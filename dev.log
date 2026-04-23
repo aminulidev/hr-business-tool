@@ -1,0 +1,13 @@
+▲ Next.js 16.1.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.101:3000
+- Environments: .env
+
+✓ Starting...
+✓ Ready in 1352ms
+ GET / 200 in 1889ms (compile: 1280ms, render: 609ms)
+ GET /calculators/pro-rata-salary 200 in 886ms (compile: 813ms, generate-params: 669ms, render: 73ms)
+ GET /calculators/payroll 200 in 86ms (compile: 28ms, generate-params: 13ms, render: 57ms)
+ GET /about 200 in 1309ms (compile: 1229ms, render: 79ms)
+ GET / 200 in 34ms (compile: 7ms, render: 27ms)
+ GET /calculators/post-tax-bonus 200 in 77ms (compile: 20ms, generate-params: 13ms, render: 56ms)
