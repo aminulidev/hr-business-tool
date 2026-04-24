@@ -29,7 +29,7 @@ import {
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
-
+// TODO: slug update to target keywords
 export type CalculatorSlug =
   | 'sales-commission'
   | 'pro-rata-salary'

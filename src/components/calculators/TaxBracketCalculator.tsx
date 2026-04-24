@@ -17,6 +17,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -234,6 +236,7 @@ export default function TaxBracketCalculator() {
   const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
   const [applyDeduction, setApplyDeduction] = useState(true);
   const [result, setResult] = useState<TaxResult | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ incomeInput: string; filingStatus: string; applyDeduction: string }>('tax-bracket');
 
   const handleCalculate = () => {
     const income = parseFloat(incomeInput);
@@ -241,7 +244,19 @@ export default function TaxBracketCalculator() {
       setResult(null);
       return;
     }
-    setResult(calculateTax(income, filingStatus, applyDeduction));
+    const res = calculateTax(income, filingStatus, applyDeduction);
+    setResult(res);
+    saveEntry(
+      { incomeInput, filingStatus, applyDeduction: String(applyDeduction) },
+      `${formatCurrency(income)} (${filingStatusLabels[filingStatus]}) — Tax: ${formatCurrency(res.totalTax)} | Effective: ${res.effectiveRate.toFixed(2)}%`
+    );
+  };
+
+  const handleRestore = (inputs: { incomeInput: string; filingStatus: string; applyDeduction: string }) => {
+    setIncomeInput(inputs.incomeInput);
+    setFilingStatus(inputs.filingStatus as FilingStatus);
+    setApplyDeduction(inputs.applyDeduction === 'true');
+    setResult(null);
   };
 
   // Current standard deduction for selected filing status
@@ -760,6 +775,7 @@ export default function TaxBracketCalculator() {
           )}
         </motion.div>
       )}
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

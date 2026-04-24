@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import CalculatorLayout from '@/components/calculators/CalculatorLayout';
 import TryExample from './TryExample';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 
 interface ROIResult {
   initialInvestment: number;
@@ -76,6 +78,7 @@ export default function ROICalculator() {
   const [duration, setDuration] = useState<string>('5');
   const [additionalContributions, setAdditionalContributions] = useState<string>('0');
   const [result, setResult] = useState<ROIResult | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ initialInvestment: string; finalValue: string; duration: string; additionalContributions: string }>('roi');
 
   const handleTryExample = () => {
     setInitialInvestment('10000');
@@ -115,6 +118,18 @@ export default function ROICalculator() {
       annualizedROI,
       years,
     });
+    saveEntry(
+      { initialInvestment, finalValue, duration, additionalContributions },
+      `ROI ${roi.toFixed(1)}% (${formatCurrency(totalProfit)} profit on ${formatCurrency(totalCost)} invested)`
+    );
+  };
+
+  const handleRestore = (inputs: { initialInvestment: string; finalValue: string; duration: string; additionalContributions: string }) => {
+    setInitialInvestment(inputs.initialInvestment);
+    setFinalValue(inputs.finalValue);
+    setDuration(inputs.duration);
+    setAdditionalContributions(inputs.additionalContributions);
+    setResult(null);
   };
 
   const health = result ? getHealthLabel(result.roi) : null;
@@ -501,6 +516,7 @@ export default function ROICalculator() {
         </div>
       )}
       </div>
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 import {
   Select,
   SelectContent,
@@ -151,6 +153,7 @@ export default function SalaryConverterCalculator() {
   const [payPeriod, setPayPeriod] = useState<PayPeriod>('annual');
   const [hoursPerWeek, setHoursPerWeek] = useState('40');
   const [results, setResults] = useState<PeriodResult[] | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ payAmount: string; payPeriod: string; hoursPerWeek: string }>('salary-converter');
 
   const effectiveHoursPerWeek = useMemo(
     () => parseFloat(hoursPerWeek) || 40,
@@ -170,9 +173,20 @@ export default function SalaryConverterCalculator() {
       setResults(null);
       return;
     }
-
     const annual = convertToAnnual(amount, payPeriod, effectiveHoursPerWeek);
-    setResults(annualToAllPeriods(annual, effectiveHoursPerWeek));
+    const allPeriods = annualToAllPeriods(annual, effectiveHoursPerWeek);
+    setResults(allPeriods);
+    saveEntry(
+      { payAmount, payPeriod, hoursPerWeek },
+      `${formatCurrency(amount)} ${periodLabels[payPeriod]} → ${formatCurrency(annual)}/year`
+    );
+  };
+
+  const handleRestore = (inputs: { payAmount: string; payPeriod: string; hoursPerWeek: string }) => {
+    setPayAmount(inputs.payAmount);
+    setPayPeriod(inputs.payPeriod as PayPeriod);
+    setHoursPerWeek(inputs.hoursPerWeek);
+    setResults(null);
   };
 
   const annualHours = effectiveHoursPerWeek * 52;
@@ -533,6 +547,7 @@ export default function SalaryConverterCalculator() {
           </div>
         </motion.div>
       )}
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 import {
   Select,
   SelectContent,
@@ -111,6 +113,10 @@ export default function OvertimeCalculator() {
 
   // Results
   const [result, setResult] = useState<OvertimeResult | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{
+    hourlyRateInput: string; regularHoursInput: string; overtimeHoursInput: string;
+    multiplierPreset: string; customMultiplierInput: string; weeklyHoursInput: string;
+  }>('overtime');
 
   // Derived overtime hint from weekly total (display only, no side effects)
   const autoOvertimeHint = useMemo(() => {
@@ -158,6 +164,20 @@ export default function OvertimeCalculator() {
       hourlyRate,
       multiplier,
     });
+    saveEntry(
+      { hourlyRateInput, regularHoursInput, overtimeHoursInput, multiplierPreset, customMultiplierInput, weeklyHoursInput },
+      `${formatCurrency(totalPay)} total (${formatCurrency(hourlyRate)}/hr × ${multiplier}x, ${overtimeHours}h OT)`
+    );
+  };
+
+  const handleRestore = (inputs: { hourlyRateInput: string; regularHoursInput: string; overtimeHoursInput: string; multiplierPreset: string; customMultiplierInput: string; weeklyHoursInput: string }) => {
+    setHourlyRateInput(inputs.hourlyRateInput);
+    setRegularHoursInput(inputs.regularHoursInput);
+    setOvertimeHoursInput(inputs.overtimeHoursInput);
+    setMultiplierPreset(inputs.multiplierPreset as OvertimeMultiplierPreset);
+    setCustomMultiplierInput(inputs.customMultiplierInput);
+    setWeeklyHoursInput(inputs.weeklyHoursInput);
+    setResult(null);
   };
 
   const handleReset = () => {
@@ -530,6 +550,7 @@ export default function OvertimeCalculator() {
           </div>
         </motion.div>
       )}
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

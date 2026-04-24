@@ -24,6 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -104,6 +106,7 @@ export default function WagesCalculator() {
   const [payPeriod, setPayPeriod] = useState<PayPeriod>('weekly');
   const [result, setResult] = useState<WagesResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ payPeriod: string; overtimeMultiplier: string; doubleTimeMultiplier: string; firstRate: string }>('wages');
 
   const updateEntry = (id: number, field: keyof WageEntry, value: string) => {
     setEntries((prev) =>
@@ -203,6 +206,17 @@ export default function WagesCalculator() {
       doubleTimeMultiplier: dtMult,
       payPeriod,
     });
+    saveEntry(
+      { payPeriod, overtimeMultiplier, doubleTimeMultiplier, firstRate: entries[0]?.hourlyRate ?? '' },
+      `${PERIOD_LABELS[payPeriod]}: ${formatCurrency(totalPeriod)}/period — ${formatCurrency(grossPerYear)}/yr`
+    );
+  };
+
+  const handleRestore = (inputs: { payPeriod: string; overtimeMultiplier: string; doubleTimeMultiplier: string; firstRate: string }) => {
+    setPayPeriod(inputs.payPeriod as PayPeriod);
+    setOvertimeMultiplier(inputs.overtimeMultiplier);
+    setDoubleTimeMultiplier(inputs.doubleTimeMultiplier);
+    setResult(null);
   };
 
   const handleReset = () => {
@@ -785,6 +799,7 @@ export default function WagesCalculator() {
           </div>
         </motion.div>
       )}
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

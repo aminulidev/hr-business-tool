@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 import {
   Select,
   SelectContent,
@@ -47,6 +49,7 @@ export default function DiscountCalculator() {
   const [secondDiscountValue, setSecondDiscountValue] = useState('');
   const [result, setResult] = useState<DiscountResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ originalPrice: string; discountType: string; discountValue: string; enableSecondDiscount: boolean; secondDiscountValue: string }>('discount');
 
   const handleCalculate = () => {
     setResult(null);
@@ -143,6 +146,19 @@ export default function DiscountCalculator() {
         isChained: false,
       });
     }
+    saveEntry(
+      { originalPrice, discountType, discountValue, enableSecondDiscount, secondDiscountValue },
+      `${formatCurrency(parseFloat(originalPrice))} → ${formatCurrency(result?.finalPrice ?? 0)} (saved ${formatCurrency(result?.totalSaved ?? 0)})`
+    );
+  };
+
+  const handleRestore = (inputs: { originalPrice: string; discountType: string; discountValue: string; enableSecondDiscount: boolean; secondDiscountValue: string }) => {
+    setOriginalPrice(inputs.originalPrice);
+    setDiscountType(inputs.discountType as DiscountType);
+    setDiscountValue(inputs.discountValue);
+    setEnableSecondDiscount(inputs.enableSecondDiscount);
+    setSecondDiscountValue(inputs.secondDiscountValue);
+    setResult(null);
   };
 
   const handleReset = () => {
@@ -634,6 +650,7 @@ export default function DiscountCalculator() {
           </div>
         </motion.div>
       )}
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

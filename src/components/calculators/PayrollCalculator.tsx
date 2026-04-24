@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 import {
   Select,
   SelectContent,
@@ -47,6 +49,14 @@ const frequencyLabels: Record<PayFrequency, string> = {
 const formatCurrency = (value: number): string =>
   value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
+interface PayrollInputs {
+  salaryInput: string;
+  frequency: PayFrequency;
+  federalTaxRate: string;
+  stateTaxRate: string;
+  otherDeductions: string;
+}
+
 export default function PayrollCalculator() {
   const [salaryInput, setSalaryInput] = useState('');
   const [frequency, setFrequency] = useState<PayFrequency>('annual');
@@ -54,6 +64,7 @@ export default function PayrollCalculator() {
   const [stateTaxRate, setStateTaxRate] = useState('5');
   const [otherDeductions, setOtherDeductions] = useState('0');
   const [result, setResult] = useState<PayrollResult | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<PayrollInputs>('payroll');
 
   const handleTryExample = () => {
     setSalaryInput('75000');
@@ -111,6 +122,19 @@ export default function PayrollCalculator() {
       effectiveTaxRate,
       annualNetPay,
     });
+    saveEntry(
+      { salaryInput, frequency, federalTaxRate, stateTaxRate, otherDeductions },
+      `${formatCurrency(netPayPerPeriod)} net / ${frequencyLabels[frequency]} (${formatCurrency(grossPerPeriod)} gross)`
+    );
+  };
+
+  const handleRestore = (inputs: PayrollInputs) => {
+    setSalaryInput(inputs.salaryInput);
+    setFrequency(inputs.frequency);
+    setFederalTaxRate(inputs.federalTaxRate);
+    setStateTaxRate(inputs.stateTaxRate);
+    setOtherDeductions(inputs.otherDeductions);
+    setResult(null);
   };
 
   const howToSteps = [
@@ -465,6 +489,7 @@ export default function PayrollCalculator() {
           </div>
         </motion.div>
       )}
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

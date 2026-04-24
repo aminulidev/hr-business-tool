@@ -23,6 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -88,6 +90,7 @@ export default function PayrollDeductionCalculator() {
 
   const [result, setResult] = useState<DeductionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ grossPay: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string; k401Pct: string }>('payroll-deduction');
 
   const handleCalculate = () => {
     setError(null);
@@ -243,6 +246,19 @@ export default function PayrollDeductionCalculator() {
       effectiveRate,
       itemized,
     });
+    saveEntry(
+      { grossPay, payFrequency, federalTaxPct, stateTaxPct, k401Pct },
+      `${formatCurrency(gross)} gross → ${formatCurrency(netPay)} net (${effectiveRate.toFixed(1)}% deducted)`
+    );
+  };
+
+  const handleRestore = (inputs: { grossPay: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string; k401Pct: string }) => {
+    setGrossPay(inputs.grossPay);
+    setPayFrequency(inputs.payFrequency as PayFrequency);
+    setFederalTaxPct(inputs.federalTaxPct);
+    setStateTaxPct(inputs.stateTaxPct);
+    setK401Pct(inputs.k401Pct);
+    setResult(null);
   };
 
   const handleReset = () => {
@@ -841,6 +857,7 @@ export default function PayrollDeductionCalculator() {
           </div>
         </motion.div>
       )}
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

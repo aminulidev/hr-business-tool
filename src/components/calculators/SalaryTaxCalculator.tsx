@@ -22,6 +22,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 
 // ---------------------------------------------------------------------------
 // 2025 Federal Tax Brackets & Constants
@@ -145,6 +147,7 @@ export default function SalaryTaxCalculator() {
 
   const [result, setResult] = useState<SalaryTaxResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ salary: string; filingStatus: string; stateTaxPct: string; localTaxPct: string }>('salary-tax');
 
   const handleCalculate = () => {
     setError(null);
@@ -229,6 +232,18 @@ export default function SalaryTaxCalculator() {
       weeklyTakeHome: takeHomePay / 52,
       dailyTakeHome: takeHomePay / 260,
     });
+    saveEntry(
+      { salary, filingStatus, stateTaxPct, localTaxPct },
+      `${formatCurrency(sal)} salary — Take-home: ${formatCurrency(takeHomePay)} (${effectiveRate.toFixed(1)}% effective)`
+    );
+  };
+
+  const handleRestore = (inputs: { salary: string; filingStatus: string; stateTaxPct: string; localTaxPct: string }) => {
+    setSalary(inputs.salary);
+    setFilingStatus(inputs.filingStatus as FilingStatus);
+    setStateTaxPct(inputs.stateTaxPct);
+    setLocalTaxPct(inputs.localTaxPct);
+    setResult(null);
   };
 
   const handleReset = () => {
@@ -743,6 +758,7 @@ export default function SalaryTaxCalculator() {
           </div>
         </motion.div>
       )}
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

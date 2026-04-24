@@ -9,6 +9,8 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import CalculatorLayout from '@/components/calculators/CalculatorLayout';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 
 const formatCurrency = (value: number): string =>
   value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -21,6 +23,7 @@ export default function SalaryIncreaseCalculator() {
   const [salaryIncrease, setSalaryIncrease] = useState<string>('');
   const [inflationRate, setInflationRate] = useState<string>('3.0');
   const [calculated, setCalculated] = useState(false);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ currentSalary: string; salaryIncrease: string; inflationRate: string }>('salary-increase');
 
   const currentSalaryNum = parseFloat(currentSalary) || 0;
   const salaryIncreaseNum = parseFloat(salaryIncrease) || 0;
@@ -36,7 +39,18 @@ export default function SalaryIncreaseCalculator() {
   const handleCalculate = () => {
     if (currentSalaryNum > 0 && salaryIncreaseNum >= 0) {
       setCalculated(true);
+      saveEntry(
+        { currentSalary, salaryIncrease, inflationRate },
+        `${formatCurrency(currentSalaryNum)} → ${formatCurrency(newSalary)} (+${salaryIncreaseNum}% raise)`
+      );
     }
+  };
+
+  const handleRestore = (inputs: { currentSalary: string; salaryIncrease: string; inflationRate: string }) => {
+    setCurrentSalary(inputs.currentSalary);
+    setSalaryIncrease(inputs.salaryIncrease);
+    setInflationRate(inputs.inflationRate);
+    setCalculated(false);
   };
 
   const handleReset = () => {
@@ -389,6 +403,7 @@ export default function SalaryIncreaseCalculator() {
         </motion.div>
       )}
       </div>
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

@@ -11,6 +11,8 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 
 type CalcMode = 'cost-selling' | 'cost-revenue';
 
@@ -107,6 +109,7 @@ export default function ProfitMarginCalculator() {
   const [revenueAmount, setRevenueAmount] = useState('');
 
   const [result, setResult] = useState<MarginResult | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ mode: string; costPrice: string; sellingPrice: string; revenueCost: string; revenueAmount: string }>('profit-margin');
 
   const handleTryExample = () => {
     if (mode === 'cost-selling') {
@@ -161,6 +164,19 @@ export default function ProfitMarginCalculator() {
         revenue,
       });
     }
+    saveEntry(
+      { mode, costPrice, sellingPrice, revenueCost, revenueAmount },
+      `Margin ${result ? result.margin.toFixed(1) : '?'}% — ${formatCurrency(result?.profit ?? 0)} profit`
+    );
+  };
+
+  const handleRestore = (inputs: { mode: string; costPrice: string; sellingPrice: string; revenueCost: string; revenueAmount: string }) => {
+    setMode(inputs.mode as CalcMode);
+    setCostPrice(inputs.costPrice);
+    setSellingPrice(inputs.sellingPrice);
+    setRevenueCost(inputs.revenueCost);
+    setRevenueAmount(inputs.revenueAmount);
+    setResult(null);
   };
 
   const health = result ? getMarginHealth(result.margin) : null;
@@ -577,6 +593,7 @@ export default function ProfitMarginCalculator() {
           </div>
         </motion.div>
       )}
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

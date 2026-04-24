@@ -9,6 +9,8 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import CalculatorLayout from '@/components/calculators/CalculatorLayout';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 
 type CalculationMode = 'gross-to-net' | 'net-to-gross';
 
@@ -35,6 +37,7 @@ export default function PostTaxBonusCalculator() {
   const [stateRate, setStateRate] = useState<string>('5');
   const [additionalRate, setAdditionalRate] = useState<string>('0');
   const [result, setResult] = useState<BonusResult | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ mode: string; grossBonus: string; netBonusInput: string; federalRate: string; stateRate: string; additionalRate: string }>('post-tax-bonus');
 
   const handleCalculate = () => {
     const fed = parseFloat(federalRate) || 0;
@@ -60,6 +63,10 @@ export default function PostTaxBonusCalculator() {
         stateTax: gross * (state / 100),
         additionalTax: gross * (addl / 100),
       });
+      saveEntry(
+        { mode, grossBonus, netBonusInput, federalRate, stateRate, additionalRate },
+        `${formatCurrency(gross)} gross → ${formatCurrency(net)} net (${totalTaxRate.toFixed(1)}% tax)`
+      );
     } else {
       const net = parseFloat(netBonusInput) || 0;
       if (net <= 0 || totalTaxRate >= 100) {
@@ -68,8 +75,7 @@ export default function PostTaxBonusCalculator() {
       }
       const gross = net / (1 - totalTaxRate / 100);
       const taxAmount = gross - net;
-
-      setResult({
+      const r = {
         grossBonus: gross,
         netBonus: net,
         taxAmount,
@@ -77,8 +83,23 @@ export default function PostTaxBonusCalculator() {
         federalTax: gross * (fed / 100),
         stateTax: gross * (state / 100),
         additionalTax: gross * (addl / 100),
-      });
+      };
+      setResult(r);
+      saveEntry(
+        { mode, grossBonus, netBonusInput, federalRate, stateRate, additionalRate },
+        `${formatCurrency(net)} net → ${formatCurrency(gross)} gross (${totalTaxRate.toFixed(1)}% tax)`
+      );
     }
+  };
+
+  const handleRestore = (inputs: { mode: string; grossBonus: string; netBonusInput: string; federalRate: string; stateRate: string; additionalRate: string }) => {
+    setMode(inputs.mode as CalculationMode);
+    setGrossBonus(inputs.grossBonus);
+    setNetBonusInput(inputs.netBonusInput);
+    setFederalRate(inputs.federalRate);
+    setStateRate(inputs.stateRate);
+    setAdditionalRate(inputs.additionalRate);
+    setResult(null);
   };
 
   const effectiveWithholding = result
@@ -471,6 +492,7 @@ export default function PostTaxBonusCalculator() {
         </motion.div>
       )}
       </div>
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

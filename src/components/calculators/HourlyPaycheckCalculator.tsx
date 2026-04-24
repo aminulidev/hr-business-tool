@@ -23,6 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -87,6 +89,7 @@ export default function HourlyPaycheckCalculator() {
 
   const [result, setResult] = useState<HourlyPaycheckResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ hourlyRate: string; regularHours: string; overtimeHours: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string }>('hourly-paycheck');
 
   const handleCalculate = () => {
     setError(null);
@@ -169,6 +172,20 @@ export default function HourlyPaycheckCalculator() {
       effectiveHourlyRate,
       effectiveRate,
     });
+    saveEntry(
+      { hourlyRate, regularHours, overtimeHours, payFrequency, federalTaxPct, stateTaxPct },
+      `${formatCurrency(rate)}/hr → ${formatCurrency(netPayPerPeriod)} net/${FREQ_LABELS[payFrequency].toLowerCase()}`
+    );
+  };
+
+  const handleRestore = (inputs: { hourlyRate: string; regularHours: string; overtimeHours: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string }) => {
+    setHourlyRate(inputs.hourlyRate);
+    setRegularHours(inputs.regularHours);
+    setOvertimeHours(inputs.overtimeHours);
+    setPayFrequency(inputs.payFrequency as PayFrequency);
+    setFederalTaxPct(inputs.federalTaxPct);
+    setStateTaxPct(inputs.stateTaxPct);
+    setResult(null);
   };
 
   const handleReset = () => {
@@ -787,6 +804,7 @@ export default function HourlyPaycheckCalculator() {
           </div>
         </motion.div>
       )}
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

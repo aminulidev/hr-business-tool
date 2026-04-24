@@ -33,6 +33,8 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
@@ -498,9 +500,27 @@ export default function SalesCommissionCalculator() {
     };
   }, [quotaBase, quotaRate, salesQuota, actualSales, accelerator, totalDeductions]);
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // Tier management
-  // ═══════════════════════════════════════════════════════════════════════════
+  // ─── History ────────────────────────────────────────────────────
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ activeTab: string; salesAmount: string; simpleRate: string; tieredSalesAmount: string; quotaBase: string; salesQuota: string; actualSales: string }>('sales-commission');
+
+  const handleSaveHistory = useCallback(() => {
+    const r = activeTab === 'simple' ? simpleResults : activeTab === 'tiered' ? tieredResults : quotaResults;
+    if (!r.hasInput) return;
+    saveEntry(
+      { activeTab, salesAmount, simpleRate, tieredSalesAmount, quotaBase, salesQuota, actualSales },
+      `${activeTab} mode — Net: ${formatCurrency(r.net)} | Total Comp: ${formatCurrency(r.totalComp)}`
+    );
+  }, [activeTab, simpleResults, tieredResults, quotaResults, salesAmount, simpleRate, tieredSalesAmount, quotaBase, salesQuota, actualSales, saveEntry]);
+
+  const handleRestore = (inputs: { activeTab: string; salesAmount: string; simpleRate: string; tieredSalesAmount: string; quotaBase: string; salesQuota: string; actualSales: string }) => {
+    setActiveTab(inputs.activeTab as CalcMode);
+    setSalesAmount(inputs.salesAmount);
+    setSimpleRate(inputs.simpleRate);
+    setTieredSalesAmount(inputs.tieredSalesAmount);
+    setQuotaBase(inputs.quotaBase);
+    setSalesQuota(inputs.salesQuota);
+    setActualSales(inputs.actualSales);
+  };
 
   const addTier = useCallback(() => {
     if (tiers.length >= 5) return;
@@ -1467,6 +1487,7 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
           </AnimatePresence>
         </div>
       </TooltipProvider>
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

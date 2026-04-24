@@ -16,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 
 // ---------------------------------------------------------------------------
 // 2025 Federal Tax Brackets
@@ -154,6 +156,7 @@ export default function TaxRefundCalculator() {
   const [taxCredits, setTaxCredits] = useState('');
   const [result, setResult] = useState<TaxResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ filingStatus: string; grossIncome: string; federalWithheld: string; stateWithheld: string }>('tax-refund');
 
   const handleCalculate = () => {
     setResult(null);
@@ -213,6 +216,20 @@ export default function TaxRefundCalculator() {
       bracketBreakdown: breakdown,
       topBracket,
     });
+    saveEntry(
+      { filingStatus, grossIncome, federalWithheld, stateWithheld },
+      refund >= 0
+        ? `Refund: ${formatCurrency(refund)} (${effectiveRate.toFixed(1)}% effective)`
+        : `Owe: ${formatCurrency(Math.abs(refund))} (${effectiveRate.toFixed(1)}% effective)`
+    );
+  };
+
+  const handleRestore = (inputs: { filingStatus: string; grossIncome: string; federalWithheld: string; stateWithheld: string }) => {
+    setFilingStatus(inputs.filingStatus as FilingStatus);
+    setGrossIncome(inputs.grossIncome);
+    setFederalWithheld(inputs.federalWithheld);
+    setStateWithheld(inputs.stateWithheld);
+    setResult(null);
   };
 
   const handleReset = () => {
@@ -707,6 +724,7 @@ export default function TaxRefundCalculator() {
           </motion.div>
         )}
       </div>
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

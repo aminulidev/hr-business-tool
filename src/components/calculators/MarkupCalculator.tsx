@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -60,6 +62,7 @@ export default function MarkupCalculator() {
   const [sellingPrice, setSellingPrice] = useState('');
   const [result, setResult] = useState<MarkupResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ mode: string; costPrice: string; markupPct: string; sellingPrice: string }>('markup');
 
   const handleCalculate = () => {
     setResult(null);
@@ -112,6 +115,18 @@ export default function MarkupCalculator() {
         marginPct: margin,
       });
     }
+    saveEntry(
+      { mode, costPrice, markupPct, sellingPrice },
+      `${(result?.markupPct ?? 0).toFixed(1)}% markup: ${formatCurrency(result?.costPrice ?? 0)} cost → ${formatCurrency(result?.sellingPrice ?? 0)} price`
+    );
+  };
+
+  const handleRestore = (inputs: { mode: string; costPrice: string; markupPct: string; sellingPrice: string }) => {
+    setMode(inputs.mode as CalcMode);
+    setCostPrice(inputs.costPrice);
+    setMarkupPct(inputs.markupPct);
+    setSellingPrice(inputs.sellingPrice);
+    setResult(null);
   };
 
   const handleReset = () => {
@@ -581,6 +596,7 @@ export default function MarkupCalculator() {
           </motion.div>
         )}
       </div>
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

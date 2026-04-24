@@ -16,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -125,6 +127,7 @@ export default function PropertyTaxCalculator() {
   const [targetTax, setTargetTax] = useState('');
   const [result, setResult] = useState<TaxResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ mode: string; assessedValue: string; rateMode: string; taxRate: string; assessmentRatio: string; exemptions: string }>('property-tax');
 
   const handleCalculate = () => {
     setResult(null);
@@ -157,6 +160,10 @@ export default function PropertyTaxCalculator() {
 
       const res = computeTaxFromRate(av, rateMode, rate, ar, ex);
       setResult(res);
+      saveEntry(
+        { mode, assessedValue, rateMode, taxRate, assessmentRatio, exemptions },
+        `${formatCurrencyExact(res.annualTax)}/yr — ${formatCurrencyExact(res.monthlyTax)}/mo (${res.effectiveRate.toFixed(2)}%)`
+      );
     } else {
       const tax = parseFloat(targetTax);
       if (isNaN(tax) || tax < 0) {
@@ -166,7 +173,21 @@ export default function PropertyTaxCalculator() {
 
       const res = computeRateFromTax(av, ar, ex, tax, rateMode);
       setResult(res);
+      saveEntry(
+        { mode, assessedValue, rateMode, taxRate, assessmentRatio, exemptions },
+        `Rate ${res.rateValue.toFixed(2)} ${rateMode === 'mills' ? 'mills' : '%'} for ${formatCurrencyExact(tax)}/yr tax`
+      );
     }
+  };
+
+  const handleRestore = (inputs: { mode: string; assessedValue: string; rateMode: string; taxRate: string; assessmentRatio: string; exemptions: string }) => {
+    setMode(inputs.mode as CalcMode);
+    setAssessedValue(inputs.assessedValue);
+    setRateMode(inputs.rateMode as RateMode);
+    setTaxRate(inputs.taxRate);
+    setAssessmentRatio(inputs.assessmentRatio);
+    setExemptions(inputs.exemptions);
+    setResult(null);
   };
 
   const handleReset = () => {
@@ -709,6 +730,7 @@ export default function PropertyTaxCalculator() {
           </motion.div>
         )}
       </div>
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

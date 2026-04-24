@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -74,6 +76,7 @@ export default function GrossMarginCalculator() {
 
   const [result, setResult] = useState<MarginResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ mode: string; revenue: string; cogs: string; marginPct: string }>('gross-margin');
 
   const handleSingleCalculate = () => {
     setResult(null);
@@ -143,6 +146,18 @@ export default function GrossMarginCalculator() {
         totalGrossMargin: prod.grossMargin,
       });
     }
+    saveEntry(
+      { mode, revenue, cogs, marginPct },
+      `${mode}: margin ${result ? result.totalGrossMargin.toFixed(1) : '?'}% on ${formatCurrency(parseFloat(revenue) || parseFloat(cogs) || 0)}`
+    );
+  };
+
+  const handleRestore = (inputs: { mode: string; revenue: string; cogs: string; marginPct: string }) => {
+    setMode(inputs.mode as CalcMode);
+    setRevenue(inputs.revenue);
+    setCogs(inputs.cogs);
+    setMarginPct(inputs.marginPct);
+    setResult(null);
   };
 
   const handleMultiCalculate = () => {
@@ -647,6 +662,7 @@ export default function GrossMarginCalculator() {
           </motion.div>
         )}
       </div>
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

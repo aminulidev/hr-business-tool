@@ -22,6 +22,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 
 // ---------------------------------------------------------------------------
 // 2025 Federal Tax Brackets
@@ -233,6 +235,8 @@ export default function AfterTaxIncomeCalculator() {
   const [additionalDeductions, setAdditionalDeductions] = useState<string>('0');
   const [showResults, setShowResults] = useState<boolean>(false);
 
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ incomeAmount: string; payFrequency: string; filingStatus: string; stateTaxRate: string }>('after-tax-income');
+
   // ---- Computed Results ----
   const results = useMemo<TaxResults | null>(() => {
     const amount = parseFloat(incomeAmount);
@@ -249,6 +253,20 @@ export default function AfterTaxIncomeCalculator() {
 
   const handleCalculate = () => {
     setShowResults(true);
+    if (results) {
+      saveEntry(
+        { incomeAmount, payFrequency, filingStatus, stateTaxRate },
+        `${payFrequency} $${incomeAmount} — Net: $${(results.netAnnual).toLocaleString('en-US', { maximumFractionDigits: 0 })}/yr (${results.effectiveTaxRate.toFixed(1)}% effective)`
+      );
+    }
+  };
+
+  const handleRestore = (inputs: { incomeAmount: string; payFrequency: string; filingStatus: string; stateTaxRate: string }) => {
+    setIncomeAmount(inputs.incomeAmount);
+    setPayFrequency(inputs.payFrequency as PayFrequency);
+    setFilingStatus(inputs.filingStatus);
+    setStateTaxRate(inputs.stateTaxRate);
+    setShowResults(false);
   };
 
   // ---- Filing status display label ----
@@ -863,6 +881,7 @@ export default function AfterTaxIncomeCalculator() {
           </motion.div>
         )}
       </div>
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }
