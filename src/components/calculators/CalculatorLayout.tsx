@@ -482,7 +482,7 @@ export default function CalculatorLayout({
           <div className="flex-1 min-w-0 space-y-8">
             {/* Calculator card */}
             <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
-              <Card className="glass-strong overflow-hidden">{children}</Card>
+              <Card className="glass-strong overflow-hidden calculator-form">{children}</Card>
             </motion.div>
 
             {/* ============================================================= */}
