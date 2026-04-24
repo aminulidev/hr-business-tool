@@ -77,7 +77,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: "/favicon.ico",
-    apple: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
   },
   verification: {
     // google: "your-google-verification-code", // Uncomment and set when you receive verification from Google Search Console

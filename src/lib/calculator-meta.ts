@@ -23,6 +23,14 @@ import {
   Shield,
   Coffee,
   BadgeDollarSign,
+  UserMinus,
+  ShieldCheck,
+  Landmark,
+  AlarmClock,
+  Users,
+  Briefcase,
+  Hourglass,
+  Activity,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -54,7 +62,15 @@ export type CalculatorSlug =
   | 'payroll-deduction'
   | 'salary-tax'
   | 'time-card-lunch'
-  | 'hourly-paycheck';
+  | 'hourly-paycheck'
+  | 'severance-pay'
+  | 'workers-comp'
+  | 'fica-tax'
+  | 'time-and-a-half'
+  | 'employee-turnover'
+  | 'cost-per-hire'
+  | 'billable-hours'
+  | 'revenue-per-employee';
 
 export interface CalculatorMeta {
   slug: CalculatorSlug;
@@ -81,6 +97,7 @@ export const SITE_TAGLINE = 'Free Online Business & HR Calculators';
 export const categoryOrder = [
   'Payroll & Taxes',          // 8 tools — highest volume & CPC keywords
   'Salary & Compensation',    // 5 tools — high-demand salary/pay topics
+  'HR Analytics',             // 5 tools — HR metrics, severance, workers comp
   'Commission & Compensation', // 2 tools — high-value tier1 keywords
   'Business Finance',         // 5 tools — strong margin/ROI/discount keywords
   'Time & Attendance',        // 4 tools — essential time-tracking tools
@@ -94,6 +111,10 @@ export const categoryMeta: Record<string, { emoji: string; description: string }
   'Salary & Compensation': {
     emoji: '\uD83D\uDCB0',
     description: 'Tools for salary analysis, raises, overtime, and prorated pay',
+  },
+  'HR Analytics': {
+    emoji: '\uD83D\uDCCA',
+    description: 'Workforce metrics, severance pay, workers comp, and hiring costs',
   },
   'Payroll & Taxes': {
     emoji: '\uD83D\uDCB3',
@@ -775,6 +796,205 @@ export const calculators: CalculatorMeta[] = [
     tier: 'tier2',
     category: 'Payroll & Taxes',
     path: '/calculators/hourly-paycheck',
+  },
+
+  // ── HR Analytics ──
+  {
+    slug: 'severance-pay',
+    title: 'Severance Pay Calculator',
+    shortDescription:
+      'Calculate total severance pay based on salary, years of service, and company multiplier. Includes monthly equivalent and tax estimate.',
+    metaDescription:
+      'Free severance pay calculator. Estimate your total severance package based on years of service, base salary, and severance multiplier. See weekly rate, total weeks, and monthly equivalent. Covers common severance formulas used in the US.',
+    keywords: [
+      'severance pay calculator',
+      'severance calculator',
+      'how to calculate severance pay',
+      'severance package calculator',
+      'severance pay formula',
+      'weeks of severance calculator',
+      'severance pay per year of service',
+      'layoff severance calculator',
+      'severance pay estimator',
+      'how much severance am I owed',
+      'severance agreement calculator',
+      'separation pay calculator',
+    ],
+    icon: UserMinus,
+    tier: 'tier1',
+    category: 'HR Analytics',
+    path: '/calculators/severance-pay',
+  },
+  {
+    slug: 'workers-comp',
+    title: 'Workers Comp Calculator',
+    shortDescription:
+      'Estimate your annual workers compensation insurance premium from payroll, class code rate, and experience modification factor.',
+    metaDescription:
+      'Free workers comp calculator. Estimate your workers compensation insurance premium based on annual payroll, classification rate per $100, and experience modification rate (EMR). Compare costs by class code and see per-employee cost breakdown.',
+    keywords: [
+      'workers comp calculator',
+      'workers compensation calculator',
+      'workers comp premium calculator',
+      'workers comp rate calculator',
+      'workers compensation insurance calculator',
+      'experience mod calculator',
+      'EMR workers comp calculator',
+      'workers comp cost per employee',
+      'workers comp rate per 100',
+      'class code rate calculator',
+      'employer workers compensation cost',
+    ],
+    icon: ShieldCheck,
+    tier: 'tier1',
+    category: 'HR Analytics',
+    path: '/calculators/workers-comp',
+  },
+  {
+    slug: 'fica-tax',
+    title: 'FICA Tax Calculator',
+    shortDescription:
+      'Calculate Social Security and Medicare FICA taxes for employees and self-employed individuals with a full employer/employee breakdown.',
+    metaDescription:
+      'Free FICA tax calculator. Calculate Social Security tax (6.2%), Medicare tax (1.45%), and Additional Medicare tax (0.9%) for employees and self-employed workers. See employer and employee share, annual wage base limits, and self-employment tax deduction.',
+    keywords: [
+      'FICA tax calculator',
+      'social security tax calculator',
+      'medicare tax calculator',
+      'self employment tax calculator',
+      'FICA calculator',
+      'payroll tax calculator FICA',
+      'how to calculate FICA',
+      'social security withholding calculator',
+      'additional medicare tax calculator',
+      'FICA withholding calculator',
+      'employer FICA calculator',
+      'self employed FICA tax',
+    ],
+    icon: Landmark,
+    tier: 'tier1',
+    category: 'Payroll & Taxes',
+    path: '/calculators/fica-tax',
+  },
+  {
+    slug: 'time-and-a-half',
+    title: 'Time and a Half Calculator',
+    shortDescription:
+      'Calculate overtime pay at 1.5× your regular rate. Enter your hourly wage and OT hours to instantly see your time and a half earnings.',
+    metaDescription:
+      'Free time and a half calculator. Instantly calculate your overtime pay at 1.5 times your regular hourly rate. Enter your hourly wage and overtime hours to see regular pay, overtime pay, and total gross earnings for the week.',
+    keywords: [
+      'time and a half calculator',
+      'time and a half pay calculator',
+      'overtime 1.5x calculator',
+      'time and a half rate calculator',
+      'how to calculate time and a half',
+      'overtime pay rate calculator',
+      '1.5 times pay calculator',
+      'time and a half hourly rate',
+      'overtime earnings calculator',
+      'FLSA overtime calculator',
+      'time and half pay formula',
+    ],
+    icon: AlarmClock,
+    tier: 'tier1',
+    category: 'Salary & Compensation',
+    path: '/calculators/time-and-a-half',
+  },
+  {
+    slug: 'employee-turnover',
+    title: 'Employee Turnover Rate Calculator',
+    shortDescription:
+      'Calculate your employee turnover rate, retention rate, and estimated cost of attrition with industry benchmark comparisons.',
+    metaDescription:
+      'Free employee turnover rate calculator. Calculate your organization\'s annual turnover rate and retention rate from headcount and separation data. Estimate the financial cost of employee attrition and compare to industry benchmarks.',
+    keywords: [
+      'employee turnover rate calculator',
+      'staff turnover calculator',
+      'employee attrition calculator',
+      'turnover rate formula',
+      'how to calculate employee turnover',
+      'annual turnover rate calculator',
+      'employee retention rate calculator',
+      'cost of employee turnover calculator',
+      'workforce turnover calculator',
+      'HR turnover metrics',
+    ],
+    icon: Users,
+    tier: 'tier2',
+    category: 'HR Analytics',
+    path: '/calculators/employee-turnover',
+  },
+  {
+    slug: 'cost-per-hire',
+    title: 'Cost per Hire Calculator',
+    shortDescription:
+      'Calculate your average cost per hire from internal and external recruiting costs. See total spend breakdown and cost benchmarks.',
+    metaDescription:
+      'Free cost per hire calculator. Calculate your organization\'s recruiting cost per hire by entering internal HR costs, external agency and advertising expenses, and total hires. Compare to SHRM benchmarks and identify cost-saving opportunities.',
+    keywords: [
+      'cost per hire calculator',
+      'recruiting cost calculator',
+      'cost of hiring calculator',
+      'HR cost per hire',
+      'how to calculate cost per hire',
+      'recruiting ROI calculator',
+      'hiring cost estimator',
+      'talent acquisition cost calculator',
+      'cost per hire formula',
+      'SHRM cost per hire',
+    ],
+    icon: Briefcase,
+    tier: 'tier2',
+    category: 'HR Analytics',
+    path: '/calculators/cost-per-hire',
+  },
+  {
+    slug: 'billable-hours',
+    title: 'Billable Hours Calculator',
+    shortDescription:
+      'Calculate billable hours, utilization rate, and billable revenue from total hours worked and non-billable time.',
+    metaDescription:
+      'Free billable hours calculator. Track your billable hours, calculate utilization rate, and estimate billable revenue. Enter total work hours, non-billable time (admin, training), and hourly billing rate to see how efficiently your time generates income.',
+    keywords: [
+      'billable hours calculator',
+      'utilization rate calculator',
+      'billable rate calculator',
+      'how to calculate billable hours',
+      'billable hours tracker',
+      'consultant billable hours calculator',
+      'lawyer billable hours calculator',
+      'billable utilization calculator',
+      'time tracking billable hours',
+      'billable revenue calculator',
+    ],
+    icon: Hourglass,
+    tier: 'tier2',
+    category: 'Time & Attendance',
+    path: '/calculators/billable-hours',
+  },
+  {
+    slug: 'revenue-per-employee',
+    title: 'Revenue per Employee Calculator',
+    shortDescription:
+      'Calculate revenue per employee ratio and benchmark against industry averages to measure workforce productivity and efficiency.',
+    metaDescription:
+      'Free revenue per employee calculator. Divide your annual revenue by headcount to get a key productivity metric. Compare your revenue per employee against industry benchmarks and track efficiency improvements over time.',
+    keywords: [
+      'revenue per employee calculator',
+      'revenue per employee ratio',
+      'sales per employee calculator',
+      'workforce productivity calculator',
+      'HR productivity metrics',
+      'revenue per FTE calculator',
+      'how to calculate revenue per employee',
+      'employee productivity ratio',
+      'headcount efficiency calculator',
+    ],
+    icon: Activity,
+    tier: 'tier2',
+    category: 'HR Analytics',
+    path: '/calculators/revenue-per-employee',
   },
 ];
 
