@@ -26,6 +26,8 @@ import {
 } from '@/components/ui/select';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
+import ComparePanel, { CompareRow } from './ComparePanel';
+import { formatCurrency, formatPercent } from '@/lib/utils';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -63,12 +65,16 @@ interface WagesResult {
   payPeriod: PayPeriod;
 }
 
+interface WageSnapshot {
+  grossPeriod: number;
+  grossYear: number;
+  totalHours: number;
+  label: string;
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-const formatCurrency = (value: number): string =>
-  value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
 const PERIOD_MULTIPLIERS: Record<PayPeriod, number> = {
   weekly: 52,
@@ -106,6 +112,11 @@ export default function WagesCalculator() {
   const [payPeriod, setPayPeriod] = useState<PayPeriod>('weekly');
   const [result, setResult] = useState<WagesResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Comparison State
+  const [compareA, setCompareA] = useState<WageSnapshot | null>(null);
+  const [compareB, setCompareB] = useState<WageSnapshot | null>(null);
+
   const { history, saveEntry, clearHistory } = useCalcHistory<{ payPeriod: string; overtimeMultiplier: string; doubleTimeMultiplier: string; firstRate: string }>('wages');
 
   const updateEntry = (id: number, field: keyof WageEntry, value: string) => {
@@ -597,12 +608,49 @@ export default function WagesCalculator() {
               <p className="text-4xl font-bold text-emerald-600">
                 {formatCurrency(result.grossPerPeriod)}
               </p>
-              <Badge
-                variant="outline"
-                className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600 px-3 py-1 text-sm font-medium"
-              >
-                {formatCurrency(result.grossPerYear)}/year
-              </Badge>
+              <div className="flex items-center justify-center gap-2">
+                <Badge
+                  variant="outline"
+                  className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600 px-3 py-1 text-sm font-medium"
+                >
+                  {formatCurrency(result.grossPerYear)}/year
+                </Badge>
+              </div>
+
+              <div className="flex items-center justify-center gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const totalHours = result.entries.reduce((acc, curr) => acc + curr.regularHours + curr.overtimeHours + curr.doubleTimeHours, 0);
+                    setCompareA({
+                      grossPeriod: result.grossPerPeriod,
+                      grossYear: result.grossPerYear,
+                      totalHours,
+                      label: `${formatCurrency(result.grossPerPeriod)} / ${PERIOD_LABELS[result.payPeriod]}`
+                    });
+                  }}
+                  className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary"
+                >
+                  {compareA ? '↺ Set A' : '+ Save A'}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const totalHours = result.entries.reduce((acc, curr) => acc + curr.regularHours + curr.overtimeHours + curr.doubleTimeHours, 0);
+                    setCompareB({
+                      grossPeriod: result.grossPerPeriod,
+                      grossYear: result.grossPerYear,
+                      totalHours,
+                      label: `${formatCurrency(result.grossPerPeriod)} / ${PERIOD_LABELS[result.payPeriod]}`
+                    });
+                  }}
+                  className="h-7 text-[10px] px-2 border-amber-500/30 bg-amber-500/5 text-amber-600"
+                >
+                  {compareB ? '↺ Set B' : '+ Save B'}
+                </Button>
+              </div>
             </div>
 
             {/* Equivalent Wages Grid */}
@@ -799,6 +847,26 @@ export default function WagesCalculator() {
           </div>
         </motion.div>
       )}
+
+      {compareA && compareB && (() => {
+        const rows: CompareRow[] = [
+          { label: 'Gross Pay (Period)', valueA: formatCurrency(compareA.grossPeriod), valueB: formatCurrency(compareB.grossPeriod), numA: compareA.grossPeriod, numB: compareB.grossPeriod },
+          { label: 'Gross Pay (Annual)', valueA: formatCurrency(compareA.grossYear),   valueB: formatCurrency(compareB.grossYear),   numA: compareA.grossYear,   numB: compareB.grossYear },
+          { label: 'Total Weekly Hours', valueA: `${compareA.totalHours}h`,           valueB: `${compareB.totalHours}h`,           numA: compareA.totalHours,   numB: compareB.totalHours },
+        ];
+        return (
+          <div className="px-4 pb-6 sm:px-6">
+            <ComparePanel
+              rows={rows}
+              labelA={compareA.label}
+              labelB={compareB.label}
+              onClear={() => { setCompareA(null); setCompareB(null); }}
+              onSwap={() => { const tmp = compareA; setCompareA(compareB); setCompareB(tmp); }}
+            />
+          </div>
+        );
+      })()}
+
       <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );

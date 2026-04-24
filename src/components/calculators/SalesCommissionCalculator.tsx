@@ -35,14 +35,10 @@ import { Switch } from '@/components/ui/switch';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
+import ComparePanel, { CompareRow } from './ComparePanel';
+import { formatCurrency, formatPercent, formatNumber } from '@/lib/utils';
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
-
-const formatCurrency = (value: number): string =>
-  value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-
-const formatPercent = (value: number): string =>
-  `${value.toFixed(2)}%`;
 
 const parseNum = (val: string): number => {
   const n = parseFloat(val);
@@ -72,6 +68,20 @@ interface Deductions {
   brokerFees: string;
   processingFees: string;
   otherDeductions: string;
+}
+
+interface CommissionSnapshot {
+  totalSales: number;
+  grossCommission: number;
+  netCommission: number;
+  totalComp: number;
+  effectiveRate: number;
+  mode: string;
+}
+
+interface CompareSnapshot {
+  result: CommissionSnapshot;
+  label: string;
 }
 
 type CalcMode = 'simple' | 'tiered' | 'quota';
@@ -364,6 +374,44 @@ export default function SalesCommissionCalculator() {
     processingFees: '',
     otherDeductions: '',
   });
+
+  // ─── Comparison ──────────────────────────────────────────────────────────
+  const [compareA, setCompareA] = useState<CompareSnapshot | null>(null);
+  const [compareB, setCompareB] = useState<CompareSnapshot | null>(null);
+
+  const getSnapshot = (): CommissionSnapshot => {
+    if (activeTab === 'simple') {
+      const sales = parseNum(salesAmount);
+      return {
+        totalSales: sales,
+        grossCommission: simpleResults.gross,
+        netCommission: simpleResults.net,
+        totalComp: simpleResults.totalComp,
+        effectiveRate: sales > 0 ? (simpleResults.gross / sales) * 100 : 0,
+        mode: 'Simple'
+      };
+    } else if (activeTab === 'tiered') {
+      const sales = parseNum(tieredSalesAmount);
+      return {
+        totalSales: sales,
+        grossCommission: tieredResults.gross,
+        netCommission: tieredResults.net,
+        totalComp: tieredResults.totalComp,
+        effectiveRate: sales > 0 ? (tieredResults.totalCommission / sales) * 100 : 0,
+        mode: 'Tiered'
+      };
+    } else {
+      const sales = parseNum(actualSales);
+      return {
+        totalSales: sales,
+        grossCommission: quotaResults.gross,
+        netCommission: quotaResults.net,
+        totalComp: quotaResults.totalComp,
+        effectiveRate: sales > 0 ? (quotaResults.totalCommission / sales) * 100 : 0,
+        mode: 'Quota'
+      };
+    }
+  };
 
   // ─── Deduction total ────────────────────────────────────────────────────
   const totalDeductions = useMemo(() => {
@@ -1481,10 +1529,62 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
                           : `At ${quotaResults.attainment.toFixed(1)}% quota attainment, focus on closing deals to reach your ${formatCurrency(parseNum(salesQuota))} target and unlock your commission accelerator for earnings above quota.`}
                     </InsightBox>
                   )}
+
+                  {/* ─── Comparison Save Buttons ─────────────────────────── */}
+                  <div className="flex flex-wrap gap-2 mt-6 pt-6 border-t border-border/40">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const snap = getSnapshot();
+                        setCompareA({ 
+                          result: snap, 
+                          label: `${snap.mode} - ${formatCurrency(snap.totalSales)} Sales` 
+                        });
+                      }}
+                      className="text-xs h-8 gap-1.5 border-primary/30 bg-primary/5 text-primary hover:bg-primary/10 transition-colors"
+                    >
+                      {compareA ? '↺ Replace Scenario A' : '+ Save as Scenario A'}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const snap = getSnapshot();
+                        setCompareB({ 
+                          result: snap, 
+                          label: `${snap.mode} - ${formatCurrency(snap.totalSales)} Sales` 
+                        });
+                      }}
+                      className="text-xs h-8 gap-1.5 border-amber-500/30 bg-amber-500/5 text-amber-600 hover:bg-amber-500/10 transition-colors"
+                    >
+                      {compareB ? '↺ Replace Scenario B' : '+ Save as Scenario B'}
+                    </Button>
+                  </div>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* ─── Comparison Panel ────────────────────────────────────────── */}
+          {compareA && compareB && (() => {
+            const rows: CompareRow[] = [
+              { label: 'Total Sales',        valueA: formatCurrency(compareA.result.totalSales),      valueB: formatCurrency(compareB.result.totalSales),      numA: compareA.result.totalSales,      numB: compareB.result.totalSales },
+              { label: 'Gross Commission',   valueA: formatCurrency(compareA.result.grossCommission), valueB: formatCurrency(compareB.result.grossCommission), numA: compareA.result.grossCommission, numB: compareB.result.grossCommission },
+              { label: 'Net Commission',     valueA: formatCurrency(compareA.result.netCommission),   valueB: formatCurrency(compareB.result.netCommission),   numA: compareA.result.netCommission,   numB: compareB.result.netCommission },
+              { label: 'Total Compensation', valueA: formatCurrency(compareA.result.totalComp),       valueB: formatCurrency(compareB.result.totalComp),       numA: compareA.result.totalComp,       numB: compareB.result.totalComp },
+              { label: 'Effective Rate',     valueA: `${compareA.result.effectiveRate.toFixed(2)}%`,  valueB: `${compareB.result.effectiveRate.toFixed(2)}%`,  numA: compareA.result.effectiveRate,     numB: compareB.result.effectiveRate },
+            ];
+            return (
+              <ComparePanel
+                rows={rows}
+                labelA={compareA.label}
+                labelB={compareB.label}
+                onClear={() => { setCompareA(null); setCompareB(null); }}
+                onSwap={() => { const tmp = compareA; setCompareA(compareB); setCompareB(tmp); }}
+              />
+            );
+          })()}
         </div>
       </TooltipProvider>
       <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />

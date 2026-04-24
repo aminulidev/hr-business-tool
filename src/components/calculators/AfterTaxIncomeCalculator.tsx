@@ -24,6 +24,8 @@ import {
 } from '@/components/ui/tooltip';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
+import ComparePanel, { CompareRow } from './ComparePanel';
+import { formatCurrency, formatPercent } from '@/lib/utils';
 
 // ---------------------------------------------------------------------------
 // 2025 Federal Tax Brackets
@@ -144,6 +146,14 @@ interface TaxResults {
   effectiveTaxRate: number;
 }
 
+interface IncomeSnapshot {
+  gross: number;
+  net: number;
+  taxes: number;
+  effectiveRate: number;
+  label: string;
+}
+
 function calculateTaxResults(
   grossAnnual: number,
   filingStatus: string,
@@ -234,6 +244,10 @@ export default function AfterTaxIncomeCalculator() {
   const [stateTaxRate, setStateTaxRate] = useState<string>('9.3');
   const [additionalDeductions, setAdditionalDeductions] = useState<string>('0');
   const [showResults, setShowResults] = useState<boolean>(false);
+
+  // Comparison State
+  const [compareA, setCompareA] = useState<IncomeSnapshot | null>(null);
+  const [compareB, setCompareB] = useState<IncomeSnapshot | null>(null);
 
   const { history, saveEntry, clearHistory } = useCalcHistory<{ incomeAmount: string; payFrequency: string; filingStatus: string; stateTaxRate: string }>('after-tax-income');
 
@@ -814,9 +828,41 @@ export default function AfterTaxIncomeCalculator() {
 
             {/* ---- Net Take-Home Pay ---- */}
             <div className="space-y-3">
-              <h3 className="text-base font-semibold flex items-center gap-2">
-                <Wallet className="h-4.5 w-4.5 text-emerald-500" />
-                Net Take-Home Pay
+              <h3 className="text-base font-semibold flex items-center justify-between gap-2">
+                <span className="flex items-center gap-2">
+                  <Wallet className="h-4.5 w-4.5 text-emerald-500" />
+                  Net Take-Home Pay
+                </span>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCompareA({
+                      gross: results.grossAnnual,
+                      net: results.netAnnual,
+                      taxes: results.totalDeductions,
+                      effectiveRate: results.effectiveTaxRate,
+                      label: `${formatCurrency(results.grossAnnual)} Gross`
+                    })}
+                    className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary"
+                  >
+                    {compareA ? '↺ Set A' : '+ Save A'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCompareB({
+                      gross: results.grossAnnual,
+                      net: results.netAnnual,
+                      taxes: results.totalDeductions,
+                      effectiveRate: results.effectiveTaxRate,
+                      label: `${formatCurrency(results.grossAnnual)} Gross`
+                    })}
+                    className="h-7 text-[10px] px-2 border-amber-500/30 bg-amber-500/5 text-amber-600"
+                  >
+                    {compareB ? '↺ Set B' : '+ Save B'}
+                  </Button>
+                </div>
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {[
@@ -881,6 +927,27 @@ export default function AfterTaxIncomeCalculator() {
           </motion.div>
         )}
       </div>
+
+      {compareA && compareB && (() => {
+        const rows: CompareRow[] = [
+          { label: 'Gross Annual Income', valueA: formatCurrency(compareA.gross), valueB: formatCurrency(compareB.gross), numA: compareA.gross, numB: compareB.gross },
+          { label: 'Net Annual Income',   valueA: formatCurrency(compareA.net),   valueB: formatCurrency(compareB.net),   numA: compareA.net,   numB: compareB.net },
+          { label: 'Total Taxes & Ded.',  valueA: formatCurrency(compareA.taxes), valueB: formatCurrency(compareB.taxes), numA: compareA.taxes, numB: compareB.taxes, higherIsBetter: false },
+          { label: 'Effective Tax Rate',  valueA: formatPercent(compareA.effectiveRate), valueB: formatPercent(compareB.effectiveRate), numA: compareA.effectiveRate, numB: compareB.effectiveRate, higherIsBetter: false },
+        ];
+        return (
+          <div className="px-4 pb-6 sm:px-6">
+            <ComparePanel
+              rows={rows}
+              labelA={compareA.label}
+              labelB={compareB.label}
+              onClear={() => { setCompareA(null); setCompareB(null); }}
+              onSwap={() => { const tmp = compareA; setCompareA(compareB); setCompareB(tmp); }}
+            />
+          </div>
+        );
+      })()}
+
       <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );

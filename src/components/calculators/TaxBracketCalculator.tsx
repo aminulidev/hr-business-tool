@@ -19,6 +19,7 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
+import ComparePanel, { CompareRow } from './ComparePanel';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -237,6 +238,10 @@ export default function TaxBracketCalculator() {
   const [applyDeduction, setApplyDeduction] = useState(true);
   const [result, setResult] = useState<TaxResult | null>(null);
   const { history, saveEntry, clearHistory } = useCalcHistory<{ incomeInput: string; filingStatus: string; applyDeduction: string }>('tax-bracket');
+
+  // ---- Comparison state ----
+  const [compareA, setCompareA] = useState<{ result: TaxResult; label: string } | null>(null);
+  const [compareB, setCompareB] = useState<{ result: TaxResult; label: string } | null>(null);
 
   const handleCalculate = () => {
     const income = parseFloat(incomeInput);
@@ -775,6 +780,46 @@ export default function TaxBracketCalculator() {
           )}
         </motion.div>
       )}
+
+      {/* ---- Comparison save buttons ---- */}
+      {result && (
+        <div className="flex flex-wrap gap-2 mt-4 px-1">
+          <button
+            onClick={() => setCompareA({ result, label: `${formatCurrency(result.grossIncome)} (${filingStatusLabels[filingStatus]})` })}
+            className="text-xs px-3 py-1.5 rounded-lg border border-primary/30 bg-primary/5 text-primary hover:bg-primary/10 transition-colors font-medium"
+          >
+            {compareA ? '↺ Replace Scenario A' : '+ Save as Scenario A'}
+          </button>
+          <button
+            onClick={() => setCompareB({ result, label: `${formatCurrency(result.grossIncome)} (${filingStatusLabels[filingStatus]})` })}
+            className="text-xs px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/5 text-amber-600 hover:bg-amber-500/10 transition-colors font-medium"
+          >
+            {compareB ? '↺ Replace Scenario B' : '+ Save as Scenario B'}
+          </button>
+        </div>
+      )}
+
+      {/* ---- Compare Panel ---- */}
+      {compareA && compareB && (() => {
+        const rows: CompareRow[] = [
+          { label: 'Gross Income',     valueA: formatCurrency(compareA.result.grossIncome),     valueB: formatCurrency(compareB.result.grossIncome),     numA: compareA.result.grossIncome,     numB: compareB.result.grossIncome },
+          { label: 'Taxable Income',   valueA: formatCurrency(compareA.result.taxableIncome),   valueB: formatCurrency(compareB.result.taxableIncome),   numA: compareA.result.taxableIncome,   numB: compareB.result.taxableIncome },
+          { label: 'Total Federal Tax',valueA: formatCurrency(compareA.result.totalTax),        valueB: formatCurrency(compareB.result.totalTax),        numA: compareA.result.totalTax,        numB: compareB.result.totalTax,        higherIsBetter: false },
+          { label: 'Effective Rate',   valueA: `${compareA.result.effectiveRate.toFixed(2)}%`,  valueB: `${compareB.result.effectiveRate.toFixed(2)}%`,  numA: compareA.result.effectiveRate,   numB: compareB.result.effectiveRate,   higherIsBetter: false },
+          { label: 'Marginal Rate',    valueA: `${(compareA.result.marginalRate * 100).toFixed(0)}%`, valueB: `${(compareB.result.marginalRate * 100).toFixed(0)}%`, numA: compareA.result.marginalRate, numB: compareB.result.marginalRate, higherIsBetter: false },
+          { label: 'Est. Take-Home',   valueA: formatCurrency(compareA.result.taxableIncome - compareA.result.totalTax), valueB: formatCurrency(compareB.result.taxableIncome - compareB.result.totalTax), numA: compareA.result.taxableIncome - compareA.result.totalTax, numB: compareB.result.taxableIncome - compareB.result.totalTax },
+        ];
+        return (
+          <ComparePanel
+            rows={rows}
+            labelA={compareA.label}
+            labelB={compareB.label}
+            onClear={() => { setCompareA(null); setCompareB(null); }}
+            onSwap={() => { const tmp = compareA; setCompareA(compareB); setCompareB(tmp); }}
+          />
+        );
+      })()}
+
       <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );

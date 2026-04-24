@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
+import ComparePanel, { CompareRow } from './ComparePanel';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -77,6 +78,10 @@ export default function GrossMarginCalculator() {
   const [result, setResult] = useState<MarginResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { history, saveEntry, clearHistory } = useCalcHistory<{ mode: string; revenue: string; cogs: string; marginPct: string }>('gross-margin');
+
+  // ---- Comparison state ----
+  const [compareA, setCompareA] = useState<{ result: MarginResult; label: string } | null>(null);
+  const [compareB, setCompareB] = useState<{ result: MarginResult; label: string } | null>(null);
 
   const handleSingleCalculate = () => {
     setResult(null);
@@ -662,6 +667,44 @@ export default function GrossMarginCalculator() {
           </motion.div>
         )}
       </div>
+
+      {/* ---- Comparison save buttons ---- */}
+      {result && (
+        <div className="flex flex-wrap gap-2 mt-4 px-1">
+          <button
+            onClick={() => setCompareA({ result, label: `${formatCurrency(result.totalRevenue)} rev · ${result.totalGrossMargin.toFixed(1)}% margin` })}
+            className="text-xs px-3 py-1.5 rounded-lg border border-primary/30 bg-primary/5 text-primary hover:bg-primary/10 transition-colors font-medium"
+          >
+            {compareA ? '↺ Replace Scenario A' : '+ Save as Scenario A'}
+          </button>
+          <button
+            onClick={() => setCompareB({ result, label: `${formatCurrency(result.totalRevenue)} rev · ${result.totalGrossMargin.toFixed(1)}% margin` })}
+            className="text-xs px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/5 text-amber-600 hover:bg-amber-500/10 transition-colors font-medium"
+          >
+            {compareB ? '↺ Replace Scenario B' : '+ Save as Scenario B'}
+          </button>
+        </div>
+      )}
+
+      {/* ---- Compare Panel ---- */}
+      {compareA && compareB && (() => {
+        const rows: CompareRow[] = [
+          { label: 'Total Revenue',   valueA: formatCurrency(compareA.result.totalRevenue),   valueB: formatCurrency(compareB.result.totalRevenue),   numA: compareA.result.totalRevenue,   numB: compareB.result.totalRevenue },
+          { label: 'Total COGS',      valueA: formatCurrency(compareA.result.totalCogs),      valueB: formatCurrency(compareB.result.totalCogs),      numA: compareA.result.totalCogs,      numB: compareB.result.totalCogs,      higherIsBetter: false },
+          { label: 'Gross Profit',    valueA: formatCurrency(compareA.result.totalGrossProfit), valueB: formatCurrency(compareB.result.totalGrossProfit), numA: compareA.result.totalGrossProfit, numB: compareB.result.totalGrossProfit },
+          { label: 'Gross Margin %',  valueA: `${compareA.result.totalGrossMargin.toFixed(2)}%`, valueB: `${compareB.result.totalGrossMargin.toFixed(2)}%`, numA: compareA.result.totalGrossMargin, numB: compareB.result.totalGrossMargin },
+        ];
+        return (
+          <ComparePanel
+            rows={rows}
+            labelA={compareA.label}
+            labelB={compareB.label}
+            onClear={() => { setCompareA(null); setCompareB(null); }}
+            onSwap={() => { const tmp = compareA; setCompareA(compareB); setCompareB(tmp); }}
+          />
+        );
+      })()}
+
       <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );

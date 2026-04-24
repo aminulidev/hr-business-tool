@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import CalculatorLayout from '@/components/calculators/CalculatorLayout';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
+import ComparePanel, { CompareRow } from './ComparePanel';
 
 type CalculationMode = 'gross-to-net' | 'net-to-gross';
 
@@ -38,6 +39,10 @@ export default function PostTaxBonusCalculator() {
   const [additionalRate, setAdditionalRate] = useState<string>('0');
   const [result, setResult] = useState<BonusResult | null>(null);
   const { history, saveEntry, clearHistory } = useCalcHistory<{ mode: string; grossBonus: string; netBonusInput: string; federalRate: string; stateRate: string; additionalRate: string }>('post-tax-bonus');
+
+  // ---- Comparison state ----
+  const [compareA, setCompareA] = useState<{ result: BonusResult; label: string } | null>(null);
+  const [compareB, setCompareB] = useState<{ result: BonusResult; label: string } | null>(null);
 
   const handleCalculate = () => {
     const fed = parseFloat(federalRate) || 0;
@@ -491,6 +496,44 @@ export default function PostTaxBonusCalculator() {
           Total tax rate must be less than 100% for reverse calculation.
         </motion.div>
       )}
+
+      {/* ---- Comparison save buttons ---- */}
+      {result && (
+        <div className="flex flex-wrap gap-2 mt-4 px-1">
+          <button
+            onClick={() => setCompareA({ result, label: `${formatCurrency(result.grossBonus)} Gross (${result.totalTaxRate.toFixed(1)}% tax)` })}
+            className="text-xs px-3 py-1.5 rounded-lg border border-primary/30 bg-primary/5 text-primary hover:bg-primary/10 transition-colors font-medium"
+          >
+            {compareA ? '↺ Replace Scenario A' : '+ Save as Scenario A'}
+          </button>
+          <button
+            onClick={() => setCompareB({ result, label: `${formatCurrency(result.grossBonus)} Gross (${result.totalTaxRate.toFixed(1)}% tax)` })}
+            className="text-xs px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/5 text-amber-600 hover:bg-amber-500/10 transition-colors font-medium"
+          >
+            {compareB ? '↺ Replace Scenario B' : '+ Save as Scenario B'}
+          </button>
+        </div>
+      )}
+
+      {/* ---- Compare Panel ---- */}
+      {compareA && compareB && (() => {
+        const rows: CompareRow[] = [
+          { label: 'Gross Bonus',     valueA: formatCurrency(compareA.result.grossBonus),     valueB: formatCurrency(compareB.result.grossBonus),     numA: compareA.result.grossBonus,     numB: compareB.result.grossBonus },
+          { label: 'Net Bonus',       valueA: formatCurrency(compareA.result.netBonus),       valueB: formatCurrency(compareB.result.netBonus),       numA: compareA.result.netBonus,       numB: compareB.result.netBonus },
+          { label: 'Tax Amount',      valueA: formatCurrency(compareA.result.taxAmount),      valueB: formatCurrency(compareB.result.taxAmount),      numA: compareA.result.taxAmount,      numB: compareB.result.taxAmount,      higherIsBetter: false },
+          { label: 'Total Tax Rate',  valueA: `${compareA.result.totalTaxRate.toFixed(2)}%`,  valueB: `${compareB.result.totalTaxRate.toFixed(2)}%`,  numA: compareA.result.totalTaxRate,   numB: compareB.result.totalTaxRate,   higherIsBetter: false },
+        ];
+        return (
+          <ComparePanel
+            rows={rows}
+            labelA={compareA.label}
+            labelB={compareB.label}
+            onClear={() => { setCompareA(null); setCompareB(null); }}
+            onSwap={() => { const tmp = compareA; setCompareA(compareB); setCompareB(tmp); }}
+          />
+        );
+      })()}
+
       </div>
       <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>

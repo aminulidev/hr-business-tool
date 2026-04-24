@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
+import ComparePanel, { CompareRow } from './ComparePanel';
 import {
   Select,
   SelectContent,
@@ -154,6 +155,10 @@ export default function SalaryConverterCalculator() {
   const [hoursPerWeek, setHoursPerWeek] = useState('40');
   const [results, setResults] = useState<PeriodResult[] | null>(null);
   const { history, saveEntry, clearHistory } = useCalcHistory<{ payAmount: string; payPeriod: string; hoursPerWeek: string }>('salary-converter');
+
+  // ---- Comparison state ----
+  const [compareA, setCompareA] = useState<{ results: PeriodResult[]; label: string } | null>(null);
+  const [compareB, setCompareB] = useState<{ results: PeriodResult[]; label: string } | null>(null);
 
   const effectiveHoursPerWeek = useMemo(
     () => parseFloat(hoursPerWeek) || 40,
@@ -547,6 +552,47 @@ export default function SalaryConverterCalculator() {
           </div>
         </motion.div>
       )}
+
+      {/* ---- Comparison save buttons ---- */}
+      {results && (
+        <div className="flex flex-wrap gap-2 mt-4 px-1">
+          <button
+            onClick={() => setCompareA({ results, label: `${payAmount} ${periodLabels[payPeriod]}` })}
+            className="text-xs px-3 py-1.5 rounded-lg border border-primary/30 bg-primary/5 text-primary hover:bg-primary/10 transition-colors font-medium"
+          >
+            {compareA ? '↺ Replace Scenario A' : '+ Save as Scenario A'}
+          </button>
+          <button
+            onClick={() => setCompareB({ results, label: `${payAmount} ${periodLabels[payPeriod]}` })}
+            className="text-xs px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/5 text-amber-600 hover:bg-amber-500/10 transition-colors font-medium"
+          >
+            {compareB ? '↺ Replace Scenario B' : '+ Save as Scenario B'}
+          </button>
+        </div>
+      )}
+
+      {/* ---- Compare Panel ---- */}
+      {compareA && compareB && (() => {
+        const find = (rs: PeriodResult[], key: PayPeriod) => rs.find(r => r.key === key)?.amount ?? 0;
+        const rows: CompareRow[] = [
+          { label: 'Annual',      valueA: formatCurrency(find(compareA.results, 'annual')),      valueB: formatCurrency(find(compareB.results, 'annual')),      numA: find(compareA.results, 'annual'),      numB: find(compareB.results, 'annual') },
+          { label: 'Monthly',     valueA: formatCurrency(find(compareA.results, 'monthly')),     valueB: formatCurrency(find(compareB.results, 'monthly')),     numA: find(compareA.results, 'monthly'),     numB: find(compareB.results, 'monthly') },
+          { label: 'Bi-Weekly',   valueA: formatCurrency(find(compareA.results, 'biweekly')),   valueB: formatCurrency(find(compareB.results, 'biweekly')),   numA: find(compareA.results, 'biweekly'),   numB: find(compareB.results, 'biweekly') },
+          { label: 'Weekly',      valueA: formatCurrency(find(compareA.results, 'weekly')),      valueB: formatCurrency(find(compareB.results, 'weekly')),      numA: find(compareA.results, 'weekly'),      numB: find(compareB.results, 'weekly') },
+          { label: 'Daily',       valueA: formatCurrency(find(compareA.results, 'daily')),       valueB: formatCurrency(find(compareB.results, 'daily')),       numA: find(compareA.results, 'daily'),       numB: find(compareB.results, 'daily') },
+          { label: 'Hourly',      valueA: formatCurrency(find(compareA.results, 'hourly')),      valueB: formatCurrency(find(compareB.results, 'hourly')),      numA: find(compareA.results, 'hourly'),      numB: find(compareB.results, 'hourly') },
+        ];
+        return (
+          <ComparePanel
+            rows={rows}
+            labelA={compareA.label}
+            labelB={compareB.label}
+            onClear={() => { setCompareA(null); setCompareB(null); }}
+            onSwap={() => { const tmp = compareA; setCompareA(compareB); setCompareB(tmp); }}
+          />
+        );
+      })()}
+
       <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );

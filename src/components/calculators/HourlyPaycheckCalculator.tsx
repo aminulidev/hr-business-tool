@@ -25,6 +25,8 @@ import {
 } from '@/components/ui/select';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
+import ComparePanel, { CompareRow } from './ComparePanel';
+import { formatCurrency, formatPercent } from '@/lib/utils';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -52,12 +54,19 @@ interface HourlyPaycheckResult {
   effectiveRate: number;
 }
 
+interface HourlySnapshot {
+  hourlyRate: number;
+  regularHours: number;
+  overtimeHours: number;
+  grossPeriod: number;
+  netPeriod: number;
+  netYear: number;
+  label: string;
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-const formatCurrency = (value: number): string =>
-  value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
 const PERIODS_PER_YEAR: Record<PayFrequency, number> = {
   weekly: 52,
@@ -89,6 +98,11 @@ export default function HourlyPaycheckCalculator() {
 
   const [result, setResult] = useState<HourlyPaycheckResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Comparison State
+  const [compareA, setCompareA] = useState<HourlySnapshot | null>(null);
+  const [compareB, setCompareB] = useState<HourlySnapshot | null>(null);
+
   const { history, saveEntry, clearHistory } = useCalcHistory<{ hourlyRate: string; regularHours: string; overtimeHours: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string }>('hourly-paycheck');
 
   const handleCalculate = () => {
@@ -567,6 +581,41 @@ export default function HourlyPaycheckCalculator() {
                   Effective: {formatCurrency(result.effectiveHourlyRate)}/hr
                 </Badge>
               </div>
+
+              <div className="flex items-center justify-center gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCompareA({
+                    hourlyRate: result.hourlyRate,
+                    regularHours: result.regularHours,
+                    overtimeHours: result.overtimeHours,
+                    grossPeriod: result.grossPerPeriod,
+                    netPeriod: result.netPayPerPeriod,
+                    netYear: result.netPayPerYear,
+                    label: `${formatCurrency(result.hourlyRate)}/hr (${result.regularHours}h)`
+                  })}
+                  className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary"
+                >
+                  {compareA ? '↺ Set A' : '+ Save A'}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCompareB({
+                    hourlyRate: result.hourlyRate,
+                    regularHours: result.regularHours,
+                    overtimeHours: result.overtimeHours,
+                    grossPeriod: result.grossPerPeriod,
+                    netPeriod: result.netPayPerPeriod,
+                    netYear: result.netPayPerYear,
+                    label: `${formatCurrency(result.hourlyRate)}/hr (${result.regularHours}h)`
+                  })}
+                  className="h-7 text-[10px] px-2 border-amber-500/30 bg-amber-500/5 text-amber-600"
+                >
+                  {compareB ? '↺ Set B' : '+ Save B'}
+                </Button>
+              </div>
             </div>
 
             {/* Key Metrics */}
@@ -804,6 +853,28 @@ export default function HourlyPaycheckCalculator() {
           </div>
         </motion.div>
       )}
+      {compareA && compareB && (() => {
+        const rows: CompareRow[] = [
+          { label: 'Hourly Rate',     valueA: formatCurrency(compareA.hourlyRate),     valueB: formatCurrency(compareB.hourlyRate),     numA: compareA.hourlyRate,     numB: compareB.hourlyRate },
+          { label: 'Regular Hours',   valueA: `${compareA.regularHours}h`,             valueB: `${compareB.regularHours}h`,             numA: compareA.regularHours,   numB: compareB.regularHours },
+          { label: 'Overtime Hours',  valueA: `${compareA.overtimeHours}h`,            valueB: `${compareB.overtimeHours}h`,            numA: compareA.overtimeHours,  numB: compareB.overtimeHours },
+          { label: 'Gross Pay (Period)', valueA: formatCurrency(compareA.grossPeriod),  valueB: formatCurrency(compareB.grossPeriod),  numA: compareA.grossPeriod,    numB: compareB.grossPeriod },
+          { label: 'Net Pay (Period)',   valueA: formatCurrency(compareA.netPeriod),    valueB: formatCurrency(compareB.netPeriod),    numA: compareA.netPeriod,      numB: compareB.netPeriod },
+          { label: 'Net Pay (Year)',     valueA: formatCurrency(compareA.netYear),      valueB: formatCurrency(compareB.netYear),      numA: compareA.netYear,        numB: compareB.netYear },
+        ];
+        return (
+          <div className="px-4 pb-6 sm:px-6">
+            <ComparePanel
+              rows={rows}
+              labelA={compareA.label}
+              labelB={compareB.label}
+              onClear={() => { setCompareA(null); setCompareB(null); }}
+              onSwap={() => { const tmp = compareA; setCompareA(compareB); setCompareB(tmp); }}
+            />
+          </div>
+        );
+      })()}
+
       <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );

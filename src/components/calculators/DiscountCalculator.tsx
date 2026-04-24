@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
+import ComparePanel, { CompareRow } from './ComparePanel';
 import {
   Select,
   SelectContent,
@@ -50,6 +51,10 @@ export default function DiscountCalculator() {
   const [result, setResult] = useState<DiscountResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { history, saveEntry, clearHistory } = useCalcHistory<{ originalPrice: string; discountType: string; discountValue: string; enableSecondDiscount: boolean; secondDiscountValue: string }>('discount');
+
+  // ---- Comparison state ----
+  const [compareA, setCompareA] = useState<{ result: DiscountResult; label: string } | null>(null);
+  const [compareB, setCompareB] = useState<{ result: DiscountResult; label: string } | null>(null);
 
   const handleCalculate = () => {
     setResult(null);
@@ -650,6 +655,44 @@ export default function DiscountCalculator() {
           </div>
         </motion.div>
       )}
+
+      {/* ---- Comparison save buttons ---- */}
+      {result && (
+        <div className="flex flex-wrap gap-2 mt-4 px-1">
+          <button
+            onClick={() => setCompareA({ result, label: `${formatCurrency(result.originalPrice)} · ${result.savingsPercent.toFixed(1)}% off` })}
+            className="text-xs px-3 py-1.5 rounded-lg border border-primary/30 bg-primary/5 text-primary hover:bg-primary/10 transition-colors font-medium"
+          >
+            {compareA ? '↺ Replace Scenario A' : '+ Save as Scenario A'}
+          </button>
+          <button
+            onClick={() => setCompareB({ result, label: `${formatCurrency(result.originalPrice)} · ${result.savingsPercent.toFixed(1)}% off` })}
+            className="text-xs px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/5 text-amber-600 hover:bg-amber-500/10 transition-colors font-medium"
+          >
+            {compareB ? '↺ Replace Scenario B' : '+ Save as Scenario B'}
+          </button>
+        </div>
+      )}
+
+      {/* ---- Compare Panel ---- */}
+      {compareA && compareB && (() => {
+        const rows: CompareRow[] = [
+          { label: 'Original Price', valueA: formatCurrency(compareA.result.originalPrice), valueB: formatCurrency(compareB.result.originalPrice), numA: compareA.result.originalPrice, numB: compareB.result.originalPrice, higherIsBetter: false },
+          { label: 'Final Price',    valueA: formatCurrency(compareA.result.finalPrice),    valueB: formatCurrency(compareB.result.finalPrice),    numA: compareA.result.finalPrice,    numB: compareB.result.finalPrice,    higherIsBetter: false },
+          { label: 'Total Saved',    valueA: formatCurrency(compareA.result.totalSaved),    valueB: formatCurrency(compareB.result.totalSaved),    numA: compareA.result.totalSaved,    numB: compareB.result.totalSaved },
+          { label: 'Savings %',      valueA: `${compareA.result.savingsPercent.toFixed(1)}%`, valueB: `${compareB.result.savingsPercent.toFixed(1)}%`, numA: compareA.result.savingsPercent, numB: compareB.result.savingsPercent },
+        ];
+        return (
+          <ComparePanel
+            rows={rows}
+            labelA={compareA.label}
+            labelB={compareB.label}
+            onClear={() => { setCompareA(null); setCompareB(null); }}
+            onSwap={() => { const tmp = compareA; setCompareA(compareB); setCompareB(tmp); }}
+          />
+        );
+      })()}
+
       <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );

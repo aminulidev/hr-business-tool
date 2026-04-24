@@ -11,6 +11,15 @@ import { Badge } from '@/components/ui/badge';
 import CalculatorLayout from '@/components/calculators/CalculatorLayout';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
+import ComparePanel, { CompareRow } from './ComparePanel';
+
+interface SalaryIncreaseResult {
+  currentSalary: number;
+  salaryIncrease: number;
+  increaseAmount: number;
+  newSalary: number;
+  realIncrease: number;
+}
 
 const formatCurrency = (value: number): string =>
   value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -24,6 +33,10 @@ export default function SalaryIncreaseCalculator() {
   const [inflationRate, setInflationRate] = useState<string>('3.0');
   const [calculated, setCalculated] = useState(false);
   const { history, saveEntry, clearHistory } = useCalcHistory<{ currentSalary: string; salaryIncrease: string; inflationRate: string }>('salary-increase');
+
+  // ---- Comparison state ----
+  const [compareA, setCompareA] = useState<{ result: SalaryIncreaseResult; label: string } | null>(null);
+  const [compareB, setCompareB] = useState<{ result: SalaryIncreaseResult; label: string } | null>(null);
 
   const currentSalaryNum = parseFloat(currentSalary) || 0;
   const salaryIncreaseNum = parseFloat(salaryIncrease) || 0;
@@ -403,6 +416,51 @@ export default function SalaryIncreaseCalculator() {
         </motion.div>
       )}
       </div>
+
+      {/* ---- Comparison save buttons ---- */}
+      {calculated && (
+        <div className="flex flex-wrap gap-2 mt-4 px-1">
+          <button
+            onClick={() => {
+              const res: SalaryIncreaseResult = { currentSalary: currentSalaryNum, salaryIncrease: salaryIncreaseNum, increaseAmount, newSalary, realIncrease };
+              setCompareA({ result: res, label: `${formatCurrency(currentSalaryNum)} + ${salaryIncreaseNum}%` });
+            }}
+            className="text-xs px-3 py-1.5 rounded-lg border border-primary/30 bg-primary/5 text-primary hover:bg-primary/10 transition-colors font-medium"
+          >
+            {compareA ? '↺ Replace Scenario A' : '+ Save as Scenario A'}
+          </button>
+          <button
+            onClick={() => {
+              const res: SalaryIncreaseResult = { currentSalary: currentSalaryNum, salaryIncrease: salaryIncreaseNum, increaseAmount, newSalary, realIncrease };
+              setCompareB({ result: res, label: `${formatCurrency(currentSalaryNum)} + ${salaryIncreaseNum}%` });
+            }}
+            className="text-xs px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/5 text-amber-600 hover:bg-amber-500/10 transition-colors font-medium"
+          >
+            {compareB ? '↺ Replace Scenario B' : '+ Save as Scenario B'}
+          </button>
+        </div>
+      )}
+
+      {/* ---- Compare Panel ---- */}
+      {compareA && compareB && (() => {
+        const rows: CompareRow[] = [
+          { label: 'Current Salary', valueA: formatCurrency(compareA.result.currentSalary),  valueB: formatCurrency(compareB.result.currentSalary),  numA: compareA.result.currentSalary,  numB: compareB.result.currentSalary },
+          { label: 'Raise %',        valueA: `${compareA.result.salaryIncrease.toFixed(2)}%`,valueB: `${compareB.result.salaryIncrease.toFixed(2)}%`,numA: compareA.result.salaryIncrease, numB: compareB.result.salaryIncrease },
+          { label: 'Raise Amount',   valueA: formatCurrency(compareA.result.increaseAmount), valueB: formatCurrency(compareB.result.increaseAmount), numA: compareA.result.increaseAmount, numB: compareB.result.increaseAmount },
+          { label: 'New Salary',     valueA: formatCurrency(compareA.result.newSalary),      valueB: formatCurrency(compareB.result.newSalary),      numA: compareA.result.newSalary,      numB: compareB.result.newSalary },
+          { label: 'Real Increase',  valueA: `${compareA.result.realIncrease.toFixed(2)}%`,  valueB: `${compareB.result.realIncrease.toFixed(2)}%`,  numA: compareA.result.realIncrease,   numB: compareB.result.realIncrease },
+        ];
+        return (
+          <ComparePanel
+            rows={rows}
+            labelA={compareA.label}
+            labelB={compareB.label}
+            onClear={() => { setCompareA(null); setCompareB(null); }}
+            onSwap={() => { const tmp = compareA; setCompareA(compareB); setCompareB(tmp); }}
+          />
+        );
+      })()}
+
       <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );

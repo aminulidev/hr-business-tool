@@ -9,18 +9,30 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import CalculatorLayout from '@/components/calculators/CalculatorLayout';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
+import ComparePanel, { CompareRow } from './ComparePanel';
+import { formatCurrency, formatPercent } from '@/lib/utils';
 
-const formatCurrency = (value: number): string =>
-  value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-
-const formatPercent = (value: number): string =>
-  `${value.toFixed(2)}%`;
+interface ProRataSnapshot {
+  annualSalary: number;
+  actualDays: number;
+  proRataSalary: number;
+  percentage: number;
+  label: string;
+}
 
 export default function ProRataSalaryCalculator() {
   const [annualSalary, setAnnualSalary] = useState<string>('');
   const [fullWorkingDays, setFullWorkingDays] = useState<string>('260');
   const [actualDaysWorked, setActualDaysWorked] = useState<string>('');
   const [calculated, setCalculated] = useState(false);
+
+  // Comparison State
+  const [compareA, setCompareA] = useState<ProRataSnapshot | null>(null);
+  const [compareB, setCompareB] = useState<ProRataSnapshot | null>(null);
+
+  const { history, saveEntry, clearHistory } = useCalcHistory<{ annualSalary: string; actualDaysWorked: string; fullWorkingDays: string }>('pro-rata-salary');
 
   const annualSalaryNum = parseFloat(annualSalary) || 0;
   const fullWorkingDaysNum = parseFloat(fullWorkingDays) || 260;
@@ -36,7 +48,18 @@ export default function ProRataSalaryCalculator() {
   const handleCalculate = () => {
     if (annualSalaryNum > 0 && actualDaysWorkedNum > 0 && fullWorkingDaysNum > 0) {
       setCalculated(true);
+      saveEntry(
+        { annualSalary, actualDaysWorked, fullWorkingDays },
+        `${formatCurrency(annualSalaryNum)} salary, ${actualDaysWorkedNum}/${fullWorkingDaysNum} days — Result: ${formatCurrency(proRataSalary)}`
+      );
     }
+  };
+
+  const handleRestore = (inputs: { annualSalary: string; actualDaysWorked: string; fullWorkingDays: string }) => {
+    setAnnualSalary(inputs.annualSalary);
+    setActualDaysWorked(inputs.actualDaysWorked);
+    setFullWorkingDays(inputs.fullWorkingDays);
+    setCalculated(true);
   };
 
   const handleReset = () => {
@@ -241,6 +264,36 @@ export default function ProRataSalaryCalculator() {
             <p className="text-4xl font-bold text-emerald-600">
               {formatCurrency(proRataSalary)}
             </p>
+            <div className="flex justify-center gap-2 mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCompareA({
+                  annualSalary: annualSalaryNum,
+                  actualDays: actualDaysWorkedNum,
+                  proRataSalary: proRataSalary,
+                  percentage: percentageOfFull,
+                  label: `${actualDaysWorkedNum} days worked`
+                })}
+                className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary"
+              >
+                {compareA ? '↺ Set A' : '+ Save A'}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCompareB({
+                  annualSalary: annualSalaryNum,
+                  actualDays: actualDaysWorkedNum,
+                  proRataSalary: proRataSalary,
+                  percentage: percentageOfFull,
+                  label: `${actualDaysWorkedNum} days worked`
+                })}
+                className="h-7 text-[10px] px-2 border-amber-500/30 bg-amber-500/5 text-amber-600"
+              >
+                {compareB ? '↺ Set B' : '+ Save B'}
+              </Button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -341,6 +394,28 @@ export default function ProRataSalaryCalculator() {
         </motion.div>
       )}
       </div>
+
+      {compareA && compareB && (() => {
+        const rows: CompareRow[] = [
+          { label: 'Full Annual Salary', valueA: formatCurrency(compareA.annualSalary), valueB: formatCurrency(compareB.annualSalary), numA: compareA.annualSalary, numB: compareB.annualSalary },
+          { label: 'Actual Days Worked', valueA: `${compareA.actualDays} days`,         valueB: `${compareB.actualDays} days`,         numA: compareA.actualDays,   numB: compareB.actualDays },
+          { label: 'Pro Rata Salary',    valueA: formatCurrency(compareA.proRataSalary), valueB: formatCurrency(compareB.proRataSalary), numA: compareA.proRataSalary, numB: compareB.proRataSalary },
+          { label: '% of Full Salary',   valueA: formatPercent(compareA.percentage),    valueB: formatPercent(compareB.percentage),    numA: compareA.percentage,    numB: compareB.percentage },
+        ];
+        return (
+          <div className="px-4 pb-6 sm:px-6">
+            <ComparePanel
+              rows={rows}
+              labelA={compareA.label}
+              labelB={compareB.label}
+              onClear={() => { setCompareA(null); setCompareB(null); }}
+              onSwap={() => { const tmp = compareA; setCompareA(compareB); setCompareB(tmp); }}
+            />
+          </div>
+        );
+      })()}
+
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
 }

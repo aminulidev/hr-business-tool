@@ -18,6 +18,8 @@ import {
 } from '@/components/ui/select';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
+import ComparePanel, { CompareRow } from './ComparePanel';
+import { formatCurrency, formatPercent } from '@/lib/utils';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -46,12 +48,17 @@ interface JurisdictionComparison {
   monthlyTax: number;
 }
 
+interface PropertySnapshot {
+  marketValue: number;
+  taxableValue: number;
+  annualTax: number;
+  effectiveRate: number;
+  label: string;
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-const formatCurrency = (value: number): string =>
-  value.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
 const formatCurrencyExact = (value: number): string =>
   value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -127,6 +134,10 @@ export default function PropertyTaxCalculator() {
   const [targetTax, setTargetTax] = useState('');
   const [result, setResult] = useState<TaxResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Comparison State
+  const [compareA, setCompareA] = useState<PropertySnapshot | null>(null);
+  const [compareB, setCompareB] = useState<PropertySnapshot | null>(null);
   const { history, saveEntry, clearHistory } = useCalcHistory<{ mode: string; assessedValue: string; rateMode: string; taxRate: string; assessmentRatio: string; exemptions: string }>('property-tax');
 
   const handleCalculate = () => {
@@ -579,6 +590,37 @@ export default function PropertyTaxCalculator() {
                     {formatCurrencyExact(result.monthlyTax)}/month
                   </Badge>
                 )}
+
+                <div className="flex items-center justify-center gap-2 pt-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCompareA({
+                      marketValue: result.assessedValue,
+                      taxableValue: result.taxableValue,
+                      annualTax: result.annualTax,
+                      effectiveRate: result.effectiveRate,
+                      label: `${formatCurrency(result.assessedValue)} Home`
+                    })}
+                    className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary"
+                  >
+                    {compareA ? '↺ Set A' : '+ Save A'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCompareB({
+                      marketValue: result.assessedValue,
+                      taxableValue: result.taxableValue,
+                      annualTax: result.annualTax,
+                      effectiveRate: result.effectiveRate,
+                      label: `${formatCurrency(result.assessedValue)} Home`
+                    })}
+                    className="h-7 text-[10px] px-2 border-amber-500/30 bg-amber-500/5 text-amber-600"
+                  >
+                    {compareB ? '↺ Set B' : '+ Save B'}
+                  </Button>
+                </div>
               </div>
 
               {/* Key Metrics */}
@@ -730,6 +772,26 @@ export default function PropertyTaxCalculator() {
           </motion.div>
         )}
       </div>
+      {compareA && compareB && (() => {
+        const rows: CompareRow[] = [
+          { label: 'Market Value',     valueA: formatCurrency(compareA.marketValue),  valueB: formatCurrency(compareB.marketValue),  numA: compareA.marketValue,  numB: compareB.marketValue },
+          { label: 'Taxable Value',    valueA: formatCurrency(compareA.taxableValue), valueB: formatCurrency(compareB.taxableValue), numA: compareA.taxableValue, numB: compareB.taxableValue },
+          { label: 'Annual Prop Tax',  valueA: formatCurrencyExact(compareA.annualTax), valueB: formatCurrencyExact(compareB.annualTax), numA: compareA.annualTax, numB: compareB.annualTax, higherIsBetter: false },
+          { label: 'Effective Tax Rate', valueA: formatPercent(compareA.effectiveRate), valueB: formatPercent(compareB.effectiveRate), numA: compareA.effectiveRate, numB: compareB.effectiveRate, higherIsBetter: false },
+        ];
+        return (
+          <div className="px-4 pb-6 sm:px-6">
+            <ComparePanel
+              rows={rows}
+              labelA={compareA.label}
+              labelB={compareB.label}
+              onClear={() => { setCompareA(null); setCompareB(null); }}
+              onSwap={() => { const tmp = compareA; setCompareA(compareB); setCompareB(tmp); }}
+            />
+          </div>
+        );
+      })()}
+
       <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );

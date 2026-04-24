@@ -12,6 +12,7 @@ import CalculatorLayout from '@/components/calculators/CalculatorLayout';
 import TryExample from './TryExample';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
+import ComparePanel, { CompareRow } from './ComparePanel';
 
 interface ROIResult {
   initialInvestment: number;
@@ -79,6 +80,10 @@ export default function ROICalculator() {
   const [additionalContributions, setAdditionalContributions] = useState<string>('0');
   const [result, setResult] = useState<ROIResult | null>(null);
   const { history, saveEntry, clearHistory } = useCalcHistory<{ initialInvestment: string; finalValue: string; duration: string; additionalContributions: string }>('roi');
+
+  // ---- Comparison state ----
+  const [compareA, setCompareA] = useState<{ result: ROIResult; label: string } | null>(null);
+  const [compareB, setCompareB] = useState<{ result: ROIResult; label: string } | null>(null);
 
   const handleTryExample = () => {
     setInitialInvestment('10000');
@@ -516,6 +521,44 @@ export default function ROICalculator() {
         </div>
       )}
       </div>
+
+      {/* ---- Comparison save buttons ---- */}
+      {result && (
+        <div className="flex flex-wrap gap-2 mt-4 px-1">
+          <button
+            onClick={() => setCompareA({ result, label: `${formatCurrency(result.totalInvested)} for ${result.years}yr` })}
+            className="text-xs px-3 py-1.5 rounded-lg border border-primary/30 bg-primary/5 text-primary hover:bg-primary/10 transition-colors font-medium"
+          >
+            {compareA ? '↺ Replace Scenario A' : '+ Save as Scenario A'}
+          </button>
+          <button
+            onClick={() => setCompareB({ result, label: `${formatCurrency(result.totalInvested)} for ${result.years}yr` })}
+            className="text-xs px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/5 text-amber-600 hover:bg-amber-500/10 transition-colors font-medium"
+          >
+            {compareB ? '↺ Replace Scenario B' : '+ Save as Scenario B'}
+          </button>
+        </div>
+      )}
+
+      {/* ---- Compare Panel ---- */}
+      {compareA && compareB && (() => {
+        const rows: CompareRow[] = [
+          { label: 'Total Invested',  valueA: formatCurrency(compareA.result.totalInvested),  valueB: formatCurrency(compareB.result.totalInvested),  numA: compareA.result.totalInvested,  numB: compareB.result.totalInvested,  higherIsBetter: false },
+          { label: 'Final Value',     valueA: formatCurrency(compareA.result.finalValue),     valueB: formatCurrency(compareB.result.finalValue),     numA: compareA.result.finalValue,     numB: compareB.result.finalValue },
+          { label: 'Total Profit',    valueA: formatCurrency(compareA.result.totalProfit),    valueB: formatCurrency(compareB.result.totalProfit),    numA: compareA.result.totalProfit,    numB: compareB.result.totalProfit },
+          { label: 'ROI %',           valueA: formatPercent(compareA.result.roi),             valueB: formatPercent(compareB.result.roi),             numA: compareA.result.roi,            numB: compareB.result.roi },
+          { label: 'Annualized ROI',  valueA: formatPercent(compareA.result.annualizedROI),   valueB: formatPercent(compareB.result.annualizedROI),   numA: compareA.result.annualizedROI,  numB: compareB.result.annualizedROI },
+        ];
+        return (
+          <ComparePanel
+            rows={rows}
+            labelA={compareA.label}
+            labelB={compareB.label}
+            onClear={() => { setCompareA(null); setCompareB(null); }}
+            onSwap={() => { const tmp = compareA; setCompareA(compareB); setCompareB(tmp); }}
+          />
+        );
+      })()}
       <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
     </CalculatorLayout>
   );
