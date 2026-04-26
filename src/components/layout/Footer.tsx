@@ -25,6 +25,12 @@ export default function Footer() {
         <nav aria-label="Footer navigation">
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground/60 mb-3">
             <Link
+              href="/blog"
+              className="hover:text-foreground transition-colors duration-200 underline-offset-2 hover:underline"
+            >
+              Blog
+            </Link>
+            <Link
               href="/about"
               className="hover:text-foreground transition-colors duration-200 underline-offset-2 hover:underline"
             >

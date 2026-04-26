@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calculator, ArrowLeft, Info, Mail, Menu, X, Search } from 'lucide-react';
+import { Calculator, ArrowLeft, Info, Mail, Menu, X, Search, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { calculators, type CalculatorMeta } from '@/lib/calculator-meta';
 
@@ -215,6 +215,12 @@ export default function Header() {
                     </Button>
                   </Link>
                 )}
+                <Link href="/blog">
+                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                    <BookOpen className="h-3.5 w-3.5 mr-1.5" />
+                    Blog
+                  </Button>
+                </Link>
                 <Link href="/about">
                   <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
                     <Info className="h-3.5 w-3.5 mr-1.5" />
@@ -265,6 +271,14 @@ export default function Header() {
                   All Calculators
                 </Link>
               )}
+              <Link
+                href="/blog"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
+              >
+                <BookOpen className="h-4 w-4" />
+                Blog
+              </Link>
               <Link
                 href="/about"
                 onClick={() => setMobileMenuOpen(false)}

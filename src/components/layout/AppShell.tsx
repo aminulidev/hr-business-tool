@@ -4,10 +4,14 @@ import { motion } from 'framer-motion';
 import Header from './Header';
 import Footer from './Footer';
 import CookieConsentBanner from './CookieConsentBanner';
+import Scripts from '../analytics/Scripts';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col mesh-gradient relative overflow-hidden">
+      {/* Analytics & Ads */}
+      <Scripts />
+
       {/* Animated background orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
         <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl animate-float" />

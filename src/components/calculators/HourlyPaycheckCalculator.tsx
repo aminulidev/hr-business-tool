@@ -557,6 +557,7 @@ export default function HourlyPaycheckCalculator() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className="mt-8 px-4 sm:px-6"
+          aria-live="polite"
         >
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
             {/* Main Result */}

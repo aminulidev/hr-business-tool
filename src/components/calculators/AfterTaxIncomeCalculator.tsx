@@ -642,6 +642,7 @@ export default function AfterTaxIncomeCalculator() {
         {showResults && results && (
           <motion.div
             className="space-y-6 pt-2"
+            aria-live="polite"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
