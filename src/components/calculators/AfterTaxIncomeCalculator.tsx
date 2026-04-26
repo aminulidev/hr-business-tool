@@ -249,7 +249,7 @@ export default function AfterTaxIncomeCalculator() {
   const [compareA, setCompareA] = useState<IncomeSnapshot | null>(null);
   const [compareB, setCompareB] = useState<IncomeSnapshot | null>(null);
 
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ incomeAmount: string; payFrequency: string; filingStatus: string; stateTaxRate: string }>('after-tax-income');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ incomeAmount: string; payFrequency: string; filingStatus: string; stateTaxRate: string }>('after-tax-income');
 
   // ---- Computed Results ----
   const results = useMemo<TaxResults | null>(() => {
@@ -949,7 +949,8 @@ export default function AfterTaxIncomeCalculator() {
         );
       })()}
 
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

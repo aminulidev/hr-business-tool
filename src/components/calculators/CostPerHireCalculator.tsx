@@ -27,7 +27,7 @@ export default function CostPerHireCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<CphSnap | null>(null);
   const [compareB, setCompareB] = useState<CphSnap | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ numHires: string; internalRecruiting: string; externalAgency: string }>('cost-per-hire');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ numHires: string; internalRecruiting: string; externalAgency: string }>('cost-per-hire');
 
   const parse = (v: string) => parseFloat(v) || 0;
   const internal = parse(internalRecruiting);
@@ -215,7 +215,8 @@ export default function CostPerHireCalculator() {
           </div>
         );
       })()}
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

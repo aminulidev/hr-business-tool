@@ -26,7 +26,7 @@ export default function BillableHoursCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<BhSnap | null>(null);
   const [compareB, setCompareB] = useState<BhSnap | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ totalHours: string; nonBillableHours: string; billingRate: string; period: string }>('billable-hours');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ totalHours: string; nonBillableHours: string; billingRate: string; period: string }>('billable-hours');
 
   const totalNum = parseFloat(totalHours) || 0;
   const nonBillNum = parseFloat(nonBillableHours) || 0;
@@ -277,7 +277,8 @@ export default function BillableHoursCalculator() {
           </div>
         );
       })()}
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

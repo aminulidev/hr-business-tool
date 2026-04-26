@@ -10,6 +10,7 @@ interface CalcHistoryPanelProps<T = Record<string, string>> {
   history: CalcHistoryEntry<T>[];
   onRestore: (inputs: T) => void;
   onClear: () => void;
+  onDelete?: (id: string) => void;
 }
 
 function formatRelativeTime(timestamp: number): string {
@@ -28,6 +29,7 @@ export default function CalcHistoryPanel<T = Record<string, string>>({
   history,
   onRestore,
   onClear,
+  onDelete,
 }: CalcHistoryPanelProps<T>) {
   const [open, setOpen] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
@@ -46,7 +48,7 @@ export default function CalcHistoryPanel<T = Record<string, string>>({
   };
 
   return (
-    <div className="mt-4 border border-border/50 rounded-xl overflow-hidden">
+    <div className="mt-4 border border-border/50 rounded-xl overflow-hidden mx-4 sm:mx-6">
       {/* Toggle Header */}
       <button
         type="button"
@@ -106,6 +108,24 @@ export default function CalcHistoryPanel<T = Record<string, string>>({
                     <RotateCcw className="h-3 w-3 mr-1" />
                     Restore
                   </Button>
+
+                  {/* Delete Entry Button */}
+                  {onDelete && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(entry.id);
+                      }}
+                      className="shrink-0 h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-red-600 hover:text-red-700 hover:bg-red-500/10"
+                      title="Delete this entry"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      <span className="sr-only">Delete</span>
+                    </Button>
+                  )}
                 </div>
               ))}
             </div>
@@ -117,11 +137,10 @@ export default function CalcHistoryPanel<T = Record<string, string>>({
                 variant="ghost"
                 size="sm"
                 onClick={handleClear}
-                className={`h-7 px-3 text-xs transition-colors ${
-                  confirmClear
-                    ? 'text-red-600 hover:text-red-700 hover:bg-red-500/10'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
+                className={`h-7 px-3 text-xs transition-colors ${confirmClear
+                  ? 'text-red-600 hover:text-red-700 hover:bg-red-500/10'
+                  : 'text-muted-foreground hover:text-foreground'
+                  }`}
               >
                 <Trash2 className="h-3 w-3 mr-1.5" />
                 {confirmClear ? 'Click again to confirm' : 'Clear all'}

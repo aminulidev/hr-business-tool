@@ -29,7 +29,7 @@ export default function FicaTaxCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<FicaSnapshot | null>(null);
   const [compareB, setCompareB] = useState<FicaSnapshot | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ grossWages: string; selfEmployed: string }>('fica-tax');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ grossWages: string; selfEmployed: string }>('fica-tax');
 
   const gross = parseFloat(grossWages) || 0;
   const isSE = selfEmployed === 'self-employed';
@@ -241,7 +241,8 @@ export default function FicaTaxCalculator() {
           </div>
         );
       })()}
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

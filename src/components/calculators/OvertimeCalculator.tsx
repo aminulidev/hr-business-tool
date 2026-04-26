@@ -114,7 +114,7 @@ export default function OvertimeCalculator() {
 
   // Results
   const [result, setResult] = useState<OvertimeResult | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{
     hourlyRateInput: string; regularHoursInput: string; overtimeHoursInput: string;
     multiplierPreset: string; customMultiplierInput: string; weeklyHoursInput: string;
   }>('overtime');
@@ -595,7 +595,8 @@ export default function OvertimeCalculator() {
         );
       })()}
 
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

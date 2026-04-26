@@ -34,7 +34,7 @@ export default function RevenuePerEmployeeCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<RpeSnap | null>(null);
   const [compareB, setCompareB] = useState<RpeSnap | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ annualRevenue: string; numEmployees: string }>('revenue-per-employee');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualRevenue: string; numEmployees: string }>('revenue-per-employee');
 
   const revenueNum = parseFloat(annualRevenue.replace(/,/g, '')) || 0;
   const empNum = parseFloat(numEmployees) || 0;
@@ -229,7 +229,8 @@ export default function RevenuePerEmployeeCalculator() {
           </div>
         );
       })()}
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

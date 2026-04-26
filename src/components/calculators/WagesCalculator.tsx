@@ -117,7 +117,7 @@ export default function WagesCalculator() {
   const [compareA, setCompareA] = useState<WageSnapshot | null>(null);
   const [compareB, setCompareB] = useState<WageSnapshot | null>(null);
 
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ payPeriod: string; overtimeMultiplier: string; doubleTimeMultiplier: string; firstRate: string }>('wages');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ payPeriod: string; overtimeMultiplier: string; doubleTimeMultiplier: string; firstRate: string }>('wages');
 
   const updateEntry = (id: number, field: keyof WageEntry, value: string) => {
     setEntries((prev) =>
@@ -868,7 +868,8 @@ export default function WagesCalculator() {
         );
       })()}
 
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

@@ -64,7 +64,7 @@ export default function PayrollCalculator() {
   const [stateTaxRate, setStateTaxRate] = useState('5');
   const [otherDeductions, setOtherDeductions] = useState('0');
   const [result, setResult] = useState<PayrollResult | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<PayrollInputs>('payroll');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<PayrollInputs>('payroll');
 
   const handleTryExample = () => {
     setSalaryInput('75000');
@@ -489,7 +489,8 @@ export default function PayrollCalculator() {
           </div>
         </motion.div>
       )}
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

@@ -38,7 +38,7 @@ export default function PostTaxBonusCalculator() {
   const [stateRate, setStateRate] = useState<string>('5');
   const [additionalRate, setAdditionalRate] = useState<string>('0');
   const [result, setResult] = useState<BonusResult | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ mode: string; grossBonus: string; netBonusInput: string; federalRate: string; stateRate: string; additionalRate: string }>('post-tax-bonus');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; grossBonus: string; netBonusInput: string; federalRate: string; stateRate: string; additionalRate: string }>('post-tax-bonus');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: BonusResult; label: string } | null>(null);
@@ -535,7 +535,8 @@ export default function PostTaxBonusCalculator() {
       })()}
 
       </div>
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

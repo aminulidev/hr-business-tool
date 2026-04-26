@@ -32,7 +32,7 @@ export default function ProRataSalaryCalculator() {
   const [compareA, setCompareA] = useState<ProRataSnapshot | null>(null);
   const [compareB, setCompareB] = useState<ProRataSnapshot | null>(null);
 
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ annualSalary: string; actualDaysWorked: string; fullWorkingDays: string }>('pro-rata-salary');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualSalary: string; actualDaysWorked: string; fullWorkingDays: string }>('pro-rata-salary');
 
   const annualSalaryNum = parseFloat(annualSalary) || 0;
   const fullWorkingDaysNum = parseFloat(fullWorkingDays) || 260;
@@ -415,7 +415,8 @@ export default function ProRataSalaryCalculator() {
         );
       })()}
 
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

@@ -60,6 +60,14 @@ export function useCalcHistory<T = Record<string, string>>(slug: CalculatorSlug)
     [slug]
   );
 
+  const deleteEntry = useCallback((id: string) => {
+    setHistory((prev) => {
+      const updated = prev.filter(entry => entry.id !== id);
+      writeStorage<T>(slug, updated);
+      return updated;
+    });
+  }, [slug]);
+
   const clearHistory = useCallback(() => {
     setHistory([]);
     if (typeof window !== 'undefined') {
@@ -67,5 +75,5 @@ export function useCalcHistory<T = Record<string, string>>(slug: CalculatorSlug)
     }
   }, [slug]);
 
-  return { history, saveEntry, clearHistory };
+  return { history, saveEntry, deleteEntry, clearHistory };
 }

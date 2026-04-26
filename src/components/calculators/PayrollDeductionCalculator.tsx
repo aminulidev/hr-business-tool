@@ -90,7 +90,7 @@ export default function PayrollDeductionCalculator() {
 
   const [result, setResult] = useState<DeductionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ grossPay: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string; k401Pct: string }>('payroll-deduction');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ grossPay: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string; k401Pct: string }>('payroll-deduction');
 
   const handleCalculate = () => {
     setError(null);
@@ -858,7 +858,8 @@ export default function PayrollDeductionCalculator() {
           </div>
         </motion.div>
       )}
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

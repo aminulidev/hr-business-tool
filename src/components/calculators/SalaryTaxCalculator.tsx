@@ -147,7 +147,7 @@ export default function SalaryTaxCalculator() {
 
   const [result, setResult] = useState<SalaryTaxResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ salary: string; filingStatus: string; stateTaxPct: string; localTaxPct: string }>('salary-tax');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ salary: string; filingStatus: string; stateTaxPct: string; localTaxPct: string }>('salary-tax');
 
   const handleCalculate = () => {
     setError(null);
@@ -759,7 +759,8 @@ export default function SalaryTaxCalculator() {
           </div>
         </motion.div>
       )}
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

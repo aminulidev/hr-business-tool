@@ -63,7 +63,7 @@ export default function MarkupCalculator() {
   const [sellingPrice, setSellingPrice] = useState('');
   const [result, setResult] = useState<MarkupResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ mode: string; costPrice: string; markupPct: string; sellingPrice: string }>('markup');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; costPrice: string; markupPct: string; sellingPrice: string }>('markup');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: MarkupResult; label: string } | null>(null);
@@ -640,7 +640,8 @@ export default function MarkupCalculator() {
         );
       })()}
 
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

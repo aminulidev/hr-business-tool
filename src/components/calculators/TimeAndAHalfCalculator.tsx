@@ -23,7 +23,7 @@ export default function TimeAndAHalfCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<OTSnapshot | null>(null);
   const [compareB, setCompareB] = useState<OTSnapshot | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ regularRate: string; regularHours: string; overtimeHours: string }>('time-and-a-half');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ regularRate: string; regularHours: string; overtimeHours: string }>('time-and-a-half');
 
   const rateNum = parseFloat(regularRate) || 0;
   const regHrs = parseFloat(regularHours) || 0;
@@ -196,7 +196,8 @@ export default function TimeAndAHalfCalculator() {
           </div>
         );
       })()}
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

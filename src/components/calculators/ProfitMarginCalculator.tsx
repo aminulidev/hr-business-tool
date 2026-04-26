@@ -110,7 +110,7 @@ export default function ProfitMarginCalculator() {
   const [revenueAmount, setRevenueAmount] = useState('');
 
   const [result, setResult] = useState<MarginResult | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ mode: string; costPrice: string; sellingPrice: string; revenueCost: string; revenueAmount: string }>('profit-margin');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; costPrice: string; sellingPrice: string; revenueCost: string; revenueAmount: string }>('profit-margin');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: MarginResult; label: string } | null>(null);
@@ -639,7 +639,8 @@ export default function ProfitMarginCalculator() {
         );
       })()}
 
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

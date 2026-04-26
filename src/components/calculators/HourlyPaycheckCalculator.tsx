@@ -103,7 +103,7 @@ export default function HourlyPaycheckCalculator() {
   const [compareA, setCompareA] = useState<HourlySnapshot | null>(null);
   const [compareB, setCompareB] = useState<HourlySnapshot | null>(null);
 
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ hourlyRate: string; regularHours: string; overtimeHours: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string }>('hourly-paycheck');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ hourlyRate: string; regularHours: string; overtimeHours: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string }>('hourly-paycheck');
 
   const handleCalculate = () => {
     setError(null);
@@ -876,7 +876,8 @@ export default function HourlyPaycheckCalculator() {
         );
       })()}
 
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

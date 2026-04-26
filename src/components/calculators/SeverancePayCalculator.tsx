@@ -25,7 +25,7 @@ export default function SeverancePayCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<SevSnap | null>(null);
   const [compareB, setCompareB] = useState<SevSnap | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ annualSalary: string; yearsService: string; weeksPerYear: string; capWeeks: string }>('severance-pay');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualSalary: string; yearsService: string; weeksPerYear: string; capWeeks: string }>('severance-pay');
 
   const salaryNum = parseFloat(annualSalary) || 0;
   const yearsNum = parseFloat(yearsService) || 0;
@@ -218,7 +218,8 @@ export default function SeverancePayCalculator() {
           </div>
         );
       })()}
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

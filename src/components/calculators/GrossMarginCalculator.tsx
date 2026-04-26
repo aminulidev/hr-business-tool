@@ -77,7 +77,7 @@ export default function GrossMarginCalculator() {
 
   const [result, setResult] = useState<MarginResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ mode: string; revenue: string; cogs: string; marginPct: string }>('gross-margin');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; revenue: string; cogs: string; marginPct: string }>('gross-margin');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: MarginResult; label: string } | null>(null);
@@ -705,7 +705,8 @@ export default function GrossMarginCalculator() {
         );
       })()}
 
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

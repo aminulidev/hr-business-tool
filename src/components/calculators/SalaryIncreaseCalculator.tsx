@@ -32,7 +32,7 @@ export default function SalaryIncreaseCalculator() {
   const [salaryIncrease, setSalaryIncrease] = useState<string>('');
   const [inflationRate, setInflationRate] = useState<string>('3.0');
   const [calculated, setCalculated] = useState(false);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ currentSalary: string; salaryIncrease: string; inflationRate: string }>('salary-increase');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ currentSalary: string; salaryIncrease: string; inflationRate: string }>('salary-increase');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: SalaryIncreaseResult; label: string } | null>(null);
@@ -461,7 +461,8 @@ export default function SalaryIncreaseCalculator() {
         );
       })()}
 
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

@@ -237,7 +237,7 @@ export default function TaxBracketCalculator() {
   const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
   const [applyDeduction, setApplyDeduction] = useState(true);
   const [result, setResult] = useState<TaxResult | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ incomeInput: string; filingStatus: string; applyDeduction: string }>('tax-bracket');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ incomeInput: string; filingStatus: string; applyDeduction: string }>('tax-bracket');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: TaxResult; label: string } | null>(null);
@@ -820,7 +820,8 @@ export default function TaxBracketCalculator() {
         );
       })()}
 
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

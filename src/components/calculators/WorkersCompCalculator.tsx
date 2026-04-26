@@ -40,7 +40,7 @@ export default function WorkersCompCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<WcSnap | null>(null);
   const [compareB, setCompareB] = useState<WcSnap | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ annualPayroll: string; ratePerHundred: string; emr: string; employees: string }>('workers-comp');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualPayroll: string; ratePerHundred: string; emr: string; employees: string }>('workers-comp');
 
   const payrollNum = parseFloat(annualPayroll.replace(/,/g, '')) || 0;
   const rateNum = parseFloat(ratePerHundred) || 0;
@@ -258,7 +258,8 @@ export default function WorkersCompCalculator() {
           </div>
         );
       })()}
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

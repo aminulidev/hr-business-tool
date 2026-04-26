@@ -138,7 +138,7 @@ export default function PropertyTaxCalculator() {
   // Comparison State
   const [compareA, setCompareA] = useState<PropertySnapshot | null>(null);
   const [compareB, setCompareB] = useState<PropertySnapshot | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ mode: string; assessedValue: string; rateMode: string; taxRate: string; assessmentRatio: string; exemptions: string }>('property-tax');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; assessedValue: string; rateMode: string; taxRate: string; assessmentRatio: string; exemptions: string }>('property-tax');
 
   const handleCalculate = () => {
     setResult(null);
@@ -792,7 +792,8 @@ export default function PropertyTaxCalculator() {
         );
       })()}
 
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

@@ -79,7 +79,7 @@ export default function ROICalculator() {
   const [duration, setDuration] = useState<string>('5');
   const [additionalContributions, setAdditionalContributions] = useState<string>('0');
   const [result, setResult] = useState<ROIResult | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ initialInvestment: string; finalValue: string; duration: string; additionalContributions: string }>('roi');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ initialInvestment: string; finalValue: string; duration: string; additionalContributions: string }>('roi');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: ROIResult; label: string } | null>(null);
@@ -559,7 +559,8 @@ export default function ROICalculator() {
           />
         );
       })()}
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

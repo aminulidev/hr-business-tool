@@ -50,7 +50,7 @@ export default function DiscountCalculator() {
   const [secondDiscountValue, setSecondDiscountValue] = useState('');
   const [result, setResult] = useState<DiscountResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ originalPrice: string; discountType: string; discountValue: string; enableSecondDiscount: boolean; secondDiscountValue: string }>('discount');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ originalPrice: string; discountType: string; discountValue: string; enableSecondDiscount: boolean; secondDiscountValue: string }>('discount');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: DiscountResult; label: string } | null>(null);
@@ -693,7 +693,8 @@ export default function DiscountCalculator() {
         );
       })()}
 
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

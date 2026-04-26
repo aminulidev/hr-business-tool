@@ -36,7 +36,7 @@ export default function EmployeeTurnoverCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<TurnoverSnap | null>(null);
   const [compareB, setCompareB] = useState<TurnoverSnap | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ beginHeadcount: string; endHeadcount: string; separations: string; avgSalary: string }>('employee-turnover');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ beginHeadcount: string; endHeadcount: string; separations: string; avgSalary: string }>('employee-turnover');
 
   const beginNum = parseFloat(beginHeadcount) || 0;
   const endNum = parseFloat(endHeadcount) || 0;
@@ -255,7 +255,8 @@ export default function EmployeeTurnoverCalculator() {
           </div>
         );
       })()}
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

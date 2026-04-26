@@ -156,7 +156,7 @@ export default function TaxRefundCalculator() {
   const [taxCredits, setTaxCredits] = useState('');
   const [result, setResult] = useState<TaxResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ filingStatus: string; grossIncome: string; federalWithheld: string; stateWithheld: string }>('tax-refund');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ filingStatus: string; grossIncome: string; federalWithheld: string; stateWithheld: string }>('tax-refund');
 
   const handleCalculate = () => {
     setResult(null);
@@ -724,7 +724,8 @@ export default function TaxRefundCalculator() {
           </motion.div>
         )}
       </div>
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

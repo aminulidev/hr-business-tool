@@ -549,7 +549,7 @@ export default function SalesCommissionCalculator() {
   }, [quotaBase, quotaRate, salesQuota, actualSales, accelerator, totalDeductions]);
 
   // ─── History ────────────────────────────────────────────────────
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ activeTab: string; salesAmount: string; simpleRate: string; tieredSalesAmount: string; quotaBase: string; salesQuota: string; actualSales: string }>('sales-commission');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ activeTab: string; salesAmount: string; simpleRate: string; tieredSalesAmount: string; quotaBase: string; salesQuota: string; actualSales: string }>('sales-commission');
 
   const handleSaveHistory = useCallback(() => {
     const r = activeTab === 'simple' ? simpleResults : activeTab === 'tiered' ? tieredResults : quotaResults;
@@ -1587,7 +1587,8 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
           })()}
         </div>
       </TooltipProvider>
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

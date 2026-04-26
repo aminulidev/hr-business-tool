@@ -154,7 +154,7 @@ export default function SalaryConverterCalculator() {
   const [payPeriod, setPayPeriod] = useState<PayPeriod>('annual');
   const [hoursPerWeek, setHoursPerWeek] = useState('40');
   const [results, setResults] = useState<PeriodResult[] | null>(null);
-  const { history, saveEntry, clearHistory } = useCalcHistory<{ payAmount: string; payPeriod: string; hoursPerWeek: string }>('salary-converter');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ payAmount: string; payPeriod: string; hoursPerWeek: string }>('salary-converter');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ results: PeriodResult[]; label: string } | null>(null);
@@ -593,7 +593,8 @@ export default function SalaryConverterCalculator() {
         );
       })()}
 
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} />
+      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
+          onDelete={deleteEntry} />
     </CalculatorLayout>
   );
 }

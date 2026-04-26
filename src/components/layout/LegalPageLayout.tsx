@@ -60,9 +60,9 @@ export default function LegalPageLayout({
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
             {title}
           </h1>
-          <p className="mt-3 text-sm text-muted-foreground">
+          {/* <p className="mt-3 text-sm text-muted-foreground">
             Last updated: {lastUpdated}
-          </p>
+          </p> */}
         </div>
         <div className="prose-custom">{children}</div>
 
@@ -79,7 +79,7 @@ export default function LegalPageLayout({
             <Link
               href="/contact"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-border/50 bg-card hover:bg-muted/50 text-sm font-medium text-foreground transition-colors"
-              >
+            >
               Contact Us
             </Link>
           </div>
