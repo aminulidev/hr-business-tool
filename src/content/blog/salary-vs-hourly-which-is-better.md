@@ -2,7 +2,7 @@
 title: "Salary vs. Hourly Pay: Which is Better for Your Business?"
 date: "2025-04-24"
 excerpt: "Deciding between salaried and hourly compensation models is a pivotal choice for employers. We compare the pros and cons of each to help you decide."
-author: "CalcHub Team"
+author: "QuickBizCalc Team"
 category: "HR Strategy"
 ---
 

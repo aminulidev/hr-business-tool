@@ -5,9 +5,9 @@ import { SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
 export const metadata: Metadata = {
   title: 'Terms of Service',
   description:
-    'CalcHub terms of service. Read the terms and conditions that govern your use of our free online business and HR calculator tools.',
+    'QuickBizCalc terms of service. Read the terms and conditions that govern your use of our free online business and HR calculator tools.',
   keywords: [
-    'CalcHub terms of service',
+    'QuickBizCalc terms of service',
     'calculator terms and conditions',
     'terms of use',
     'website terms',
@@ -28,8 +28,8 @@ export default function TermsOfServicePage() {
     <LegalPageLayout title="Terms of Service" lastUpdated="April 21, 2026">
       <section className="space-y-6 text-sm leading-relaxed text-foreground/80">
         <p>
-          Welcome to CalcHub. These Terms of Service (&quot;Terms&quot;) govern your access to and use of
-          the CalcHub website located at{' '}
+          Welcome to QuickBizCalc. These Terms of Service (&quot;Terms&quot;) govern your access to and use of
+          the QuickBizCalc website located at{' '}
           <a
             href={SITE_URL}
             className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
@@ -65,7 +65,7 @@ export default function TermsOfServicePage() {
 
         <h2 className="text-xl font-semibold text-foreground pt-4">2. Description of Service</h2>
         <p>
-          CalcHub provides free online calculator tools for small business, human resources, and
+          QuickBizCalc provides free online calculator tools for small business, human resources, and
           financial planning purposes. Our calculators include tools for sales commission, pro rata
           salary, salary increase, payroll estimation, time card calculation, profit margin analysis,
           bonus tax calculation, and return on investment analysis. All calculations are performed
@@ -89,17 +89,17 @@ export default function TermsOfServicePage() {
         <h2 className="text-xl font-semibold text-foreground pt-4">4. Intellectual Property</h2>
         <p>
           The Site, including its original content, features, functionality, design, graphics, and
-          the calculator algorithms and code, are owned by CalcHub and are protected by international
+          the calculator algorithms and code, are owned by QuickBizCalc and are protected by international
           copyright, trademark, patent, trade secret, and other intellectual property laws. Our
           trademarks, service marks, and trade dress may not be used in connection with any product
-          or service without the prior written consent of CalcHub. You are granted a limited,
+          or service without the prior written consent of QuickBizCalc. You are granted a limited,
           non-exclusive, non-transferable, revocable license to access and use the Site and its
           calculator tools for your personal or business use.
         </p>
 
         <h2 className="text-xl font-semibold text-foreground pt-4">5. Accuracy of Calculations</h2>
         <p>
-          While we strive to ensure that all calculator tools produce accurate results, CalcHub makes
+          While we strive to ensure that all calculator tools produce accurate results, QuickBizCalc makes
           no guarantee, representation, or warranty regarding the accuracy, reliability, or completeness
           of any calculation results. Tax laws, regulations, and business practices vary by jurisdiction
           and change frequently. Our calculators provide general estimates and should not be relied upon
@@ -118,7 +118,7 @@ export default function TermsOfServicePage() {
         <h2 className="text-xl font-semibold text-foreground pt-4">6. Third-Party Links and Content</h2>
         <p>
           The Site may contain links to third-party websites, services, or advertisements that are
-          not owned or controlled by CalcHub. We have no control over, and assume no responsibility
+          not owned or controlled by QuickBizCalc. We have no control over, and assume no responsibility
           for, the content, privacy policies, or practices of any third-party websites or services.
           We strongly advise you to read the terms and conditions and privacy policies of any
           third-party websites or services that you visit. The inclusion of any link does not imply
@@ -127,10 +127,10 @@ export default function TermsOfServicePage() {
 
         <h2 className="text-xl font-semibold text-foreground pt-4">7. Advertising</h2>
         <p>
-          CalcHub displays advertisements provided by third-party advertising networks, including
+          QuickBizCalc displays advertisements provided by third-party advertising networks, including
           Google AdSense. These advertisements may use cookies, web beacons, or similar technologies
           to collect information about your browsing behavior and interests to display relevant ads.
-          Your interaction with advertisers on the Site is at your own risk. CalcHub is not responsible
+          Your interaction with advertisers on the Site is at your own risk. QuickBizCalc is not responsible
           for the content, accuracy, or practices of any third-party advertisers. For more information
           about how ads are served, please see our{' '}
           <a
@@ -151,7 +151,7 @@ export default function TermsOfServicePage() {
 
         <h2 className="text-xl font-semibold text-foreground pt-4">8. Limitation of Liability</h2>
         <p>
-          TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, CALCHUB AND ITS OPERATORS, DIRECTORS,
+          TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, QuickBizCalc AND ITS OPERATORS, DIRECTORS,
           EMPLOYEES, AGENTS, AND AFFILIATES SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL,
           SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS,
           DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES, RESULTING FROM (A) YOUR ACCESS TO OR USE
@@ -160,13 +160,13 @@ export default function TermsOfServicePage() {
           ALTERATION OF YOUR TRANSMISSIONS OR CONTENT.
         </p>
         <p>
-          IN NO EVENT SHALL CALCHUB&apos;S TOTAL AGGREGATE LIABILITY TO YOU FOR ALL CLAIMS ARISING FROM
+          IN NO EVENT SHALL QuickBizCalc&apos;S TOTAL AGGREGATE LIABILITY TO YOU FOR ALL CLAIMS ARISING FROM
           OR RELATED TO THE USE OF THE SITE EXCEED THE AMOUNT OF ONE HUNDRED U.S. DOLLARS ($100.00).
         </p>
 
         <h2 className="text-xl font-semibold text-foreground pt-4">9. Indemnification</h2>
         <p>
-          You agree to defend, indemnify, and hold harmless CalcHub and its operators, directors,
+          You agree to defend, indemnify, and hold harmless QuickBizCalc and its operators, directors,
           employees, agents, and affiliates from and against any and all claims, damages, obligations,
           losses, liabilities, costs, or debt arising from (a) your use of the Site; (b) your
           violation of these Terms; (c) your violation of any applicable law or regulation; or
@@ -211,10 +211,10 @@ export default function TermsOfServicePage() {
           </a>{' '}
           or email us at{' '}
           <a
-            href="mailto:legal@calchub.com"
+            href="mailto:legal@quickbizcalc.com"
             className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
           >
-            legal@calchub.com
+            legal@quickbizcalc.com
           </a>
           .
         </p>

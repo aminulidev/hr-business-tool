@@ -5,9 +5,9 @@ import { SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
 export const metadata: Metadata = {
   title: 'Disclaimer',
   description:
-    'CalcHub disclaimer. Important information about the limitations of our free calculator tools and the nature of information provided on this website.',
+    'QuickBizCalc disclaimer. Important information about the limitations of our free calculator tools and the nature of information provided on this website.',
   keywords: [
-    'CalcHub disclaimer',
+    'QuickBizCalc disclaimer',
     'calculator disclaimer',
     'financial calculator terms',
     'not financial advice',
@@ -33,7 +33,7 @@ export default function DisclaimerPage() {
             Important Notice
           </h2>
           <p className="text-foreground/90 font-medium">
-            The calculators and information provided on CalcHub are for general informational and
+            The calculators and information provided on QuickBizCalc are for general informational and
             educational purposes only. They do not constitute financial, tax, legal, accounting,
             or professional advice. You should not rely on calculator results as the sole basis for
             any financial, employment, or business decision.
@@ -42,7 +42,7 @@ export default function DisclaimerPage() {
 
         <h2 className="text-xl font-semibold text-foreground pt-4">General Disclaimer</h2>
         <p>
-          CalcHub provides free online calculator tools designed to help small business owners, HR
+          QuickBizCalc provides free online calculator tools designed to help small business owners, HR
           professionals, freelancers, and entrepreneurs perform common business and financial
           calculations. While we make every effort to ensure that our calculators are accurate and
           up to date, we make no representations or warranties of any kind, express or implied,
@@ -53,7 +53,7 @@ export default function DisclaimerPage() {
 
         <h2 className="text-xl font-semibold text-foreground pt-4">Not Professional Advice</h2>
         <p>
-          The content on CalcHub, including all calculator tools, formula explanations, examples,
+          The content on QuickBizCalc, including all calculator tools, formula explanations, examples,
           articles, and guides, is intended to provide general information only. It is not intended
           to be and should not be construed as professional financial advice, tax advice, legal
           advice, accounting advice, or any other form of professional advice. Specifically:
@@ -117,7 +117,7 @@ export default function DisclaimerPage() {
         <h2 className="text-xl font-semibold text-foreground pt-4">No Guarantee of Results</h2>
         <p>
           Any reliance you place on calculator results or information from this Site is strictly at
-          your own risk. CalcHub shall not be liable for any loss or damage, including but not
+          your own risk. QuickBizCalc shall not be liable for any loss or damage, including but not
           limited to indirect or consequential loss or damage, or any loss or damage whatsoever
           arising from loss of data or profits arising out of, or in connection with, the use of
           this Site and its calculator tools.
@@ -139,7 +139,7 @@ export default function DisclaimerPage() {
         <h2 className="text-xl font-semibold text-foreground pt-4">Third-Party Content</h2>
         <p>
           The Site may contain links to third-party websites or display advertisements from
-          third-party networks. CalcHub does not endorse, verify, or take responsibility for the
+          third-party networks. QuickBizCalc does not endorse, verify, or take responsibility for the
           accuracy, opinions, or practices of any third-party content. Any interactions you have
           with third-party services through our Site are at your own risk.
         </p>
@@ -172,10 +172,10 @@ export default function DisclaimerPage() {
           </a>{' '}
           or email us at{' '}
           <a
-            href="mailto:legal@calchub.com"
+            href="mailto:legal@quickbizcalc.com"
             className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
           >
-            legal@calchub.com
+            legal@quickbizcalc.com
           </a>
           .
         </p>

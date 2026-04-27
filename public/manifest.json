@@ -1,6 +1,6 @@
 {
-  "name": "CalcHub",
-  "short_name": "CalcHub",
+  "name": "QuickBizCalc",
+  "short_name": "QuickBizCalc",
   "description": "Free Online Business & HR Calculators",
   "start_url": "/",
   "display": "standalone",

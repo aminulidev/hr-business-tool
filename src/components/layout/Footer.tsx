@@ -10,7 +10,7 @@ export default function Footer() {
         {/* Brand row */}
         <div className="flex items-center justify-center gap-2 text-muted-foreground mb-4">
           <Calculator className="h-4 w-4" />
-          <span className="text-sm font-medium">CalcHub</span>
+          <span className="text-sm font-medium">QuickBizCalc</span>
         </div>
 
         {/* Disclaimer */}
@@ -71,7 +71,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <p className="text-center text-xs text-muted-foreground/50">
-          &copy; {new Date().getFullYear()} CalcHub. All rights reserved.
+          &copy; {new Date().getFullYear()} QuickBizCalc. All rights reserved.
         </p>
       </div>
     </footer>

@@ -13,7 +13,7 @@ export interface CalcHistoryEntry<T = Record<string, string>> {
 const MAX_ENTRIES = 15;
 
 function storageKey(slug: CalculatorSlug): string {
-  return `calchub_history_${slug}`;
+  return `QuickBizCalc_history_${slug}`;
 }
 
 function readStorage<T>(slug: CalculatorSlug): CalcHistoryEntry<T>[] {

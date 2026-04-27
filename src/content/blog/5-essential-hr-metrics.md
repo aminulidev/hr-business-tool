@@ -2,7 +2,7 @@
 title: "5 Essential HR Metrics Every Small Business Should Track"
 date: "2025-04-23"
 excerpt: "Data-driven HR is no longer just for big corporations. Discover the five key metrics that will give you insights into your team's health and productivity."
-author: "CalcHub Team"
+author: "QuickBizCalc Team"
 category: "HR Analytics"
 ---
 

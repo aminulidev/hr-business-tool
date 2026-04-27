@@ -89,7 +89,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const calc = getCalculatorBySlug(slug);
   return {
-    title: calc ? `${calc.title} — Embed | CalcHub` : 'Calculator Embed',
+    title: calc ? `${calc.title} — Embed | QuickBizCalc` : 'Calculator Embed',
     robots: { index: false, follow: false },
   };
 }
@@ -124,12 +124,12 @@ export default async function EmbedPage({
       <div className="text-center py-2 text-xs text-muted-foreground border-t border-border mt-2">
         Powered by{' '}
         <a
-          href={`https://calchub.com/calculators/${slug}`}
+          href={`https://quickbizcalc.com/calculators/${slug}`}
           target="_blank"
           rel="noopener noreferrer"
           className="text-primary font-semibold hover:underline"
         >
-          CalcHub
+          QuickBizCalc
         </a>
       </div>
     </div>

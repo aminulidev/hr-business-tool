@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props) {
   try {
     const post = await getPostData(slug);
     return {
-      title: `${post.title} - CalcHub Blog`,
+      title: `${post.title} - QuickBizCalc Blog`,
       description: post.excerpt,
     };
   } catch {
@@ -96,7 +96,7 @@ export default async function PostPage({ params }: Props) {
           <div className="mt-20 pt-8 border-t border-border/50">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
               <div className="text-sm text-muted-foreground">
-                © {new Date().getFullYear()} CalcHub. All rights reserved.
+                © {new Date().getFullYear()} QuickBizCalc. All rights reserved.
               </div>
               <div className="flex items-center gap-4">
                 <Link href="/calculators" className="text-sm font-medium hover:text-emerald-600 transition-colors">

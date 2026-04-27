@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Cookie, X, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const COOKIE_CONSENT_KEY = 'calchub_cookie_consent';
+const COOKIE_CONSENT_KEY = 'QuickBizCalc_cookie_consent';
 
 type ConsentStatus = 'undecided' | 'accepted' | 'rejected' | 'custom';
 

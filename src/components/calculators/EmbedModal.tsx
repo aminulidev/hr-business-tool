@@ -22,7 +22,7 @@ export default function EmbedModal({ slug, title, onClose }: EmbedModalProps) {
   const embedUrl =
     typeof window !== 'undefined'
       ? `${window.location.origin}/calculators/${slug}/embed`
-      : `https://calchub.com/calculators/${slug}/embed`;
+      : `https://quickbizcalc.com/calculators/${slug}/embed`;
 
   const iframeCode = `<iframe
   src="${embedUrl}"
@@ -152,7 +152,7 @@ export default function EmbedModal({ slug, title, onClose }: EmbedModalProps) {
 
             {/* Info banner */}
             <div className="bg-primary/5 border border-primary/15 rounded-xl px-4 py-3 text-xs text-muted-foreground leading-relaxed">
-              <strong className="text-foreground">Free to embed.</strong> This calculator will remain free and ad-supported on your site. A small &quot;Powered by CalcHub&quot; attribution appears at the bottom.
+              <strong className="text-foreground">Free to embed.</strong> This calculator will remain free and ad-supported on your site. A small &quot;Powered by QuickBizCalc&quot; attribution appears at the bottom.
             </div>
 
             {/* Preview link */}

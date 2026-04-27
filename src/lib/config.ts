@@ -1,6 +1,6 @@
 export const CONFIG = {
-  siteName: 'CalcHub',
-  domain: 'calchub.com',
+  siteName: 'QuickBizCalc',
+  domain: 'quickbizcalc.com',
   analytics: {
     gaId: process.env.NEXT_PUBLIC_GA_ID || 'G-XXXXXXXXXX',
     clarityId: process.env.NEXT_PUBLIC_CLARITY_ID || 'XXXXXXXXXX',

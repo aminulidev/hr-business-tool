@@ -2,7 +2,7 @@
 title: "The Ultimate Guide to Calculating Payroll Taxes in 2025"
 date: "2025-04-26"
 excerpt: "Understanding payroll tax calculations is critical for any business owner. Learn how to accurately calculate FICA, FUTA, and state withholdings for your employees."
-author: "CalcHub Team"
+author: "QuickBizCalc Team"
 category: "Payroll"
 ---
 

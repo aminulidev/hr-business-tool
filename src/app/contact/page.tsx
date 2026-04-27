@@ -6,12 +6,12 @@ import { Mail, Clock, MessageSquare, Globe } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'Contact Us',
   description:
-    'Get in touch with CalcHub. Contact us for questions, feedback, bug reports, or partnership inquiries about our free business and HR calculator tools.',
+    'Get in touch with QuickBizCalc. Contact us for questions, feedback, bug reports, or partnership inquiries about our free business and HR calculator tools.',
   keywords: [
-    'contact CalcHub',
-    'CalcHub support',
+    'contact QuickBizCalc',
+    'QuickBizCalc support',
     'calculator help',
-    'CalcHub feedback',
+    'QuickBizCalc feedback',
   ],
   openGraph: {
     title: `Contact Us | ${SITE_NAME}`,
@@ -31,7 +31,7 @@ export default function ContactPage() {
         <p>
           We would love to hear from you. Whether you have a question about one of our calculators,
           want to report a bug, have a suggestion for a new tool, or are interested in partnering
-          with CalcHub, please do not hesitate to reach out. We aim to respond to all inquiries
+          with QuickBizCalc, please do not hesitate to reach out. We aim to respond to all inquiries
           within 48 business hours.
         </p>
 
@@ -48,20 +48,20 @@ export default function ContactPage() {
               For general questions, feedback, and support:
             </p>
             <a
-              href="mailto:hello@calchub.com"
+              href="mailto:hello@quickbizcalc.com"
               className="text-emerald-600 hover:text-emerald-700 font-medium underline underline-offset-2"
             >
-              hello@calchub.com
+              hello@quickbizcalc.com
             </a>
             <div className="border-t border-border/30 pt-3 mt-3">
               <p className="text-muted-foreground text-xs">
                 For privacy-related inquiries:
               </p>
               <a
-                href="mailto:privacy@calchub.com"
+                href="mailto:privacy@quickbizcalc.com"
                 className="text-emerald-600 hover:text-emerald-700 font-medium underline underline-offset-2"
               >
-                privacy@calchub.com
+                privacy@quickbizcalc.com
               </a>
             </div>
             <div className="border-t border-border/30 pt-3">
@@ -69,10 +69,10 @@ export default function ContactPage() {
                 For legal and partnership inquiries:
               </p>
               <a
-                href="mailto:legal@calchub.com"
+                href="mailto:legal@quickbizcalc.com"
                 className="text-emerald-600 hover:text-emerald-700 font-medium underline underline-offset-2"
               >
-                legal@calchub.com
+                legal@quickbizcalc.com
               </a>
             </div>
           </div>
@@ -151,10 +151,10 @@ export default function ContactPage() {
             <p>
               Please email us at{' '}
               <a
-                href="mailto:hello@calchub.com"
+                href="mailto:hello@quickbizcalc.com"
                 className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
               >
-                hello@calchub.com
+                hello@quickbizcalc.com
               </a>{' '}
               with the calculator name, the input values you used, the result you received, and the
               result you expected. Screenshots are very helpful. We will investigate and fix any
@@ -171,10 +171,10 @@ export default function ContactPage() {
               that would be useful for small business or HR professionals, please send your suggestion
               to{' '}
               <a
-                href="mailto:hello@calchub.com"
+                href="mailto:hello@quickbizcalc.com"
                 className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
               >
-                hello@calchub.com
+                hello@quickbizcalc.com
               </a>
               . We evaluate all suggestions based on demand and feasibility.
             </p>
@@ -182,15 +182,15 @@ export default function ContactPage() {
 
           <div className="rounded-xl border border-border/50 bg-muted/20 p-5">
             <h3 className="text-sm font-semibold text-foreground mb-2">
-              I am interested in advertising or partnering with CalcHub. Who should I contact?
+              I am interested in advertising or partnering with QuickBizCalc. Who should I contact?
             </h3>
             <p>
               For business development, advertising, and partnership inquiries, please email us at{' '}
               <a
-                href="mailto:legal@calchub.com"
+                href="mailto:legal@quickbizcalc.com"
                 className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
               >
-                legal@calchub.com
+                legal@quickbizcalc.com
               </a>{' '}
               with details about your proposal. We will review and respond to serious inquiries.
             </p>

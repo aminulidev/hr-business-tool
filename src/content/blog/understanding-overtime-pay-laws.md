@@ -2,7 +2,7 @@
 title: "Understanding Overtime Pay Laws: A Comprehensive Guide"
 date: "2025-04-25"
 excerpt: "Are you paying your employees fairly for extra hours? Discover the essential rules of the Fair Labor Standards Act (FLSA) regarding overtime compensation."
-author: "CalcHub Team"
+author: "QuickBizCalc Team"
 category: "Legal"
 ---
 

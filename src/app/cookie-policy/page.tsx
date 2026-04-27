@@ -5,9 +5,9 @@ import { SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
 export const metadata: Metadata = {
   title: 'Cookie Policy',
   description:
-    'CalcHub cookie policy. Learn about the cookies we use, why we use them, and how you can manage your cookie preferences.',
+    'QuickBizCalc cookie policy. Learn about the cookies we use, why we use them, and how you can manage your cookie preferences.',
   keywords: [
-    'CalcHub cookie policy',
+    'QuickBizCalc cookie policy',
     'calculator cookies',
     'website cookie policy',
     'AdSense cookies',
@@ -29,7 +29,7 @@ export default function CookiePolicyPage() {
     <LegalPageLayout title="Cookie Policy" lastUpdated="April 21, 2026">
       <section className="space-y-6 text-sm leading-relaxed text-foreground/80">
         <p>
-          This Cookie Policy explains how CalcHub (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) uses cookies and similar
+          This Cookie Policy explains how QuickBizCalc (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) uses cookies and similar
           technologies when you visit our website at{' '}
           <a
             href={SITE_URL}
@@ -238,7 +238,7 @@ export default function CookiePolicyPage() {
 
         <h3 className="text-base font-semibold text-foreground mt-4">4.1 Cookie Consent Banner</h3>
         <p>
-          When you first visit CalcHub, you will see a cookie consent banner at the bottom of the
+          When you first visit QuickBizCalc, you will see a cookie consent banner at the bottom of the
           page. This banner allows you to accept or customize your cookie preferences. You can
           choose to accept all cookies, accept only necessary cookies, or manage your preferences
           individually. Your choice will be saved and respected on subsequent visits.
@@ -354,10 +354,10 @@ export default function CookiePolicyPage() {
           </a>{' '}
           or email us at{' '}
           <a
-            href="mailto:privacy@calchub.com"
+            href="mailto:privacy@quickbizcalc.com"
             className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
           >
-            privacy@calchub.com
+            privacy@quickbizcalc.com
           </a>
           .
         </p>

@@ -2,7 +2,7 @@
 title: "The Pros and Cons of a 4-Day Work Week for HR Managers"
 date: "2025-04-21"
 excerpt: "Is the 4-day work week the future of employment? We explore the operational impacts and employee satisfaction trends of this rising workplace shift."
-author: "CalcHub Team"
+author: "QuickBizCalc Team"
 category: "Future of Work"
 ---
 

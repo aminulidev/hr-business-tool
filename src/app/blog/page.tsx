@@ -6,7 +6,7 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
 export const metadata = {
-  title: 'Blog - CalcHub HR & Business Insights',
+  title: 'Blog - QuickBizCalc HR & Business Insights',
   description: 'Expert advice, guides, and insights on HR, payroll, taxation, and business management to help you grow your business.',
 };
 
@@ -24,7 +24,7 @@ export default async function BlogPage() {
               Latest Insights
             </Badge>
             <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-foreground">
-              CalcHub <span className="text-emerald-600">Insights</span>
+              QuickBizCalc <span className="text-emerald-600">Insights</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Expert guides and strategic advice on HR, payroll, and business finance to help you navigate the complexities of management.

@@ -12,12 +12,12 @@ export default function Scripts() {
 
   useEffect(() => {
     const updateConsent = () => {
-      const status = localStorage.getItem('calchub_cookie_consent');
+      const status = localStorage.getItem('QuickBizCalc_cookie_consent');
       if (status === 'accepted') {
         setConsent({ analytics: true, advertising: true });
       } else if (status === 'custom') {
         try {
-          const prefs = JSON.parse(localStorage.getItem('calchub_cookie_consent_prefs') || '{}');
+          const prefs = JSON.parse(localStorage.getItem('QuickBizCalc_cookie_consent_prefs') || '{}');
           setConsent({
             analytics: !!prefs.analytics,
             advertising: !!prefs.advertising,

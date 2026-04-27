@@ -72,7 +72,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    creator: "@calchub",
+    creator: "@QuickBizCalc",
     images: ["/og-image.png"],
   },
   icons: {
@@ -101,7 +101,7 @@ const websiteJsonLd = {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer support",
-      email: "hello@calchub.com",
+      email: "hello@quickbizcalc.com",
       availableLanguage: ["English"],
     },
   },
@@ -127,13 +127,13 @@ const organizationJsonLd = {
     {
       "@type": "ContactPoint",
       contactType: "customer support",
-      email: "hello@calchub.com",
+      email: "hello@quickbizcalc.com",
       availableLanguage: ["English"],
     },
     {
       "@type": "ContactPoint",
       contactType: "privacy",
-      email: "privacy@calchub.com",
+      email: "privacy@quickbizcalc.com",
       availableLanguage: ["English"],
     },
   ],
