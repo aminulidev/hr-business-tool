@@ -328,35 +328,35 @@ export default function TimeCardLunchCalculator() {
 
   const relatedTools = [
     {
-      slug: 'time-card',
+      slug: 'time-card-calculator',
       title: 'Time Card Calculator',
       description:
         'Calculate total work hours from clock-in/out times for payroll',
       icon: 'Clock',
     },
     {
-      slug: 'overtime',
+      slug: 'overtime-calculator',
       title: 'Overtime Calculator',
       description:
         'Calculate overtime pay with standard time-and-a-half and double-time rates',
       icon: 'Timer',
     },
     {
-      slug: 'payroll',
+      slug: 'payroll-calculator',
       title: 'Payroll & Paycheck Calculator',
       description:
         'Estimate your take-home pay after taxes and deductions',
       icon: 'CreditCard',
     },
     {
-      slug: 'wages',
+      slug: 'wages-calculator',
       title: 'Wages Calculator',
       description:
         'Calculate gross wages from hours worked and hourly rates with overtime',
       icon: 'Banknote',
     },
     {
-      slug: 'business-day',
+      slug: 'business-day-calculator',
       title: 'Business Day Calculator',
       description:
         'Count business days between dates or add/subtract working days',

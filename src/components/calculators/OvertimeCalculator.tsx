@@ -117,7 +117,7 @@ export default function OvertimeCalculator() {
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{
     hourlyRateInput: string; regularHoursInput: string; overtimeHoursInput: string;
     multiplierPreset: string; customMultiplierInput: string; weeklyHoursInput: string;
-  }>('overtime');
+  }>('overtime-calculator');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: OvertimeResult; label: string } | null>(null);
@@ -233,10 +233,10 @@ export default function OvertimeCalculator() {
       ]}
       faqs={faqs}
       relatedTools={[
-        { slug: 'time-card', title: 'Time Card Calculator', description: 'Convert work hours to decimal format for payroll', icon: 'Clock' },
-        { slug: 'time-card-lunch', title: 'Time Card Calculator with Lunch', description: 'Track hours with automatic lunch break deduction', icon: 'Coffee' },
-        { slug: 'payroll', title: 'Payroll Calculator', description: 'Calculate take-home pay after taxes and deductions', icon: 'CreditCard' },
-        { slug: 'wages', title: 'Wages Calculator', description: 'Calculate gross and net wages from hours worked', icon: 'Banknote' },
+        { slug: 'time-card-calculator', title: 'Time Card Calculator', description: 'Convert work hours to decimal format for payroll', icon: 'Clock' },
+        { slug: 'time-card-calculator-with-lunch', title: 'Time Card Calculator with Lunch', description: 'Track hours with automatic lunch break deduction', icon: 'Coffee' },
+        { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Calculate take-home pay after taxes and deductions', icon: 'CreditCard' },
+        { slug: 'wages-calculator', title: 'Wages Calculator', description: 'Calculate gross and net wages from hours worked', icon: 'Banknote' },
         { slug: 'salary-converter', title: 'Salary Converter', description: 'Convert between hourly, monthly, and annual salary', icon: 'DollarSign' },
       ]}
     >

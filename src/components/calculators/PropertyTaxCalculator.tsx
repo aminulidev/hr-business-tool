@@ -138,7 +138,7 @@ export default function PropertyTaxCalculator() {
   // Comparison State
   const [compareA, setCompareA] = useState<PropertySnapshot | null>(null);
   const [compareB, setCompareB] = useState<PropertySnapshot | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; assessedValue: string; rateMode: string; taxRate: string; assessmentRatio: string; exemptions: string }>('property-tax');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; assessedValue: string; rateMode: string; taxRate: string; assessmentRatio: string; exemptions: string }>('property-tax-calculator');
 
   const handleCalculate = () => {
     setResult(null);
@@ -288,11 +288,11 @@ export default function PropertyTaxCalculator() {
   ];
 
   const relatedTools = [
-    { slug: 'tax-bracket', title: 'Tax Bracket Calculator', description: 'Find your federal tax bracket and effective tax rate', icon: 'FileText' },
-    { slug: 'after-tax-income', title: 'After-Tax Income Calculator', description: 'Calculate your net income after federal and state taxes', icon: 'Wallet' },
-    { slug: 'salary-tax', title: 'Salary Tax Calculator', description: 'See your total tax burden broken down by tax type', icon: 'Shield' },
-    { slug: 'payroll-deduction', title: 'Payroll Deduction Calculator', description: 'Itemize all paycheck deductions including FICA and benefits', icon: 'FileMinus' },
-    { slug: 'hourly-paycheck', title: 'Hourly Paycheck Calculator', description: 'Calculate your hourly take-home pay after taxes', icon: 'BadgeDollarSign' },
+    { slug: 'tax-bracket-calculator', title: 'Tax Bracket Calculator', description: 'Find your federal tax bracket and effective tax rate', icon: 'FileText' },
+    { slug: 'after-tax-income-calculator', title: 'After-Tax Income Calculator', description: 'Calculate your net income after federal and state taxes', icon: 'Wallet' },
+    { slug: 'salary-tax-calculator', title: 'Salary Tax Calculator', description: 'See your total tax burden broken down by tax type', icon: 'Shield' },
+    { slug: 'payroll-deduction-calculator', title: 'Payroll Deduction Calculator', description: 'Itemize all paycheck deductions including FICA and benefits', icon: 'FileMinus' },
+    { slug: 'hourly-paycheck-calculator', title: 'Hourly Paycheck Calculator', description: 'Calculate your hourly take-home pay after taxes', icon: 'BadgeDollarSign' },
   ];
 
   return (

@@ -249,7 +249,7 @@ export default function AfterTaxIncomeCalculator() {
   const [compareA, setCompareA] = useState<IncomeSnapshot | null>(null);
   const [compareB, setCompareB] = useState<IncomeSnapshot | null>(null);
 
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ incomeAmount: string; payFrequency: string; filingStatus: string; stateTaxRate: string }>('after-tax-income');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ incomeAmount: string; payFrequency: string; filingStatus: string; stateTaxRate: string }>('after-tax-income-calculator');
 
   // ---- Computed Results ----
   const results = useMemo<TaxResults | null>(() => {
@@ -385,19 +385,19 @@ export default function AfterTaxIncomeCalculator() {
 
   const relatedTools = [
     {
-      slug: 'payroll',
+      slug: 'payroll-calculator',
       title: 'Payroll Calculator',
       description: 'Calculate your paycheck details including taxes and deductions.',
       icon: 'DollarSign',
     },
     {
-      slug: 'tax-bracket',
+      slug: 'tax-bracket-calculator',
       title: 'Tax Bracket Calculator',
       description: 'Find your federal tax bracket and marginal tax rate.',
       icon: 'Percent',
     },
     {
-      slug: 'post-tax-bonus',
+      slug: 'bonus-tax-calculator',
       title: 'Post-Tax Bonus Calculator',
       description: 'Estimate your take-home bonus after federal and state taxes.',
       icon: 'Gift',
@@ -409,13 +409,13 @@ export default function AfterTaxIncomeCalculator() {
       icon: 'CalendarClock',
     },
     {
-      slug: 'salary-increase',
+      slug: 'salary-increase-calculator',
       title: 'Salary Increase Calculator',
       description: 'Calculate your raise amount in percentage and actual dollars.',
       icon: 'TrendingUp',
     },
     {
-      slug: 'property-tax',
+      slug: 'property-tax-calculator',
       title: 'Property Tax Calculator',
       description: 'Estimate your annual property tax from assessed value and tax rate.',
       icon: 'Building2',

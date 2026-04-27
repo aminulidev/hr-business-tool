@@ -26,7 +26,7 @@ export default function BillableHoursCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<BhSnap | null>(null);
   const [compareB, setCompareB] = useState<BhSnap | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ totalHours: string; nonBillableHours: string; billingRate: string; period: string }>('billable-hours');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ totalHours: string; nonBillableHours: string; billingRate: string; period: string }>('billable-hours-calculator');
 
   const totalNum = parseFloat(totalHours) || 0;
   const nonBillNum = parseFloat(nonBillableHours) || 0;
@@ -100,10 +100,10 @@ export default function BillableHoursCalculator() {
         { question: 'How can I increase my billable hours?', answer: 'Delegate administrative tasks, automate invoicing and scheduling, use templates for proposals and contracts, set clear office hours, batch non-billable tasks to specific time blocks, and track time in real-time rather than reconstructing it from memory at day-end.' },
       ]}
       relatedTools={[
-        { slug: 'time-card', title: 'Time Card Calculator', description: 'Track clock-in/out hours for payroll', icon: 'Clock' },
-        { slug: 'time-card-lunch', title: 'Time Card with Lunch', description: 'Hours minus break deductions', icon: 'Coffee' },
-        { slug: 'revenue-per-employee', title: 'Revenue per Employee', description: 'Workforce revenue efficiency', icon: 'Activity' },
-        { slug: 'wages', title: 'Wages Calculator', description: 'Calculate gross wages from hours', icon: 'Banknote' },
+        { slug: 'time-card-calculator', title: 'Time Card Calculator', description: 'Track clock-in/out hours for payroll', icon: 'Clock' },
+        { slug: 'time-card-calculator-with-lunch', title: 'Time Card with Lunch', description: 'Hours minus break deductions', icon: 'Coffee' },
+        { slug: 'revenue-per-employee-calculator', title: 'Revenue per Employee', description: 'Workforce revenue efficiency', icon: 'Activity' },
+        { slug: 'wages-calculator', title: 'Wages Calculator', description: 'Calculate gross wages from hours', icon: 'Banknote' },
       ]}
     >
       <div className="p-4 sm:p-6 space-y-6">

@@ -147,7 +147,7 @@ export default function SalaryTaxCalculator() {
 
   const [result, setResult] = useState<SalaryTaxResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ salary: string; filingStatus: string; stateTaxPct: string; localTaxPct: string }>('salary-tax');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ salary: string; filingStatus: string; stateTaxPct: string; localTaxPct: string }>('salary-tax-calculator');
 
   const handleCalculate = () => {
     setError(null);
@@ -324,28 +324,28 @@ export default function SalaryTaxCalculator() {
 
   const relatedTools = [
     {
-      slug: 'tax-bracket',
+      slug: 'tax-bracket-calculator',
       title: 'Tax Bracket Calculator',
       description:
         'Find your federal tax bracket, effective and marginal tax rates',
       icon: 'FileText',
     },
     {
-      slug: 'after-tax-income',
+      slug: 'after-tax-income-calculator',
       title: 'After-Tax Income Calculator',
       description:
         'Calculate your net income after federal and state taxes with detailed breakdown',
       icon: 'Wallet',
     },
     {
-      slug: 'tax-refund',
+      slug: 'tax-refund-estimator',
       title: 'Tax Refund Calculator',
       description:
         'Estimate your federal and state tax refund based on withholding and deductions',
       icon: 'Receipt',
     },
     {
-      slug: 'payroll',
+      slug: 'payroll-calculator',
       title: 'Payroll & Paycheck Calculator',
       description:
         'Estimate your take-home pay after federal and state taxes and deductions',
@@ -359,7 +359,7 @@ export default function SalaryTaxCalculator() {
       icon: 'ArrowLeftRight',
     },
     {
-      slug: 'property-tax',
+      slug: 'property-tax-calculator',
       title: 'Property Tax Calculator',
       description:
         'Estimate your annual property tax from assessed value and tax rate',

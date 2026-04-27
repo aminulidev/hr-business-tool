@@ -40,7 +40,7 @@ export default function WorkersCompCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<WcSnap | null>(null);
   const [compareB, setCompareB] = useState<WcSnap | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualPayroll: string; ratePerHundred: string; emr: string; employees: string }>('workers-comp');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualPayroll: string; ratePerHundred: string; emr: string; employees: string }>('workers-comp-calculator');
 
   const payrollNum = parseFloat(annualPayroll.replace(/,/g, '')) || 0;
   const rateNum = parseFloat(ratePerHundred) || 0;
@@ -105,10 +105,10 @@ export default function WorkersCompCalculator() {
         { question: 'Is workers comp the same in every state?', answer: 'No — workers comp is regulated at the state level. Rates, required coverage, benefits, and class codes vary significantly by state. Some states have monopolistic state funds (WA, ND, OH, WY) where you must buy coverage from the state.' },
       ]}
       relatedTools={[
-        { slug: 'cost-per-hire', title: 'Cost per Hire Calculator', description: 'Total recruiting cost analysis', icon: 'Briefcase' },
-        { slug: 'employee-turnover', title: 'Employee Turnover Calculator', description: 'Turnover rate & cost impact', icon: 'Users' },
-        { slug: 'payroll', title: 'Payroll Calculator', description: 'Full employee paycheck calculation', icon: 'CreditCard' },
-        { slug: 'severance-pay', title: 'Severance Pay Calculator', description: 'Calculate severance packages', icon: 'UserMinus' },
+        { slug: 'cost-per-hire-calculator', title: 'Cost per Hire Calculator', description: 'Total recruiting cost analysis', icon: 'Briefcase' },
+        { slug: 'employee-turnover-calculator', title: 'Employee Turnover Calculator', description: 'Turnover rate & cost impact', icon: 'Users' },
+        { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Full employee paycheck calculation', icon: 'CreditCard' },
+        { slug: 'severance-pay-calculator', title: 'Severance Pay Calculator', description: 'Calculate severance packages', icon: 'UserMinus' },
       ]}
     >
       <div className="p-4 sm:p-6 space-y-6">

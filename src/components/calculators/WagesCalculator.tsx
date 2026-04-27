@@ -117,7 +117,7 @@ export default function WagesCalculator() {
   const [compareA, setCompareA] = useState<WageSnapshot | null>(null);
   const [compareB, setCompareB] = useState<WageSnapshot | null>(null);
 
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ payPeriod: string; overtimeMultiplier: string; doubleTimeMultiplier: string; firstRate: string }>('wages');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ payPeriod: string; overtimeMultiplier: string; doubleTimeMultiplier: string; firstRate: string }>('wages-calculator');
 
   const updateEntry = (id: number, field: keyof WageEntry, value: string) => {
     setEntries((prev) =>
@@ -309,7 +309,7 @@ export default function WagesCalculator() {
 
   const relatedTools = [
     {
-      slug: 'overtime',
+      slug: 'overtime-calculator',
       title: 'Overtime Calculator',
       description:
         'Calculate overtime pay with standard time-and-a-half and double-time rates',
@@ -323,21 +323,21 @@ export default function WagesCalculator() {
       icon: 'ArrowLeftRight',
     },
     {
-      slug: 'payroll',
+      slug: 'payroll-calculator',
       title: 'Payroll & Paycheck Calculator',
       description:
         'Estimate your take-home pay after federal and state taxes and deductions',
       icon: 'CreditCard',
     },
     {
-      slug: 'hourly-paycheck',
+      slug: 'hourly-paycheck-calculator',
       title: 'Hourly Paycheck Calculator',
       description:
         'Calculate your hourly paycheck after taxes and deductions',
       icon: 'BadgeDollarSign',
     },
     {
-      slug: 'time-card',
+      slug: 'time-card-calculator',
       title: 'Time Card Calculator',
       description:
         'Calculate total work hours from clock-in/out times for payroll',

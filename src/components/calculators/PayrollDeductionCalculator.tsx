@@ -90,7 +90,7 @@ export default function PayrollDeductionCalculator() {
 
   const [result, setResult] = useState<DeductionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ grossPay: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string; k401Pct: string }>('payroll-deduction');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ grossPay: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string; k401Pct: string }>('payroll-deduction-calculator');
 
   const handleCalculate = () => {
     setError(null);
@@ -345,35 +345,35 @@ export default function PayrollDeductionCalculator() {
 
   const relatedTools = [
     {
-      slug: 'payroll',
+      slug: 'payroll-calculator',
       title: 'Payroll & Paycheck Calculator',
       description:
         'Estimate your take-home pay after federal and state taxes and deductions',
       icon: 'CreditCard',
     },
     {
-      slug: 'after-tax-income',
+      slug: 'after-tax-income-calculator',
       title: 'After-Tax Income Calculator',
       description:
         'Calculate your net income after federal and state taxes with detailed breakdown',
       icon: 'Wallet',
     },
     {
-      slug: 'salary-tax',
+      slug: 'salary-tax-calculator',
       title: 'Salary Tax Calculator',
       description:
         'Calculate total tax on your salary with federal, state, FICA, and local taxes',
       icon: 'Shield',
     },
     {
-      slug: 'hourly-paycheck',
+      slug: 'hourly-paycheck-calculator',
       title: 'Hourly Paycheck Calculator',
       description:
         'Calculate your hourly paycheck after taxes and deductions',
       icon: 'BadgeDollarSign',
     },
     {
-      slug: 'tax-bracket',
+      slug: 'tax-bracket-calculator',
       title: 'Tax Bracket Calculator',
       description:
         'Find your federal tax bracket, effective and marginal tax rates',

@@ -39,38 +39,38 @@ import {
 // ---------------------------------------------------------------------------
 // TODO: slug update to target keywords
 export type CalculatorSlug =
-  | 'sales-commission'
-  | 'pro-rata-salary'
-  | 'salary-increase'
-  | 'overtime'
+  | 'commission-calculator'
+  | 'pro-rata-calculator'
+  | 'salary-increase-calculator'
+  | 'overtime-calculator'
   | 'salary-converter'
-  | 'payroll'
-  | 'post-tax-bonus'
-  | 'tax-bracket'
-  | 'after-tax-income'
-  | 'time-card'
-  | 'business-day'
-  | 'profit-margin'
-  | 'roi'
-  | 'discount'
-  | 'property-tax'
-  | 'gross-margin'
-  | 'markup'
-  | 'tax-refund'
-  | 'decimal-converter'
-  | 'wages'
-  | 'payroll-deduction'
-  | 'salary-tax'
-  | 'time-card-lunch'
-  | 'hourly-paycheck'
-  | 'severance-pay'
-  | 'workers-comp'
-  | 'fica-tax'
-  | 'time-and-a-half'
-  | 'employee-turnover'
-  | 'cost-per-hire'
-  | 'billable-hours'
-  | 'revenue-per-employee';
+  | 'payroll-calculator'
+  | 'bonus-tax-calculator'
+  | 'tax-bracket-calculator'
+  | 'after-tax-income-calculator'
+  | 'time-card-calculator'
+  | 'business-day-calculator'
+  | 'profit-margin-calculator'
+  | 'roi-calculator'
+  | 'discount-calculator'
+  | 'property-tax-calculator'
+  | 'gross-margin-calculator'
+  | 'markup-calculator'
+  | 'tax-refund-estimator'
+  | 'time-to-decimal-calculator'
+  | 'wages-calculator'
+  | 'payroll-deduction-calculator'
+  | 'salary-tax-calculator'
+  | 'time-card-calculator-with-lunch'
+  | 'hourly-paycheck-calculator'
+  | 'severance-pay-calculator'
+  | 'workers-comp-calculator'
+  | 'fica-tax-calculator'
+  | 'time-and-a-half-calculator'
+  | 'employee-turnover-calculator'
+  | 'cost-per-hire-calculator'
+  | 'billable-hours-calculator'
+  | 'revenue-per-employee-calculator';
 
 export interface CalculatorMeta {
   slug: CalculatorSlug;
@@ -137,13 +137,14 @@ export const categoryMeta: Record<string, { emoji: string; description: string }
 export const calculators: CalculatorMeta[] = [
   // ── Commission & Compensation ──
   {
-    slug: 'sales-commission',
+    slug: 'commission-calculator',
     title: 'Sales Commission Calculator',
     shortDescription:
       'Calculate take-home commission from flat rates, tiered structures, and quota-based plans with deductions and visual charts.',
     metaDescription:
       'Free sales commission calculator. Calculate your commission from flat rate, tiered, or quota attainment structures. Includes deductions, visual charts, and CSV export. Accurate results for real estate, SaaS, B2B, and retail sales professionals.',
     keywords: [
+      'commission calculator',
       'sales commission calculator',
       'commission calculator',
       'how to calculate sales commission',
@@ -162,7 +163,7 @@ export const calculators: CalculatorMeta[] = [
     icon: DollarSign,
     tier: 'tier1',
     category: 'Commission & Compensation',
-    path: '/calculators/sales-commission',
+    path: '/calculators/commission-calculator',
   },
   {
     slug: 'salary-converter',
@@ -172,6 +173,8 @@ export const calculators: CalculatorMeta[] = [
     metaDescription:
       'Free salary converter calculator. Instantly convert your pay between hourly, daily, weekly, bi-weekly, semi-monthly, monthly, and annual rates. See equivalent earnings across all pay periods with overtime adjustments.',
     keywords: [
+      'salary converter',
+      'hourly to salary calculator',
       'salary converter',
       'hourly to salary calculator',
       'salary to hourly calculator',
@@ -196,13 +199,15 @@ export const calculators: CalculatorMeta[] = [
 
   // ── Salary & Compensation ──
   {
-    slug: 'pro-rata-salary',
+    slug: 'pro-rata-calculator',
     title: 'Pro Rata Salary Calculator',
     shortDescription:
       'Calculate prorated salary when an employee starts mid-year, works part-time, or is on a fixed-term contract.',
     metaDescription:
       'Free pro rata salary calculator. Quickly calculate prorated pay for mid-year starts, part-time employees, and contract workers. Includes daily rate, percentage of full salary, and detailed worked examples.',
     keywords: [
+      'pro rata calculator',
+      'pro rata salary calculator',
       'pro rata salary calculator',
       'pro rata calculator',
       'prorated salary calculator',
@@ -217,16 +222,17 @@ export const calculators: CalculatorMeta[] = [
     icon: CalendarClock,
     tier: 'tier1',
     category: 'Salary & Compensation',
-    path: '/calculators/pro-rata-salary',
+    path: '/calculators/pro-rata-calculator',
   },
   {
-    slug: 'salary-increase',
+    slug: 'salary-increase-calculator',
     title: 'Salary Increase Calculator',
     shortDescription:
       'See what a percentage raise looks like in actual paycheck dollars, with inflation adjustment and future projections.',
     metaDescription:
       'Free salary increase calculator. See exactly how a percentage raise affects your paycheck with before-and-after comparison, inflation adjustment, and future salary projections. Plan your next raise with confidence.',
     keywords: [
+      'salary increase calculator',
       'salary increase calculator',
       'raise calculator',
       'percentage raise calculator',
@@ -243,16 +249,17 @@ export const calculators: CalculatorMeta[] = [
     icon: TrendingUp,
     tier: 'tier1',
     category: 'Salary & Compensation',
-    path: '/calculators/salary-increase',
+    path: '/calculators/salary-increase-calculator',
   },
   {
-    slug: 'overtime',
+    slug: 'overtime-calculator',
     title: 'Overtime Calculator',
     shortDescription:
       'Calculate overtime pay with standard time-and-a-half and double-time rates, weekly and daily tracking with state-specific rules.',
     metaDescription:
       'Free overtime calculator. Calculate overtime pay at 1.5x and 2x rates, track weekly and daily hours, and see your total earnings with overtime included. Covers federal FLSA rules and common state overtime laws.',
     keywords: [
+      'overtime calculator',
       'overtime calculator',
       'overtime pay calculator',
       'time and a half calculator',
@@ -269,18 +276,21 @@ export const calculators: CalculatorMeta[] = [
     icon: Timer,
     tier: 'tier1',
     category: 'Salary & Compensation',
-    path: '/calculators/overtime',
+    path: '/calculators/overtime-calculator',
   },
 
   // ── Payroll & Taxes ──
   {
-    slug: 'payroll',
+    slug: 'payroll-calculator',
     title: 'Payroll & Paycheck Calculator',
     shortDescription:
       'Estimate your take-home pay after federal and state taxes, deductions, and benefits contributions.',
     metaDescription:
       'Free payroll and paycheck calculator. Estimate your take-home pay after federal tax, state tax, Social Security, Medicare, and custom deductions. See your net pay breakdown for salary and hourly employees.',
     keywords: [
+      'payroll calculator',
+      'online payroll calculator',
+      'free paycheck calculator',
       'payroll calculator',
       'paycheck calculator',
       'take home pay calculator',
@@ -306,16 +316,17 @@ export const calculators: CalculatorMeta[] = [
     icon: CreditCard,
     tier: 'tier2',
     category: 'Payroll & Taxes',
-    path: '/calculators/payroll',
+    path: '/calculators/payroll-calculator',
   },
   {
-    slug: 'post-tax-bonus',
+    slug: 'bonus-tax-calculator',
     title: 'Post-Tax & Bonus Calculator',
     shortDescription:
       'Calculate your net bonus after federal and state tax withholding, or find your gross bonus from a desired net amount.',
     metaDescription:
       'Free bonus tax calculator. Find your take-home bonus after supplemental tax withholding, or reverse-calculate the gross bonus needed for a specific net amount. Covers federal flat rate, state taxes, and the bonus tax methodology.',
     keywords: [
+      'bonus tax calculator',
       'bonus tax calculator',
       'after tax bonus calculator',
       'net bonus calculator',
@@ -332,16 +343,17 @@ export const calculators: CalculatorMeta[] = [
     icon: Gift,
     tier: 'tier2',
     category: 'Payroll & Taxes',
-    path: '/calculators/post-tax-bonus',
+    path: '/calculators/bonus-tax-calculator',
   },
   {
-    slug: 'tax-bracket',
+    slug: 'tax-bracket-calculator',
     title: 'Tax Bracket Calculator',
     shortDescription:
       'Find your federal tax bracket, effective tax rate, and marginal rate with a detailed breakdown of taxes owed by bracket.',
     metaDescription:
       'Free tax bracket calculator. Find your federal income tax bracket, calculate effective and marginal tax rates, and see exactly how much tax you owe in each bracket. Covers 2025 federal tax brackets for all filing statuses.',
     keywords: [
+      'tax bracket calculator',
       'tax bracket calculator',
       'effective tax rate calculator',
       'marginal tax rate calculator',
@@ -371,16 +383,20 @@ export const calculators: CalculatorMeta[] = [
     icon: FileText,
     tier: 'tier2',
     category: 'Payroll & Taxes',
-    path: '/calculators/tax-bracket',
+    path: '/calculators/tax-bracket-calculator',
   },
   {
-    slug: 'after-tax-income',
+    slug: 'after-tax-income-calculator',
     title: 'After-Tax Income Calculator',
     shortDescription:
       'Calculate your net income after federal and state taxes with a detailed breakdown of tax savings and take-home pay.',
     metaDescription:
       'Free after-tax income calculator. See your take-home pay after federal and state income taxes, Social Security, and Medicare. Compare your gross vs. net income with a clear tax breakdown for any salary or hourly rate.',
     keywords: [
+      'after tax income calculator',
+      'after tax calculator',
+      'pay after tax',
+      'net salary calculator',
       'after tax income calculator',
       'salary after tax calculator',
       'salary after tax',
@@ -399,18 +415,19 @@ export const calculators: CalculatorMeta[] = [
     icon: Wallet,
     tier: 'tier2',
     category: 'Payroll & Taxes',
-    path: '/calculators/after-tax-income',
+    path: '/calculators/after-tax-income-calculator',
   },
 
   // ── Time & Attendance ──
   {
-    slug: 'time-card',
+    slug: 'time-card-calculator',
     title: 'Time Card & Time-to-Decimal Calculator',
     shortDescription:
       'Calculate total work hours from clock-in/out times, deduct breaks, and convert to decimal format for payroll.',
     metaDescription:
       'Free time card calculator. Convert clock-in and clock-out times to total hours, deduct breaks, and get decimal-hour output for payroll processing. Supports multiple time entries and AM/PM format.',
     keywords: [
+      'time card calculator',
       'time card calculator',
       'time to decimal calculator',
       'hours calculator from time',
@@ -432,16 +449,17 @@ export const calculators: CalculatorMeta[] = [
     icon: Clock,
     tier: 'tier2',
     category: 'Time & Attendance',
-    path: '/calculators/time-card',
+    path: '/calculators/time-card-calculator',
   },
   {
-    slug: 'business-day',
+    slug: 'business-day-calculator',
     title: 'Business Day Calculator',
     shortDescription:
       'Calculate business days between two dates, or add/subtract business days from a start date, excluding weekends and holidays.',
     metaDescription:
       'Free business day calculator. Find the number of business days between two dates, or add/subtract working days from a start date. Excludes weekends and optionally excludes public holidays. Essential for project deadlines and HR planning.',
     keywords: [
+      'business day calculator',
       'business day calculator',
       'working days calculator',
       'business days between dates',
@@ -457,18 +475,21 @@ export const calculators: CalculatorMeta[] = [
     icon: CalendarDays,
     tier: 'tier2',
     category: 'Time & Attendance',
-    path: '/calculators/business-day',
+    path: '/calculators/business-day-calculator',
   },
 
   // ── Business Finance ──
   {
-    slug: 'profit-margin',
+    slug: 'profit-margin-calculator',
     title: 'Profit Margin & Markup Calculator',
     shortDescription:
       'Calculate retail pricing, profit margins, and markup percentages from wholesale costs and selling prices.',
     metaDescription:
       'Free profit margin and markup calculator. Calculate profit margin, markup percentage, gross profit, and selling price from cost and revenue. Essential for retail pricing, wholesale, and business financial planning.',
     keywords: [
+      'profit margin calculator',
+      'omni margin calculator',
+      'margin calculator',
       'profit margin calculator',
       'markup calculator',
       'profit margin vs markup calculator',
@@ -488,16 +509,18 @@ export const calculators: CalculatorMeta[] = [
     icon: Percent,
     tier: 'tier2',
     category: 'Business Finance',
-    path: '/calculators/profit-margin',
+    path: '/calculators/profit-margin-calculator',
   },
   {
-    slug: 'roi',
+    slug: 'roi-calculator',
     title: 'ROI Calculator',
     shortDescription:
       'Calculate Return on Investment from initial cost, final value, and time period with annualized returns.',
     metaDescription:
       'Free ROI calculator. Calculate Return on Investment percentage, net profit/loss, and annualized returns from your investment costs and gains. Perfect for business decisions, marketing campaigns, and investment analysis.',
     keywords: [
+      'roi calculator',
+      'roi formula',
       'ROI calculator',
       'return on investment calculator',
       'investment return calculator',
@@ -514,16 +537,18 @@ export const calculators: CalculatorMeta[] = [
     icon: BarChart3,
     tier: 'tier2',
     category: 'Business Finance',
-    path: '/calculators/roi',
+    path: '/calculators/roi-calculator',
   },
   {
-    slug: 'discount',
+    slug: 'discount-calculator',
     title: 'Discount Calculator',
     shortDescription:
       'Calculate sale prices, discount amounts, and savings from percentage or fixed discounts. Compare original vs. discounted prices.',
     metaDescription:
       'Free discount calculator. Quickly calculate the sale price after a percentage or fixed-amount discount. See how much you save, compare multiple discounts, and find the original price from a discounted amount. Perfect for retail and business pricing.',
     keywords: [
+      'discount calculator',
+      'discount formula',
       'discount calculator',
       'percentage discount calculator',
       'sale price calculator',
@@ -541,18 +566,19 @@ export const calculators: CalculatorMeta[] = [
     icon: Tag,
     tier: 'tier2',
     category: 'Business Finance',
-    path: '/calculators/discount',
+    path: '/calculators/discount-calculator',
   },
 
   // ── NEW: Property Tax ──
   {
-    slug: 'property-tax',
+    slug: 'property-tax-calculator',
     title: 'Property Tax Calculator',
     shortDescription:
       'Estimate your annual property tax from assessed value, tax rate, and exemptions. Compare effective rates across jurisdictions.',
     metaDescription:
       'Free property tax calculator. Estimate your annual property tax bill based on assessed value, millage rate, and applicable exemptions. Compare effective tax rates, see monthly breakdowns, and plan your housing budget with accuracy.',
     keywords: [
+      'property tax calculator',
       'property tax calculator',
       'land transfer tax calculator',
       'property tax estimator',
@@ -565,18 +591,19 @@ export const calculators: CalculatorMeta[] = [
     icon: Building2,
     tier: 'tier2',
     category: 'Payroll & Taxes',
-    path: '/calculators/property-tax',
+    path: '/calculators/property-tax-calculator',
   },
 
   // ── NEW: Gross Margin ──
   {
-    slug: 'gross-margin',
+    slug: 'gross-margin-calculator',
     title: 'Gross Margin Calculator',
     shortDescription:
       'Calculate gross margin, gross profit, and COGS from revenue and cost of goods sold with detailed financial analysis.',
     metaDescription:
       'Free gross margin calculator. Quickly compute gross margin percentage, gross profit, and cost of goods sold from your revenue and costs. Includes visual breakdowns, industry benchmarks, and multi-product comparison for business financial analysis.',
     keywords: [
+      'gross margin calculator',
       'gross margin calculator',
       'gross profit calculator',
       'gross profit margin formula',
@@ -589,18 +616,20 @@ export const calculators: CalculatorMeta[] = [
     icon: PieChart,
     tier: 'tier2',
     category: 'Business Finance',
-    path: '/calculators/gross-margin',
+    path: '/calculators/gross-margin-calculator',
   },
 
   // ── NEW: Markup ──
   {
-    slug: 'markup',
+    slug: 'markup-calculator',
     title: 'Markup Calculator',
     shortDescription:
       'Calculate selling price from cost and desired markup percentage, with margin vs markup comparison and multi-tier pricing.',
     metaDescription:
       'Free markup calculator. Determine the right selling price from your cost basis and desired markup percentage. Includes margin vs markup comparison, cost-based pricing tables, and visual charts for wholesale and retail pricing decisions.',
     keywords: [
+      'markup calculator',
+      'markup formula',
       'markup calculator',
       'markup formula',
       'cost based pricing calculator',
@@ -613,18 +642,20 @@ export const calculators: CalculatorMeta[] = [
     icon: Package,
     tier: 'tier2',
     category: 'Business Finance',
-    path: '/calculators/markup',
+    path: '/calculators/markup-calculator',
   },
 
   // ── NEW: Tax Refund ──
   {
-    slug: 'tax-refund',
+    slug: 'tax-refund-estimator',
     title: 'Tax Refund Calculator',
     shortDescription:
       'Estimate your federal and state tax refund based on income, withholding, deductions, and filing status.',
     metaDescription:
       'Free tax refund estimator. Calculate your expected tax refund or amount owed based on your income, federal and state tax withholdings, deductions, credits, and filing status. Plan your tax season with confidence.',
     keywords: [
+      'tax refund estimator',
+      'tax refund calculator 2022 2023',
       'tax refund estimator',
       'tax return calculator',
       'tax refund calculator',
@@ -639,18 +670,20 @@ export const calculators: CalculatorMeta[] = [
     icon: Receipt,
     tier: 'tier2',
     category: 'Payroll & Taxes',
-    path: '/calculators/tax-refund',
+    path: '/calculators/tax-refund-estimator',
   },
 
   // ── NEW: Decimal Converter ──
   {
-    slug: 'decimal-converter',
+    slug: 'time-to-decimal-calculator',
     title: 'Decimal & Fraction Converter',
     shortDescription:
       'Convert between decimals, fractions, percentages, and time formats instantly. Essential for payroll and math calculations.',
     metaDescription:
       'Free decimal and fraction converter. Convert decimals to fractions, fractions to decimals, decimals to percentages, and time to decimal hours. Perfect for payroll processing, grade calculations, and everyday math conversions.',
     keywords: [
+      'time to decimal calculator',
+      'decimal calculator',
       'decimal converter',
       'fraction to decimal calculator',
       'decimal to fraction calculator',
@@ -665,18 +698,20 @@ export const calculators: CalculatorMeta[] = [
     icon: Hash,
     tier: 'tier2',
     category: 'Time & Attendance',
-    path: '/calculators/decimal-converter',
+    path: '/calculators/time-to-decimal-calculator',
   },
 
   // ── NEW: Wages ──
   {
-    slug: 'wages',
+    slug: 'wages-calculator',
     title: 'Wages Calculator',
     shortDescription:
       'Calculate gross and net wages from hours worked and hourly rate, including overtime and multiple pay rates.',
     metaDescription:
       'Free wages calculator. Compute your gross and net wages from hours worked and pay rate. Includes regular hours, overtime, double-time calculations, and supports multiple hourly rates. See weekly, bi-weekly, and annual wage breakdowns.',
     keywords: [
+      'wages calculator',
+      'hourly wage calculator',
       'wages calculator',
       'wage calculator',
       'gross wages calculator',
@@ -691,18 +726,20 @@ export const calculators: CalculatorMeta[] = [
     icon: Banknote,
     tier: 'tier2',
     category: 'Salary & Compensation',
-    path: '/calculators/wages',
+    path: '/calculators/wages-calculator',
   },
 
   // ── NEW: Payroll Deduction ──
   {
-    slug: 'payroll-deduction',
+    slug: 'payroll-deduction-calculator',
     title: 'Payroll Deduction Calculator',
     shortDescription:
       'Calculate detailed paycheck deductions including federal tax, state tax, Social Security, Medicare, insurance, and retirement contributions.',
     metaDescription:
       'Free payroll deduction calculator. Itemize all paycheck deductions including federal and state income tax, FICA (Social Security and Medicare), health insurance, 401(k) contributions, and other pre-tax and post-tax deductions. See your gross-to-net pay breakdown.',
     keywords: [
+      'payroll deduction calculator',
+      'payroll deductions online calculator',
       'payroll deduction calculator',
       'payroll deductions online calculator',
       'paycheck deduction calculator',
@@ -717,18 +754,21 @@ export const calculators: CalculatorMeta[] = [
     icon: FileMinus,
     tier: 'tier2',
     category: 'Payroll & Taxes',
-    path: '/calculators/payroll-deduction',
+    path: '/calculators/payroll-deduction-calculator',
   },
 
   // ── NEW: Salary Tax ──
   {
-    slug: 'salary-tax',
+    slug: 'salary-tax-calculator',
     title: 'Salary Tax Calculator',
     shortDescription:
       'Calculate total tax on your salary including federal, state, FICA, and local taxes with a comprehensive breakdown by tax type.',
     metaDescription:
       'Free salary tax calculator. See exactly how much tax you pay on your salary, broken down by federal income tax, state income tax, Social Security, Medicare, and local taxes. Supports all filing statuses and compares effective tax rates across income levels.',
     keywords: [
+      'salary tax calculator',
+      'salary after tax calculator',
+      'salary paycheck calculator',
       'salary tax calculator',
       'reverse tax calculator',
       'how much tax on my salary',
@@ -743,18 +783,19 @@ export const calculators: CalculatorMeta[] = [
     icon: Shield,
     tier: 'tier2',
     category: 'Payroll & Taxes',
-    path: '/calculators/salary-tax',
+    path: '/calculators/salary-tax-calculator',
   },
 
   // ── NEW: Time Card with Lunch ──
   {
-    slug: 'time-card-lunch',
+    slug: 'time-card-calculator-with-lunch',
     title: 'Time Card Calculator with Lunch',
     shortDescription:
       'Calculate total work hours with automatic lunch break deduction. Supports multiple in/out entries per day and weekly totals.',
     metaDescription:
       'Free time card calculator with lunch break deduction. Track clock-in and clock-out times with automatic lunch break subtraction. Supports multiple daily entries, custom break durations, and generates weekly hour totals in decimal format for payroll.',
     keywords: [
+      'time card calculator with lunch',
       'time card calculator with lunch',
       'time card with lunch break',
       'work hours calculator with lunch',
@@ -769,18 +810,21 @@ export const calculators: CalculatorMeta[] = [
     icon: Coffee,
     tier: 'tier2',
     category: 'Time & Attendance',
-    path: '/calculators/time-card-lunch',
+    path: '/calculators/time-card-calculator-with-lunch',
   },
 
   // ── NEW: Hourly Paycheck ──
   {
-    slug: 'hourly-paycheck',
+    slug: 'hourly-paycheck-calculator',
     title: 'Hourly Paycheck Calculator',
     shortDescription:
       'Calculate your hourly paycheck after taxes and deductions. See net pay per hour, per week, and per year with full breakdown.',
     metaDescription:
       'Free hourly paycheck calculator. Enter your hourly rate and hours worked to see your gross pay, federal and state tax withholdings, FICA deductions, and net take-home pay. View results per paycheck, per week, and per year.',
     keywords: [
+      'hourly paycheck calculator',
+      'adp hourly calculator',
+      'hourly pay calculator',
       'hourly paycheck calculator',
       'free paycheck calculator',
       'net hourly pay calculator',
@@ -795,12 +839,12 @@ export const calculators: CalculatorMeta[] = [
     icon: BadgeDollarSign,
     tier: 'tier2',
     category: 'Payroll & Taxes',
-    path: '/calculators/hourly-paycheck',
+    path: '/calculators/hourly-paycheck-calculator',
   },
 
   // ── HR Analytics ──
   {
-    slug: 'severance-pay',
+    slug: 'severance-pay-calculator',
     title: 'Severance Pay Calculator',
     shortDescription:
       'Calculate total severance pay based on salary, years of service, and company multiplier. Includes monthly equivalent and tax estimate.',
@@ -823,10 +867,10 @@ export const calculators: CalculatorMeta[] = [
     icon: UserMinus,
     tier: 'tier1',
     category: 'HR Analytics',
-    path: '/calculators/severance-pay',
+    path: '/calculators/severance-pay-calculator',
   },
   {
-    slug: 'workers-comp',
+    slug: 'workers-comp-calculator',
     title: 'Workers Comp Calculator',
     shortDescription:
       'Estimate your annual workers compensation insurance premium from payroll, class code rate, and experience modification factor.',
@@ -848,10 +892,10 @@ export const calculators: CalculatorMeta[] = [
     icon: ShieldCheck,
     tier: 'tier1',
     category: 'HR Analytics',
-    path: '/calculators/workers-comp',
+    path: '/calculators/workers-comp-calculator',
   },
   {
-    slug: 'fica-tax',
+    slug: 'fica-tax-calculator',
     title: 'FICA Tax Calculator',
     shortDescription:
       'Calculate Social Security and Medicare FICA taxes for employees and self-employed individuals with a full employer/employee breakdown.',
@@ -874,10 +918,10 @@ export const calculators: CalculatorMeta[] = [
     icon: Landmark,
     tier: 'tier1',
     category: 'Payroll & Taxes',
-    path: '/calculators/fica-tax',
+    path: '/calculators/fica-tax-calculator',
   },
   {
-    slug: 'time-and-a-half',
+    slug: 'time-and-a-half-calculator',
     title: 'Time and a Half Calculator',
     shortDescription:
       'Calculate overtime pay at 1.5× your regular rate. Enter your hourly wage and OT hours to instantly see your time and a half earnings.',
@@ -899,10 +943,10 @@ export const calculators: CalculatorMeta[] = [
     icon: AlarmClock,
     tier: 'tier1',
     category: 'Salary & Compensation',
-    path: '/calculators/time-and-a-half',
+    path: '/calculators/time-and-a-half-calculator',
   },
   {
-    slug: 'employee-turnover',
+    slug: 'employee-turnover-calculator',
     title: 'Employee Turnover Rate Calculator',
     shortDescription:
       'Calculate your employee turnover rate, retention rate, and estimated cost of attrition with industry benchmark comparisons.',
@@ -923,10 +967,10 @@ export const calculators: CalculatorMeta[] = [
     icon: Users,
     tier: 'tier2',
     category: 'HR Analytics',
-    path: '/calculators/employee-turnover',
+    path: '/calculators/employee-turnover-calculator',
   },
   {
-    slug: 'cost-per-hire',
+    slug: 'cost-per-hire-calculator',
     title: 'Cost per Hire Calculator',
     shortDescription:
       'Calculate your average cost per hire from internal and external recruiting costs. See total spend breakdown and cost benchmarks.',
@@ -947,10 +991,10 @@ export const calculators: CalculatorMeta[] = [
     icon: Briefcase,
     tier: 'tier2',
     category: 'HR Analytics',
-    path: '/calculators/cost-per-hire',
+    path: '/calculators/cost-per-hire-calculator',
   },
   {
-    slug: 'billable-hours',
+    slug: 'billable-hours-calculator',
     title: 'Billable Hours Calculator',
     shortDescription:
       'Calculate billable hours, utilization rate, and billable revenue from total hours worked and non-billable time.',
@@ -971,10 +1015,10 @@ export const calculators: CalculatorMeta[] = [
     icon: Hourglass,
     tier: 'tier2',
     category: 'Time & Attendance',
-    path: '/calculators/billable-hours',
+    path: '/calculators/billable-hours-calculator',
   },
   {
-    slug: 'revenue-per-employee',
+    slug: 'revenue-per-employee-calculator',
     title: 'Revenue per Employee Calculator',
     shortDescription:
       'Calculate revenue per employee ratio and benchmark against industry averages to measure workforce productivity and efficiency.',
@@ -994,7 +1038,7 @@ export const calculators: CalculatorMeta[] = [
     icon: Activity,
     tier: 'tier2',
     category: 'HR Analytics',
-    path: '/calculators/revenue-per-employee',
+    path: '/calculators/revenue-per-employee-calculator',
   },
 ];
 

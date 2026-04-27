@@ -366,10 +366,10 @@ export default function DecimalConverterCalculator() {
   ];
 
   const relatedTools = [
-    { slug: 'time-card', title: 'Time Card Calculator', description: 'Convert clock-in/out times to decimal hours for payroll', icon: 'Clock' },
-    { slug: 'discount', title: 'Discount Calculator', description: 'Calculate sale prices and percentage discounts', icon: 'Tag' },
-    { slug: 'profit-margin', title: 'Profit Margin Calculator', description: 'Calculate profit margin percentage from cost and revenue', icon: 'Percent' },
-    { slug: 'payroll', title: 'Payroll Calculator', description: 'Estimate your take-home pay after taxes and deductions', icon: 'CreditCard' },
+    { slug: 'time-card-calculator', title: 'Time Card Calculator', description: 'Convert clock-in/out times to decimal hours for payroll', icon: 'Clock' },
+    { slug: 'discount-calculator', title: 'Discount Calculator', description: 'Calculate sale prices and percentage discounts', icon: 'Tag' },
+    { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Calculate profit margin percentage from cost and revenue', icon: 'Percent' },
+    { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Estimate your take-home pay after taxes and deductions', icon: 'CreditCard' },
     { slug: 'salary-converter', title: 'Salary Converter', description: 'Convert between hourly, weekly, and annual pay rates', icon: 'ArrowLeftRight' },
   ];
 

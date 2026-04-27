@@ -341,19 +341,19 @@ export default function BusinessDayCalculator() {
 
   const relatedTools = [
     {
-      slug: 'time-card',
+      slug: 'time-card-calculator',
       title: 'Time Card Calculator',
       description: 'Calculate total work hours from clock-in/out times',
       icon: 'Clock',
     },
     {
-      slug: 'payroll',
+      slug: 'payroll-calculator',
       title: 'Payroll Calculator',
       description: 'Calculate take-home pay after taxes and deductions',
       icon: 'CreditCard',
     },
     {
-      slug: 'overtime',
+      slug: 'overtime-calculator',
       title: 'Overtime Calculator',
       description: 'Calculate overtime pay and total earnings',
       icon: 'Timer',
@@ -365,7 +365,7 @@ export default function BusinessDayCalculator() {
       icon: 'DollarSign',
     },
     {
-      slug: 'pro-rata-salary',
+      slug: 'pro-rata-calculator',
       title: 'Pro Rata Salary Calculator',
       description: 'Calculate prorated salary for partial periods',
       icon: 'CalendarClock',

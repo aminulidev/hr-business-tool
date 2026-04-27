@@ -23,7 +23,7 @@ export default function TimeAndAHalfCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<OTSnapshot | null>(null);
   const [compareB, setCompareB] = useState<OTSnapshot | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ regularRate: string; regularHours: string; overtimeHours: string }>('time-and-a-half');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ regularRate: string; regularHours: string; overtimeHours: string }>('time-and-a-half-calculator');
 
   const rateNum = parseFloat(regularRate) || 0;
   const regHrs = parseFloat(regularHours) || 0;
@@ -78,9 +78,9 @@ export default function TimeAndAHalfCalculator() {
         { question: 'How is overtime calculated for salaried employees?', answer: 'Salaried non-exempt employees are still entitled to overtime. Divide weekly salary by 40 to find hourly equivalent, then apply the 1.5× multiplier to hours over 40.' },
       ]}
       relatedTools={[
-        { slug: 'overtime', title: 'Overtime Calculator', description: 'Full OT tool with daily & weekly tracking', icon: 'Timer' },
-        { slug: 'wages', title: 'Wages Calculator', description: 'Gross wages including overtime and double time', icon: 'Banknote' },
-        { slug: 'hourly-paycheck', title: 'Hourly Paycheck Calculator', description: 'Net take-home pay after taxes', icon: 'BadgeDollarSign' },
+        { slug: 'overtime-calculator', title: 'Overtime Calculator', description: 'Full OT tool with daily & weekly tracking', icon: 'Timer' },
+        { slug: 'wages-calculator', title: 'Wages Calculator', description: 'Gross wages including overtime and double time', icon: 'Banknote' },
+        { slug: 'hourly-paycheck-calculator', title: 'Hourly Paycheck Calculator', description: 'Net take-home pay after taxes', icon: 'BadgeDollarSign' },
         { slug: 'salary-converter', title: 'Salary Converter', description: 'Convert between hourly and annual pay', icon: 'ArrowLeftRight' },
       ]}
     >

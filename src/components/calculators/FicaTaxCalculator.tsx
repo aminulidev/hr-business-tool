@@ -29,7 +29,7 @@ export default function FicaTaxCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<FicaSnapshot | null>(null);
   const [compareB, setCompareB] = useState<FicaSnapshot | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ grossWages: string; selfEmployed: string }>('fica-tax');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ grossWages: string; selfEmployed: string }>('fica-tax-calculator');
 
   const gross = parseFloat(grossWages) || 0;
   const isSE = selfEmployed === 'self-employed';
@@ -106,10 +106,10 @@ export default function FicaTaxCalculator() {
         { question: 'How do self-employed workers handle FICA?', answer: 'Self-employed workers pay self-employment (SE) tax, which covers both the employee and employer portions (15.3% total). However, SE tax is calculated on 92.35% of net earnings (not 100%), and you can deduct 50% of the SE tax paid from your gross income on your tax return.' },
       ]}
       relatedTools={[
-        { slug: 'payroll', title: 'Payroll Calculator', description: 'Full paycheck after all deductions', icon: 'CreditCard' },
-        { slug: 'tax-bracket', title: 'Tax Bracket Calculator', description: 'Federal income tax bracket analysis', icon: 'FileText' },
-        { slug: 'after-tax-income', title: 'After-Tax Income', description: 'Net income after all taxes', icon: 'Wallet' },
-        { slug: 'payroll-deduction', title: 'Payroll Deduction Calculator', description: 'Detailed paycheck deductions', icon: 'FileMinus' },
+        { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Full paycheck after all deductions', icon: 'CreditCard' },
+        { slug: 'tax-bracket-calculator', title: 'Tax Bracket Calculator', description: 'Federal income tax bracket analysis', icon: 'FileText' },
+        { slug: 'after-tax-income-calculator', title: 'After-Tax Income', description: 'Net income after all taxes', icon: 'Wallet' },
+        { slug: 'payroll-deduction-calculator', title: 'Payroll Deduction Calculator', description: 'Detailed paycheck deductions', icon: 'FileMinus' },
       ]}
     >
       <div className="p-4 sm:p-6 space-y-6">

@@ -32,7 +32,7 @@ export default function ProRataSalaryCalculator() {
   const [compareA, setCompareA] = useState<ProRataSnapshot | null>(null);
   const [compareB, setCompareB] = useState<ProRataSnapshot | null>(null);
 
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualSalary: string; actualDaysWorked: string; fullWorkingDays: string }>('pro-rata-salary');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualSalary: string; actualDaysWorked: string; fullWorkingDays: string }>('pro-rata-calculator');
 
   const annualSalaryNum = parseFloat(annualSalary) || 0;
   const fullWorkingDaysNum = parseFloat(fullWorkingDays) || 260;
@@ -103,12 +103,12 @@ export default function ProRataSalaryCalculator() {
         },
       ]}
       relatedTools={[
-        { slug: 'sales-commission', title: 'Sales Commission Calculator', description: 'Calculate your commission earnings', icon: 'DollarSign' },
-        { slug: 'salary-increase', title: 'Salary Increase Calculator', description: 'See what a raise looks like in your paycheck', icon: 'TrendingUp' },
-        { slug: 'payroll', title: 'Payroll Calculator', description: 'Calculate your take-home pay after taxes', icon: 'CreditCard' },
-        { slug: 'time-card', title: 'Time Card Calculator', description: 'Convert work hours to decimal format', icon: 'Clock' },
-        { slug: 'post-tax-bonus', title: 'Bonus Tax Calculator', description: 'Calculate net bonus after tax withholding', icon: 'Gift' },
-        { slug: 'profit-margin', title: 'Profit Margin Calculator', description: 'Calculate profit margins and markup', icon: 'Percent' },
+        { slug: 'commission-calculator', title: 'Sales Commission Calculator', description: 'Calculate your commission earnings', icon: 'DollarSign' },
+        { slug: 'salary-increase-calculator', title: 'Salary Increase Calculator', description: 'See what a raise looks like in your paycheck', icon: 'TrendingUp' },
+        { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Calculate your take-home pay after taxes', icon: 'CreditCard' },
+        { slug: 'time-card-calculator', title: 'Time Card Calculator', description: 'Convert work hours to decimal format', icon: 'Clock' },
+        { slug: 'bonus-tax-calculator', title: 'Bonus Tax Calculator', description: 'Calculate net bonus after tax withholding', icon: 'Gift' },
+        { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Calculate profit margins and markup', icon: 'Percent' },
       ]}
       howToSteps={[
         'Start with the full-time annual salary — this is the complete yearly salary a full-time employee working the entire year would earn.',

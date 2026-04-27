@@ -36,7 +36,7 @@ export default function EmployeeTurnoverCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<TurnoverSnap | null>(null);
   const [compareB, setCompareB] = useState<TurnoverSnap | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ beginHeadcount: string; endHeadcount: string; separations: string; avgSalary: string }>('employee-turnover');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ beginHeadcount: string; endHeadcount: string; separations: string; avgSalary: string }>('employee-turnover-calculator');
 
   const beginNum = parseFloat(beginHeadcount) || 0;
   const endNum = parseFloat(endHeadcount) || 0;
@@ -110,10 +110,10 @@ export default function EmployeeTurnoverCalculator() {
         { question: 'How do you reduce employee turnover?', answer: 'Key strategies: competitive compensation and benefits, strong onboarding, career development programs, recognition and feedback culture, flexible work arrangements, and manager training. Exit interviews identify specific reasons employees leave. Tracking turnover by department helps isolate management-related issues.' },
       ]}
       relatedTools={[
-        { slug: 'cost-per-hire', title: 'Cost per Hire Calculator', description: 'Measure total recruiting investment', icon: 'Briefcase' },
-        { slug: 'revenue-per-employee', title: 'Revenue per Employee', description: 'Workforce productivity metrics', icon: 'Activity' },
-        { slug: 'severance-pay', title: 'Severance Pay Calculator', description: 'Calculate departing employee packages', icon: 'UserMinus' },
-        { slug: 'salary-increase', title: 'Salary Increase Calculator', description: 'Model compensation improvements', icon: 'TrendingUp' },
+        { slug: 'cost-per-hire-calculator', title: 'Cost per Hire Calculator', description: 'Measure total recruiting investment', icon: 'Briefcase' },
+        { slug: 'revenue-per-employee-calculator', title: 'Revenue per Employee', description: 'Workforce productivity metrics', icon: 'Activity' },
+        { slug: 'severance-pay-calculator', title: 'Severance Pay Calculator', description: 'Calculate departing employee packages', icon: 'UserMinus' },
+        { slug: 'salary-increase-calculator', title: 'Salary Increase Calculator', description: 'Model compensation improvements', icon: 'TrendingUp' },
       ]}
     >
       <div className="p-4 sm:p-6 space-y-6">

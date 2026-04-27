@@ -77,7 +77,7 @@ export default function GrossMarginCalculator() {
 
   const [result, setResult] = useState<MarginResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; revenue: string; cogs: string; marginPct: string }>('gross-margin');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; revenue: string; cogs: string; marginPct: string }>('gross-margin-calculator');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: MarginResult; label: string } | null>(null);
@@ -284,11 +284,11 @@ export default function GrossMarginCalculator() {
   ];
 
   const relatedTools = [
-    { slug: 'profit-margin', title: 'Profit Margin Calculator', description: 'Calculate profit margin and markup from cost and selling price', icon: 'Percent' },
-    { slug: 'markup', title: 'Markup Calculator', description: 'Determine the right selling price from your cost basis', icon: 'TrendingUp' },
-    { slug: 'roi', title: 'ROI Calculator', description: 'Evaluate the return on investment for business decisions', icon: 'BarChart3' },
-    { slug: 'discount', title: 'Discount Calculator', description: 'Calculate sale prices and savings amounts', icon: 'Tag' },
-    { slug: 'sales-commission', title: 'Sales Commission Calculator', description: 'Calculate commission earnings from sales revenue', icon: 'DollarSign' },
+    { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Calculate profit margin and markup from cost and selling price', icon: 'Percent' },
+    { slug: 'markup-calculator', title: 'Markup Calculator', description: 'Determine the right selling price from your cost basis', icon: 'TrendingUp' },
+    { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Evaluate the return on investment for business decisions', icon: 'BarChart3' },
+    { slug: 'discount-calculator', title: 'Discount Calculator', description: 'Calculate sale prices and savings amounts', icon: 'Tag' },
+    { slug: 'commission-calculator', title: 'Sales Commission Calculator', description: 'Calculate commission earnings from sales revenue', icon: 'DollarSign' },
   ];
 
   return (

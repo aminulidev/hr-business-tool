@@ -79,7 +79,7 @@ export default function ROICalculator() {
   const [duration, setDuration] = useState<string>('5');
   const [additionalContributions, setAdditionalContributions] = useState<string>('0');
   const [result, setResult] = useState<ROIResult | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ initialInvestment: string; finalValue: string; duration: string; additionalContributions: string }>('roi');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ initialInvestment: string; finalValue: string; duration: string; additionalContributions: string }>('roi-calculator');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: ROIResult; label: string } | null>(null);
@@ -173,12 +173,12 @@ export default function ROICalculator() {
         },
       ]}
       relatedTools={[
-        { slug: 'profit-margin', title: 'Profit Margin Calculator', description: 'Calculate profit margins on sales', icon: 'Percent' },
-        { slug: 'sales-commission', title: 'Sales Commission Calculator', description: 'Calculate commission costs vs revenue', icon: 'DollarSign' },
-        { slug: 'payroll', title: 'Payroll Calculator', description: 'Factor labor costs into ROI', icon: 'CreditCard' },
-        { slug: 'salary-increase', title: 'Salary Increase Calculator', description: 'Evaluate ROI of career growth', icon: 'TrendingUp' },
-        { slug: 'time-card', title: 'Time Card Calculator', description: 'Track hours for project ROI', icon: 'Clock' },
-        { slug: 'post-tax-bonus', title: 'Bonus Tax Calculator', description: 'Calculate net returns after tax', icon: 'Gift' },
+        { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Calculate profit margins on sales', icon: 'Percent' },
+        { slug: 'commission-calculator', title: 'Sales Commission Calculator', description: 'Calculate commission costs vs revenue', icon: 'DollarSign' },
+        { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Factor labor costs into ROI', icon: 'CreditCard' },
+        { slug: 'salary-increase-calculator', title: 'Salary Increase Calculator', description: 'Evaluate ROI of career growth', icon: 'TrendingUp' },
+        { slug: 'time-card-calculator', title: 'Time Card Calculator', description: 'Track hours for project ROI', icon: 'Clock' },
+        { slug: 'bonus-tax-calculator', title: 'Bonus Tax Calculator', description: 'Calculate net returns after tax', icon: 'Gift' },
       ]}
       howToSteps={[
         'Enter your Initial Investment amount — the original capital you put into the investment at the start.',

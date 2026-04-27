@@ -8,7 +8,7 @@ import Scripts from '../analytics/Scripts';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col mesh-gradient relative overflow-hidden">
+    <div className="min-h-screen flex flex-col mesh-gradient relative">
       {/* Analytics & Ads */}
       <Scripts />
 

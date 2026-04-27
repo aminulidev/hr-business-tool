@@ -110,7 +110,7 @@ export default function ProfitMarginCalculator() {
   const [revenueAmount, setRevenueAmount] = useState('');
 
   const [result, setResult] = useState<MarginResult | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; costPrice: string; sellingPrice: string; revenueCost: string; revenueAmount: string }>('profit-margin');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; costPrice: string; sellingPrice: string; revenueCost: string; revenueAmount: string }>('profit-margin-calculator');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: MarginResult; label: string } | null>(null);
@@ -293,12 +293,12 @@ export default function ProfitMarginCalculator() {
       ]}
       faqs={faqs}
       relatedTools={[
-        { slug: 'sales-commission', title: 'Sales Commission Calculator', description: 'Calculate commission on sales revenue', icon: 'DollarSign' },
-        { slug: 'roi', title: 'ROI Calculator', description: 'Calculate return on investment', icon: 'BarChart3' },
-        { slug: 'payroll', title: 'Payroll Calculator', description: 'Factor labor costs into pricing', icon: 'CreditCard' },
-        { slug: 'salary-increase', title: 'Salary Increase Calculator', description: 'Calculate raise impact on payroll costs', icon: 'TrendingUp' },
-        { slug: 'time-card', title: 'Time Card Calculator', description: 'Track labor hours for cost analysis', icon: 'Clock' },
-        { slug: 'post-tax-bonus', title: 'Bonus Tax Calculator', description: 'Calculate net bonus after tax', icon: 'Gift' },
+        { slug: 'commission-calculator', title: 'Sales Commission Calculator', description: 'Calculate commission on sales revenue', icon: 'DollarSign' },
+        { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Calculate return on investment', icon: 'BarChart3' },
+        { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Factor labor costs into pricing', icon: 'CreditCard' },
+        { slug: 'salary-increase-calculator', title: 'Salary Increase Calculator', description: 'Calculate raise impact on payroll costs', icon: 'TrendingUp' },
+        { slug: 'time-card-calculator', title: 'Time Card Calculator', description: 'Track labor hours for cost analysis', icon: 'Clock' },
+        { slug: 'bonus-tax-calculator', title: 'Bonus Tax Calculator', description: 'Calculate net bonus after tax', icon: 'Gift' },
       ]}
     >
       <div className="p-4 sm:p-6 space-y-6">

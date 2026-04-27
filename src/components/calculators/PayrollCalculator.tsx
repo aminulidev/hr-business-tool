@@ -64,7 +64,7 @@ export default function PayrollCalculator() {
   const [stateTaxRate, setStateTaxRate] = useState('5');
   const [otherDeductions, setOtherDeductions] = useState('0');
   const [result, setResult] = useState<PayrollResult | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<PayrollInputs>('payroll');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<PayrollInputs>('payroll-calculator');
 
   const handleTryExample = () => {
     setSalaryInput('75000');
@@ -230,12 +230,12 @@ export default function PayrollCalculator() {
       ]}
       faqs={faqs}
       relatedTools={[
-        { slug: 'sales-commission', title: 'Sales Commission Calculator', description: 'Calculate commission from sales revenue', icon: 'DollarSign' },
-        { slug: 'salary-increase', title: 'Salary Increase Calculator', description: 'See what a raise looks like in your paycheck', icon: 'TrendingUp' },
-        { slug: 'pro-rata-salary', title: 'Pro Rata Salary Calculator', description: 'Calculate prorated salary for partial periods', icon: 'CalendarClock' },
-        { slug: 'time-card', title: 'Time Card Calculator', description: 'Convert work hours to decimal format', icon: 'Clock' },
-        { slug: 'post-tax-bonus', title: 'Bonus Tax Calculator', description: 'Calculate net bonus after tax withholding', icon: 'Gift' },
-        { slug: 'roi', title: 'ROI Calculator', description: 'Calculate return on investment', icon: 'BarChart3' },
+        { slug: 'commission-calculator', title: 'Sales Commission Calculator', description: 'Calculate commission from sales revenue', icon: 'DollarSign' },
+        { slug: 'salary-increase-calculator', title: 'Salary Increase Calculator', description: 'See what a raise looks like in your paycheck', icon: 'TrendingUp' },
+        { slug: 'pro-rata-calculator', title: 'Pro Rata Salary Calculator', description: 'Calculate prorated salary for partial periods', icon: 'CalendarClock' },
+        { slug: 'time-card-calculator', title: 'Time Card Calculator', description: 'Convert work hours to decimal format', icon: 'Clock' },
+        { slug: 'bonus-tax-calculator', title: 'Bonus Tax Calculator', description: 'Calculate net bonus after tax withholding', icon: 'Gift' },
+        { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Calculate return on investment', icon: 'BarChart3' },
       ]}
     >
       {/* Input Fields */}

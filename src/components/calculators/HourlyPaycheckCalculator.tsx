@@ -103,7 +103,7 @@ export default function HourlyPaycheckCalculator() {
   const [compareA, setCompareA] = useState<HourlySnapshot | null>(null);
   const [compareB, setCompareB] = useState<HourlySnapshot | null>(null);
 
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ hourlyRate: string; regularHours: string; overtimeHours: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string }>('hourly-paycheck');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ hourlyRate: string; regularHours: string; overtimeHours: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string }>('hourly-paycheck-calculator');
 
   const handleCalculate = () => {
     setError(null);
@@ -284,14 +284,14 @@ export default function HourlyPaycheckCalculator() {
 
   const relatedTools = [
     {
-      slug: 'payroll',
+      slug: 'payroll-calculator',
       title: 'Payroll & Paycheck Calculator',
       description:
         'Estimate your take-home pay after federal and state taxes and deductions',
       icon: 'CreditCard',
     },
     {
-      slug: 'wages',
+      slug: 'wages-calculator',
       title: 'Wages Calculator',
       description:
         'Calculate gross wages from hours worked and hourly rates with overtime',
@@ -305,14 +305,14 @@ export default function HourlyPaycheckCalculator() {
       icon: 'ArrowLeftRight',
     },
     {
-      slug: 'overtime',
+      slug: 'overtime-calculator',
       title: 'Overtime Calculator',
       description:
         'Calculate overtime pay with standard time-and-a-half and double-time rates',
       icon: 'Timer',
     },
     {
-      slug: 'after-tax-income',
+      slug: 'after-tax-income-calculator',
       title: 'After-Tax Income Calculator',
       description:
         'Calculate your net income after federal and state taxes with detailed breakdown',

@@ -38,7 +38,7 @@ export default function PostTaxBonusCalculator() {
   const [stateRate, setStateRate] = useState<string>('5');
   const [additionalRate, setAdditionalRate] = useState<string>('0');
   const [result, setResult] = useState<BonusResult | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; grossBonus: string; netBonusInput: string; federalRate: string; stateRate: string; additionalRate: string }>('post-tax-bonus');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; grossBonus: string; netBonusInput: string; federalRate: string; stateRate: string; additionalRate: string }>('bonus-tax-calculator');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: BonusResult; label: string } | null>(null);
@@ -145,12 +145,12 @@ export default function PostTaxBonusCalculator() {
         },
       ]}
       relatedTools={[
-        { slug: 'payroll', title: 'Payroll Calculator', description: 'Calculate your regular take-home pay', icon: 'CreditCard' },
-        { slug: 'sales-commission', title: 'Sales Commission Calculator', description: 'Calculate commission after deductions', icon: 'DollarSign' },
-        { slug: 'salary-increase', title: 'Salary Increase Calculator', description: 'See how a raise affects your paycheck', icon: 'TrendingUp' },
-        { slug: 'pro-rata-salary', title: 'Pro Rata Salary Calculator', description: 'Calculate prorated salary', icon: 'CalendarClock' },
-        { slug: 'profit-margin', title: 'Profit Margin Calculator', description: 'Calculate profit margins and markup', icon: 'Percent' },
-        { slug: 'roi', title: 'ROI Calculator', description: 'Calculate return on investment', icon: 'BarChart3' },
+        { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Calculate your regular take-home pay', icon: 'CreditCard' },
+        { slug: 'commission-calculator', title: 'Sales Commission Calculator', description: 'Calculate commission after deductions', icon: 'DollarSign' },
+        { slug: 'salary-increase-calculator', title: 'Salary Increase Calculator', description: 'See how a raise affects your paycheck', icon: 'TrendingUp' },
+        { slug: 'pro-rata-calculator', title: 'Pro Rata Salary Calculator', description: 'Calculate prorated salary', icon: 'CalendarClock' },
+        { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Calculate profit margins and markup', icon: 'Percent' },
+        { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Calculate return on investment', icon: 'BarChart3' },
       ]}
       howToSteps={[
         'Select your calculation mode: "Gross to Net" to find your take-home pay, or "Net to Gross" to find the gross bonus needed for a desired net amount.',

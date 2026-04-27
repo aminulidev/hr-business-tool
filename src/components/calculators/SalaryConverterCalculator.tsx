@@ -266,37 +266,37 @@ export default function SalaryConverterCalculator() {
 
   const relatedTools = [
     {
-      slug: 'sales-commission',
+      slug: 'commission-calculator',
       title: 'Sales Commission Calculator',
       description: 'Calculate commission earnings from sales revenue and rates',
       icon: 'DollarSign',
     },
     {
-      slug: 'salary-increase',
+      slug: 'salary-increase-calculator',
       title: 'Salary Increase Calculator',
       description: 'See how a raise impacts your paycheck across all pay periods',
       icon: 'TrendingUp',
     },
     {
-      slug: 'overtime',
+      slug: 'overtime-calculator',
       title: 'Overtime Calculator',
       description: 'Calculate overtime pay with 1.5× and 2× multipliers',
       icon: 'Timer',
     },
     {
-      slug: 'payroll',
+      slug: 'payroll-calculator',
       title: 'Payroll Calculator',
       description: 'Estimate take-home pay after taxes and deductions',
       icon: 'CreditCard',
     },
     {
-      slug: 'pro-rata-salary',
+      slug: 'pro-rata-calculator',
       title: 'Pro Rata Salary Calculator',
       description: 'Calculate prorated salary for partial work periods',
       icon: 'CalendarClock',
     },
     {
-      slug: 'decimal-converter',
+      slug: 'time-to-decimal-calculator',
       title: 'Decimal & Fraction Converter',
       description: 'Convert between decimals, fractions, and percentages',
       icon: 'Hash',

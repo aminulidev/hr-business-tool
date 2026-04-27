@@ -281,11 +281,11 @@ export default function TimeCardCalculator() {
       ]}
       faqs={faqs}
       relatedTools={[
-        { slug: 'time-card-lunch', title: 'Time Card Calculator with Lunch', description: 'Track work hours with automatic lunch break deduction', icon: 'Coffee' },
-        { slug: 'payroll', title: 'Payroll Calculator', description: 'Calculate take-home pay from hours worked', icon: 'CreditCard' },
+        { slug: 'time-card-calculator-with-lunch', title: 'Time Card Calculator with Lunch', description: 'Track work hours with automatic lunch break deduction', icon: 'Coffee' },
+        { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Calculate take-home pay from hours worked', icon: 'CreditCard' },
         { slug: 'salary-converter', title: 'Salary Converter', description: 'Convert between hourly, monthly, and annual salary', icon: 'DollarSign' },
-        { slug: 'decimal-converter', title: 'Decimal & Fraction Converter', description: 'Convert between decimals, fractions, and percentages', icon: 'Hash' },
-        { slug: 'salary-increase', title: 'Salary Increase Calculator', description: 'See what a raise looks like in your paycheck', icon: 'TrendingUp' },
+        { slug: 'time-to-decimal-calculator', title: 'Decimal & Fraction Converter', description: 'Convert between decimals, fractions, and percentages', icon: 'Hash' },
+        { slug: 'salary-increase-calculator', title: 'Salary Increase Calculator', description: 'See what a raise looks like in your paycheck', icon: 'TrendingUp' },
       ]}
     >
       <div className="p-4 sm:p-6 space-y-6">

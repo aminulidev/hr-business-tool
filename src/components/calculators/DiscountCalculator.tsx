@@ -50,7 +50,7 @@ export default function DiscountCalculator() {
   const [secondDiscountValue, setSecondDiscountValue] = useState('');
   const [result, setResult] = useState<DiscountResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ originalPrice: string; discountType: string; discountValue: string; enableSecondDiscount: boolean; secondDiscountValue: string }>('discount');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ originalPrice: string; discountType: string; discountValue: string; enableSecondDiscount: boolean; secondDiscountValue: string }>('discount-calculator');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: DiscountResult; label: string } | null>(null);
@@ -240,11 +240,11 @@ export default function DiscountCalculator() {
   ];
 
   const relatedTools = [
-    { slug: 'profit-margin', title: 'Profit Margin Calculator', description: 'Calculate profit margin and markup from cost and selling price', icon: 'Percent' },
-    { slug: 'markup', title: 'Markup Calculator', description: 'Determine the right selling price from your cost basis', icon: 'TrendingUp' },
-    { slug: 'roi', title: 'ROI Calculator', description: 'Evaluate the return on investment for business decisions', icon: 'BarChart3' },
-    { slug: 'payroll', title: 'Payroll Calculator', description: 'Calculate employee payroll, taxes, and deductions', icon: 'CreditCard' },
-    { slug: 'sales-commission', title: 'Sales Commission Calculator', description: 'Calculate commission earnings from sales revenue', icon: 'DollarSign' },
+    { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Calculate profit margin and markup from cost and selling price', icon: 'Percent' },
+    { slug: 'markup-calculator', title: 'Markup Calculator', description: 'Determine the right selling price from your cost basis', icon: 'TrendingUp' },
+    { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Evaluate the return on investment for business decisions', icon: 'BarChart3' },
+    { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Calculate employee payroll, taxes, and deductions', icon: 'CreditCard' },
+    { slug: 'commission-calculator', title: 'Sales Commission Calculator', description: 'Calculate commission earnings from sales revenue', icon: 'DollarSign' },
   ];
 
   return (

@@ -549,7 +549,7 @@ export default function SalesCommissionCalculator() {
   }, [quotaBase, quotaRate, salesQuota, actualSales, accelerator, totalDeductions]);
 
   // ─── History ────────────────────────────────────────────────────
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ activeTab: string; salesAmount: string; simpleRate: string; tieredSalesAmount: string; quotaBase: string; salesQuota: string; actualSales: string }>('sales-commission');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ activeTab: string; salesAmount: string; simpleRate: string; tieredSalesAmount: string; quotaBase: string; salesQuota: string; actualSales: string }>('commission-calculator');
 
   const handleSaveHistory = useCallback(() => {
     const r = activeTab === 'simple' ? simpleResults : activeTab === 'tiered' ? tieredResults : quotaResults;
@@ -851,12 +851,12 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
   ];
 
   const relatedTools = [
-    { slug: 'salary-increase' as const, title: 'Salary Increase Calculator', description: 'See what a raise looks like in your paycheck', icon: 'TrendingUp' },
-    { slug: 'payroll' as const, title: 'Payroll Calculator', description: 'Calculate your take-home pay after taxes', icon: 'CreditCard' },
-    { slug: 'pro-rata-salary' as const, title: 'Pro Rata Salary Calculator', description: 'Calculate prorated salary for partial periods', icon: 'CalendarClock' },
-    { slug: 'profit-margin' as const, title: 'Profit Margin Calculator', description: 'Calculate profit margins and markup percentages', icon: 'Percent' },
-    { slug: 'post-tax-bonus' as const, title: 'Bonus Tax Calculator', description: 'Calculate net bonus after tax withholding', icon: 'Gift' },
-    { slug: 'roi' as const, title: 'ROI Calculator', description: 'Calculate return on investment for business decisions', icon: 'BarChart3' },
+    { slug: 'salary-increase-calculator' as const, title: 'Salary Increase Calculator', description: 'See what a raise looks like in your paycheck', icon: 'TrendingUp' },
+    { slug: 'payroll-calculator' as const, title: 'Payroll Calculator', description: 'Calculate your take-home pay after taxes', icon: 'CreditCard' },
+    { slug: 'pro-rata-calculator' as const, title: 'Pro Rata Salary Calculator', description: 'Calculate prorated salary for partial periods', icon: 'CalendarClock' },
+    { slug: 'profit-margin-calculator' as const, title: 'Profit Margin Calculator', description: 'Calculate profit margins and markup percentages', icon: 'Percent' },
+    { slug: 'bonus-tax-calculator' as const, title: 'Bonus Tax Calculator', description: 'Calculate net bonus after tax withholding', icon: 'Gift' },
+    { slug: 'roi-calculator' as const, title: 'ROI Calculator', description: 'Calculate return on investment for business decisions', icon: 'BarChart3' },
   ];
 
   // ═══════════════════════════════════════════════════════════════════════════

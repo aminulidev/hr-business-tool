@@ -156,7 +156,7 @@ export default function TaxRefundCalculator() {
   const [taxCredits, setTaxCredits] = useState('');
   const [result, setResult] = useState<TaxResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ filingStatus: string; grossIncome: string; federalWithheld: string; stateWithheld: string }>('tax-refund');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ filingStatus: string; grossIncome: string; federalWithheld: string; stateWithheld: string }>('tax-refund-estimator');
 
   const handleCalculate = () => {
     setResult(null);
@@ -317,11 +317,11 @@ export default function TaxRefundCalculator() {
   ];
 
   const relatedTools = [
-    { slug: 'tax-bracket', title: 'Tax Bracket Calculator', description: 'Find your federal tax bracket and effective tax rate', icon: 'FileText' },
-    { slug: 'after-tax-income', title: 'After-Tax Income Calculator', description: 'Calculate your net income after federal and state taxes', icon: 'Wallet' },
-    { slug: 'salary-tax', title: 'Salary Tax Calculator', description: 'See your total tax burden broken down by tax type', icon: 'Shield' },
-    { slug: 'payroll', title: 'Payroll Calculator', description: 'Estimate your take-home pay after taxes and deductions', icon: 'CreditCard' },
-    { slug: 'hourly-paycheck', title: 'Hourly Paycheck Calculator', description: 'Calculate your hourly take-home pay after taxes', icon: 'BadgeDollarSign' },
+    { slug: 'tax-bracket-calculator', title: 'Tax Bracket Calculator', description: 'Find your federal tax bracket and effective tax rate', icon: 'FileText' },
+    { slug: 'after-tax-income-calculator', title: 'After-Tax Income Calculator', description: 'Calculate your net income after federal and state taxes', icon: 'Wallet' },
+    { slug: 'salary-tax-calculator', title: 'Salary Tax Calculator', description: 'See your total tax burden broken down by tax type', icon: 'Shield' },
+    { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Estimate your take-home pay after taxes and deductions', icon: 'CreditCard' },
+    { slug: 'hourly-paycheck-calculator', title: 'Hourly Paycheck Calculator', description: 'Calculate your hourly take-home pay after taxes', icon: 'BadgeDollarSign' },
   ];
 
   return (

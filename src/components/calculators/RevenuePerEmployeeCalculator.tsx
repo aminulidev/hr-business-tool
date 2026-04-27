@@ -34,7 +34,7 @@ export default function RevenuePerEmployeeCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<RpeSnap | null>(null);
   const [compareB, setCompareB] = useState<RpeSnap | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualRevenue: string; numEmployees: string }>('revenue-per-employee');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualRevenue: string; numEmployees: string }>('revenue-per-employee-calculator');
 
   const revenueNum = parseFloat(annualRevenue.replace(/,/g, '')) || 0;
   const empNum = parseFloat(numEmployees) || 0;
@@ -100,10 +100,10 @@ export default function RevenuePerEmployeeCalculator() {
         { question: 'Should I include contractors and part-time staff?', answer: 'Best practice is to count full-time equivalents (FTEs). Convert part-time hours to FTE by dividing hours worked by 2,080 (standard full-time annual hours). Contractors are typically excluded unless they are integral to revenue generation. Consistency in how you count employees is more important than the specific method — just apply it consistently over time for meaningful comparisons.' },
       ]}
       relatedTools={[
-        { slug: 'employee-turnover', title: 'Employee Turnover Calculator', description: 'Measure workforce retention', icon: 'Users' },
-        { slug: 'cost-per-hire', title: 'Cost per Hire Calculator', description: 'Recruiting investment analysis', icon: 'Briefcase' },
-        { slug: 'roi', title: 'ROI Calculator', description: 'Return on business investment', icon: 'BarChart3' },
-        { slug: 'profit-margin', title: 'Profit Margin Calculator', description: 'Analyze business profitability', icon: 'Percent' },
+        { slug: 'employee-turnover-calculator', title: 'Employee Turnover Calculator', description: 'Measure workforce retention', icon: 'Users' },
+        { slug: 'cost-per-hire-calculator', title: 'Cost per Hire Calculator', description: 'Recruiting investment analysis', icon: 'Briefcase' },
+        { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Return on business investment', icon: 'BarChart3' },
+        { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Analyze business profitability', icon: 'Percent' },
       ]}
     >
       <div className="p-4 sm:p-6 space-y-6">

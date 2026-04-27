@@ -27,7 +27,7 @@ export default function CostPerHireCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<CphSnap | null>(null);
   const [compareB, setCompareB] = useState<CphSnap | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ numHires: string; internalRecruiting: string; externalAgency: string }>('cost-per-hire');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ numHires: string; internalRecruiting: string; externalAgency: string }>('cost-per-hire-calculator');
 
   const parse = (v: string) => parseFloat(v) || 0;
   const internal = parse(internalRecruiting);
@@ -101,10 +101,10 @@ export default function CostPerHireCalculator() {
         { question: 'Is a lower cost per hire always better?', answer: 'Not necessarily. Extremely low CPH can indicate underinvestment in hiring quality, leading to high turnover. Quality of hire (measured by performance ratings and retention) is often more important than CPH alone. The goal is optimizing total workforce cost — balancing CPH with turnover cost and productivity.' },
       ]}
       relatedTools={[
-        { slug: 'employee-turnover', title: 'Employee Turnover Calculator', description: 'Turnover rate & attrition cost', icon: 'Users' },
-        { slug: 'revenue-per-employee', title: 'Revenue per Employee', description: 'Workforce productivity ratio', icon: 'Activity' },
-        { slug: 'workers-comp', title: 'Workers Comp Calculator', description: 'Estimate insurance premiums', icon: 'ShieldCheck' },
-        { slug: 'roi', title: 'ROI Calculator', description: 'Measure return on HR investment', icon: 'BarChart3' },
+        { slug: 'employee-turnover-calculator', title: 'Employee Turnover Calculator', description: 'Turnover rate & attrition cost', icon: 'Users' },
+        { slug: 'revenue-per-employee-calculator', title: 'Revenue per Employee', description: 'Workforce productivity ratio', icon: 'Activity' },
+        { slug: 'workers-comp-calculator', title: 'Workers Comp Calculator', description: 'Estimate insurance premiums', icon: 'ShieldCheck' },
+        { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Measure return on HR investment', icon: 'BarChart3' },
       ]}
     >
       <div className="p-4 sm:p-6 space-y-6">

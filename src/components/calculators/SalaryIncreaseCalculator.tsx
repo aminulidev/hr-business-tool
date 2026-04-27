@@ -32,7 +32,7 @@ export default function SalaryIncreaseCalculator() {
   const [salaryIncrease, setSalaryIncrease] = useState<string>('');
   const [inflationRate, setInflationRate] = useState<string>('3.0');
   const [calculated, setCalculated] = useState(false);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ currentSalary: string; salaryIncrease: string; inflationRate: string }>('salary-increase');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ currentSalary: string; salaryIncrease: string; inflationRate: string }>('salary-increase-calculator');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: SalaryIncreaseResult; label: string } | null>(null);
@@ -107,12 +107,12 @@ export default function SalaryIncreaseCalculator() {
         },
       ]}
       relatedTools={[
-        { slug: 'sales-commission', title: 'Sales Commission Calculator', description: 'Calculate commission from sales revenue', icon: 'DollarSign' },
-        { slug: 'pro-rata-salary', title: 'Pro Rata Salary Calculator', description: 'Calculate prorated salary for partial periods', icon: 'CalendarClock' },
-        { slug: 'payroll', title: 'Payroll Calculator', description: 'Calculate your take-home pay after taxes', icon: 'CreditCard' },
-        { slug: 'post-tax-bonus', title: 'Bonus Tax Calculator', description: 'Calculate net bonus after tax withholding', icon: 'Gift' },
-        { slug: 'profit-margin', title: 'Profit Margin Calculator', description: 'Calculate profit margins and markup', icon: 'Percent' },
-        { slug: 'roi', title: 'ROI Calculator', description: 'Calculate return on investment', icon: 'BarChart3' },
+        { slug: 'commission-calculator', title: 'Sales Commission Calculator', description: 'Calculate commission from sales revenue', icon: 'DollarSign' },
+        { slug: 'pro-rata-calculator', title: 'Pro Rata Salary Calculator', description: 'Calculate prorated salary for partial periods', icon: 'CalendarClock' },
+        { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Calculate your take-home pay after taxes', icon: 'CreditCard' },
+        { slug: 'bonus-tax-calculator', title: 'Bonus Tax Calculator', description: 'Calculate net bonus after tax withholding', icon: 'Gift' },
+        { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Calculate profit margins and markup', icon: 'Percent' },
+        { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Calculate return on investment', icon: 'BarChart3' },
       ]}
       howToSteps={[
         'Enter your current annual salary — this is the total amount you earn before any increase is applied, including base pay and any existing allowances.',

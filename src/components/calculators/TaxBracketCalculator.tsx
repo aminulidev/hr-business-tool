@@ -237,7 +237,7 @@ export default function TaxBracketCalculator() {
   const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
   const [applyDeduction, setApplyDeduction] = useState(true);
   const [result, setResult] = useState<TaxResult | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ incomeInput: string; filingStatus: string; applyDeduction: string }>('tax-bracket');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ incomeInput: string; filingStatus: string; applyDeduction: string }>('tax-bracket-calculator');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: TaxResult; label: string } | null>(null);
@@ -336,19 +336,19 @@ export default function TaxBracketCalculator() {
 
   const relatedTools = [
     {
-      slug: 'payroll',
+      slug: 'payroll-calculator',
       title: 'Payroll Calculator',
       description: 'Calculate your take-home pay after all deductions',
       icon: 'CreditCard',
     },
     {
-      slug: 'after-tax-income',
+      slug: 'after-tax-income-calculator',
       title: 'After-Tax Income Calculator',
       description: 'Estimate your income after federal and state taxes',
       icon: 'DollarSign',
     },
     {
-      slug: 'post-tax-bonus',
+      slug: 'bonus-tax-calculator',
       title: 'Bonus Tax Calculator',
       description: 'Calculate net bonus after supplemental withholding',
       icon: 'Gift',
@@ -360,7 +360,7 @@ export default function TaxBracketCalculator() {
       icon: 'TrendingUp',
     },
     {
-      slug: 'salary-increase',
+      slug: 'salary-increase-calculator',
       title: 'Salary Increase Calculator',
       description: 'See how a raise affects your paycheck and taxes',
       icon: 'TrendingUp',

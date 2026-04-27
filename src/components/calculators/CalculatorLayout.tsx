@@ -54,7 +54,7 @@ import {
 
 interface BreadcrumbItem {
   label: string;
-  href?: string; // URL path, e.g. '/' or '/calculators/salary-increase'
+  href?: string; // URL path, e.g. '/' or '/calculators/salary-increase-calculator'
 }
 
 interface RelatedTool {

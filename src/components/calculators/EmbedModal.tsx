@@ -63,7 +63,7 @@ export default function EmbedModal({ slug, title, onClose }: EmbedModalProps) {
         {/* Modal */}
         <motion.div
           key="embed-modal"
-          className="relative w-full max-w-xl bg-background border border-border rounded-2xl shadow-2xl overflow-hidden"
+          className="relative w-full max-w-xl bg-background border border-border rounded-2xl shadow-2xl flex flex-col max-h-[90vh]"
           initial={{ opacity: 0, scale: 0.94, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.94, y: 20 }}
@@ -90,8 +90,8 @@ export default function EmbedModal({ slug, title, onClose }: EmbedModalProps) {
             </button>
           </div>
 
-          {/* Body */}
-          <div className="p-5 space-y-5">
+          {/* Body — scrollable */}
+          <div className="p-5 space-y-5 overflow-y-auto flex-1">
             {/* Dimensions */}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">

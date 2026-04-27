@@ -25,7 +25,7 @@ export default function SeverancePayCalculator() {
   const [calculated, setCalculated] = useState(false);
   const [compareA, setCompareA] = useState<SevSnap | null>(null);
   const [compareB, setCompareB] = useState<SevSnap | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualSalary: string; yearsService: string; weeksPerYear: string; capWeeks: string }>('severance-pay');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualSalary: string; yearsService: string; weeksPerYear: string; capWeeks: string }>('severance-pay-calculator');
 
   const salaryNum = parseFloat(annualSalary) || 0;
   const yearsNum = parseFloat(yearsService) || 0;
@@ -92,9 +92,9 @@ export default function SeverancePayCalculator() {
       ]}
       relatedTools={[
         { slug: 'salary-converter', title: 'Salary Converter', description: 'Convert salary to weekly, monthly rates', icon: 'ArrowLeftRight' },
-        { slug: 'after-tax-income', title: 'After-Tax Income', description: 'Estimate take-home after taxes', icon: 'Wallet' },
-        { slug: 'employee-turnover', title: 'Employee Turnover Calculator', description: 'Calculate turnover rate & cost', icon: 'Users' },
-        { slug: 'payroll', title: 'Payroll Calculator', description: 'Full paycheck calculation', icon: 'CreditCard' },
+        { slug: 'after-tax-income-calculator', title: 'After-Tax Income', description: 'Estimate take-home after taxes', icon: 'Wallet' },
+        { slug: 'employee-turnover-calculator', title: 'Employee Turnover Calculator', description: 'Calculate turnover rate & cost', icon: 'Users' },
+        { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Full paycheck calculation', icon: 'CreditCard' },
       ]}
     >
       <div className="p-4 sm:p-6 space-y-6">
