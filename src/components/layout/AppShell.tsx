@@ -16,9 +16,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Animated background orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl animate-float" />
-        <div className="absolute top-1/2 -left-40 h-80 w-80 rounded-full bg-gold-500/8 blur-3xl animate-float-delayed" />
-        <div className="absolute -bottom-40 right-1/3 h-96 w-96 rounded-full bg-emerald-600/8 blur-3xl animate-float-slow" />
+        <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-emerald-500/10 blur-2xl md:blur-3xl animate-float" />
+        <div className="absolute top-1/2 -left-40 h-80 w-80 rounded-full bg-gold-500/8 blur-2xl md:blur-3xl animate-float-delayed" />
+        <div className="absolute -bottom-40 right-1/3 h-96 w-96 rounded-full bg-emerald-600/8 blur-2xl md:blur-3xl animate-float-slow" />
       </div>
 
       <Header />

@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
   reactStrictMode: true,
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'recharts', 'framer-motion'],
+  },
   async headers() {
     return [
       {
