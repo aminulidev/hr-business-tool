@@ -404,43 +404,43 @@ export default function CalculatorLayout({
               {breadcrumbs
                 .filter((crumb) => crumb.label !== 'Calculators')
                 .map((crumb, idx, arr) => {
-                const isLast = idx === arr.length - 1;
-                const crumbHref = crumb.href || undefined;
-                return (
-                  <motion.li
-                    key={crumb.label}
-                    variants={itemVariants}
-                    className="flex items-center"
-                    itemProp="itemListElement"
-                    itemScope
-                    itemType="https://schema.org/ListItem"
-                  >
-                    {isLast || !crumbHref ? (
-                      <span
-                        className="text-sm text-foreground font-medium truncate max-w-[200px] sm:max-w-none"
-                        aria-current={isLast ? 'page' : undefined}
-                        itemProp="name"
-                      >
-                        {crumb.label}
-                      </span>
-                    ) : (
-                      <Link
-                        href={crumbHref}
-                        className="text-sm text-muted-foreground hover:text-foreground transition-colors truncate max-w-[200px] sm:max-w-none rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                        itemProp="item"
-                      >
-                        <span itemProp="name">{crumb.label}</span>
-                      </Link>
-                    )}
+                  const isLast = idx === arr.length - 1;
+                  const crumbHref = crumb.href || undefined;
+                  return (
+                    <motion.li
+                      key={crumb.label}
+                      variants={itemVariants}
+                      className="flex items-center"
+                      itemProp="itemListElement"
+                      itemScope
+                      itemType="https://schema.org/ListItem"
+                    >
+                      {isLast || !crumbHref ? (
+                        <span
+                          className="text-sm text-foreground font-medium truncate max-w-[200px] sm:max-w-none"
+                          aria-current={isLast ? 'page' : undefined}
+                          itemProp="name"
+                        >
+                          {crumb.label}
+                        </span>
+                      ) : (
+                        <Link
+                          href={crumbHref}
+                          className="text-sm text-muted-foreground hover:text-foreground transition-colors truncate max-w-[200px] sm:max-w-none rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          itemProp="item"
+                        >
+                          <span itemProp="name">{crumb.label}</span>
+                        </Link>
+                      )}
 
-                    <meta itemProp="position" content={String(idx + 2)} />
+                      <meta itemProp="position" content={String(idx + 2)} />
 
-                    {!isLast && (
-                      <ChevronRight className="size-3.5 text-muted-foreground/50 mx-1" />
-                    )}
-                  </motion.li>
-                );
-              })}
+                      {!isLast && (
+                        <ChevronRight className="size-3.5 text-muted-foreground/50 mx-1" />
+                      )}
+                    </motion.li>
+                  );
+                })}
             </ol>
           </motion.nav>
         )}
@@ -454,13 +454,13 @@ export default function CalculatorLayout({
           animate="visible"
           variants={containerVariants}
         >
-          <motion.div variants={itemVariants} className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4 min-w-0">
-              <div className="flex items-center justify-center size-12 sm:size-14 rounded-2xl bg-primary/10 text-primary shrink-0">
+          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+              <div className="flex items-center justify-center size-8 sm:size-14 rounded-2xl bg-primary/10 text-primary shrink-0 p-1">
                 {icon}
               </div>
               <div className="min-w-0">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight truncate">
+                <h1 className="text-lg sm:text-3xl lg:text-4xl font-bold tracking-tight truncate">
                   {title}
                 </h1>
                 <p className="text-muted-foreground text-sm sm:text-base mt-1 line-clamp-2">
@@ -468,7 +468,7 @@ export default function CalculatorLayout({
                 </p>
               </div>
             </div>
-            <div className="shrink-0">
+            <div className="shrink-0 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
               <ResultActions />
             </div>
           </motion.div>
@@ -614,11 +614,10 @@ export default function CalculatorLayout({
                   {workedExamples!.map((ex, idx) => (
                     <motion.div
                       key={idx}
-                      className={`glass rounded-2xl p-5 border-l-4 ${
-                        idx % 2 === 0
-                          ? 'border-l-emerald-500'
-                          : 'border-l-gold-500'
-                      }`}
+                      className={`glass rounded-2xl p-5 border-l-4 ${idx % 2 === 0
+                        ? 'border-l-emerald-500'
+                        : 'border-l-gold-500'
+                        }`}
                       variants={itemVariants}
                     >
                       <h3 className="font-semibold text-sm sm:text-base mb-1">
@@ -753,11 +752,10 @@ export default function CalculatorLayout({
                         <button
                           type="button"
                           onClick={() => scrollToSection(item.id)}
-                          className={`w-full text-left text-xs leading-relaxed py-1.5 px-2.5 rounded-lg border-l-2 transition-all duration-150 hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                            activeTocId === item.id
-                              ? 'border-l-emerald-500 text-foreground font-medium bg-emerald-500/5'
-                              : 'border-l-transparent text-muted-foreground'
-                          }`}
+                          className={`w-full text-left text-xs leading-relaxed py-1.5 px-2.5 rounded-lg border-l-2 transition-all duration-150 hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${activeTocId === item.id
+                            ? 'border-l-emerald-500 text-foreground font-medium bg-emerald-500/5'
+                            : 'border-l-transparent text-muted-foreground'
+                            }`}
                         >
                           {item.label}
                         </button>
