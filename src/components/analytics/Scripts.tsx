@@ -42,9 +42,9 @@ export default function Scripts() {
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${CONFIG.analytics.gaId}`}
-            strategy="afterInteractive"
+            strategy="lazyOnload"
           />
-          <Script id="google-analytics" strategy="afterInteractive">
+          <Script id="google-analytics" strategy="lazyOnload">
             {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
@@ -59,7 +59,7 @@ export default function Scripts() {
 
       {/* Microsoft Clarity */}
       {consent.analytics && CONFIG.analytics.clarityId !== 'XXXXXXXXXX' && (
-        <Script id="microsoft-clarity" strategy="afterInteractive">
+        <Script id="microsoft-clarity" strategy="lazyOnload">
           {`
             (function(c,l,a,r,i,t,y){
               c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -76,7 +76,7 @@ export default function Scripts() {
           async
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${CONFIG.monetization.adSenseId}`}
           crossOrigin="anonymous"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
       )}
     </>

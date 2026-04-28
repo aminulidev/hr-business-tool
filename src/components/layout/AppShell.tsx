@@ -3,7 +3,9 @@
 import { motion } from 'framer-motion';
 import Header from './Header';
 import Footer from './Footer';
-import CookieConsentBanner from './CookieConsentBanner';
+import dynamic from 'next/dynamic';
+
+const CookieConsentBanner = dynamic(() => import('./CookieConsentBanner'), { ssr: false });
 import Scripts from '../analytics/Scripts';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
