@@ -116,9 +116,7 @@ function CalculatorCardComponent({ calc }: { calc: CalculatorMeta }) {
   return (
     <motion.div
       variants={cardVariants}
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      whileTap={{ scale: 0.98 }}
-      className="cursor-pointer group"
+      className="cursor-pointer group hover:-translate-y-1 active:scale-[0.98] transition-transform duration-200"
     >
       <Link href={calc.path} className="block h-full">
         <div className="relative h-full rounded-2xl border border-border/60 bg-card/80 backdrop-blur-sm p-5 sm:p-6 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/5 hover:border-emerald-500/30">
