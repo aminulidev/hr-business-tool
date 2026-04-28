@@ -189,18 +189,20 @@
   66% { transform: translate(-20px, 20px) scale(0.95); }
 }
 
-.animate-float {
-  animation: float 20s ease-in-out infinite;
-}
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .animate-float {
+    animation: float 20s ease-in-out infinite;
+  }
 
-.animate-float-delayed {
-  animation: float 25s ease-in-out infinite;
-  animation-delay: -5s;
-}
+  .animate-float-delayed {
+    animation: float 25s ease-in-out infinite;
+    animation-delay: -5s;
+  }
 
-.animate-float-slow {
-  animation: float 30s ease-in-out infinite;
-  animation-delay: -10s;
+  .animate-float-slow {
+    animation: float 30s ease-in-out infinite;
+    animation-delay: -10s;
+  }
 }
 
 /* Calculator input group styling */
