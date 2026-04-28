@@ -436,7 +436,7 @@ export default function SalaryTaxCalculator() {
         </div>
 
         {/* State & Local Tax */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="stateTax" className="text-sm font-medium">
               <Percent className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
@@ -543,7 +543,7 @@ export default function SalaryTaxCalculator() {
             </div>
 
             {/* Take-home Breakdown */}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
                 { label: 'Monthly', value: result.monthlyTakeHome },
                 { label: 'Weekly', value: result.weeklyTakeHome },
@@ -611,7 +611,7 @@ export default function SalaryTaxCalculator() {
             </div>
 
             {/* Tax Summary Metrics */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {[
                 { label: 'Federal Tax', value: result.federalTax, color: 'text-red-500' },
                 { label: 'State Tax', value: result.stateTax, color: 'text-amber-600' },
@@ -705,7 +705,7 @@ export default function SalaryTaxCalculator() {
               <p className="text-sm font-medium text-muted-foreground">
                 FICA Tax Detail
               </p>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="rounded-xl bg-background border border-border/50 p-3 text-center">
                   <p className="text-xs text-muted-foreground mb-1">
                     Social Security

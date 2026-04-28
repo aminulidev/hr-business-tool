@@ -228,7 +228,7 @@ export default function CookieConsentBanner() {
                   Customize
                 </Button>
               )}
-              <div className="flex gap-2 sm:ml-auto">
+              <div className="flex flex-wrap gap-2 sm:ml-auto">
                 <Button
                   variant="outline"
                   size="sm"

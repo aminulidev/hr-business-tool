@@ -20,16 +20,16 @@ function SearchBar() {
   const results: CalculatorMeta[] = query.trim().length < 2
     ? []
     : calculators
-        .filter((c) => {
-          const q = query.toLowerCase();
-          return (
-            c.title.toLowerCase().includes(q) ||
-            c.shortDescription.toLowerCase().includes(q) ||
-            c.category.toLowerCase().includes(q) ||
-            c.keywords.some((k) => k.toLowerCase().includes(q))
-          );
-        })
-        .slice(0, 8);
+      .filter((c) => {
+        const q = query.toLowerCase();
+        return (
+          c.title.toLowerCase().includes(q) ||
+          c.shortDescription.toLowerCase().includes(q) ||
+          c.category.toLowerCase().includes(q) ||
+          c.keywords.some((k) => k.toLowerCase().includes(q))
+        );
+      })
+      .slice(0, 8);
 
   useEffect(() => {
     if (open) {
@@ -90,7 +90,7 @@ function SearchBar() {
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search calculators…"
               aria-label="Search calculators"
-              className="w-full h-9 pl-8 pr-3 rounded-lg border border-emerald-500/40 bg-background text-sm outline-none focus:ring-2 focus:ring-emerald-500/30 placeholder:text-muted-foreground/60"
+              className="w-full h-9 pl-8 pr-3 rounded-lg border border-emerald-500/40 bg-background text-sm outline-none focus:ring-0 focus:ring-emerald-500/30 placeholder:text-muted-foreground/60"
             />
           </motion.div>
         )}
@@ -162,7 +162,7 @@ export default function Header() {
   ].includes(pathname);
 
   return (
-    <header className="sticky top-0 z-50 glass-strong relative">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-xl shadow-lg relative">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Left: Back button (on calculator pages only) + Logo */}
@@ -183,10 +183,8 @@ export default function Header() {
             <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
               <motion.div className="flex items-center gap-2" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <img src="/logo.svg" alt="QuickBizCalc Logo" className="h-9 w-9 drop-shadow-md" />
-                <div>
-                  <h1 className="text-lg font-bold tracking-tight text-foreground">
-                    QuickBiz<span className="text-emerald-600">Calc</span>
-                  </h1>
+                <div className="text-lg font-bold tracking-tight text-foreground">
+                  QuickBiz<span className="text-emerald-600">Calc</span>
                 </div>
               </motion.div>
             </Link>
@@ -256,7 +254,7 @@ export default function Header() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2, ease: 'easeInOut' }}
-            className="absolute top-full left-0 right-0 glass-strong border-b border-border/50 shadow-lg overflow-hidden"
+            className="absolute top-full left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-lg overflow-hidden"
           >
             <nav className="px-4 py-3 space-y-1">
               {!isHub && !isLegalPage && (
