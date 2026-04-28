@@ -9,8 +9,10 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Brand row */}
         <div className="flex items-center justify-center gap-2 text-muted-foreground mb-4">
-          <Calculator className="h-4 w-4" />
-          <span className="text-sm font-medium">QuickBizCalc</span>
+          <img src="/logo.svg" alt="" className="h-5 w-5" />
+          <span className="text-sm font-medium text-foreground">
+            QuickBiz<span className="text-emerald-600">Calc</span>
+          </span>
         </div>
 
         {/* Disclaimer */}

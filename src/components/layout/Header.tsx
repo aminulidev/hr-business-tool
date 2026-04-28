@@ -182,12 +182,10 @@ export default function Header() {
             )}
             <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
               <motion.div className="flex items-center gap-2" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-lg shadow-emerald-500/25">
-                  <Calculator className="h-5 w-5 text-white" />
-                </div>
+                <img src="/logo.svg" alt="QuickBizCalc Logo" className="h-9 w-9 drop-shadow-md" />
                 <div>
                   <h1 className="text-lg font-bold tracking-tight text-foreground">
-                    Calc<span className="text-emerald-600">Hub</span>
+                    QuickBiz<span className="text-emerald-600">Calc</span>
                   </h1>
                 </div>
               </motion.div>
