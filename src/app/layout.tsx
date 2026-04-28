@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { SITE_URL, SITE_NAME, SITE_TAGLINE } from "@/lib/calculator-meta";
+import { CONFIG } from "@/lib/config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -85,7 +87,7 @@ export const metadata: Metadata = {
     // google: "your-google-verification-code", // Uncomment and set when you receive verification from Google Search Console
   },
   other: {
-    "google-adsense-account": "ca-pub-XXXXXXXXXXXXXXXX", // Replace with your actual AdSense publisher ID after approval
+    "google-adsense-account": CONFIG.monetization.adSenseId, // Replace with your actual AdSense publisher ID after approval
   },
 };
 
@@ -167,6 +169,24 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
+        {/* Google Analytics Scripts */}
+        {CONFIG.analytics.gaId && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${CONFIG.analytics.gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${CONFIG.analytics.gaId}');
+              `}
+            </Script>
+          </>
+        )}
+
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-background focus:text-foreground top-0 left-0"
