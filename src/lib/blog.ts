@@ -41,12 +41,34 @@ export async function getSortedPostsData() {
   });
 
   // Sort posts by date
-  return allPostsData.sort((a, b) => {
+  const sortedPosts = allPostsData.sort((a, b) => {
     if (a.date < b.date) {
       return 1;
     } else {
       return -1;
     }
+  });
+
+  // Dynamically map dates to 2 months ago, staggered by 5 days per post
+  return sortedPosts.map((post, index) => {
+    const currentYear = new Date().getFullYear().toString();
+    const dynamicTitle = post.title.replace(/\b20\d{2}\b/g, currentYear);
+
+    const dateObj = new Date();
+    dateObj.setMonth(dateObj.getMonth() - 2);
+    dateObj.setDate(dateObj.getDate() - (index * 5)); // 5 days interval between posts
+    
+    const dynamicDate = dateObj.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    return {
+      ...post,
+      title: dynamicTitle,
+      date: dynamicDate
+    };
   });
 }
 
@@ -60,10 +82,16 @@ export async function getPostData(slug: string) {
   // Use marked to convert markdown into HTML string
   const contentHtml = await marked(matterResult.content);
 
+  // Get the dynamically adjusted title and date from the sorted array
+  const sortedPosts = await getSortedPostsData();
+  const postInfo = sortedPosts.find(p => p.slug === slug);
+
   // Combine the data with the slug and contentHtml
   return {
     slug,
     contentHtml,
-    ...(matterResult.data as { title: string; date: string; excerpt: string; author: string; category: string; coverImage?: string }),
+    ...(matterResult.data as { excerpt: string; author: string; category: string; coverImage?: string }),
+    title: postInfo?.title || matterResult.data.title,
+    date: postInfo?.date || matterResult.data.date,
   };
 }
