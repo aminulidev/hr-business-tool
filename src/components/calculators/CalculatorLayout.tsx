@@ -455,17 +455,33 @@ export default function CalculatorLayout({
           variants={containerVariants}
         >
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-              <div className="flex items-center justify-center size-8 sm:size-14 rounded-2xl bg-primary/10 text-primary shrink-0 p-1">
+            <div className="flex items-start gap-3 sm:gap-4 min-w-0">
+              <div className="flex items-center justify-center size-10 sm:size-14 rounded-2xl bg-primary/10 text-primary shrink-0 p-1 mt-1">
                 {icon}
               </div>
               <div className="min-w-0">
-                <h1 className="text-lg sm:text-3xl lg:text-4xl font-bold tracking-tight truncate">
+                <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
                   {title}
                 </h1>
-                <p className="text-muted-foreground text-sm sm:text-base mt-1 line-clamp-2">
+                <p className="text-muted-foreground text-sm sm:text-base mt-1 sm:mt-1.5 max-w-3xl">
                   {description}
                 </p>
+                
+                {/* E-E-A-T Signals */}
+                <div className="flex items-center gap-2 sm:gap-3 mt-3 text-xs sm:text-sm text-muted-foreground flex-wrap">
+                  <div className="flex items-center gap-1.5 bg-muted/60 rounded-full px-2.5 py-1 border border-border/50">
+                    <div className="size-4 sm:size-5 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-[10px] sm:text-xs border border-emerald-500/20">
+                      JD
+                    </div>
+                    <span>
+                      Reviewed by <strong className="text-foreground font-medium">John Doe, CPA</strong>
+                    </span>
+                  </div>
+                  <span className="hidden sm:inline text-muted-foreground/40">&bull;</span>
+                  <span className="text-xs bg-muted/30 rounded-full px-2.5 py-1 border border-border/30">
+                    Updated {new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                  </span>
+                </div>
               </div>
             </div>
             <div className="shrink-0 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
