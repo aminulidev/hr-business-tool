@@ -47,8 +47,8 @@ export default async function PostPage({ params }: Props) {
       <main className="flex-1 container mx-auto px-4 py-12 sm:py-20">
         <article className="max-w-3xl mx-auto">
           {/* Navigation */}
-          <Link 
-            href="/blog" 
+          <Link
+            href="/blog"
             className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-emerald-600 transition-colors mb-12 group"
           >
             <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
@@ -66,11 +66,11 @@ export default async function PostPage({ params }: Props) {
                 {post.date}
               </div>
             </div>
-            
+
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground leading-tight">
               {post.title}
             </h1>
-            
+
             <div className="flex items-center gap-3 pt-2">
               <div className="h-10 w-10 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
                 <User className="h-5 w-5 text-emerald-600" />
@@ -83,31 +83,14 @@ export default async function PostPage({ params }: Props) {
           </div>
 
           {/* Content */}
-          <div 
-            className="prose prose-lg dark:prose-invert prose-emerald max-w-none 
+          <div
+            className="prose-custom prose prose-lg dark:prose-invert prose-emerald max-w-none 
             prose-headings:font-bold prose-headings:tracking-tight
-            prose-a:text-emerald-600 prose-a:no-underline hover:prose-a:underline
+            prose-a:text-emerald-600 prose-a:underline prose-a:underline-offset-4 hover:prose-a:text-emerald-700
             prose-strong:text-foreground prose-blockquote:border-emerald-500
             prose-img:rounded-3xl prose-img:shadow-2xl"
-            dangerouslySetInnerHTML={{ __html: post.contentHtml }} 
+            dangerouslySetInnerHTML={{ __html: post.contentHtml }}
           />
-
-          {/* Footer Navigation */}
-          <div className="mt-20 pt-8 border-t border-border/50">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-              <div className="text-sm text-muted-foreground">
-                © {new Date().getFullYear()} QuickBizCalc. All rights reserved.
-              </div>
-              <div className="flex items-center gap-4">
-                <Link href="/calculators" className="text-sm font-medium hover:text-emerald-600 transition-colors">
-                  All Calculators
-                </Link>
-                <Link href="/contact" className="text-sm font-medium hover:text-emerald-600 transition-colors">
-                  Contact Us
-                </Link>
-              </div>
-            </div>
-          </div>
         </article>
       </main>
       <Footer />
