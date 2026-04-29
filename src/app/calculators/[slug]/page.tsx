@@ -106,7 +106,8 @@ export function generateMetadata({
       return { title: 'Calculator Not Found' };
     }
 
-    const title = `${calc.title} — Free Online Calculator | ${SITE_NAME}`;
+    const title = `${calc.title} — Free Online Calculator`;
+    const fullTitle = `${title} | ${SITE_NAME}`;
     const url = `${SITE_URL}${calc.path}`;
 
     return {
@@ -131,7 +132,7 @@ export function generateMetadata({
         canonical: url,
       },
       openGraph: {
-        title,
+        title: fullTitle,
         description: calc.metaDescription,
         url,
         siteName: SITE_NAME,
@@ -148,7 +149,7 @@ export function generateMetadata({
       },
       twitter: {
         card: 'summary_large_image',
-        title,
+        title: fullTitle,
         description: calc.metaDescription,
         images: ['/og-image.png'],
       },
