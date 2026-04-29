@@ -95,12 +95,12 @@ export const SITE_TAGLINE = 'Free Online Business & HR Calculators';
 // Category display metadata — order matters for hub page
 // Category order: highest-demand categories first (by search volume, CPC, and calculator count)
 export const categoryOrder = [
-  'Payroll & Taxes',          // 8 tools — highest volume & CPC keywords
-  'Salary & Compensation',    // 5 tools — high-demand salary/pay topics
-  'HR Analytics',             // 5 tools — HR metrics, severance, workers comp
-  'Commission & Compensation', // 2 tools — high-value tier1 keywords
-  'Business Finance',         // 5 tools — strong margin/ROI/discount keywords
-  'Time & Attendance',        // 4 tools — essential time-tracking tools
+  'Payroll & Taxes',
+  'Salary & Compensation',
+  'HR Analytics',
+  'Commission & Compensation',
+  'Business Finance',
+  'Time & Attendance',
 ] as const;
 
 export const categoryMeta: Record<string, { emoji: string; description: string }> = {
