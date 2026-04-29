@@ -12,42 +12,39 @@ import AppShell from '@/components/layout/AppShell';
 // Dynamic imports — code-split each calculator
 // ---------------------------------------------------------------------------
 
-import dynamic from 'next/dynamic';
-import CalculatorSkeleton from '@/components/calculators/CalculatorSkeleton';
-
-const SalesCommissionCalculator = dynamic(() => import('@/components/calculators/SalesCommissionCalculator'), { loading: () => <CalculatorSkeleton /> });
-const ProRataSalaryCalculator = dynamic(() => import('@/components/calculators/ProRataSalaryCalculator'), { loading: () => <CalculatorSkeleton /> });
-const SalaryIncreaseCalculator = dynamic(() => import('@/components/calculators/SalaryIncreaseCalculator'), { loading: () => <CalculatorSkeleton /> });
-const PayrollCalculator = dynamic(() => import('@/components/calculators/PayrollCalculator'), { loading: () => <CalculatorSkeleton /> });
-const TimeCardCalculator = dynamic(() => import('@/components/calculators/TimeCardCalculator'), { loading: () => <CalculatorSkeleton /> });
-const ProfitMarginCalculator = dynamic(() => import('@/components/calculators/ProfitMarginCalculator'), { loading: () => <CalculatorSkeleton /> });
-const PostTaxBonusCalculator = dynamic(() => import('@/components/calculators/PostTaxBonusCalculator'), { loading: () => <CalculatorSkeleton /> });
-const ROICalculator = dynamic(() => import('@/components/calculators/ROICalculator'), { loading: () => <CalculatorSkeleton /> });
-const SalaryConverterCalculator = dynamic(() => import('@/components/calculators/SalaryConverterCalculator'), { loading: () => <CalculatorSkeleton /> });
-const OvertimeCalculator = dynamic(() => import('@/components/calculators/OvertimeCalculator'), { loading: () => <CalculatorSkeleton /> });
-const DiscountCalculator = dynamic(() => import('@/components/calculators/DiscountCalculator'), { loading: () => <CalculatorSkeleton /> });
-const TaxBracketCalculator = dynamic(() => import('@/components/calculators/TaxBracketCalculator'), { loading: () => <CalculatorSkeleton /> });
-const AfterTaxIncomeCalculator = dynamic(() => import('@/components/calculators/AfterTaxIncomeCalculator'), { loading: () => <CalculatorSkeleton /> });
-const BusinessDayCalculator = dynamic(() => import('@/components/calculators/BusinessDayCalculator'), { loading: () => <CalculatorSkeleton /> });
-const PropertyTaxCalculator = dynamic(() => import('@/components/calculators/PropertyTaxCalculator'), { loading: () => <CalculatorSkeleton /> });
-const GrossMarginCalculator = dynamic(() => import('@/components/calculators/GrossMarginCalculator'), { loading: () => <CalculatorSkeleton /> });
-const MarkupCalculator = dynamic(() => import('@/components/calculators/MarkupCalculator'), { loading: () => <CalculatorSkeleton /> });
-const TaxRefundCalculator = dynamic(() => import('@/components/calculators/TaxRefundCalculator'), { loading: () => <CalculatorSkeleton /> });
-const DecimalConverterCalculator = dynamic(() => import('@/components/calculators/DecimalConverterCalculator'), { loading: () => <CalculatorSkeleton /> });
-const WagesCalculator = dynamic(() => import('@/components/calculators/WagesCalculator'), { loading: () => <CalculatorSkeleton /> });
-const PayrollDeductionCalculator = dynamic(() => import('@/components/calculators/PayrollDeductionCalculator'), { loading: () => <CalculatorSkeleton /> });
-const SalaryTaxCalculator = dynamic(() => import('@/components/calculators/SalaryTaxCalculator'), { loading: () => <CalculatorSkeleton /> });
-const TimeCardLunchCalculator = dynamic(() => import('@/components/calculators/TimeCardLunchCalculator'), { loading: () => <CalculatorSkeleton /> });
-const HourlyPaycheckCalculator = dynamic(() => import('@/components/calculators/HourlyPaycheckCalculator'), { loading: () => <CalculatorSkeleton /> });
+import SalesCommissionCalculator from '@/components/calculators/SalesCommissionCalculator';
+import ProRataSalaryCalculator from '@/components/calculators/ProRataSalaryCalculator';
+import SalaryIncreaseCalculator from '@/components/calculators/SalaryIncreaseCalculator';
+import PayrollCalculator from '@/components/calculators/PayrollCalculator';
+import TimeCardCalculator from '@/components/calculators/TimeCardCalculator';
+import ProfitMarginCalculator from '@/components/calculators/ProfitMarginCalculator';
+import PostTaxBonusCalculator from '@/components/calculators/PostTaxBonusCalculator';
+import ROICalculator from '@/components/calculators/ROICalculator';
+import SalaryConverterCalculator from '@/components/calculators/SalaryConverterCalculator';
+import OvertimeCalculator from '@/components/calculators/OvertimeCalculator';
+import DiscountCalculator from '@/components/calculators/DiscountCalculator';
+import TaxBracketCalculator from '@/components/calculators/TaxBracketCalculator';
+import AfterTaxIncomeCalculator from '@/components/calculators/AfterTaxIncomeCalculator';
+import BusinessDayCalculator from '@/components/calculators/BusinessDayCalculator';
+import PropertyTaxCalculator from '@/components/calculators/PropertyTaxCalculator';
+import GrossMarginCalculator from '@/components/calculators/GrossMarginCalculator';
+import MarkupCalculator from '@/components/calculators/MarkupCalculator';
+import TaxRefundCalculator from '@/components/calculators/TaxRefundCalculator';
+import DecimalConverterCalculator from '@/components/calculators/DecimalConverterCalculator';
+import WagesCalculator from '@/components/calculators/WagesCalculator';
+import PayrollDeductionCalculator from '@/components/calculators/PayrollDeductionCalculator';
+import SalaryTaxCalculator from '@/components/calculators/SalaryTaxCalculator';
+import TimeCardLunchCalculator from '@/components/calculators/TimeCardLunchCalculator';
+import HourlyPaycheckCalculator from '@/components/calculators/HourlyPaycheckCalculator';
 // ── 8 new calculators ──
-const SeverancePayCalculator = dynamic(() => import('@/components/calculators/SeverancePayCalculator'), { loading: () => <CalculatorSkeleton /> });
-const WorkersCompCalculator = dynamic(() => import('@/components/calculators/WorkersCompCalculator'), { loading: () => <CalculatorSkeleton /> });
-const FicaTaxCalculator = dynamic(() => import('@/components/calculators/FicaTaxCalculator'), { loading: () => <CalculatorSkeleton /> });
-const TimeAndAHalfCalculator = dynamic(() => import('@/components/calculators/TimeAndAHalfCalculator'), { loading: () => <CalculatorSkeleton /> });
-const EmployeeTurnoverCalculator = dynamic(() => import('@/components/calculators/EmployeeTurnoverCalculator'), { loading: () => <CalculatorSkeleton /> });
-const CostPerHireCalculator = dynamic(() => import('@/components/calculators/CostPerHireCalculator'), { loading: () => <CalculatorSkeleton /> });
-const BillableHoursCalculator = dynamic(() => import('@/components/calculators/BillableHoursCalculator'), { loading: () => <CalculatorSkeleton /> });
-const RevenuePerEmployeeCalculator = dynamic(() => import('@/components/calculators/RevenuePerEmployeeCalculator'), { loading: () => <CalculatorSkeleton /> });
+import SeverancePayCalculator from '@/components/calculators/SeverancePayCalculator';
+import WorkersCompCalculator from '@/components/calculators/WorkersCompCalculator';
+import FicaTaxCalculator from '@/components/calculators/FicaTaxCalculator';
+import TimeAndAHalfCalculator from '@/components/calculators/TimeAndAHalfCalculator';
+import EmployeeTurnoverCalculator from '@/components/calculators/EmployeeTurnoverCalculator';
+import CostPerHireCalculator from '@/components/calculators/CostPerHireCalculator';
+import BillableHoursCalculator from '@/components/calculators/BillableHoursCalculator';
+import RevenuePerEmployeeCalculator from '@/components/calculators/RevenuePerEmployeeCalculator';
 
 const componentMap: Record<string, React.ComponentType> = {
   'commission-calculator': SalesCommissionCalculator,
