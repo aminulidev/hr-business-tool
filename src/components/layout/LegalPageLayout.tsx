@@ -65,30 +65,6 @@ export default function LegalPageLayout({
           </p> */}
         </div>
         <div className="prose-custom">{children}</div>
-
-        {/* Back to Home + Copyright */}
-        <div className="mt-16 space-y-4">
-          <div className="flex flex-wrap gap-3 justify-center">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-border/50 bg-card hover:bg-muted/50 text-sm font-medium text-foreground transition-colors"
-            >
-              <Home className="size-4 text-emerald-600" />
-              Back to All Calculators
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-border/50 bg-card hover:bg-muted/50 text-sm font-medium text-foreground transition-colors"
-            >
-              Contact Us
-            </Link>
-          </div>
-          <div className="rounded-xl border border-border/50 bg-muted/30 p-6">
-            <p className="text-sm text-muted-foreground text-center">
-              &copy; {new Date().getFullYear()} {SITE_NAME}. All rights reserved.
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   );
