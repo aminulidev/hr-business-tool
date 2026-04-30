@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
-import { SITE_URL, SITE_NAME, SITE_TAGLINE } from "@/lib/calculator-meta";
+import { CONTACT_EMAIL, SITE_URL, SITE_NAME, SITE_TAGLINE } from '@/lib/calculator-meta';
 import { CONFIG } from "@/lib/config";
 
 const geistSans = Geist({
@@ -105,7 +105,7 @@ const websiteJsonLd = {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer support",
-      email: "hello@quickbizcalc.com",
+      email: CONTACT_EMAIL,
       availableLanguage: ["English"],
     },
   },
@@ -131,13 +131,13 @@ const organizationJsonLd = {
     {
       "@type": "ContactPoint",
       contactType: "customer support",
-      email: "hello@quickbizcalc.com",
+      email: CONTACT_EMAIL,
       availableLanguage: ["English"],
     },
     {
       "@type": "ContactPoint",
       contactType: "privacy",
-      email: "privacy@quickbizcalc.com",
+      email: CONTACT_EMAIL,
       availableLanguage: ["English"],
     },
   ],

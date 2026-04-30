@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import LegalPageLayout from '@/components/layout/LegalPageLayout';
-import { SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
+import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
@@ -192,10 +192,10 @@ export default function PrivacyPolicyPage() {
         <p>
           To exercise any of these rights, please contact us at{' '}
           <a
-            href="mailto:privacy@quickbizcalc.com"
+            href={`mailto:${CONTACT_EMAIL}`}
             className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
           >
-            privacy@quickbizcalc.com
+            {CONTACT_EMAIL}
           </a>
           . We will respond to your request within 30 days.
         </p>
@@ -206,10 +206,10 @@ export default function PrivacyPolicyPage() {
           personal information from children under 13. If you are a parent or guardian and believe
           your child has provided us with personal information, please contact us at{' '}
           <a
-            href="mailto:privacy@quickbizcalc.com"
+            href={`mailto:${CONTACT_EMAIL}`}
             className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
           >
-            privacy@quickbizcalc.com
+            {CONTACT_EMAIL}
           </a>{' '}
           and we will take steps to delete such information.
         </p>
@@ -243,10 +243,10 @@ export default function PrivacyPolicyPage() {
           </a>{' '}
           or email us at{' '}
           <a
-            href="mailto:privacy@quickbizcalc.com"
+            href={`mailto:${CONTACT_EMAIL}`}
             className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
           >
-            privacy@quickbizcalc.com
+            {CONTACT_EMAIL}
           </a>
           .
         </p>

@@ -91,6 +91,7 @@ export interface CalculatorMeta {
 export const SITE_URL = 'https://quickbizcalc.com';
 export const SITE_NAME = 'QuickBizCalc';
 export const SITE_TAGLINE = 'Free Online Business & HR Calculators';
+export const CONTACT_EMAIL = 'quickbizcalc@gmail.com';
 
 // Category display metadata — order matters for hub page
 // Category order: highest-demand categories first (by search volume, CPC, and calculator count)

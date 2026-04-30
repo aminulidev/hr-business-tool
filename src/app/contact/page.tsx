@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import LegalPageLayout from '@/components/layout/LegalPageLayout';
-import { SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
+import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
 import { Mail, Clock, MessageSquare, Globe } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -48,20 +48,20 @@ export default function ContactPage() {
               For general questions, feedback, and support:
             </p>
             <a
-              href="mailto:hello@quickbizcalc.com"
+              href={`mailto:${CONTACT_EMAIL}`}
               className="text-emerald-600 hover:text-emerald-700 font-medium underline underline-offset-2"
             >
-              hello@quickbizcalc.com
+              {CONTACT_EMAIL}
             </a>
             <div className="border-t border-border/30 pt-3 mt-3">
               <p className="text-muted-foreground text-xs">
                 For privacy-related inquiries:
               </p>
               <a
-                href="mailto:privacy@quickbizcalc.com"
+                href={`mailto:${CONTACT_EMAIL}`}
                 className="text-emerald-600 hover:text-emerald-700 font-medium underline underline-offset-2"
               >
-                privacy@quickbizcalc.com
+                {CONTACT_EMAIL}
               </a>
             </div>
             <div className="border-t border-border/30 pt-3">
@@ -69,10 +69,10 @@ export default function ContactPage() {
                 For legal and partnership inquiries:
               </p>
               <a
-                href="mailto:legal@quickbizcalc.com"
+                href={`mailto:${CONTACT_EMAIL}`}
                 className="text-emerald-600 hover:text-emerald-700 font-medium underline underline-offset-2"
               >
-                legal@quickbizcalc.com
+                {CONTACT_EMAIL}
               </a>
             </div>
           </div>
@@ -151,10 +151,10 @@ export default function ContactPage() {
             <p>
               Please email us at{' '}
               <a
-                href="mailto:hello@quickbizcalc.com"
+                href={`mailto:${CONTACT_EMAIL}`}
                 className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
               >
-                hello@quickbizcalc.com
+                {CONTACT_EMAIL}
               </a>{' '}
               with the calculator name, the input values you used, the result you received, and the
               result you expected. Screenshots are very helpful. We will investigate and fix any
@@ -171,10 +171,10 @@ export default function ContactPage() {
               that would be useful for small business or HR professionals, please send your suggestion
               to{' '}
               <a
-                href="mailto:hello@quickbizcalc.com"
+                href={`mailto:${CONTACT_EMAIL}`}
                 className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
               >
-                hello@quickbizcalc.com
+                {CONTACT_EMAIL}
               </a>
               . We evaluate all suggestions based on demand and feasibility.
             </p>
@@ -187,10 +187,10 @@ export default function ContactPage() {
             <p>
               For business development, advertising, and partnership inquiries, please email us at{' '}
               <a
-                href="mailto:legal@quickbizcalc.com"
+                href={`mailto:${CONTACT_EMAIL}`}
                 className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
               >
-                legal@quickbizcalc.com
+                {CONTACT_EMAIL}
               </a>{' '}
               with details about your proposal. We will review and respond to serious inquiries.
             </p>

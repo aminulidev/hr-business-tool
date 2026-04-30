@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import LegalPageLayout from '@/components/layout/LegalPageLayout';
-import { SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
+import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
 
 export const metadata: Metadata = {
   title: 'About Us',
@@ -144,10 +144,10 @@ export default function AboutPage() {
           </a>{' '}
           or send us an email at{' '}
           <a
-            href="mailto:hello@quickbizcalc.com"
+            href={`mailto:${CONTACT_EMAIL}`}
             className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
           >
-            hello@quickbizcalc.com
+            {CONTACT_EMAIL}
           </a>
           . We aim to respond to all inquiries within 48 hours.
         </p>
