@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import LegalPageLayout from '@/components/layout/LegalPageLayout';
+import AppShell from '@/components/layout/AppShell';
 import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
 
 export const metadata: Metadata = {
@@ -25,11 +26,12 @@ export const metadata: Metadata = {
 
 export default function DisclaimerPage() {
   return (
-    <LegalPageLayout title="Disclaimer" lastUpdated="April 21, 2026">
+    <AppShell>
+      <LegalPageLayout title="Disclaimer" lastUpdated="April 21, 2026">
       <section className="space-y-6 text-sm leading-relaxed text-foreground/80">
         {/* Critical notice box */}
         <div className="rounded-2xl border-2 border-amber-500/40 bg-amber-500/5 p-6 space-y-3">
-          <h2 className="text-lg font-semibold text-amber-700 dark:text-amber-400">
+          <h2 className="text-lg font-semibold text-amber-700 dark:text-amber-400 !mt-0">
             Important Notice
           </h2>
           <p className="text-foreground/90 font-medium">
@@ -181,5 +183,6 @@ export default function DisclaimerPage() {
         </p>
       </section>
     </LegalPageLayout>
+    </AppShell>
   );
 }

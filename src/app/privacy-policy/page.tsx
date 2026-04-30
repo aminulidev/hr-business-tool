@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import LegalPageLayout from '@/components/layout/LegalPageLayout';
+import AppShell from '@/components/layout/AppShell';
 import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
 
 export const metadata: Metadata = {
@@ -26,7 +27,8 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <LegalPageLayout title="Privacy Policy" lastUpdated="April 21, 2026">
+    <AppShell>
+      <LegalPageLayout title="Privacy Policy" lastUpdated="April 21, 2026">
       <section className="space-y-6 text-sm leading-relaxed text-foreground/80">
         <p>
           At QuickBizCalc (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;), we are committed to protecting your privacy.
@@ -252,5 +254,6 @@ export default function PrivacyPolicyPage() {
         </p>
       </section>
     </LegalPageLayout>
+    </AppShell>
   );
 }
