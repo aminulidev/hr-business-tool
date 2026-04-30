@@ -45,6 +45,12 @@ export default function Footer() {
               Contact
             </Link>
             <Link
+              href="/glossary"
+              className="hover:text-foreground transition-colors duration-200 underline-offset-2 hover:underline font-medium text-emerald-600/80"
+            >
+              Glossary
+            </Link>
+            <Link
               href="/privacy-policy"
               className="hover:text-foreground transition-colors duration-200 underline-offset-2 hover:underline"
             >

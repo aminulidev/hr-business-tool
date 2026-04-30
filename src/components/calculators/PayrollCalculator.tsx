@@ -72,7 +72,35 @@ export default function PayrollCalculator() {
     setFederalTaxRate('22');
     setStateTaxRate('5');
     setOtherDeductions('500');
-    setResult(null);
+    
+    // Trigger calculation with these values
+    const salary = 75000;
+    const fedRate = 0.22;
+    const stRate = 0.05;
+    const deductions = 500;
+    const periods = 1; // annual
+    const grossPerPeriod = 75000;
+    const federalTaxPerPeriod = grossPerPeriod * fedRate;
+    const stateTaxPerPeriod = grossPerPeriod * stRate;
+    const deductionsPerPeriod = deductions * 12;
+    const totalDeductionsPerPeriod = federalTaxPerPeriod + stateTaxPerPeriod + deductionsPerPeriod;
+    const netPayPerPeriod = grossPerPeriod - totalDeductionsPerPeriod;
+    const effectiveTaxRate = 27; // (22 + 5)
+    const annualNetPay = netPayPerPeriod;
+
+    setResult({
+      grossPerPeriod,
+      federalTaxPerPeriod,
+      stateTaxPerPeriod,
+      otherDeductionsPerPeriod: deductionsPerPeriod,
+      netPayPerPeriod,
+      effectiveTaxRate,
+      annualNetPay,
+    });
+    saveEntry(
+      { salaryInput: '75000', frequency: 'annual', federalTaxRate: '22', stateTaxRate: '5', otherDeductions: '500' },
+      `${formatCurrency(netPayPerPeriod)} net / Annual (${formatCurrency(grossPerPeriod)} gross)`
+    );
   };
 
   const handleCalculate = () => {
