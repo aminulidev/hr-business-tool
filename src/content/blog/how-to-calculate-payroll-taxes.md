@@ -2,13 +2,15 @@
 title: "The Ultimate Guide to Calculating Payroll Taxes in 2025"
 date: "2025-04-26"
 excerpt: "Understanding payroll tax calculations is critical for any business owner. Learn how to accurately calculate FICA, FUTA, and state withholdings for your employees in 2025."
-author: "QuickBizCalc Team"
+author: "Sarah Jenkins, HR Specialist"
 category: "Payroll"
 ---
 
 Calculating payroll taxes can feel like a daunting, high-stakes task for many business owners and new HR professionals. Mistakes don't just upset your employees; they can lead to severe audits and financial penalties from the IRS. 
 
 However, understanding the mechanics behind these calculations is essential for remaining compliant and ensuring your business's financial health. In this comprehensive guide, we'll break down the primary components of payroll taxes and how to calculate them accurately in 2025.
+
+> **Pro Tip:** If you want to skip the manual math, use our [free payroll calculator](/calculators/payroll-calculator) to instantly estimate federal, state, and local tax withholdings for your team.
 
 ## 1. FICA Taxes (Social Security and Medicare)
 
