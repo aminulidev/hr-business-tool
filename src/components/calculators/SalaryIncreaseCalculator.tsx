@@ -12,6 +12,7 @@ import CalculatorLayout from '@/components/calculators/CalculatorLayout';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
 import ComparePanel, { CompareRow } from './ComparePanel';
+import TryExample from './TryExample';
 
 interface SalaryIncreaseResult {
   currentSalary: number;
@@ -33,6 +34,13 @@ export default function SalaryIncreaseCalculator() {
   const [inflationRate, setInflationRate] = useState<string>('3.0');
   const [calculated, setCalculated] = useState(false);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ currentSalary: string; salaryIncrease: string; inflationRate: string }>('salary-increase-calculator');
+
+  const handleTryExample = () => {
+    setCurrentSalary('65000');
+    setSalaryIncrease('8');
+    setInflationRate('3.2');
+    setCalculated(true);
+  };
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: SalaryIncreaseResult; label: string } | null>(null);
@@ -243,17 +251,20 @@ export default function SalaryIncreaseCalculator() {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-3">
-        <Button
-          onClick={handleCalculate}
-          disabled={currentSalaryNum <= 0}
-          className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25 flex-1 sm:flex-none"
-        >
-          Calculate Salary Increase
-        </Button>
-        <Button variant="outline" onClick={handleReset}>
-          Reset
-        </Button>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex gap-3">
+          <Button
+            onClick={handleCalculate}
+            disabled={currentSalaryNum <= 0}
+            className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
+          >
+            Calculate Salary Increase
+          </Button>
+          <Button variant="outline" onClick={handleReset}>
+            Reset
+          </Button>
+        </div>
+        <TryExample onClick={handleTryExample} />
       </div>
 
       {/* Results */}
