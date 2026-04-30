@@ -88,7 +88,7 @@ export interface CalculatorMeta {
 // Site-wide constants
 // ---------------------------------------------------------------------------
 
-export const SITE_URL = 'https://quickbizcalc.com';
+export const SITE_URL = 'https://www.quickbizcalc.com';
 export const SITE_NAME = 'QuickBizCalc';
 export const SITE_TAGLINE = 'Free Online Business & HR Calculators';
 export const CONTACT_EMAIL = 'quickbizcalc@gmail.com';
