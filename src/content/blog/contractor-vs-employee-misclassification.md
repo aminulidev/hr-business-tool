@@ -2,7 +2,7 @@
 title: "Managing Contractor vs. Employee Status: Avoiding Misclassification"
 date: "2025-04-22"
 excerpt: "Misclassifying workers can lead to significant penalties. Learn the key differences between W-2 employees and 1099 contractors in 2025."
-author: "QuickBizCalc Team"
+author: "Sarah Jenkins, HR Specialist"
 category: "Compliance"
 ---
 

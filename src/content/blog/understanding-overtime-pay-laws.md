@@ -2,7 +2,7 @@
 title: "Understanding Overtime Pay Laws: A Comprehensive Guide"
 date: "2025-04-25"
 excerpt: "Are you paying your employees fairly for extra hours? Discover the essential rules of the FLSA regarding overtime compensation, exemptions, and state laws."
-author: "QuickBizCalc Team"
+author: "Sarah Jenkins, HR Specialist"
 category: "Legal"
 ---
 
@@ -15,6 +15,8 @@ Under the federal Fair Labor Standards Act (FLSA), most non-exempt employees mus
 The foundational rule of the FLSA is the "time-and-a-half" requirement. The standard overtime rate must be at least 1.5 times the employee's "regular rate of pay." 
 
 For example, if an employee's standard hourly rate is $20 per hour, their overtime rate must be at least $30 per hour for every hour worked beyond the 40-hour threshold in that week. Note that the FLSA applies per workweek; you cannot average hours over a two-week pay period to avoid paying overtime (e.g., an employee working 50 hours week one and 30 hours week two is still owed 10 hours of overtime).
+
+> **Pro Tip:** Need to calculate this quickly? Use our [overtime pay calculator](/calculators/overtime-calculator) or [time and a half calculator](/calculators/time-and-a-half-calculator) to instantly compute total wages and overtime premiums.
 
 ## The Big Trap: Exempt vs. Non-Exempt Employees
 

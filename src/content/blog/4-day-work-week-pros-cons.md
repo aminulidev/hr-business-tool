@@ -2,7 +2,7 @@
 title: "The Pros and Cons of a 4-Day Work Week for HR Managers"
 date: "2025-04-21"
 excerpt: "Is the 4-day work week the future of employment? We explore the operational impacts, productivity metrics, and employee satisfaction trends of this rising workplace shift."
-author: "QuickBizCalc Team"
+author: "Sarah Jenkins, HR Specialist"
 category: "Future of Work"
 ---
 
@@ -25,6 +25,8 @@ For businesses with physical offices, closing the office for an extra day each w
 
 ### 4. Forced Efficiency
 When teams know they have less time to accomplish the same amount of work, they naturally tend to eliminate "busy work." Meaningless meetings are shortened or canceled, asynchronous communication improves, and workflows are streamlined. 
+
+> **Pro Tip:** Transitioning to a compressed schedule requires tight time management. Have your team use a [time card calculator](/calculators/time-card-calculator) to ensure they are maximizing their focused working hours.
 
 ## The Challenges for HR and Management
 

@@ -2,7 +2,7 @@
 title: "Salary vs. Hourly Pay: Which is Better for Your Business?"
 date: "2025-04-24"
 excerpt: "Deciding between salaried and hourly compensation models is a pivotal choice for employers. We compare the pros, cons, and legal implications of each to help you decide."
-author: "QuickBizCalc Team"
+author: "Sarah Jenkins, HR Specialist"
 category: "HR Strategy"
 ---
 
@@ -18,6 +18,8 @@ Hourly employees are paid strictly for the exact amount of time they are working
 *   **Ultimate Fairness:** Employees feel compensated for every minute they give to the company. If they work longer, they earn more.
 *   **Cost Control and Flexibility:** You only pay for the labor you actually need. During slow seasons, you can reduce hours to save on payroll costs.
 *   **Clear Overtime Rules:** Hourly workers are almost universally "non-exempt," meaning they are legally entitled to time-and-a-half pay for any hours worked over 40 in a workweek. This clarity prevents legal ambiguity.
+
+> **Pro Tip:** Trying to compare an hourly wage to an annual salary offer? Use our [salary converter calculator](/calculators/salary-converter) to instantly convert between hourly, weekly, monthly, and annual rates.
 
 ### The Cons of Hourly Pay
 *   **Administrative Burden:** Tracking hours, managing timesheets, policing breaks, and calculating variable paychecks requires significant administrative oversight and reliable software.
