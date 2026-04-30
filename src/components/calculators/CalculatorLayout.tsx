@@ -471,10 +471,10 @@ export default function CalculatorLayout({
                 <div className="flex items-center gap-2 sm:gap-3 mt-3 text-xs sm:text-sm text-muted-foreground flex-wrap">
                   <div className="flex items-center gap-1.5 bg-muted/60 rounded-full px-2.5 py-1 border border-border/50">
                     <div className="size-4 sm:size-5 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-[10px] sm:text-xs border border-emerald-500/20">
-                      JD
+                      SJ
                     </div>
                     <span>
-                      Reviewed by <strong className="text-foreground font-medium">John Doe, CPA</strong>
+                      Reviewed by <strong className="text-foreground font-medium">Sarah Jenkins, CPA</strong>
                     </span>
                   </div>
                   <span className="hidden sm:inline text-muted-foreground/40">&bull;</span>
