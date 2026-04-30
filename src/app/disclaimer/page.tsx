@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import LegalPageLayout from '@/components/layout/LegalPageLayout';
-import { SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
+import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
 
 export const metadata: Metadata = {
   title: 'Disclaimer',
@@ -172,10 +172,10 @@ export default function DisclaimerPage() {
           </a>{' '}
           or email us at{' '}
           <a
-            href="mailto:legal@quickbizcalc.com"
+            href={`mailto:${CONTACT_EMAIL}`}
             className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
           >
-            legal@quickbizcalc.com
+            {CONTACT_EMAIL}
           </a>
           .
         </p>
