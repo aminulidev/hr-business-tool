@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import LegalPageLayout from '@/components/layout/LegalPageLayout';
+import AppShell from '@/components/layout/AppShell';
+import ContactForm from '@/components/layout/ContactForm';
 import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
-import { Mail, Clock, MessageSquare, Globe } from 'lucide-react';
+import { Mail, Clock, MessageSquare, Globe, MapPin } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Contact Us',
@@ -26,177 +28,144 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <LegalPageLayout title="Contact Us" lastUpdated="April 21, 2026">
-      <section className="space-y-6 text-sm leading-relaxed text-foreground/80">
-        <p>
-          We would love to hear from you. Whether you have a question about one of our calculators,
-          want to report a bug, have a suggestion for a new tool, or are interested in partnering
-          with QuickBizCalc, please do not hesitate to reach out. We aim to respond to all inquiries
-          within 48 business hours.
-        </p>
+    <AppShell>
+      <LegalPageLayout title="Contact Us" lastUpdated="April 21, 2026">
+        <section className="space-y-12 text-sm leading-relaxed">
+          <div className="max-w-3xl">
+            <p className="text-base text-foreground/70">
+              We value your feedback and are here to help with any questions you may have about our tools. 
+              Whether you&apos;ve found a bug, have a suggestion for a new calculator, or want to discuss a 
+              business partnership, we&apos;d love to hear from you.
+            </p>
+          </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 mt-8">
-          {/* Email */}
-          <div className="rounded-xl border border-border/50 bg-card p-6 space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10">
-                <Mail className="h-5 w-5 text-emerald-600" />
+          <div className="grid gap-8 lg:grid-cols-5">
+            {/* Contact Form - Main Area */}
+            <div className="lg:col-span-3">
+              <ContactForm />
+            </div>
+
+            {/* Contact Info - Sidebar Area */}
+            <div className="lg:col-span-2 space-y-6">
+              <div className="rounded-2xl border border-border/50 bg-card p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <Mail className="h-5 w-5 text-emerald-600" />
+                  Direct Contact
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">
+                      General & Support
+                    </p>
+                    <a
+                      href={`mailto:${CONTACT_EMAIL}`}
+                      className="text-base font-medium text-emerald-600 hover:text-emerald-700 underline underline-offset-4"
+                    >
+                      {CONTACT_EMAIL}
+                    </a>
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">
+                      Business & Legal
+                    </p>
+                    <a
+                      href={`mailto:${CONTACT_EMAIL}`}
+                      className="text-base font-medium text-emerald-600 hover:text-emerald-700 underline underline-offset-4"
+                    >
+                      {CONTACT_EMAIL}
+                    </a>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-base font-semibold text-foreground">Email Us</h3>
-            </div>
-            <p className="text-muted-foreground text-xs">
-              For general questions, feedback, and support:
-            </p>
-            <a
-              href={`mailto:${CONTACT_EMAIL}`}
-              className="text-emerald-600 hover:text-emerald-700 font-medium underline underline-offset-2"
-            >
-              {CONTACT_EMAIL}
-            </a>
-            <div className="border-t border-border/30 pt-3 mt-3">
-              <p className="text-muted-foreground text-xs">
-                For privacy-related inquiries:
-              </p>
-              <a
-                href={`mailto:${CONTACT_EMAIL}`}
-                className="text-emerald-600 hover:text-emerald-700 font-medium underline underline-offset-2"
-              >
-                {CONTACT_EMAIL}
-              </a>
-            </div>
-            <div className="border-t border-border/30 pt-3">
-              <p className="text-muted-foreground text-xs">
-                For legal and partnership inquiries:
-              </p>
-              <a
-                href={`mailto:${CONTACT_EMAIL}`}
-                className="text-emerald-600 hover:text-emerald-700 font-medium underline underline-offset-2"
-              >
-                {CONTACT_EMAIL}
-              </a>
-            </div>
-          </div>
 
-          {/* Response Time */}
-          <div className="rounded-xl border border-border/50 bg-card p-6 space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold-500/10">
-                <Clock className="h-5 w-5 text-gold-600" />
+              <div className="rounded-2xl border border-border/50 bg-card p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-gold-600" />
+                  Response Time
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  We aim to respond to all inquiries within <strong className="text-foreground">48 business hours</strong>.
+                </p>
+                <div className="space-y-2 text-xs border-t border-border/30 pt-4">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Mon — Fri:</span>
+                    <span className="font-medium">9:00 AM — 6:00 PM EST</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Sat — Sun:</span>
+                    <span className="font-medium text-amber-600">Limited Support</span>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-base font-semibold text-foreground">Response Time</h3>
-            </div>
-            <p className="text-muted-foreground">
-              We aim to respond to all inquiries within <strong className="text-foreground">48 business hours</strong>.
-              During weekends and holidays, response times may be slightly longer.
-            </p>
-            <div className="pt-2 space-y-2 text-xs text-muted-foreground">
-              <p><strong className="text-foreground">Business Hours:</strong> Monday &ndash; Friday, 9:00 AM &ndash; 6:00 PM (EST)</p>
-              <p><strong className="text-foreground">Weekend Support:</strong> Limited availability</p>
-            </div>
-          </div>
 
-          {/* Feedback */}
-          <div className="rounded-xl border border-border/50 bg-card p-6 space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10">
-                <MessageSquare className="h-5 w-5 text-emerald-600" />
+              <div className="rounded-2xl border border-border/50 bg-card p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <Globe className="h-5 w-5 text-blue-600" />
+                  Location
+                </h3>
+                <div className="flex items-start gap-3">
+                  <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+                  <div>
+                    <p className="font-medium">United States</p>
+                    <p className="text-xs text-muted-foreground">Remote Operations</p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-base font-semibold text-foreground">Feedback &amp; Suggestions</h3>
             </div>
-            <p className="text-muted-foreground">
-              Your feedback helps us improve. Let us know if you have ideas for new calculators,
-              find any calculation errors, or have suggestions for improving the user experience.
-            </p>
-            <p className="text-muted-foreground text-xs">
-              Please include as much detail as possible in your message, such as the calculator
-              name, the values you entered, the expected result, and the actual result you received.
-            </p>
           </div>
 
-          {/* Website */}
-          <div className="rounded-xl border border-border/50 bg-card p-6 space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold-500/10">
-                <Globe className="h-5 w-5 text-gold-600" />
+          {/* FAQ Section */}
+          <div className="pt-8 border-t border-border/30">
+            <h2 className="text-2xl font-bold text-foreground mb-8 flex items-center gap-3">
+              <MessageSquare className="h-6 w-6 text-emerald-600" />
+              Frequently Asked Questions
+            </h2>
+
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div className="rounded-xl border border-border/30 bg-muted/10 p-6 hover:bg-muted/20 transition-colors">
+                <h3 className="text-base font-semibold text-foreground mb-3">
+                  How do I report a calculation error?
+                </h3>
+                <p className="text-muted-foreground">
+                  Please use the contact form or email us with the calculator name and the specific inputs 
+                  that produced the unexpected result. Our technical team investigates all reports 
+                  within 24-48 hours.
+                </p>
               </div>
-              <h3 className="text-base font-semibold text-foreground">Online</h3>
+
+              <div className="rounded-xl border border-border/30 bg-muted/10 p-6 hover:bg-muted/20 transition-colors">
+                <h3 className="text-base font-semibold text-foreground mb-3">
+                  Can I request a custom calculator?
+                </h3>
+                <p className="text-muted-foreground">
+                  Absolutely! We are constantly expanding our suite. If you have a specific business 
+                  or HR formula you&apos;d like to see automated, please send us your suggestion.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-border/30 bg-muted/10 p-6 hover:bg-muted/20 transition-colors">
+                <h3 className="text-base font-semibold text-foreground mb-3">
+                  Is there a cost to use your tools?
+                </h3>
+                <p className="text-muted-foreground">
+                  No, all calculators on QuickBizCalc are 100% free for both personal and professional 
+                  use. We are supported by minimal, non-intrusive advertising.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-border/30 bg-muted/10 p-6 hover:bg-muted/20 transition-colors">
+                <h3 className="text-base font-semibold text-foreground mb-3">
+                  How is my data protected?
+                </h3>
+                <p className="text-muted-foreground">
+                  Your privacy is our priority. All calculations happen entirely in your browser. 
+                  We never see, store, or transmit any of the data you enter into our tools.
+                </p>
+              </div>
             </div>
-            <p className="text-muted-foreground">
-              You can also find us online:
-            </p>
-            <div className="space-y-2 text-xs">
-              <p>
-                <strong className="text-foreground">Website:</strong>{' '}
-                <a
-                  href={SITE_URL}
-                  className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
-                >
-                  {SITE_URL}
-                </a>
-              </p>
-              <p>
-                <strong className="text-foreground">Location:</strong> United States
-              </p>
-            </div>
           </div>
-        </div>
-
-        <h2 className="text-xl font-semibold text-foreground pt-6">Frequently Asked Questions</h2>
-
-        <div className="space-y-4 mt-4">
-          <div className="rounded-xl border border-border/50 bg-muted/20 p-5">
-            <h3 className="text-sm font-semibold text-foreground mb-2">
-              I found an error in one of the calculators. How do I report it?
-            </h3>
-            <p>
-              Please email us at{' '}
-              <a
-                href={`mailto:${CONTACT_EMAIL}`}
-                className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
-              >
-                {CONTACT_EMAIL}
-              </a>{' '}
-              with the calculator name, the input values you used, the result you received, and the
-              result you expected. Screenshots are very helpful. We will investigate and fix any
-              confirmed errors as quickly as possible.
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-border/50 bg-muted/20 p-5">
-            <h3 className="text-sm font-semibold text-foreground mb-2">
-              Can I suggest a new calculator?
-            </h3>
-            <p>
-              We are always looking to expand our tool suite. If you have an idea for a calculator
-              that would be useful for small business or HR professionals, please send your suggestion
-              to{' '}
-              <a
-                href={`mailto:${CONTACT_EMAIL}`}
-                className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
-              >
-                {CONTACT_EMAIL}
-              </a>
-              . We evaluate all suggestions based on demand and feasibility.
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-border/50 bg-muted/20 p-5">
-            <h3 className="text-sm font-semibold text-foreground mb-2">
-              I am interested in advertising or partnering with QuickBizCalc. Who should I contact?
-            </h3>
-            <p>
-              For business development, advertising, and partnership inquiries, please email us at{' '}
-              <a
-                href={`mailto:${CONTACT_EMAIL}`}
-                className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
-              >
-                {CONTACT_EMAIL}
-              </a>{' '}
-              with details about your proposal. We will review and respond to serious inquiries.
-            </p>
-          </div>
-        </div>
-      </section>
-    </LegalPageLayout>
+        </section>
+      </LegalPageLayout>
+    </AppShell>
   );
 }

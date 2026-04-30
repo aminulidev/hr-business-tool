@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import LegalPageLayout from '@/components/layout/LegalPageLayout';
+import AppShell from '@/components/layout/AppShell';
 import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
 
 export const metadata: Metadata = {
@@ -25,7 +26,8 @@ export const metadata: Metadata = {
 
 export default function TermsOfServicePage() {
   return (
-    <LegalPageLayout title="Terms of Service" lastUpdated="April 21, 2026">
+    <AppShell>
+      <LegalPageLayout title="Terms of Service" lastUpdated="April 21, 2026">
       <section className="space-y-6 text-sm leading-relaxed text-foreground/80">
         <p>
           Welcome to QuickBizCalc. These Terms of Service (&quot;Terms&quot;) govern your access to and use of
@@ -220,5 +222,6 @@ export default function TermsOfServicePage() {
         </p>
       </section>
     </LegalPageLayout>
+    </AppShell>
   );
 }
