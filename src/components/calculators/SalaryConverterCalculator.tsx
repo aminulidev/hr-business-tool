@@ -169,7 +169,16 @@ export default function SalaryConverterCalculator() {
     setPayAmount('50000');
     setPayPeriod('annual');
     setHoursPerWeek('40');
-    setResults(null);
+    
+    // Trigger conversion
+    const amount = 50000;
+    const annual = 50000;
+    const allPeriods = annualToAllPeriods(annual, 40);
+    setResults(allPeriods);
+    saveEntry(
+      { payAmount: '50000', payPeriod: 'annual', hoursPerWeek: '40' },
+      `${formatCurrency(amount)} Annual → ${formatCurrency(annual)}/year`
+    );
   };
 
   const handleConvert = () => {

@@ -12,6 +12,7 @@ import CalculatorLayout from '@/components/calculators/CalculatorLayout';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
 import ComparePanel, { CompareRow } from './ComparePanel';
+import TryExample from './TryExample';
 import { formatCurrency, formatPercent } from '@/lib/utils';
 
 interface ProRataSnapshot {
@@ -33,6 +34,13 @@ export default function ProRataSalaryCalculator() {
   const [compareB, setCompareB] = useState<ProRataSnapshot | null>(null);
 
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualSalary: string; actualDaysWorked: string; fullWorkingDays: string }>('pro-rata-calculator');
+
+  const handleTryExample = () => {
+    setAnnualSalary('75000');
+    setFullWorkingDays('260');
+    setActualDaysWorked('195');
+    setCalculated(true);
+  };
 
   const annualSalaryNum = parseFloat(annualSalary) || 0;
   const fullWorkingDaysNum = parseFloat(fullWorkingDays) || 260;
@@ -236,17 +244,20 @@ export default function ProRataSalaryCalculator() {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-3">
-        <Button
-          onClick={handleCalculate}
-          disabled={annualSalaryNum <= 0 || actualDaysWorkedNum <= 0}
-          className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25 flex-1 sm:flex-none"
-        >
-          Calculate Pro Rata Salary
-        </Button>
-        <Button variant="outline" onClick={handleReset}>
-          Reset
-        </Button>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex gap-3">
+          <Button
+            onClick={handleCalculate}
+            disabled={annualSalaryNum <= 0 || actualDaysWorkedNum <= 0}
+            className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
+          >
+            Calculate Pro Rata Salary
+          </Button>
+          <Button variant="outline" onClick={handleReset}>
+            Reset
+          </Button>
+        </div>
+        <TryExample onClick={handleTryExample} />
       </div>
 
       {/* Results */}

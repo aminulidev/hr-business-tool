@@ -24,6 +24,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import TryExample from './TryExample';
 import {
   Tooltip,
   TooltipContent,
@@ -38,14 +39,14 @@ import CalcHistoryPanel from './CalcHistoryPanel';
 import ComparePanel, { CompareRow } from './ComparePanel';
 import { formatCurrency, formatPercent, formatNumber } from '@/lib/utils';
 
-// ─── Helpers ───────────────────────────────────────────────────────────────
+// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const parseNum = (val: string): number => {
   const n = parseFloat(val);
   return isNaN(n) || n < 0 ? 0 : n;
 };
 
-// ─── Types ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 interface Tier {
   id: string;
@@ -86,7 +87,7 @@ interface CompareSnapshot {
 
 type CalcMode = 'simple' | 'tiered' | 'quota';
 
-// ─── Defaults ──────────────────────────────────────────────────────────────
+// â”€â”€â”€ Defaults â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const defaultTiers = (): Tier[] => [
   { id: '1', from: '0', to: '50000', rate: '5' },
@@ -99,7 +100,7 @@ const makeId = () => String(nextId++);
 
 const TIER_COLORS = ['#34d399', '#10b981', '#059669', '#047857', '#065f46'];
 
-// ─── Tooltip Label ─────────────────────────────────────────────────────────
+// â”€â”€â”€ Tooltip Label â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function TipLabel({ children, tip }: { children: React.ReactNode; tip: string }) {
   return (
@@ -117,7 +118,7 @@ function TipLabel({ children, tip }: { children: React.ReactNode; tip: string })
   );
 }
 
-// ─── Currency Input ────────────────────────────────────────────────────────
+// â”€â”€â”€ Currency Input â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function CurrencyInput({
   id,
@@ -160,7 +161,7 @@ function CurrencyInput({
   );
 }
 
-// ─── Percent Input ─────────────────────────────────────────────────────────
+// â”€â”€â”€ Percent Input â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function PercentInput({
   id,
@@ -203,7 +204,7 @@ function PercentInput({
   );
 }
 
-// ─── Quota Progress Bar ────────────────────────────────────────────────────
+// â”€â”€â”€ Quota Progress Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function QuotaProgressBar({ attainment }: { attainment: number }) {
   const clamped = Math.min(Math.max(attainment, 0), 200);
@@ -244,7 +245,7 @@ function QuotaProgressBar({ attainment }: { attainment: number }) {
       </div>
       <div className="flex justify-between items-center">
         <span className="text-xs text-muted-foreground">
-          {attainment < 100 ? 'Below quota' : attainment === 100 ? 'At quota' : 'Above quota — accelerator active!'}
+          {attainment < 100 ? 'Below quota' : attainment === 100 ? 'At quota' : 'Above quota â€” accelerator active!'}
         </span>
         {attainment > 100 && (
           <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30 text-xs">
@@ -257,7 +258,7 @@ function QuotaProgressBar({ attainment }: { attainment: number }) {
   );
 }
 
-// ─── Insight Box ───────────────────────────────────────────────────────────
+// â”€â”€â”€ Insight Box â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function InsightBox({ children }: { children: React.ReactNode }) {
   return (
@@ -268,7 +269,7 @@ function InsightBox({ children }: { children: React.ReactNode }) {
   );
 }
 
-// ─── Deductions Section ────────────────────────────────────────────────────
+// â”€â”€â”€ Deductions Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function DeductionsSection({ deductions, setDeductions }: { deductions: Deductions; setDeductions: React.Dispatch<React.SetStateAction<Deductions>> }) {
   return (
@@ -330,11 +331,11 @@ function DeductionsSection({ deductions, setDeductions }: { deductions: Deductio
   );
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // Main Component
-// ═══════════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-// ─── Custom Recharts Tooltip ──────────────────────────────────────────────
+// â”€â”€â”€ Custom Recharts Tooltip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function CustomBarTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number }>; label?: string }) {
   if (!active || !payload?.length) return null;
@@ -347,27 +348,27 @@ function CustomBarTooltip({ active, payload, label }: { active?: boolean; payloa
 }
 
 export default function SalesCommissionCalculator() {
-  // ─── Tab ────────────────────────────────────────────────────────────────
+  // â”€â”€â”€ Tab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [activeTab, setActiveTab] = useState<CalcMode>('simple');
 
-  // ─── Simple Mode ────────────────────────────────────────────────────────
+  // â”€â”€â”€ Simple Mode â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [salesAmount, setSalesAmount] = useState('');
   const [simpleRate, setSimpleRate] = useState('');
   const [simpleBaseSalary, setSimpleBaseSalary] = useState('');
 
-  // ─── Tiered Mode ────────────────────────────────────────────────────────
+  // â”€â”€â”€ Tiered Mode â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [tiers, setTiers] = useState<Tier[]>(defaultTiers());
   const [tieredSalesAmount, setTieredSalesAmount] = useState('');
   const [tieredBaseSalary, setTieredBaseSalary] = useState('');
 
-  // ─── Quota Mode ─────────────────────────────────────────────────────────
+  // â”€â”€â”€ Quota Mode â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [quotaBase, setQuotaBase] = useState('');
   const [quotaRate, setQuotaRate] = useState('');
   const [salesQuota, setSalesQuota] = useState('');
   const [actualSales, setActualSales] = useState('');
   const [accelerator, setAccelerator] = useState('');
 
-  // ─── Deductions ─────────────────────────────────────────────────────────
+  // â”€â”€â”€ Deductions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [deductions, setDeductions] = useState<Deductions>({
     enabled: false,
     brokerFees: '',
@@ -375,7 +376,7 @@ export default function SalesCommissionCalculator() {
     otherDeductions: '',
   });
 
-  // ─── Comparison ──────────────────────────────────────────────────────────
+  // â”€â”€â”€ Comparison â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [compareA, setCompareA] = useState<CompareSnapshot | null>(null);
   const [compareB, setCompareB] = useState<CompareSnapshot | null>(null);
 
@@ -413,17 +414,17 @@ export default function SalesCommissionCalculator() {
     }
   };
 
-  // ─── Deduction total ────────────────────────────────────────────────────
+  // â”€â”€â”€ Deduction total â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const totalDeductions = useMemo(() => {
     if (!deductions.enabled) return 0;
     return parseNum(deductions.brokerFees) + parseNum(deductions.processingFees) + parseNum(deductions.otherDeductions);
   }, [deductions]);
 
-  // ═══════════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // Calculations
-  // ═══════════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-  // ─── Simple Results ──────────────────────────────────────────────────────
+  // â”€â”€â”€ Simple Results â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const simpleResults = useMemo(() => {
     const sales = parseNum(salesAmount);
     const rate = parseNum(simpleRate);
@@ -437,7 +438,7 @@ export default function SalesCommissionCalculator() {
     return { commission, gross, net, totalComp, effectiveRate, base, hasInput };
   }, [salesAmount, simpleRate, simpleBaseSalary, totalDeductions]);
 
-  // ─── Tiered Results ─────────────────────────────────────────────────────
+  // â”€â”€â”€ Tiered Results â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const tieredResults = useMemo(() => {
     const sales = parseNum(tieredSalesAmount);
     const base = parseNum(tieredBaseSalary);
@@ -502,7 +503,7 @@ export default function SalesCommissionCalculator() {
     return { tierBreakdown, totalCommission, gross, net, totalComp, effectiveRate, base, hasInput, hasGaps };
   }, [tiers, tieredSalesAmount, tieredBaseSalary, totalDeductions]);
 
-  // ─── Quota Results ──────────────────────────────────────────────────────
+  // â”€â”€â”€ Quota Results â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const quotaResults = useMemo(() => {
     const base = parseNum(quotaBase);
     const rate = parseNum(quotaRate);
@@ -524,7 +525,7 @@ export default function SalesCommissionCalculator() {
     const gapToQuota = quota > actual ? quota - actual : 0;
 
     // Projected annual earnings: if at current pace, annualized
-    // (We don't know the period — just show as if this is the current period's earnings × (12 / months))
+    // (We don't know the period â€” just show as if this is the current period's earnings Ã— (12 / months))
     // Simple approach: assume current period is annual already, show totalComp as-is
     const projectedAnnual = totalComp; // Since quota/sales are typically annual
 
@@ -548,15 +549,37 @@ export default function SalesCommissionCalculator() {
     };
   }, [quotaBase, quotaRate, salesQuota, actualSales, accelerator, totalDeductions]);
 
-  // ─── History ────────────────────────────────────────────────────
+  // â”€â”€â”€ History â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ activeTab: string; salesAmount: string; simpleRate: string; tieredSalesAmount: string; quotaBase: string; salesQuota: string; actualSales: string }>('commission-calculator');
+
+  const handleTryExample = useCallback(() => {
+    if (activeTab === 'simple') {
+      setSalesAmount('150000');
+      setSimpleRate('10');
+      setSimpleBaseSalary('60000');
+    } else if (activeTab === 'tiered') {
+      setTieredSalesAmount('250000');
+      setTieredBaseSalary('75000');
+      setTiers([
+        { id: '1', from: '0', to: '100000', rate: '5' },
+        { id: '2', from: '100000', to: '200000', rate: '10' },
+        { id: '3', from: '200000', to: '', rate: '15' },
+      ]);
+    } else if (activeTab === 'quota') {
+      setQuotaBase('55000');
+      setSalesQuota('500000');
+      setActualSales('450000');
+      setQuotaRate('8');
+      setAccelerator('120'); // 120% of commission above quota
+    }
+  }, [activeTab, setSalesAmount, setSimpleRate, setSimpleBaseSalary, setTieredSalesAmount, setTieredBaseSalary, setTiers, setQuotaBase, setSalesQuota, setActualSales, setQuotaRate, setAccelerator]);
 
   const handleSaveHistory = useCallback(() => {
     const r = activeTab === 'simple' ? simpleResults : activeTab === 'tiered' ? tieredResults : quotaResults;
     if (!r.hasInput) return;
     saveEntry(
       { activeTab, salesAmount, simpleRate, tieredSalesAmount, quotaBase, salesQuota, actualSales },
-      `${activeTab} mode — Net: ${formatCurrency(r.net)} | Total Comp: ${formatCurrency(r.totalComp)}`
+      `${activeTab} mode â€” Net: ${formatCurrency(r.net)} | Total Comp: ${formatCurrency(r.totalComp)}`
     );
   }, [activeTab, simpleResults, tieredResults, quotaResults, salesAmount, simpleRate, tieredSalesAmount, quotaBase, salesQuota, actualSales, saveEntry]);
 
@@ -599,9 +622,9 @@ export default function SalesCommissionCalculator() {
     []
   );
 
-  // ═══════════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // Reset
-  // ═══════════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   const handleReset = useCallback(() => {
     if (activeTab === 'simple') {
@@ -622,15 +645,15 @@ export default function SalesCommissionCalculator() {
     setDeductions({ enabled: false, brokerFees: '', processingFees: '', otherDeductions: '' });
   }, [activeTab]);
 
-  // ═══════════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // CSV Export
-  // ═══════════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   const downloadCSV = useCallback(() => {
     const rows: string[][] = [];
 
     if (activeTab === 'simple') {
-      rows.push(['Sales Commission Calculator — Simple Mode']);
+      rows.push(['Sales Commission Calculator â€” Simple Mode']);
       rows.push([]);
       rows.push(['Field', 'Value']);
       rows.push(['Sales Amount', salesAmount]);
@@ -645,7 +668,7 @@ export default function SalesCommissionCalculator() {
       rows.push(['Total Compensation', simpleResults.totalComp.toFixed(2)]);
       rows.push(['Effective Commission Rate', `${simpleResults.effectiveRate.toFixed(2)}%`]);
     } else if (activeTab === 'tiered') {
-      rows.push(['Sales Commission Calculator — Tiered Mode']);
+      rows.push(['Sales Commission Calculator â€” Tiered Mode']);
       rows.push([]);
       rows.push(['Tier', 'From ($)', 'To ($)', 'Rate (%)', 'Sales in Range ($)', 'Commission ($)']);
       tieredResults.tierBreakdown.forEach((t) => {
@@ -666,7 +689,7 @@ export default function SalesCommissionCalculator() {
       rows.push(['Total Compensation', tieredResults.totalComp.toFixed(2)]);
       rows.push(['Effective Rate', `${tieredResults.effectiveRate.toFixed(2)}%`]);
     } else {
-      rows.push(['Sales Commission Calculator — Quota Attainment Mode']);
+      rows.push(['Sales Commission Calculator â€” Quota Attainment Mode']);
       rows.push([]);
       rows.push(['Field', 'Value']);
       rows.push(['Base Salary', quotaBase || '0']);
@@ -711,9 +734,9 @@ export default function SalesCommissionCalculator() {
     totalDeductions,
   ]);
 
-  // ═══════════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // Current results shorthand
-  // ═══════════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   const currentResults = activeTab === 'simple'
     ? simpleResults
@@ -723,9 +746,9 @@ export default function SalesCommissionCalculator() {
 
   const hasAnyResult = 'hasInput' in currentResults && currentResults.hasInput;
 
-  // ═══════════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // Chart data for tiered mode
-  // ═══════════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   const tierChartData = useMemo(() => {
     return tieredResults.tierBreakdown.map((t, i) => ({
@@ -746,43 +769,43 @@ export default function SalesCommissionCalculator() {
 
 
 
-  // ═══════════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // SEO Content
-  // ═══════════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   const howToSteps = [
-    'Determine your commission structure — flat rate, tiered, or base + commission',
-    'Gather your sales data — total sales amount or individual transaction values',
-    'Identify your commission rate(s) — check your employment agreement or comp plan',
-    'Apply the commission formula — multiply sales by rate(s) according to your structure',
-    'Account for any deductions — subtract broker fees, processing fees, or clawbacks',
-    'Add base salary if applicable — combine fixed and variable pay for total compensation',
+    'Determine your commission structure â€” flat rate, tiered, or base + commission',
+    'Gather your sales data â€” total sales amount or individual transaction values',
+    'Identify your commission rate(s) â€” check your employment agreement or comp plan',
+    'Apply the commission formula â€” multiply sales by rate(s) according to your structure',
+    'Account for any deductions â€” subtract broker fees, processing fees, or clawbacks',
+    'Add base salary if applicable â€” combine fixed and variable pay for total compensation',
   ];
 
-  const formula = `Simple: Commission = Sales Amount × (Commission Rate / 100)
-Tiered: Commission = Σ(Tier Sales × Tier Rate)
+  const formula = `Simple: Commission = Sales Amount Ã— (Commission Rate / 100)
+Tiered: Commission = Î£(Tier Sales Ã— Tier Rate)
 With Base: Total Compensation = Base Salary + Commission
-Net Commission = Gross Commission − Deductions
-Quota Attainment = (Actual Sales / Quota) × 100%`;
+Net Commission = Gross Commission âˆ’ Deductions
+Quota Attainment = (Actual Sales / Quota) Ã— 100%`;
 
   const formulaDescription =
     'The commission formula depends on your compensation structure. A simple flat rate multiplies your total sales by a single percentage. Tiered structures apply different rates to different portions of your sales, rewarding higher volumes. Quota-based plans add accelerators that increase your rate when you exceed targets. Always subtract any deductions to arrive at your net commission.';
 
   const workedExamples = [
     {
-      title: 'Real Estate Agent — Flat Commission',
+      title: 'Real Estate Agent â€” Flat Commission',
       description:
-        'A real estate agent sells a house for $500,000 at a 3% commission rate. Commission = $500,000 × 3% = $15,000. If the agent has a base salary of $0 (straight commission), their total compensation is $15,000.',
+        'A real estate agent sells a house for $500,000 at a 3% commission rate. Commission = $500,000 Ã— 3% = $15,000. If the agent has a base salary of $0 (straight commission), their total compensation is $15,000.',
     },
     {
-      title: 'SaaS Sales Rep — Tiered Commission',
+      title: 'SaaS Sales Rep â€” Tiered Commission',
       description:
         'A SaaS sales rep closes $200,000 in annual recurring revenue with 3 tiers: 5% on the first $50,000 = $2,500, 8% on the next $100,000 = $8,000, and 12% on everything above $150,000 = $6,000. Total commission = $2,500 + $8,000 + $6,000 = $16,500. With a $65,000 base salary, total comp = $81,500.',
     },
     {
-      title: 'B2B Account Executive — Quota with Accelerator',
+      title: 'B2B Account Executive â€” Quota with Accelerator',
       description:
-        'An AE has an $80,000 annual quota, a 10% commission rate, and a 1.5x accelerator above quota. They close $100,000 in sales. Regular commission on $80,000 at 10% = $8,000. Accelerated commission on $20,000 above quota at 15% (10% × 1.5) = $3,000. Total commission = $11,000. With a $55,000 base, total comp = $66,000.',
+        'An AE has an $80,000 annual quota, a 10% commission rate, and a 1.5x accelerator above quota. They close $100,000 in sales. Regular commission on $80,000 at 10% = $8,000. Accelerated commission on $20,000 above quota at 15% (10% Ã— 1.5) = $3,000. Total commission = $11,000. With a $55,000 base, total comp = $66,000.',
     },
   ];
 
@@ -790,19 +813,19 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
     {
       type: 'Straight Commission',
       description: '100% variable, no base salary.',
-      formula: 'Commission = Sales × Rate',
+      formula: 'Commission = Sales Ã— Rate',
       example: 'Real estate agents often work on 100% commission.',
     },
     {
       type: 'Base Salary + Commission',
       description: 'Fixed base + variable.',
-      formula: 'Total = Base + (Sales × Rate)',
+      formula: 'Total = Base + (Sales Ã— Rate)',
       example: 'Sales rep with $60K base + 5% commission.',
     },
     {
       type: 'Tiered/Graduated Commission',
       description: 'Rate increases at thresholds.',
-      formula: 'Sum of (tier_sales × tier_rate)',
+      formula: 'Sum of (tier_sales Ã— tier_rate)',
       example: 'First $50K at 5%, next $50K at 8%, above $100K at 12%.',
     },
   ];
@@ -811,17 +834,17 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
     {
       question: 'What is a sales commission?',
       answer:
-        'A sales commission is a performance-based payment that compensates salespeople based on the volume or value of sales they generate. It serves as a powerful incentive to drive higher revenue and rewards top performers with additional earnings beyond any base salary. Commission structures are widely used across real estate, retail, B2B sales, SaaS, financial services, and insurance industries. The more you sell, the more you earn — making it a key motivator for sales-focused roles.',
+        'A sales commission is a performance-based payment that compensates salespeople based on the volume or value of sales they generate. It serves as a powerful incentive to drive higher revenue and rewards top performers with additional earnings beyond any base salary. Commission structures are widely used across real estate, retail, B2B sales, SaaS, financial services, and insurance industries. The more you sell, the more you earn â€” making it a key motivator for sales-focused roles.',
     },
     {
       question: 'What is a typical commission rate by industry?',
       answer:
-        'Commission rates vary significantly by industry: Real estate agents typically earn 2–6% of the sale price. SaaS and software sales reps often see 5–15% on annual recurring revenue. Retail sales associates usually earn 1–5% of sales. Insurance agents can earn 10–25% on new premiums. B2B sales professionals generally earn 5–10% of deal value. The exact rate depends on deal size, product complexity, sales cycle length, and the balance between base salary and variable compensation.',
+        'Commission rates vary significantly by industry: Real estate agents typically earn 2â€“6% of the sale price. SaaS and software sales reps often see 5â€“15% on annual recurring revenue. Retail sales associates usually earn 1â€“5% of sales. Insurance agents can earn 10â€“25% on new premiums. B2B sales professionals generally earn 5â€“10% of deal value. The exact rate depends on deal size, product complexity, sales cycle length, and the balance between base salary and variable compensation.',
     },
     {
       question: 'How do tiered commission structures work?',
       answer:
-        'Tiered commission structures apply progressively higher rates as your sales volume increases through predefined thresholds. Each tier only applies to the sales within its specific range — this is called marginal calculation. For example, the first $50,000 might earn 5%, the next $50,000 earns 8%, and everything above $100,000 earns 12%. This approach rewards higher performance with proportionally greater earnings and motivates salespeople to push beyond minimum targets for maximum earning potential.',
+        'Tiered commission structures apply progressively higher rates as your sales volume increases through predefined thresholds. Each tier only applies to the sales within its specific range â€” this is called marginal calculation. For example, the first $50,000 might earn 5%, the next $50,000 earns 8%, and everything above $100,000 earns 12%. This approach rewards higher performance with proportionally greater earnings and motivates salespeople to push beyond minimum targets for maximum earning potential.',
     },
     {
       question: 'What is a commission accelerator?',
@@ -831,7 +854,7 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
     {
       question: 'How is commission taxed?',
       answer:
-        'Commission income is generally taxed as ordinary income at the federal level, just like regular salary. However, employers often withhold taxes at a higher supplemental rate — typically 22% federal flat rate — on commission payments, which means larger deductions from each commission paycheck. This does not mean you pay more in total taxes; the difference is usually reconciled when you file your annual return. Self-employed individuals must also pay self-employment tax (15.3%) and make quarterly estimated payments. State and local taxes vary by jurisdiction.',
+        'Commission income is generally taxed as ordinary income at the federal level, just like regular salary. However, employers often withhold taxes at a higher supplemental rate â€” typically 22% federal flat rate â€” on commission payments, which means larger deductions from each commission paycheck. This does not mean you pay more in total taxes; the difference is usually reconciled when you file your annual return. Self-employed individuals must also pay self-employment tax (15.3%) and make quarterly estimated payments. State and local taxes vary by jurisdiction.',
     },
     {
       question: 'What is the difference between gross and net commission?',
@@ -846,7 +869,7 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
     {
       question: 'How do I calculate commission on a returned sale?',
       answer:
-        'When a sale is returned or cancelled, the commission previously earned on that sale is typically clawed back in full. For example, if you earned $500 commission on a $10,000 sale that is later returned, your employer will deduct $500 from future commissions. For partial returns, the clawback is pro-rata — a 50% return means a 50% clawback of the original commission. In tiered structures, a return can be particularly complex because it may shift your total sales into a lower tier, retroactively reducing the rate applied to your remaining sales. Always check your comp plan for the specific return policy.',
+        'When a sale is returned or cancelled, the commission previously earned on that sale is typically clawed back in full. For example, if you earned $500 commission on a $10,000 sale that is later returned, your employer will deduct $500 from future commissions. For partial returns, the clawback is pro-rata â€” a 50% return means a 50% clawback of the original commission. In tiered structures, a return can be particularly complex because it may shift your total sales into a lower tier, retroactively reducing the rate applied to your remaining sales. Always check your comp plan for the specific return policy.',
     },
   ];
 
@@ -859,9 +882,9 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
     { slug: 'roi-calculator' as const, title: 'ROI Calculator', description: 'Calculate return on investment for business decisions', icon: 'BarChart3' },
   ];
 
-  // ═══════════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // Render
-  // ═══════════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   return (
     <CalculatorLayout
@@ -890,7 +913,7 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
     >
       <TooltipProvider>
         <div className="p-4 sm:p-6 space-y-6">
-          {/* ─── Mode Tabs ───────────────────────────────────────────────── */}
+          {/* â”€â”€â”€ Mode Tabs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           <Tabs
             value={activeTab}
             onValueChange={(val) => setActiveTab(val as CalcMode)}
@@ -911,9 +934,13 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
               </TabsTrigger>
             </TabsList>
 
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            <div className="flex justify-end pt-2">
+              <TryExample onClick={handleTryExample} />
+            </div>
+
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             {/* Simple Mode                                                     */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             <TabsContent value="simple" className="mt-6 space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <CurrencyInput
@@ -927,7 +954,7 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
                 <PercentInput
                   id="simple-rate"
                   label="Commission Rate"
-                  tip="The percentage of each sale you earn as commission. Common rates range from 2–15% depending on your industry and role."
+                  tip="The percentage of each sale you earn as commission. Common rates range from 2â€“15% depending on your industry and role."
                   placeholder="e.g., 5.00"
                   value={simpleRate}
                   onChange={setSimpleRate}
@@ -944,9 +971,9 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
               </div>
             </TabsContent>
 
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             {/* Tiered Mode                                                     */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             <TabsContent value="tiered" className="mt-6 space-y-6">
               {/* Tiers */}
               <div className="space-y-3">
@@ -1014,7 +1041,7 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
                         </div>
                         <div className="space-y-1.5">
                           <Label className="text-xs text-muted-foreground">
-                            To ($){index === tiers.length - 1 && <span className="text-emerald-500 ml-1">— No limit</span>}
+                            To ($){index === tiers.length - 1 && <span className="text-emerald-500 ml-1">â€” No limit</span>}
                           </Label>
                           <div className="relative">
                             <span className="absolute left-2.5 top-[18px] -translate-y-1/2 text-muted-foreground text-xs">$</span>
@@ -1080,9 +1107,9 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
               </div>
             </TabsContent>
 
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             {/* Quota Mode                                                      */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             <TabsContent value="quota" className="mt-6 space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <CurrencyInput
@@ -1129,10 +1156,10 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
             </TabsContent>
           </Tabs>
 
-          {/* ─── Deductions ──────────────────────────────────────────────── */}
+          {/* â”€â”€â”€ Deductions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           <DeductionsSection deductions={deductions} setDeductions={setDeductions} />
 
-          {/* ─── Action Buttons ──────────────────────────────────────────── */}
+          {/* â”€â”€â”€ Action Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           <div className="flex flex-col sm:flex-row gap-3">
             <Button
               onClick={handleReset}
@@ -1153,9 +1180,9 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
             </Button>
           </div>
 
-          {/* ═══════════════════════════════════════════════════════════════ */}
+          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {/* Results                                                         */}
-          {/* ═══════════════════════════════════════════════════════════════ */}
+          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           <AnimatePresence mode="wait">
             {hasAnyResult && (
               <motion.div
@@ -1167,7 +1194,7 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
                 className="result-display" aria-live="polite"
               >
                 <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 sm:p-6 space-y-6">
-                  {/* ─── Main Result ────────────────────────────────────── */}
+                  {/* â”€â”€â”€ Main Result â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
                   <div className="text-center space-y-1">
                     <p className="text-sm text-muted-foreground font-medium">
                       {activeTab === 'quota' ? 'Total Annual Compensation' : 'Net Commission'}
@@ -1188,12 +1215,12 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
                               ? tieredResults.gross
                               : quotaResults.gross
                         )}</span>{' '}
-                        → Net after {formatCurrency(totalDeductions)} deductions
+                        â†’ Net after {formatCurrency(totalDeductions)} deductions
                       </p>
                     )}
                   </div>
 
-                  {/* ─── Metric Cards ───────────────────────────────────── */}
+                  {/* â”€â”€â”€ Metric Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {/* Commission */}
                     <motion.div
@@ -1310,11 +1337,11 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
                     </motion.div>
                   </div>
 
-                  {/* ═══════════════════════════════════════════════════════ */}
+                  {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
                   {/* Mode-specific results                                    */}
-                  {/* ═══════════════════════════════════════════════════════ */}
+                  {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
 
-                  {/* ─── Tiered: Per-tier table + chart ──────────────────── */}
+                  {/* â”€â”€â”€ Tiered: Per-tier table + chart â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
                   {activeTab === 'tiered' && tieredResults.hasInput && (
                     <>
                       <Separator className="opacity-50" />
@@ -1340,7 +1367,7 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
                                 <tr key={i} className={t.commission > 0 ? 'text-emerald-600' : 'text-muted-foreground'}>
                                   <td className="px-3 sm:px-4 py-2.5 font-medium">{t.tierLabel}</td>
                                   <td className="text-right px-3 sm:px-4 py-2.5">
-                                    {formatCurrency(t.from)} – {t.to === Infinity ? '∞' : formatCurrency(t.to)}
+                                    {formatCurrency(t.from)} â€“ {t.to === Infinity ? 'âˆž' : formatCurrency(t.to)}
                                   </td>
                                   <td className="text-right px-3 sm:px-4 py-2.5">{t.rate.toFixed(1)}%</td>
                                   <td className="text-right px-3 sm:px-4 py-2.5">{formatCurrency(t.salesInRange)}</td>
@@ -1380,7 +1407,7 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
                     </>
                   )}
 
-                  {/* ─── Quota: Attainment bar + breakdown ──────────────── */}
+                  {/* â”€â”€â”€ Quota: Attainment bar + breakdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
                   {activeTab === 'quota' && quotaResults.hasInput && (
                     <>
                       <Separator className="opacity-50" />
@@ -1437,7 +1464,7 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
                                 {deductions.enabled && totalDeductions > 0 && (
                                   <tr className="text-red-500">
                                     <td className="px-4 py-2.5 font-medium">Deductions</td>
-                                    <td className="text-right px-4 py-2.5 font-medium">−{formatCurrency(totalDeductions)}</td>
+                                    <td className="text-right px-4 py-2.5 font-medium">âˆ’{formatCurrency(totalDeductions)}</td>
                                   </tr>
                                 )}
                                 <tr className="font-bold bg-muted/20">
@@ -1478,7 +1505,7 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
                     </>
                   )}
 
-                  {/* ─── Deduction Pie Chart ─────────────────────────────── */}
+                  {/* â”€â”€â”€ Deduction Pie Chart â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
                   {deductionPieData && (
                     <div className="rounded-xl bg-background border border-border/50 p-4">
                       <p className="text-sm font-semibold mb-3">Gross vs Net Commission</p>
@@ -1505,18 +1532,18 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
                     </div>
                   )}
 
-                  {/* ─── Insight Callout ─────────────────────────────────── */}
+                  {/* â”€â”€â”€ Insight Callout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
                   {activeTab === 'simple' && simpleResults.hasInput && (
                     <InsightBox>
                       {simpleResults.net > 0 && simpleResults.totalComp > 0
-                        ? `Your net commission of ${formatCurrency(simpleResults.net)} represents ${formatPercent(simpleResults.effectiveRate)} of total compensation. ${simpleResults.effectiveRate > 50 ? 'A significant portion of your income is performance-based — strong sales directly boost earnings.' : simpleResults.base > 0 ? 'Your base salary provides a solid foundation, with commission as variable upside.' : 'Consider negotiating a base salary for more income stability alongside your commission.'}`
+                        ? `Your net commission of ${formatCurrency(simpleResults.net)} represents ${formatPercent(simpleResults.effectiveRate)} of total compensation. ${simpleResults.effectiveRate > 50 ? 'A significant portion of your income is performance-based â€” strong sales directly boost earnings.' : simpleResults.base > 0 ? 'Your base salary provides a solid foundation, with commission as variable upside.' : 'Consider negotiating a base salary for more income stability alongside your commission.'}`
                         : 'Enter your sales amount and commission rate to see your earnings breakdown and insights.'}
                     </InsightBox>
                   )}
 
                   {activeTab === 'tiered' && tieredResults.hasInput && tieredResults.totalCommission > 0 && (
                     <InsightBox>
-                      With a tiered structure, your effective commission rate is {formatPercent(tieredResults.effectiveRate)} across {formatCurrency(parseNum(tieredSalesAmount))} in total sales. {tieredResults.effectiveRate > parseNum(tiers[tiers.length - 1]?.rate || '0') ? 'Your effective rate exceeds the highest tier rate — this means most of your sales fall in higher tiers.' : 'As you sell more and enter higher tiers, your effective rate will increase.'}
+                      With a tiered structure, your effective commission rate is {formatPercent(tieredResults.effectiveRate)} across {formatCurrency(parseNum(tieredSalesAmount))} in total sales. {tieredResults.effectiveRate > parseNum(tiers[tiers.length - 1]?.rate || '0') ? 'Your effective rate exceeds the highest tier rate â€” this means most of your sales fall in higher tiers.' : 'As you sell more and enter higher tiers, your effective rate will increase.'}
                     </InsightBox>
                   )}
 
@@ -1525,12 +1552,12 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
                       {quotaResults.attainment >= 100
                         ? `At ${quotaResults.attainment.toFixed(1)}% attainment, you're earning above-quota commissions. Your total comp of ${formatCurrency(quotaResults.totalComp)} includes ${formatCurrency(quotaResults.acceleratedCommission)} in accelerated earnings.`
                         : quotaResults.attainment >= 75
-                          ? `You're at ${quotaResults.attainment.toFixed(1)}% of quota — just ${formatCurrency(quotaResults.gapToQuota)} away from unlocking your accelerator. Pushing to 100% could significantly boost your total comp.`
+                          ? `You're at ${quotaResults.attainment.toFixed(1)}% of quota â€” just ${formatCurrency(quotaResults.gapToQuota)} away from unlocking your accelerator. Pushing to 100% could significantly boost your total comp.`
                           : `At ${quotaResults.attainment.toFixed(1)}% quota attainment, focus on closing deals to reach your ${formatCurrency(parseNum(salesQuota))} target and unlock your commission accelerator for earnings above quota.`}
                     </InsightBox>
                   )}
 
-                  {/* ─── Comparison Save Buttons ─────────────────────────── */}
+                  {/* â”€â”€â”€ Comparison Save Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
                   <div className="flex flex-wrap gap-2 mt-6 pt-6 border-t border-border/40">
                     <Button
                       variant="outline"
@@ -1544,7 +1571,7 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
                       }}
                       className="text-xs h-8 gap-1.5 border-primary/30 bg-primary/5 text-primary hover:bg-primary/10 transition-colors"
                     >
-                      {compareA ? '↺ Replace Scenario A' : '+ Save as Scenario A'}
+                      {compareA ? 'â†º Replace Scenario A' : '+ Save as Scenario A'}
                     </Button>
                     <Button
                       variant="outline"
@@ -1558,7 +1585,7 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
                       }}
                       className="text-xs h-8 gap-1.5 border-amber-500/30 bg-amber-500/5 text-amber-600 hover:bg-amber-500/10 transition-colors"
                     >
-                      {compareB ? '↺ Replace Scenario B' : '+ Save as Scenario B'}
+                      {compareB ? 'â†º Replace Scenario B' : '+ Save as Scenario B'}
                     </Button>
                   </div>
                 </div>
@@ -1566,7 +1593,7 @@ Quota Attainment = (Actual Sales / Quota) × 100%`;
             )}
           </AnimatePresence>
 
-          {/* ─── Comparison Panel ────────────────────────────────────────── */}
+          {/* â”€â”€â”€ Comparison Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           {compareA && compareB && (() => {
             const rows: CompareRow[] = [
               { label: 'Total Sales',        valueA: formatCurrency(compareA.result.totalSales),      valueB: formatCurrency(compareB.result.totalSales),      numA: compareA.result.totalSales,      numB: compareB.result.totalSales },
