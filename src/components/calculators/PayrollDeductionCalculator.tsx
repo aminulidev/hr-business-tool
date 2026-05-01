@@ -39,7 +39,8 @@ interface DeductionResult {
   k401Contribution: number;
   otherPreTax: number;
   totalPreTax: number;
-  taxableIncome: number;
+  incomeTaxableIncome: number;
+  ficaTaxableIncome: number;
   federalTax: number;
   stateTax: number;
   socialSecurity: number;
@@ -124,21 +125,25 @@ export default function PayrollDeductionCalculator() {
       return;
     }
 
-    // Pre-tax deductions (reduces taxable income)
+    // Pre-tax deductions
     const k401Amount = gross * (k401Rate / 100);
     const totalPreTax = healthAmt + k401Amount + oPreTax;
-    const taxableIncome = gross - totalPreTax;
+    
+    // 401(k) reduces income tax, but does NOT reduce FICA taxes
+    // Health insurance and other Section 125 pre-tax deductions reduce both
+    const incomeTaxableIncome = gross - totalPreTax;
+    const ficaTaxableIncome = gross - healthAmt - oPreTax;
 
-    if (taxableIncome < 0) {
+    if (incomeTaxableIncome < 0) {
       setError('Pre-tax deductions cannot exceed your gross pay.');
       return;
     }
 
-    // Taxes on taxable income
-    const federalTax = taxableIncome * (fedPct / 100);
-    const stateTax = taxableIncome * (stPct / 100);
-    const socialSecurity = taxableIncome * (ssRate / 100);
-    const medicare = taxableIncome * (medRate / 100);
+    // Taxes
+    const federalTax = incomeTaxableIncome * (fedPct / 100);
+    const stateTax = incomeTaxableIncome * (stPct / 100);
+    const socialSecurity = ficaTaxableIncome * (ssRate / 100);
+    const medicare = ficaTaxableIncome * (medRate / 100);
     const ficaTotal = socialSecurity + medicare;
     const totalTaxes = federalTax + stateTax + ficaTotal;
 
@@ -232,7 +237,8 @@ export default function PayrollDeductionCalculator() {
       k401Contribution: k401Amount,
       otherPreTax: oPreTax,
       totalPreTax,
-      taxableIncome,
+      incomeTaxableIncome,
+      ficaTaxableIncome,
       federalTax,
       stateTax,
       socialSecurity,
