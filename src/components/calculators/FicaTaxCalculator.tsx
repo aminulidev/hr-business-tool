@@ -36,17 +36,24 @@ export default function FicaTaxCalculator() {
 
   const result = useMemo(() => {
     if (gross <= 0) return null;
-    const ssWages = Math.min(gross, SS_WAGE_BASE_2025);
+    
+    // For self-employed, FICA is calculated on 92.35% of net earnings
+    const taxableGross = isSE ? gross * 0.9235 : gross;
+    
+    const ssWages = Math.min(taxableGross, SS_WAGE_BASE_2025);
     const empSS = ssWages * SS_RATE;
-    const empMedicare = gross * MEDICARE_RATE;
-    const addMedicare = gross > ADD_MEDICARE_THRESHOLD ? (gross - ADD_MEDICARE_THRESHOLD) * ADD_MEDICARE_RATE : 0;
+    const empMedicare = taxableGross * MEDICARE_RATE;
+    const addMedicare = taxableGross > ADD_MEDICARE_THRESHOLD ? (taxableGross - ADD_MEDICARE_THRESHOLD) * ADD_MEDICARE_RATE : 0;
     const empTotal = empSS + empMedicare + addMedicare;
+    
     const erSS = ssWages * SS_RATE;
-    const erMedicare = gross * MEDICARE_RATE;
+    const erMedicare = taxableGross * MEDICARE_RATE;
     const erTotal = erSS + erMedicare;
+    
     const seTotal = isSE ? (empTotal + erTotal) : 0;
     const seDeduction = isSE ? seTotal / 2 : 0;
-    return { empSS, empMedicare, addMedicare, empTotal, erSS, erMedicare, erTotal, seTotal, seDeduction, ssWages };
+    
+    return { empSS, empMedicare, addMedicare, empTotal, erSS, erMedicare, erTotal, seTotal, seDeduction, ssWages, taxableGross };
   }, [gross, isSE]);
 
   const handleCalculate = () => {

@@ -87,8 +87,12 @@ const SS_WAGE_BASE = 176100;
 const SS_RATE = 0.062;
 const MEDICARE_RATE = 0.0145;
 const ADDITIONAL_MEDICARE_RATE = 0.009;
-const ADDITIONAL_MEDICARE_THRESHOLD = 200000;
-
+const ADDITIONAL_MEDICARE_THRESHOLDS: Record<FilingStatus, number> = {
+  single: 200000,
+  mfj: 250000,
+  mfs: 125000,
+  hoh: 200000,
+};
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -201,8 +205,8 @@ export default function SalaryTaxCalculator() {
     const socialSecurity = Math.min(sal, SS_WAGE_BASE) * SS_RATE;
     const medicare = sal * MEDICARE_RATE;
     const additionalMedicare =
-      sal > ADDITIONAL_MEDICARE_THRESHOLD
-        ? (sal - ADDITIONAL_MEDICARE_THRESHOLD) * ADDITIONAL_MEDICARE_RATE
+      sal > ADDITIONAL_MEDICARE_THRESHOLDS[filingStatus]
+        ? (sal - ADDITIONAL_MEDICARE_THRESHOLDS[filingStatus]) * ADDITIONAL_MEDICARE_RATE
         : 0;
     const ficaTotal = socialSecurity + medicare + additionalMedicare;
 
