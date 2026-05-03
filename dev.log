@@ -1,0 +1,67 @@
+▲ Next.js 16.1.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.101:3000
+- Environments: .env
+- Experiments (use with caution):
+  · optimizePackageImports
+
+✓ Starting...
+✓ Ready in 3.4s
+ GET / 200 in 2.3s (compile: 1261ms, render: 1076ms)
+✓ Compiled in 2.1s
+ GET /about 200 in 281ms (compile: 124ms, render: 156ms)
+✓ Compiled in 1112ms
+ GET /about 200 in 796ms (compile: 168ms, render: 628ms)
+ GET /contact 200 in 369ms (compile: 284ms, render: 85ms)
+ GET /blog 200 in 745ms (compile: 296ms, render: 448ms)
+ GET /blog/how-to-structure-sales-commission-plan 200 in 1541ms (compile: 1390ms, generate-params: 1132ms, render: 151ms)
+ GET / 200 in 128ms (compile: 78ms, render: 51ms)
+ GET /about 200 in 78ms (compile: 11ms, render: 67ms)
+ GET /blog 200 in 187ms (compile: 12ms, render: 176ms)
+ GET /glossary 200 in 449ms (compile: 190ms, render: 259ms)
+✓ Compiled in 250ms
+ GET /privacy-policy 200 in 344ms (compile: 270ms, render: 74ms)
+✓ Compiled in 1133ms
+ GET /privacy-policy 200 in 639ms (compile: 180ms, render: 459ms)
+✓ Compiled in 567ms
+ GET /privacy-policy 200 in 681ms (compile: 111ms, render: 570ms)
+✓ Compiled in 363ms
+ GET /blog 200 in 472ms (compile: 225ms, render: 247ms)
+✓ Compiled in 308ms
+ GET /blog 200 in 1077ms (compile: 158ms, render: 919ms)
+✓ Compiled in 303ms
+ GET /blog 200 in 938ms (compile: 158ms, render: 780ms)
+✓ Compiled in 695ms
+✓ Compiled in 350ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+✓ Compiled in 925ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /blog 200 in 1119ms (compile: 176ms, render: 943ms)
+✓ Compiled in 275ms
+✓ Compiled in 357ms
+✓ Compiled in 223ms
+✓ Compiled in 211ms
+✓ Compiled in 220ms
+✓ Compiled in 229ms
+✓ Compiled in 217ms
+✓ Compiled in 231ms
+ GET /blog/hidden-costs-of-employee-turnover 200 in 530ms (compile: 258ms, generate-params: 23ms, render: 272ms)
+✓ Compiled in 298ms
+ GET /blog/hidden-costs-of-employee-turnover 200 in 997ms (compile: 194ms, generate-params: 13ms, render: 803ms)
+ GET /blog/hidden-costs-of-employee-turnover 200 in 692ms (compile: 15ms, generate-params: 66µs, render: 678ms)
+ GET /blog/hidden-costs-of-employee-turnover 200 in 548ms (compile: 10ms, generate-params: 104µs, render: 538ms)
+ GET /blog/hidden-costs-of-employee-turnover 200 in 456ms (compile: 7ms, generate-params: 117µs, render: 449ms)
+ GET /blog/hidden-costs-of-employee-turnover 200 in 354ms (compile: 10ms, generate-params: 46µs, render: 343ms)
+ GET /blog/hidden-costs-of-employee-turnover 200 in 260ms (compile: 8ms, generate-params: 41µs, render: 252ms)
+ GET /blog/hidden-costs-of-employee-turnover 200 in 136ms (compile: 10ms, generate-params: 115µs, render: 126ms)
+✓ Compiled in 301ms
+ GET /blog/hidden-costs-of-employee-turnover 200 in 1033ms (compile: 186ms, generate-params: 19ms, render: 847ms)
+ GET /blog/hidden-costs-of-employee-turnover 200 in 789ms (compile: 9ms, generate-params: 69µs, render: 780ms)
+ GET /blog/hidden-costs-of-employee-turnover 200 in 696ms (compile: 10ms, generate-params: 50µs, render: 686ms)
+ GET /blog/hidden-costs-of-employee-turnover 200 in 589ms (compile: 10ms, generate-params: 55µs, render: 579ms)
+ GET /blog/hidden-costs-of-employee-turnover 200 in 456ms (compile: 14ms, generate-params: 104µs, render: 442ms)
+ GET /blog/hidden-costs-of-employee-turnover 200 in 245ms (compile: 10ms, generate-params: 72µs, render: 234ms)
+ GET /blog/hidden-costs-of-employee-turnover 200 in 132ms (compile: 11ms, generate-params: 74µs, render: 121ms)
+  Reload env: .env
+ GET /blog/hidden-costs-of-employee-turnover 200 in 369ms (compile: 142ms, generate-params: 16ms, render: 227ms)

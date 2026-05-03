@@ -1,147 +1,121 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calculator, ArrowLeft, Info, Mail, Menu, X, Search, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
 import { calculators, type CalculatorMeta } from '@/lib/calculator-meta';
 
 // ─── Search Component ────────────────────────────────────────────────────────
 
 function SearchBar() {
   const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const results: CalculatorMeta[] = query.trim().length < 2
-    ? []
-    : calculators
-      .filter((c) => {
-        const q = query.toLowerCase();
-        return (
-          c.title.toLowerCase().includes(q) ||
-          c.shortDescription.toLowerCase().includes(q) ||
-          c.category.toLowerCase().includes(q) ||
-          c.keywords.some((k) => k.toLowerCase().includes(q))
-        );
-      })
-      .slice(0, 8);
-
+  // Ctrl+K / Cmd+K keyboard shortcut
   useEffect(() => {
-    if (open) {
-      setTimeout(() => inputRef.current?.focus(), 50);
-    } else {
-      setQuery('');
-    }
-  }, [open]);
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setOpen((prev) => !prev);
+      }
+    };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, []);
 
-  useEffect(() => {
-    const onMouse = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', onMouse);
-    return () => document.removeEventListener('mousedown', onMouse);
-  }, []);
+  const handleSelect = (path: string) => {
+    setOpen(false);
+    router.push(path);
+  };
 
-  const handleSelect = (path: string) => { setOpen(false); router.push(path); };
+  // Group calculators by category
+  const categories = Array.from(new Set(calculators.map((c) => c.category)));
 
   return (
-    <div ref={containerRef} className="relative">
-      <AnimatePresence mode="wait">
-        {!open ? (
-          <motion.button
-            key="icon"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.15 }}
-            type="button"
-            onClick={() => setOpen(true)}
-            aria-label="Search calculators"
-            className="flex items-center justify-center h-9 w-9 rounded-lg border border-border/50 bg-background/80 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <Search className="h-4 w-4" />
-          </motion.button>
-        ) : (
-          <motion.div
-            key="input"
-            initial={{ opacity: 0, width: 36 }}
-            animate={{ opacity: 1, width: 220 }}
-            exit={{ opacity: 0, width: 36 }}
-            transition={{ duration: 0.2 }}
-            style={{ overflow: 'hidden' }}
-            className="relative flex items-center"
-          >
-            <Search className="absolute left-2.5 h-3.5 w-3.5 text-muted-foreground pointer-events-none z-10" />
-            <input
-              ref={inputRef}
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search calculators…"
-              aria-label="Search calculators"
-              className="w-full h-9 pl-8 pr-3 rounded-lg border border-emerald-500/40 bg-background text-sm outline-none focus:ring-0 focus:ring-emerald-500/30 placeholder:text-muted-foreground/60"
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label="Search calculators"
+        className="flex items-center cursor-pointer gap-2 h-9 rounded-lg border border-border/50 bg-background/80 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors px-3 w-9 sm:w-auto"
+      >
+        <Search className="h-4 w-4 shrink-0" />
+        <span className="hidden sm:inline text-sm">Search calculators…</span>
+        <kbd className="hidden sm:inline-flex pointer-events-none ml-1 h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+          ⌘K
+        </kbd>
+      </button>
 
-      {/* Dropdown results */}
-      <AnimatePresence>
-        {open && query.trim().length >= 2 && (
-          <motion.div
-            initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.15 }}
-            className="absolute right-0 top-full mt-2 w-72 rounded-xl border border-border/60 bg-popover shadow-xl shadow-black/10 overflow-hidden z-[60]"
-            role="listbox"
-            aria-label="Search results"
-          >
-            {results.length === 0 ? (
-              <div className="px-4 py-6 text-center text-sm text-muted-foreground">
-                No calculators found for &ldquo;{query}&rdquo;
-              </div>
-            ) : (
-              <ul>
-                {results.map((calc) => {
+      <CommandDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Search Calculators"
+        description="Search for any business or HR calculator"
+        showCloseButton={false}
+        className="sm:max-w-lg"
+      >
+        <CommandInput placeholder="Search…" />
+        <CommandList className="max-h-[60vh]">
+          <CommandEmpty>No calculators found.</CommandEmpty>
+          {categories.map((category) => {
+            const group = calculators.filter((c) => c.category === category);
+            return (
+              <CommandGroup key={category} heading={category}>
+                {group.map((calc) => {
                   const Icon = calc.icon;
                   return (
-                    <li key={calc.slug}>
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected="false"
-                        onClick={() => handleSelect(calc.path)}
-                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/60 transition-colors text-left group"
-                      >
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors">
-                          <Icon className="h-4 w-4 text-emerald-600" />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-sm font-medium text-foreground truncate">{calc.title}</p>
-                          <p className="text-xs text-muted-foreground truncate">{calc.category}</p>
-                        </div>
-                      </button>
-                    </li>
+                    <CommandItem
+                      key={calc.slug}
+                      value={`${calc.title} ${calc.category} ${calc.keywords.join(' ')}`}
+                      onSelect={() => handleSelect(calc.path)}
+                      className="flex items-center gap-3 cursor-pointer"
+                    >
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-emerald-500/10">
+                        <Icon className="h-4 w-4 text-emerald-600" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium truncate">{calc.title}</p>
+                        <p className="text-xs text-muted-foreground truncate">{calc.shortDescription}</p>
+                      </div>
+                    </CommandItem>
                   );
                 })}
-              </ul>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+              </CommandGroup>
+            );
+          })}
+        </CommandList>
+
+        {/* Footer hint */}
+        <div className="border-t px-3 py-2 flex items-center gap-3 text-xs text-muted-foreground">
+          <span className="flex items-center gap-1">
+            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium">↑↓</kbd>
+            navigate
+          </span>
+          <span className="flex items-center gap-1">
+            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium">↵</kbd>
+            open
+          </span>
+          <span className="flex items-center gap-1">
+            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium">Esc</kbd>
+            close
+          </span>
+          <span className="ml-auto flex items-center gap-1">
+            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium">⌘K</kbd>
+          </span>
+        </div>
+      </CommandDialog>
+    </>
   );
 }
 
@@ -202,29 +176,29 @@ export default function Header() {
               <SearchBar />
 
               {/* Desktop-only nav links */}
-              <div className="hidden sm:flex items-center gap-2">
+              <div className="hidden lg:flex items-center gap-2">
                 {!isHub && !isLegalPage && (
                   <Link href="/">
-                    <Button variant="outline" size="sm" className="text-muted-foreground">
+                    <Button variant="outline" size="sm" className="text-muted-foreground cursor-pointer">
                       <Calculator className="h-3.5 w-3.5 mr-1.5" />
                       All Calculators
                     </Button>
                   </Link>
                 )}
                 <Link href="/blog">
-                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                  <Button variant="ghost" size="sm" className={`cursor-pointer ${pathname.startsWith('/blog') ? 'bg-accent text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
                     <BookOpen className="h-3.5 w-3.5 mr-1.5" />
                     Blog
                   </Button>
                 </Link>
                 <Link href="/about">
-                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                  <Button variant="ghost" size="sm" className={`cursor-pointer ${pathname === '/about' ? 'bg-accent text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
                     <Info className="h-3.5 w-3.5 mr-1.5" />
                     About
                   </Button>
                 </Link>
                 <Link href="/contact">
-                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                  <Button variant="ghost" size="sm" className={`cursor-pointer ${pathname === '/contact' ? 'bg-accent text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
                     <Mail className="h-3.5 w-3.5 mr-1.5" />
                     Contact
                   </Button>
@@ -236,7 +210,7 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="flex sm:hidden items-center justify-center h-9 w-9 rounded-lg border border-border/50 bg-background/80 hover:bg-accent text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="flex lg:hidden items-center justify-center h-9 w-9 rounded-lg border border-border/50 bg-background/80 hover:bg-accent text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label="Toggle menu"
               aria-expanded={mobileMenuOpen}
             >
@@ -254,14 +228,14 @@ export default function Header() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2, ease: 'easeInOut' }}
-            className="absolute top-full left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-lg overflow-hidden"
+            className="absolute top-full left-0 right-0 bg-background border-b border-border/50 shadow-lg overflow-hidden"
           >
             <nav className="px-4 py-3 space-y-1">
               {!isHub && !isLegalPage && (
                 <Link
                   href="/"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors cursor-pointer"
                 >
                   <Calculator className="h-4 w-4" />
                   All Calculators
@@ -270,7 +244,7 @@ export default function Header() {
               <Link
                 href="/blog"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
+                className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors cursor-pointer ${pathname.startsWith('/blog') ? 'bg-accent/50 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'}`}
               >
                 <BookOpen className="h-4 w-4" />
                 Blog
@@ -278,7 +252,7 @@ export default function Header() {
               <Link
                 href="/about"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
+                className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors cursor-pointer ${pathname === '/about' ? 'bg-accent/50 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'}`}
               >
                 <Info className="h-4 w-4" />
                 About
@@ -286,7 +260,7 @@ export default function Header() {
               <Link
                 href="/contact"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
+                className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors cursor-pointer ${pathname === '/contact' ? 'bg-accent/50 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'}`}
               >
                 <Mail className="h-4 w-4" />
                 Contact
