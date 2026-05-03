@@ -155,7 +155,9 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#059669" />
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        {CONFIG.analytics.gaId && (
+          <link rel="preconnect" href="https://www.googletagmanager.com" />
+        )}
         {/* JSON-LD Structured Data */}
         <script
           type="application/ld+json"
