@@ -5,9 +5,14 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Badge } from '@/components/ui/badge';
 
+import { SITE_URL } from '@/lib/calculator-meta';
+
 export const metadata = {
   title: 'Business & HR Glossary - QuickBizCalc',
   description: 'A comprehensive dictionary of business, HR, payroll, and financial terms to help you understand the metrics behind our calculators.',
+  alternates: {
+    canonical: `${SITE_URL}/glossary`,
+  },
 };
 
 const terms = [

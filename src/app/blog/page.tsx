@@ -5,9 +5,14 @@ import { Badge } from '@/components/ui/badge';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
+import { SITE_URL } from '@/lib/calculator-meta';
+
 export const metadata = {
   title: 'Blog - QuickBizCalc HR & Business Insights',
   description: 'Expert advice, guides, and insights on HR, payroll, taxation, and business management to help you grow your business.',
+  alternates: {
+    canonical: `${SITE_URL}/blog`,
+  },
 };
 
 export default async function BlogPage() {
