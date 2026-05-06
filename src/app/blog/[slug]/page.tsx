@@ -1,4 +1,5 @@
 import { getPostData, getSortedPostsData } from '@/lib/blog';
+import { SITE_URL } from '@/lib/calculator-meta';
 import { Calendar, User, ChevronLeft, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
@@ -17,6 +18,9 @@ export async function generateMetadata({ params }: Props) {
     return {
       title: `${post.title} - QuickBizCalc Blog`,
       description: post.excerpt,
+      alternates: {
+        canonical: `${SITE_URL}/blog/${slug}`,
+      },
     };
   } catch {
     return {
