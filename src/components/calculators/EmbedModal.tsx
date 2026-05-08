@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Code2, Copy, Check, X, ExternalLink, Monitor } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 interface EmbedModalProps {
   slug: string;
@@ -156,7 +157,7 @@ export default function EmbedModal({ slug, title, onClose }: EmbedModalProps) {
             </div>
 
             {/* Preview link */}
-            <a
+            <Link
               href={embedUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -164,7 +165,7 @@ export default function EmbedModal({ slug, title, onClose }: EmbedModalProps) {
             >
               <ExternalLink className="size-3" />
               Preview embed page
-            </a>
+            </Link>
           </div>
 
           {/* Footer */}

@@ -361,11 +361,11 @@ export default function PayrollCalculator() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <TryExample onClick={handleTryExample} />
           <Button
             onClick={handleCalculate}
-            className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
+            className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
             size="lg"
           >
             Calculate Take-Home Pay

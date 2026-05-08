@@ -454,7 +454,7 @@ export default function CalculatorLayout({
           animate="visible"
           variants={containerVariants}
         >
-          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
             <div className="flex items-start gap-3 sm:gap-4 min-w-0">
               <div className="flex items-center justify-center size-10 sm:size-14 rounded-2xl bg-primary/10 text-primary shrink-0 p-1 mt-1">
                 {icon}
@@ -484,7 +484,7 @@ export default function CalculatorLayout({
                 </div>
               </div>
             </div>
-            <div className="shrink-0 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+            <div className="shrink-0 w-full sm:w-auto">
               <ResultActions />
             </div>
           </motion.div>

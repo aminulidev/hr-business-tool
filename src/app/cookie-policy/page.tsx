@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import LegalPageLayout from '@/components/layout/LegalPageLayout';
 import AppShell from '@/components/layout/AppShell';
 import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Cookie Policy',
@@ -33,19 +34,19 @@ export default function CookiePolicyPage() {
           <p>
             This Cookie Policy explains how QuickBizCalc (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) uses cookies and similar
             technologies when you visit our website at{' '}
-            <a
+            <Link
               href={SITE_URL}
               className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
             >
               {SITE_URL}
-            </a>{' '}
+            </Link>{' '}
             (the &quot;Site&quot;). This policy should be read alongside our{' '}
-            <a
+            <Link
               href="/privacy-policy"
               className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
             >
               Privacy Policy
-            </a>
+            </Link>
             , which provides more general information about how we handle your data.
           </p>
 
@@ -208,14 +209,14 @@ export default function CookiePolicyPage() {
               Google Analytics uses cookies to analyze how visitors use the Site. The information
               generated is transmitted to and stored by Google on servers in the United States. For
               more information, visit{' '}
-              <a
+              <Link
                 href="https://policies.google.com/privacy"
                 className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Google&apos;s Privacy Policy
-              </a>
+              </Link>
               .
             </li>
             <li>
@@ -223,14 +224,14 @@ export default function CookiePolicyPage() {
               uses cookies to serve ads based on users&apos; prior visits to this Site and other websites.
               Google&apos;s use of the DoubleClick cookie enables it and its partners to serve ads to
               visitors based on their browsing activity. For more information, visit{' '}
-              <a
+              <Link
                 href="https://policies.google.com/technologies/ads"
                 className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Google Advertising Privacy
-              </a>
+              </Link>
               .
             </li>
           </ul>
@@ -254,77 +255,77 @@ export default function CookiePolicyPage() {
           </p>
           <ul className="list-disc pl-6 space-y-1 mt-2">
             <li>
-              <a
+              <Link
                 href="https://support.google.com/chrome/answer/95647"
                 className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Google Chrome
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="https://support.mozilla.org/en-US/kb/cookies-information-websites-store-on-your-computer"
                 className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Mozilla Firefox
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="https://support.apple.com/guide/safari/manage-cookies-sfri11471/mac"
                 className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Apple Safari
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="https://support.microsoft.com/en-us/microsoft-edge/manage-cookies-in-microsoft-edge-view-allow-block-delete-and-use-168dab11-0753-043d-7c16-ede5947fc64d"
                 className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Microsoft Edge
-              </a>
+              </Link>
             </li>
           </ul>
 
           <h3 className="text-base font-semibold text-foreground mt-4">4.3 Opt-Out Tools</h3>
           <p>
             You can opt out of personalized advertising from Google by visiting{' '}
-            <a
+            <Link
               href="https://www.google.com/settings/ads"
               className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
               target="_blank"
               rel="noopener noreferrer"
             >
               Google Ads Settings
-            </a>
+            </Link>
             . Additionally, you can opt out of third-party vendor cookies for personalized advertising
             by visiting{' '}
-            <a
+            <Link
               href="https://optout.aboutads.info/"
               className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
               target="_blank"
               rel="noopener noreferrer"
             >
               Digital Advertising Alliance&apos;s opt-out page
-            </a>{' '}
+            </Link>{' '}
             or{' '}
-            <a
+            <Link
               href="https://optout.networkadvertising.org/"
               className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
               target="_blank"
               rel="noopener noreferrer"
             >
               Network Advertising Initiative&apos;s opt-out page
-            </a>
+            </Link>
             .
           </p>
 
@@ -348,19 +349,19 @@ export default function CookiePolicyPage() {
           <p>
             If you have any questions about our use of cookies or this Cookie Policy, please contact
             us through our{' '}
-            <a
+            <Link
               href="/contact"
               className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
             >
               Contact Page
-            </a>{' '}
+            </Link>{' '}
             or email us at{' '}
-            <a
+            <Link
               href={`mailto:${CONTACT_EMAIL}`}
               className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
             >
               {CONTACT_EMAIL}
-            </a>
+            </Link>
             .
           </p>
         </section>
