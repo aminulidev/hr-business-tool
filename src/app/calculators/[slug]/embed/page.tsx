@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { getCalculatorBySlug, getAllSlugs } from '@/lib/calculator-meta';
 import dynamic from 'next/dynamic';
 import CalculatorSkeleton from '@/components/calculators/CalculatorSkeleton';
+import Link from 'next/link';
 
 // ---------------------------------------------------------------------------
 // Dynamic imports — same map as main calculator page
@@ -123,14 +124,14 @@ export default async function EmbedPage({
       <CalculatorComponent />
       <div className="text-center py-2 text-xs text-muted-foreground border-t border-border mt-2">
         Powered by{' '}
-        <a
+        <Link
           href={`https://quickbizcalc.com/calculators/${slug}`}
           target="_blank"
           rel="noopener noreferrer"
           className="text-primary font-semibold hover:underline"
         >
           QuickBizCalc
-        </a>
+        </Link>
       </div>
     </div>
   );

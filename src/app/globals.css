@@ -214,13 +214,55 @@
   @apply text-sm font-medium text-muted-foreground;
 }
 
+/* Action row: Try Example + Calculate button — stacks on mobile */
+.calc-action-row {
+  @apply flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3;
+}
+
+.calc-action-row .calc-submit-btn {
+  @apply w-full sm:w-auto;
+}
+
+/* Inside calculator-form: the TryExample/button row stacks on small screens */
+@media (max-width: 639px) {
+  .calculator-form .flex.items-center.justify-between:has(button[type="button"]:last-child),
+  .calculator-form .flex.items-center.justify-between:has(button[type="submit"]) {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .calculator-form .flex.items-center.justify-between:has(button[type="button"]:last-child) > button,
+  .calculator-form .flex.items-center.justify-between:has(button[type="submit"]) > button {
+    width: 100%;
+  }
+}
+
 /* Result display card */
 .result-display {
-  @apply rounded-2xl bg-gradient-to-br from-emerald-500/10 via-emerald-600/5 to-gold-500/10 p-6 border border-emerald-500/20;
+  @apply rounded-2xl bg-gradient-to-br from-emerald-500/10 via-emerald-600/5 to-gold-500/10 p-4 sm:p-6 border border-emerald-500/20;
 }
 
 .dark .result-display {
   @apply from-emerald-500/15 via-emerald-600/8 to-gold-500/10 border-emerald-500/15;
+}
+
+/* Reduce padding on result inner containers on mobile */
+@media (max-width: 639px) {
+  .result-display > div {
+    padding: 1rem !important;
+  }
+  /* Make tables inside result sections scroll on mobile instead of overflowing */
+  .result-display .overflow-hidden,
+  .result-display > div > div.overflow-hidden {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Responsive result table — tighter cells on mobile */
+.result-table th,
+.result-table td {
+  @apply px-2 py-2.5 sm:px-4 sm:py-3;
 }
 
 /* AdSense placeholder */

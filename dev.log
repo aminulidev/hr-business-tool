@@ -6,179 +6,28 @@
   · optimizePackageImports
 
 ✓ Starting...
-✓ Ready in 1718ms
- GET / 200 in 1522ms (compile: 1012ms, render: 510ms)
- GET /calculators/payroll-calculator 200 in 656ms (compile: 608ms, generate-params: 376ms, render: 48ms)
-✓ Compiled in 1902ms
-⨯ ./src/components/calculators/ResultActions.tsx:309:28
-Parsing ecmascript source code failed
-[0m [90m 307 |[39m         [33mArray[39m[33m.[39m[36mfrom[39m(el[33m.[39mchildren)[33m.[39mforEach(cleanStyles)[33m;[39m
- [90m 308 |[39m       }[33m;[39m
-[31m[1m>[22m[39m[90m 309 |[39m       cleanStyles(clo      [36mconst[39m html [33m=[39m [32m`<!DOCTYPE html>[39m
- [90m     |[39m                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 310 |[39m [32m<html lang="en">[39m
- [90m 311 |[39m [32m<head>[39m
- [90m 312 |[39m [32m  <meta charset="UTF-8">[39m[0m
-
-Expected ',', got 'const'
-
-Import traces:
-  Client Component Browser:
-    ./src/components/calculators/ResultActions.tsx [Client Component Browser]
-    ./src/components/calculators/CalculatorLayout.tsx [Client Component Browser]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Client Component Browser]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Server Component]
-    ./src/app/calculators/[slug]/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/components/calculators/ResultActions.tsx [Client Component SSR]
-    ./src/components/calculators/CalculatorLayout.tsx [Client Component SSR]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Client Component SSR]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Server Component]
-    ./src/app/calculators/[slug]/page.tsx [Server Component]
-
-
- GET /calculators/payroll-calculator 500 in 1439ms (compile: 1297ms, render: 142ms)
-⨯ ./src/components/calculators/ResultActions.tsx:438:5
-Parsing ecmascript source code failed
-[0m [90m 436 |[39m       }
- [90m 437 |[39m       }
-[31m[1m>[22m[39m[90m 438 |[39m     } [36mcatch[39m (err) {
- [90m     |[39m     [31m[1m^[22m[39m
- [90m 439 |[39m       console[33m.[39merror([32m'PDF generation failed:'[39m[33m,[39m err)[33m;[39m
- [90m 440 |[39m     } [36mfinally[39m {
- [90m 441 |[39m       setPdfLoading([36mfalse[39m)[33m;[39m[0m
-
-Expected a semicolon
-
-Import traces:
-  Client Component Browser:
-    ./src/components/calculators/ResultActions.tsx [Client Component Browser]
-    ./src/components/calculators/CalculatorLayout.tsx [Client Component Browser]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Client Component Browser]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Server Component]
-    ./src/app/calculators/[slug]/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/components/calculators/ResultActions.tsx [Client Component SSR]
-    ./src/components/calculators/CalculatorLayout.tsx [Client Component SSR]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Client Component SSR]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Server Component]
-    ./src/app/calculators/[slug]/page.tsx [Server Component]
-
-
- GET /calculators/payroll-calculator 500 in 51ms (compile: 39ms, render: 12ms)
-✓ Compiled in 165ms
- GET /calculators/payroll-calculator 200 in 644ms (compile: 141ms, generate-params: 11ms, render: 502ms)
- GET / 200 in 30ms (compile: 6ms, render: 23ms)
- GET /calculators/bonus-tax-calculator 200 in 47ms (compile: 13ms, generate-params: 8ms, render: 34ms)
- GET /calculators/payroll-calculator 200 in 49ms (compile: 17ms, generate-params: 11ms, render: 32ms)
-✓ Compiled in 107ms
- GET /calculators/bonus-tax-calculator 200 in 102ms (compile: 65ms, generate-params: 7ms, render: 37ms)
-✓ Compiled in 1465ms
- GET /calculators/bonus-tax-calculator 200 in 786ms (compile: 134ms, generate-params: 13ms, render: 652ms)
-✓ Compiled in 120ms
- GET /calculators/bonus-tax-calculator 200 in 453ms (compile: 84ms, generate-params: 8ms, render: 369ms)
- GET /calculators/bonus-tax-calculator 200 in 831ms (compile: 238ms, generate-params: 11ms, render: 593ms)
- GET /calculators/bonus-tax-calculator 200 in 501ms (compile: 10ms, generate-params: 102µs, render: 491ms)
-✓ Compiled in 115ms
-✓ Compiled in 121ms
-✓ Compiled in 197ms
- GET /calculators/bonus-tax-calculator 200 in 765ms (compile: 107ms, generate-params: 12ms, render: 658ms)
-✓ Compiled in 128ms
-✓ Compiled in 435ms
- GET /calculators/bonus-tax-calculator 200 in 488ms (compile: 67ms, generate-params: 8ms, render: 420ms)
- GET /calculators/bonus-tax-calculator 200 in 196ms (compile: 14ms, generate-params: 8ms, render: 183ms)
-⚠ ./src/components/calculators/ResultActions.tsx:468:36
-Module not found: Can't resolve 'html2pdf.js'
-[0m [90m 466 |[39m       })[33m;[39m
- [90m 467 |[39m
-[31m[1m>[22m[39m[90m 468 |[39m       [36mconst[39m html2pdfModule [33m=[39m [36mawait[39m [36mimport[39m([32m'html2pdf.js'[39m)[33m;[39m
- [90m     |[39m                                    [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 469 |[39m       [36mconst[39m html2pdf [33m=[39m html2pdfModule[33m.[39m[36mdefault[39m [33m||[39m html2pdfModule[33m;[39m
- [90m 470 |[39m
- [90m 471 |[39m       [36mconst[39m targetNode [33m=[39m container[33m.[39mquerySelector[33m<[39m[33mHTMLElement[39m[33m>[39m([32m'#pdf-export-node'[39m)[33m;[39m[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./src/components/calculators/ResultActions.tsx [Client Component Browser]
-    ./src/components/calculators/CalculatorLayout.tsx [Client Component Browser]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Client Component Browser]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Server Component]
-    ./src/app/calculators/[slug]/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/components/calculators/ResultActions.tsx [Client Component SSR]
-    ./src/components/calculators/CalculatorLayout.tsx [Client Component SSR]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Client Component SSR]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Server Component]
-    ./src/app/calculators/[slug]/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
-⚠ ./src/components/calculators/ResultActions.tsx:468:36
-Module not found: Can't resolve 'html2pdf.js'
-[0m [90m 466 |[39m       })[33m;[39m
- [90m 467 |[39m
-[31m[1m>[22m[39m[90m 468 |[39m       [36mconst[39m html2pdfModule [33m=[39m [36mawait[39m [36mimport[39m([32m'html2pdf.js'[39m)[33m;[39m
- [90m     |[39m                                    [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 469 |[39m       [36mconst[39m html2pdf [33m=[39m html2pdfModule[33m.[39m[36mdefault[39m [33m||[39m html2pdfModule[33m;[39m
- [90m 470 |[39m
- [90m 471 |[39m       [36mconst[39m targetNode [33m=[39m container[33m.[39mquerySelector[33m<[39m[33mHTMLElement[39m[33m>[39m([32m'#pdf-export-node'[39m)[33m;[39m[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./src/components/calculators/ResultActions.tsx [Client Component Browser]
-    ./src/components/calculators/CalculatorLayout.tsx [Client Component Browser]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Client Component Browser]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Server Component]
-    ./src/app/calculators/[slug]/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/components/calculators/ResultActions.tsx [Client Component SSR]
-    ./src/components/calculators/CalculatorLayout.tsx [Client Component SSR]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Client Component SSR]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Server Component]
-    ./src/app/calculators/[slug]/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- GET /calculators/bonus-tax-calculator 200 in 1530ms (compile: 1478ms, generate-params: 34µs, render: 52ms)
- GET /calculators/bonus-tax-calculator 200 in 1528ms (compile: 1038ms, generate-params: 7ms, render: 490ms)
-⚠ ./src/components/calculators/ResultActions.tsx:468:36
-Module not found: Can't resolve 'html2pdf.js'
-[0m [90m 466 |[39m       })[33m;[39m
- [90m 467 |[39m
-[31m[1m>[22m[39m[90m 468 |[39m       [36mconst[39m html2pdfModule [33m=[39m [36mawait[39m [36mimport[39m([32m'html2pdf.js'[39m)[33m;[39m
- [90m     |[39m                                    [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 469 |[39m       [36mconst[39m html2pdf [33m=[39m html2pdfModule[33m.[39m[36mdefault[39m [33m||[39m html2pdfModule[33m;[39m
- [90m 470 |[39m
- [90m 471 |[39m       [36mconst[39m targetNode [33m=[39m container[33m.[39mquerySelector[33m<[39m[33mHTMLElement[39m[33m>[39m([32m'#pdf-export-node'[39m)[33m;[39m[0m
-
-
-
-Import traces:
-  Client Component Browser:
-    ./src/components/calculators/ResultActions.tsx [Client Component Browser]
-    ./src/components/calculators/CalculatorLayout.tsx [Client Component Browser]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Client Component Browser]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Server Component]
-    ./src/app/calculators/[slug]/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/components/calculators/ResultActions.tsx [Client Component SSR]
-    ./src/components/calculators/CalculatorLayout.tsx [Client Component SSR]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Client Component SSR]
-    ./src/components/calculators/RevenuePerEmployeeCalculator.tsx [Server Component]
-    ./src/app/calculators/[slug]/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- GET /calculators/bonus-tax-calculator 200 in 146ms (compile: 78ms, generate-params: 8ms, render: 69ms)
+✓ Ready in 938ms
+ GET / 200 in 864ms (compile: 305ms, render: 559ms)
+ GET /calculators/payroll-calculator 200 in 624ms (compile: 573ms, generate-params: 382ms, render: 52ms)
+ GET /calculators/payroll-calculator 200 in 495ms (compile: 30ms, generate-params: 18ms, render: 465ms)
+ GET /calculators/sales-commission-calculator 200 in 222ms (compile: 22ms, generate-params: 12ms, render: 200ms)
+ GET / 200 in 189ms (compile: 6ms, render: 183ms)
+ GET /calculators/payroll-calculator 200 in 441ms (compile: 21ms, generate-params: 10ms, render: 421ms)
+✓ Compiled in 747ms
+✓ Compiled in 144ms
+✓ Compiled in 318ms
+✓ Compiled in 332ms
+✓ Compiled in 297ms
+✓ Compiled in 286ms
+✓ Compiled in 192ms
+ GET / 200 in 494ms (compile: 108ms, render: 386ms)
+ GET /calculators/payroll-calculator 200 in 807ms (compile: 117ms, generate-params: 11ms, render: 690ms)
+ GET /calculators/payroll-calculator 200 in 286ms (compile: 18ms, generate-params: 9ms, render: 268ms)
+✓ Compiled in 126ms
+✓ Compiled in 109ms
+✓ Compiled in 125ms
+✓ Compiled in 119ms
+ GET /calculators/payroll-calculator 200 in 581ms (compile: 95ms, generate-params: 8ms, render: 485ms)
+ GET / 200 in 213ms (compile: 8ms, render: 205ms)
+ GET /calculators/payroll-calculator 200 in 339ms (compile: 23ms, generate-params: 14ms, render: 317ms)
+ GET /calculators/payroll-calculator 200 in 193ms (compile: 12ms, generate-params: 7ms, render: 181ms)

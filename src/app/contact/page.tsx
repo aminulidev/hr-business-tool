@@ -4,6 +4,7 @@ import AppShell from '@/components/layout/AppShell';
 import ContactForm from '@/components/layout/ContactForm';
 import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
 import { Mail, Clock, MessageSquare, Globe, MapPin } from 'lucide-react';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Contact Us',
@@ -33,8 +34,8 @@ export default function ContactPage() {
         <section className="space-y-12 text-sm leading-relaxed">
           <div className="max-w-3xl">
             <p className="text-base text-foreground/70">
-              We value your feedback and are here to help with any questions you may have about our tools. 
-              Whether you&apos;ve found a bug, have a suggestion for a new calculator, or want to discuss a 
+              We value your feedback and are here to help with any questions you may have about our tools.
+              Whether you&apos;ve found a bug, have a suggestion for a new calculator, or want to discuss a
               business partnership, we&apos;d love to hear from you.
             </p>
           </div>
@@ -48,38 +49,36 @@ export default function ContactPage() {
             {/* Contact Info - Sidebar Area */}
             <div className="lg:col-span-2 space-y-6">
               <div className="rounded-2xl border border-border/50 bg-card p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2 !mt-0">
                   <Mail className="h-5 w-5 text-emerald-600" />
                   Direct Contact
                 </h3>
                 <div className="space-y-4">
                   <div>
-                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">
-                      General & Support
-                    </p>
-                    <a
+                    <Link
                       href={`mailto:${CONTACT_EMAIL}`}
                       className="text-base font-medium text-emerald-600 hover:text-emerald-700 underline underline-offset-4"
                     >
                       {CONTACT_EMAIL}
-                    </a>
+                    </Link>
                   </div>
+                </div>
+
+                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2 !mt-8">
+                  <Globe className="h-5 w-5 text-blue-600" />
+                  Location
+                </h3>
+                <div className="flex items-start gap-3">
+                  <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">
-                      Business & Legal
-                    </p>
-                    <a
-                      href={`mailto:${CONTACT_EMAIL}`}
-                      className="text-base font-medium text-emerald-600 hover:text-emerald-700 underline underline-offset-4"
-                    >
-                      {CONTACT_EMAIL}
-                    </a>
+                    <p className="font-medium">United States</p>
+                    <p className="text-xs text-muted-foreground">Remote Operations</p>
                   </div>
                 </div>
               </div>
 
               <div className="rounded-2xl border border-border/50 bg-card p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2 !mt-0">
                   <Clock className="h-5 w-5 text-gold-600" />
                   Response Time
                 </h3>
@@ -94,20 +93,6 @@ export default function ContactPage() {
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Sat — Sun:</span>
                     <span className="font-medium text-amber-600">Limited Support</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-border/50 bg-card p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <Globe className="h-5 w-5 text-blue-600" />
-                  Location
-                </h3>
-                <div className="flex items-start gap-3">
-                  <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="font-medium">United States</p>
-                    <p className="text-xs text-muted-foreground">Remote Operations</p>
                   </div>
                 </div>
               </div>
@@ -127,8 +112,8 @@ export default function ContactPage() {
                   How do I report a calculation error?
                 </h3>
                 <p className="text-muted-foreground">
-                  Please use the contact form or email us with the calculator name and the specific inputs 
-                  that produced the unexpected result. Our technical team investigates all reports 
+                  Please use the contact form or email us with the calculator name and the specific inputs
+                  that produced the unexpected result. Our technical team investigates all reports
                   within 24-48 hours.
                 </p>
               </div>
@@ -138,7 +123,7 @@ export default function ContactPage() {
                   Can I request a custom calculator?
                 </h3>
                 <p className="text-muted-foreground">
-                  Absolutely! We are constantly expanding our suite. If you have a specific business 
+                  Absolutely! We are constantly expanding our suite. If you have a specific business
                   or HR formula you&apos;d like to see automated, please send us your suggestion.
                 </p>
               </div>
@@ -148,7 +133,7 @@ export default function ContactPage() {
                   Is there a cost to use your tools?
                 </h3>
                 <p className="text-muted-foreground">
-                  No, all calculators on QuickBizCalc are 100% free for both personal and professional 
+                  No, all calculators on QuickBizCalc are 100% free for both personal and professional
                   use. We are supported by minimal, non-intrusive advertising.
                 </p>
               </div>
@@ -158,7 +143,7 @@ export default function ContactPage() {
                   How is my data protected?
                 </h3>
                 <p className="text-muted-foreground">
-                  Your privacy is our priority. All calculations happen entirely in your browser. 
+                  Your privacy is our priority. All calculations happen entirely in your browser.
                   We never see, store, or transmit any of the data you enter into our tools.
                 </p>
               </div>
