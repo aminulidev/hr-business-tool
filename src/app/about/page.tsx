@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import LegalPageLayout from '@/components/layout/LegalPageLayout';
 import AppShell from '@/components/layout/AppShell';
 import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'About Us',
@@ -99,12 +100,12 @@ export default function AboutPage() {
             Tax laws, business regulations, and employment practices vary by jurisdiction and change
             over time. For critical financial, tax, or legal decisions, we always recommend consulting
             with a qualified professional. Our full{' '}
-            <a
+            <Link
               href="/disclaimer"
               className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
             >
               Disclaimer
-            </a>{' '}
+            </Link>{' '}
             provides additional details.
           </p>
 
@@ -115,12 +116,12 @@ export default function AboutPage() {
             into our calculators never leaves your device and is never transmitted to our servers.
             We do not collect, store, or have access to your calculation inputs. For details on
             what information we do collect (such as anonymous usage analytics), please read our{' '}
-            <a
+            <Link
               href="/privacy-policy"
               className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
             >
               Privacy Policy
-            </a>
+            </Link>
             .
           </p>
 
@@ -138,19 +139,19 @@ export default function AboutPage() {
             We value your feedback and are always looking for ways to improve. If you have questions,
             suggestions, or feedback about QuickBizCalc, or if you would like to report an issue with any
             of our calculators, please visit our{' '}
-            <a
+            <Link
               href="/contact"
               className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
             >
               Contact Page
-            </a>{' '}
+            </Link>{' '}
             or send us an email at{' '}
-            <a
+            <Link
               href={`mailto:${CONTACT_EMAIL}`}
               className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
             >
               {CONTACT_EMAIL}
-            </a>
+            </Link>
             . We aim to respond to all inquiries within 48 hours.
           </p>
         </section>

@@ -5,6 +5,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { CONTACT_EMAIL, SITE_URL, SITE_NAME, SITE_TAGLINE } from '@/lib/calculator-meta';
 import { CONFIG } from "@/lib/config";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -189,12 +190,12 @@ export default function RootLayout({
           </>
         )}
 
-        <a
+        <Link
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-background focus:text-foreground top-0 left-0"
         >
           Skip to main content
-        </a>
+        </Link>
         {children}
         <Toaster />
       </body>

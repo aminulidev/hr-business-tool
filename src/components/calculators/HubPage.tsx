@@ -66,15 +66,15 @@ export default function HubPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="py-8 sm:py-12"
+      className="py-6 sm:py-12"
     >
       {/* Hero Section */}
-      <div className="text-center mb-12 sm:mb-16 px-4">
+      <div className="text-center mb-8 sm:mb-16 px-4">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4"
+          className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4"
         >
           Business & HR{' '}
           <span className="bg-gradient-to-r from-emerald-500 via-emerald-600 to-gold-500 bg-clip-text text-transparent">
@@ -85,14 +85,14 @@ export default function HubPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-muted-foreground max-w-2xl mx-auto text-lg mb-8"
+          className="text-muted-foreground max-w-2xl mx-auto text-base sm:text-lg mb-6 sm:mb-8"
         >
           Professional-grade tools for small business owners, HR managers, and
           financial professionals. Free, accurate, and instant results.
         </motion.p>
-        
+
         {/* Search Bar */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
@@ -134,7 +134,7 @@ export default function HubPage() {
         </motion.div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-20 py-6 sm:py-12">
         {/* Calculator Grid */}
         <div className="space-y-12">
           {grouped.map((group) => (
@@ -171,7 +171,7 @@ export default function HubPage() {
 
         {/* SEO & Trust Content Section */}
         <div className="pt-8 border-t border-border/40">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
             {/* Left Column: Expert Authority */}
             <div className="lg:col-span-2 space-y-8">
               <section>
@@ -189,18 +189,18 @@ export default function HubPage() {
               </section>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="p-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/10">
+                <div className="p-4 sm:p-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/10">
                   <h3 className="font-bold mb-2 flex items-center gap-2">
-                    <span className="p-1 rounded-md bg-emerald-500/20 text-emerald-600">✓</span>
+                    <span className="inline-flex items-center justify-center h-7 w-7 p-1 rounded-full bg-emerald-500/20 text-emerald-600">✓</span>
                     Accuracy Guaranteed
                   </h3>
                   <p className="text-sm text-muted-foreground">
                     All formulas are reviewed by financial experts and updated regularly to reflect the latest tax brackets and employment regulations.
                   </p>
                 </div>
-                <div className="p-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/10">
+                <div className="p-4 sm:p-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/10">
                   <h3 className="font-bold mb-2 flex items-center gap-2">
-                    <span className="p-1 rounded-md bg-emerald-500/20 text-emerald-600">✓</span>
+                    <span className="inline-flex items-center justify-center h-7 w-7 p-1 rounded-full bg-emerald-500/20 text-emerald-600">✓</span>
                     Privacy First
                   </h3>
                   <p className="text-sm text-muted-foreground">
@@ -212,7 +212,7 @@ export default function HubPage() {
 
             {/* Right Column: Key Benefits / Sidebar */}
             <div className="space-y-6">
-              <div className="p-6 rounded-2xl border border-border/60 bg-card/50 backdrop-blur-sm">
+              <div className="p-4 sm:p-6 rounded-2xl border border-border/60 bg-card/50 backdrop-blur-sm">
                 <h3 className="font-bold mb-4 text-sm uppercase tracking-wider text-muted-foreground">
                   Why Use QuickBizCalc?
                 </h3>
@@ -246,8 +246,8 @@ export default function HubPage() {
                 <p className="text-sm text-emerald-50/80 mb-4">
                   We are constantly expanding our suite. If you have a specific business calculation you need automated, let us know.
                 </p>
-                <Link 
-                  href="/contact" 
+                <Link
+                  href="/contact"
                   className="inline-flex items-center justify-center w-full py-2 px-4 rounded-xl bg-white text-emerald-700 font-bold text-sm hover:bg-emerald-50 transition-colors"
                 >
                   Request a Calculator

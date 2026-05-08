@@ -301,12 +301,11 @@ export default function ROICalculator() {
         </div>
       </div>
 
-      {/* Calculate Button */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <TryExample onClick={handleTryExample} />
         <Button
           onClick={handleCalculate}
-          className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25 font-semibold text-base py-6"
+          className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25 font-semibold text-base py-6"
         >
           Calculate ROI
           <ArrowRight className="ml-2 h-4 w-4" />
