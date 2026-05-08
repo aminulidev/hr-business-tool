@@ -135,6 +135,7 @@ export default function ResultActions() {
 
     const titleEl = document.querySelector('h1');
     const calculatorTitle = titleEl ? titleEl.textContent?.trim() || 'Calculator' : 'Calculator';
+    const safeName = calculatorTitle.toLowerCase().replace(/\s+/g, '-');
     const resultEl = document.querySelector('.result-display');
     if (!resultEl) return;
 
@@ -149,49 +150,109 @@ export default function ResultActions() {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${calculatorTitle} - Result</title>
+  <title>${safeName}-report</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1a1a1a; padding: 24px; max-width: 800px; margin: 0 auto; }
-    .print-header { text-align: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #e5e5e5; }
-    .print-header h1 { font-size: 20px; font-weight: 700; color: #111; margin-bottom: 4px; }
-    .print-header p { font-size: 12px; color: #888; }
-    .result-container { border: 2px solid #333; border-radius: 12px; padding: 24px; background: #f9fafb; }
-    .result-container > div > div { text-align: center; margin-bottom: 16px; }
+    @page { size: A4 portrait; margin: 20mm 15mm; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1f2937; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; line-height: 1.5; }
+    
+    .pdf-container { max-width: 800px; margin: 0 auto; padding-bottom: 50px; }
+    
+    /* Header */
+    .pdf-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid #059669; padding-bottom: 15px; margin-bottom: 25px; }
+    .pdf-header-left { display: flex; align-items: center; gap: 12px; }
+    .pdf-logo { width: 44px; height: 44px; display: block; }
+    .pdf-brand { font-size: 24px; font-weight: 800; color: #059669; letter-spacing: -0.5px; margin-top: 2px; }
+    .pdf-header-right { text-align: right; }
+    .pdf-doc-title { font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 1.5px; }
+    .pdf-date { font-size: 12px; color: #9ca3af; margin-top: 4px; font-weight: 500; }
+
+    /* Title Section */
+    .pdf-title-section { margin-bottom: 30px; }
+    .pdf-title-section h2 { font-size: 28px; font-weight: 800; color: #111827; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .pdf-title-section p { font-size: 14px; color: #4b5563; font-weight: 500; }
+
+    /* Result Container */
+    .result-container { border: 1px solid #e5e7eb; border-radius: 12px; padding: 28px; background: #f9fafb; margin-top: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     .result-container .text-center { text-align: center; }
-    .result-container [class*="text-4xl"], .result-container [class*="text-3xl"] { font-size: 28px; font-weight: 700; color: #059669; }
-    .result-container [class*="text-xl"] { font-size: 18px; font-weight: 600; }
-    .result-container [class*="text-lg"] { font-size: 16px; font-weight: 600; }
-    .result-container [class*="font-bold"] { font-weight: 700; }
+    .result-container [class*="text-4xl"], .result-container [class*="text-3xl"] { font-size: 32px; font-weight: 800; color: #059669; }
+    .result-container [class*="text-xl"]  { font-size: 18px; font-weight: 700; color: #1f2937; }
+    .result-container [class*="text-lg"]  { font-size: 16px; font-weight: 600; color: #374151; }
+    .result-container [class*="font-bold"]     { font-weight: 700; }
     .result-container [class*="font-semibold"] { font-weight: 600; }
-    .result-container [class*="text-sm"], .result-container [class*="text-xs"] { font-size: 13px; color: #555; }
-    .result-container [class*="text-muted"] { color: #666; }
+    .result-container [class*="text-sm"], .result-container [class*="text-xs"] { font-size: 13px; color: #6b7280; }
+    .result-container [class*="text-muted"]   { color: #6b7280; }
     .result-container [class*="text-emerald"] { color: #059669; }
-    .result-container [class*="text-red"] { color: #dc2626; }
-    .result-container [class*="text-amber"] { color: #d97706; }
-    .result-container [class*="grid"] { display: grid; gap: 12px; margin-bottom: 16px; }
+    .result-container [class*="text-red"]     { color: #dc2626; }
+    .result-container [class*="text-amber"]   { color: #d97706; }
+    .result-container [class*="grid"]        { display: grid; gap: 16px; margin-bottom: 20px; }
     .result-container [class*="grid-cols-2"] { grid-template-columns: 1fr 1fr; }
     .result-container [class*="grid-cols-3"] { grid-template-columns: 1fr 1fr 1fr; }
-    .result-container [class*="rounded-lg"], .result-container [class*="rounded-xl"] { border-radius: 8px; padding: 12px; border: 1px solid #e5e5e5; background: white; }
-    .result-container table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .result-container thead th { text-align: left; padding: 8px 12px; font-weight: 600; color: #555; border-bottom: 2px solid #e5e5e5; }
+    .result-container [class*="rounded-lg"], .result-container [class*="rounded-xl"] { border-radius: 10px; padding: 16px; border: 1px solid #e5e7eb; background: white; }
+    .result-container [class*="bg-muted"]   { background: #f3f4f6 !important; }
+    .result-container [class*="bg-emerald"] { background: #ecfdf5 !important; }
+    .result-container [class*="bg-red"]     { background: #fef2f2 !important; }
+    .result-container table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 16px; }
+    .result-container thead th { text-align: left; padding: 10px 14px; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; background: #f9fafb; }
     .result-container thead th:not(:first-child) { text-align: right; }
-    .result-container tbody td { padding: 8px 12px; border-bottom: 1px solid #f0f0f0; }
+    .result-container tbody td { padding: 10px 14px; border-bottom: 1px solid #f3f4f6; }
     .result-container tbody td:not(:first-child) { text-align: right; }
-    .print-footer { margin-top: 24px; padding-top: 12px; border-top: 1px solid #e5e5e5; font-size: 11px; color: #aaa; text-align: center; }
-    @media print { body { padding: 0; } }
+    
+    /* Footer */
+    .pdf-footer-wrapper { position: fixed; bottom: 0; left: 0; width: 100%; background: white; z-index: 10; }
+    .pdf-footer { max-width: 800px; margin: 0 auto; padding-top: 15px; padding-bottom: 10px; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #9ca3af; }
+    .pdf-footer-links { font-weight: 600; color: #059669; }
+    
+    @media print { 
+      body { background: white; } 
+      .result-container { box-shadow: none; border-color: #d1d5db; }
+      .pdf-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .pdf-footer-wrapper { position: fixed; bottom: 0; left: 0; right: 0; }
+    }
   </style>
 </head>
 <body>
-  <div class="print-header">
-    <h1>${calculatorTitle}</h1>
-    <p>${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} at ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
+  <div class="pdf-container">
+    <!-- Header -->
+    <div class="pdf-header">
+      <div class="pdf-header-left">
+        <img src="${window.location.origin}/logo.svg" alt="Logo" class="pdf-logo" onerror="this.style.display='none'" />
+        <span class="pdf-brand">QuickBizCalc</span>
+      </div>
+      <div class="pdf-header-right">
+        <div class="pdf-doc-title">Official Report</div>
+        <div class="pdf-date">${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="pdf-title-section">
+      <h2>${calculatorTitle}</h2>
+      <p>Calculation generated on ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
+    </div>
+
+    <!-- Results -->
+    <div class="result-container">${clone.innerHTML}</div>
   </div>
-  <div class="result-container">
-    ${clone.innerHTML}
+
+  <!-- Footer -->
+  <div class="pdf-footer-wrapper">
+    <div class="pdf-footer">
+      <div>&copy; ${new Date().getFullYear()} QuickBizCalc. All rights reserved.</div>
+      <div class="pdf-footer-links">www.quickbizcalc.com</div>
+    </div>
   </div>
-  <div class="print-footer">QuickBizCalc — Free Small Business &amp; HR Calculators</div>
+
+  <script>
+    window.onload = function () { 
+      setTimeout(function () { 
+        window.print(); 
+      }, 400); 
+    };
+    window.onafterprint = function() {
+      window.close();
+    };
+  </script>
 </body>
 </html>`;
 
@@ -204,8 +265,10 @@ export default function ResultActions() {
       if (iframeDoc) {
         iframeDoc.open(); iframeDoc.write(html); iframeDoc.close();
         iframe.contentWindow?.focus();
-        iframe.contentWindow?.print();
-        setTimeout(() => document.body.removeChild(iframe), 5000);
+        setTimeout(() => {
+          iframe.contentWindow?.print();
+          setTimeout(() => document.body.removeChild(iframe), 5000);
+        }, 300);
       }
       return;
     }
@@ -213,13 +276,6 @@ export default function ResultActions() {
     printWindow.document.open();
     printWindow.document.write(html);
     printWindow.document.close();
-    printWindow.onload = () => {
-      setTimeout(() => {
-        printWindow.print();
-        printWindow.onafterprint = () => printWindow.close();
-        setTimeout(() => { if (!printWindow.closed) printWindow.close(); }, 10000);
-      }, 300);
-    };
   }, [hasResult]);
 
   // ---- Copy result text ----
@@ -280,9 +336,7 @@ export default function ResultActions() {
     setTimeout(() => setLinkCopied(false), 2500);
   }, []);
 
-  // ---- PDF Export (print-window → Save as PDF) ----
-  // Uses the same clean-HTML approach as Print to avoid html2canvas
-  // incompatibility with Tailwind v4 lab()/oklch() CSS color functions.
+  // ---- PDF Export — opens a styled print preview; user selects "Save as PDF" ----
   const handlePDF = useCallback(() => {
     if (!hasResult || pdfLoading) return;
     setPdfLoading(true);
@@ -295,7 +349,6 @@ export default function ResultActions() {
       const calculatorTitle = titleEl?.textContent?.trim() ?? 'Calculator';
       const safeName = calculatorTitle.toLowerCase().replace(/\s+/g, '-');
 
-      // Clone + strip Framer Motion inline styles
       const clone = resultEl.cloneNode(true) as HTMLElement;
       const cleanStyles = (el: Element) => {
         el.removeAttribute('style');
@@ -307,58 +360,84 @@ export default function ResultActions() {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>${safeName}-result</title>
+  <title>${safeName}-report</title>
   <style>
-    @page { size: A4 portrait; margin: 12mm 14mm; }
+    @page { size: A4 portrait; margin: 20mm 15mm 25mm 15mm; }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1a1a1a; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .pdf-header { display: flex; justify-content: space-between; align-items: center; background: #059669; color: white; padding: 10px 16px; border-radius: 8px; margin-bottom: 16px; }
-    .pdf-header-brand { font-size: 15px; font-weight: 700; }
-    .pdf-header-url   { font-size: 10px; opacity: 0.85; }
-    .pdf-title h2 { font-size: 20px; font-weight: 700; color: #111; margin-bottom: 3px; }
-    .pdf-title p  { font-size: 11px; color: #888; }
-    .result-container { border: 1px solid #e5e5e5; border-radius: 10px; padding: 20px; background: #f9fafb; margin-top: 14px; }
+    body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1f2937; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; line-height: 1.5; }
+    .pdf-container { max-width: 800px; margin: 0 auto; }
+    .pdf-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid #059669; padding-bottom: 15px; margin-bottom: 25px; }
+    .pdf-header-left { display: flex; align-items: center; gap: 12px; }
+    .pdf-logo { width: 44px; height: 44px; display: block; }
+    .pdf-brand { font-size: 24px; font-weight: 800; color: #059669; letter-spacing: -0.5px; margin-top: 2px; }
+    .pdf-header-right { text-align: right; }
+    .pdf-doc-title { font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 1.5px; }
+    .pdf-date { font-size: 12px; color: #9ca3af; margin-top: 4px; font-weight: 500; }
+    .pdf-title-section { margin-bottom: 30px; }
+    .pdf-title-section h2 { font-size: 28px; font-weight: 800; color: #111827; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .pdf-title-section p { font-size: 14px; color: #4b5563; font-weight: 500; }
+    .result-container { border: 1px solid #e5e7eb; border-radius: 12px; padding: 28px; background: #f9fafb; margin-top: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     .result-container .text-center { text-align: center; }
-    .result-container [class*="text-4xl"], .result-container [class*="text-3xl"] { font-size: 26px; font-weight: 700; color: #059669; }
-    .result-container [class*="text-xl"]  { font-size: 17px; font-weight: 600; }
-    .result-container [class*="text-lg"]  { font-size: 15px; font-weight: 600; }
+    .result-container [class*="text-4xl"], .result-container [class*="text-3xl"] { font-size: 32px; font-weight: 800; color: #059669; }
+    .result-container [class*="text-xl"]  { font-size: 18px; font-weight: 700; color: #1f2937; }
+    .result-container [class*="text-lg"]  { font-size: 16px; font-weight: 600; color: #374151; }
     .result-container [class*="font-bold"]     { font-weight: 700; }
     .result-container [class*="font-semibold"] { font-weight: 600; }
-    .result-container [class*="text-sm"], .result-container [class*="text-xs"] { font-size: 12px; color: #555; }
-    .result-container [class*="text-muted"]   { color: #666; }
+    .result-container [class*="text-sm"], .result-container [class*="text-xs"] { font-size: 13px; color: #6b7280; }
+    .result-container [class*="text-muted"]   { color: #6b7280; }
     .result-container [class*="text-emerald"] { color: #059669; }
     .result-container [class*="text-red"]     { color: #dc2626; }
     .result-container [class*="text-amber"]   { color: #d97706; }
-    .result-container [class*="grid"]        { display: grid; gap: 10px; margin-bottom: 14px; }
+    .result-container [class*="grid"]        { display: grid; gap: 16px; margin-bottom: 20px; }
     .result-container [class*="grid-cols-2"] { grid-template-columns: 1fr 1fr; }
     .result-container [class*="grid-cols-3"] { grid-template-columns: 1fr 1fr 1fr; }
-    .result-container [class*="rounded-lg"], .result-container [class*="rounded-xl"] { border-radius: 8px; padding: 10px; border: 1px solid #e5e5e5; background: white; }
-    .result-container [class*="bg-muted"]   { background: #f5f5f5 !important; }
+    .result-container [class*="rounded-lg"], .result-container [class*="rounded-xl"] { border-radius: 10px; padding: 16px; border: 1px solid #e5e7eb; background: white; }
+    .result-container [class*="bg-muted"]   { background: #f3f4f6 !important; }
     .result-container [class*="bg-emerald"] { background: #ecfdf5 !important; }
     .result-container [class*="bg-red"]     { background: #fef2f2 !important; }
-    .result-container table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    .result-container thead th { text-align: left; padding: 7px 10px; font-weight: 600; color: #555; border-bottom: 2px solid #e5e5e5; }
+    .result-container table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 16px; }
+    .result-container thead th { text-align: left; padding: 10px 14px; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; background: #f9fafb; }
     .result-container thead th:not(:first-child) { text-align: right; }
-    .result-container tbody td { padding: 7px 10px; border-bottom: 1px solid #f0f0f0; }
+    .result-container tbody td { padding: 10px 14px; border-bottom: 1px solid #f3f4f6; }
     .result-container tbody td:not(:first-child) { text-align: right; }
-    .pdf-footer { margin-top: 14px; padding-top: 10px; border-top: 1px solid #e5e5e5; font-size: 10px; color: #aaa; text-align: center; }
-    @media print { body { background: white; } .pdf-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+    .pdf-footer-wrapper { position: fixed; bottom: 0; left: 0; width: 100%; background: white; }
+    .pdf-footer { max-width: 800px; margin: 0 auto; padding-top: 12px; padding-bottom: 8px; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #9ca3af; }
+    .pdf-footer-links { font-weight: 600; color: #059669; }
+    @media print {
+      body { background: white; }
+      .result-container { box-shadow: none; border-color: #d1d5db; }
+      .pdf-footer-wrapper { position: fixed; bottom: 0; left: 0; right: 0; }
+    }
   </style>
 </head>
 <body>
-  <div class="pdf-header">
-    <span class="pdf-header-brand">QuickBizCalc</span>
-    <span class="pdf-header-url">quickbizcalc.com</span>
+  <div class="pdf-container">
+    <div class="pdf-header">
+      <div class="pdf-header-left">
+        <img src="${window.location.origin}/logo.svg" alt="Logo" class="pdf-logo" onerror="this.style.display='none'" />
+        <span class="pdf-brand">QuickBizCalc</span>
+      </div>
+      <div class="pdf-header-right">
+        <div class="pdf-doc-title">Official Report</div>
+        <div class="pdf-date">${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+      </div>
+    </div>
+    <div class="pdf-title-section">
+      <h2>${calculatorTitle}</h2>
+      <p>Calculation generated on ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
+    </div>
+    <div class="result-container">${clone.innerHTML}</div>
   </div>
-  <div class="pdf-title">
-    <h2>${calculatorTitle}</h2>
-    <p>${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} &nbsp;&middot;&nbsp; ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
+  <div class="pdf-footer-wrapper">
+    <div class="pdf-footer">
+      <div>&copy; ${new Date().getFullYear()} QuickBizCalc. All rights reserved.</div>
+      <div class="pdf-footer-links">www.quickbizcalc.com</div>
+    </div>
   </div>
-  <div class="result-container">${clone.innerHTML}</div>
-  <div class="pdf-footer">Generated by QuickBizCalc &mdash; Free Business &amp; HR Calculators &nbsp;|&nbsp; quickbizcalc.com</div>
   <script>
-    window.onload = function () { setTimeout(function () { window.print(); }, 350); };
-  <\/script>
+    window.onload = function () { setTimeout(function () { window.print(); }, 400); };
+    window.onafterprint = function () { window.close(); };
+  </script>
 </body>
 </html>`;
 
@@ -368,16 +447,17 @@ export default function ResultActions() {
         pdfWindow.document.write(html);
         pdfWindow.document.close();
       } else {
-        // Popup blocked — iframe fallback
         const iframe = document.createElement('iframe');
         iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0';
         document.body.appendChild(iframe);
-        const doc = iframe.contentDocument || iframe.contentWindow?.document;
-        if (doc) {
-          doc.open(); doc.write(html); doc.close();
+        const iDoc = iframe.contentDocument || iframe.contentWindow?.document;
+        if (iDoc) {
+          iDoc.open(); iDoc.write(html); iDoc.close();
           iframe.contentWindow?.focus();
-          iframe.contentWindow?.print();
-          setTimeout(() => document.body.removeChild(iframe), 6000);
+          setTimeout(() => {
+            iframe.contentWindow?.print();
+            setTimeout(() => document.body.removeChild(iframe), 6000);
+          }, 400);
         }
       }
     } catch (err) {
