@@ -7,6 +7,7 @@ import {
   SITE_NAME,
 } from '@/lib/calculator-meta';
 import AppShell from '@/components/layout/AppShell';
+import CalculatorLayoutServer from '@/components/calculators/CalculatorLayoutServer';
 
 // ---------------------------------------------------------------------------
 // Dynamic imports — code-split each calculator
@@ -179,9 +180,45 @@ export default async function CalculatorPage({
     notFound();
   }
 
+  let seoData: any = null;
+  try {
+    // Dynamically import the extracted SEO data for the current calculator slug
+    const mod = await import(`@/lib/seo-data/${slug}`);
+    seoData = mod.default;
+  } catch (e) {
+    // If no SEO data exists yet for this slug, fallback gracefully
+  }
+
   return (
     <AppShell>
-      <CalculatorComponent />
+      {seoData ? (
+        <CalculatorLayoutServer
+          title={calc.title}
+          description={calc.metaDescription}
+          icon={<calc.icon className="h-7 w-7 text-white" />}
+          breadcrumbs={[{ label: 'Calculators' }, { label: calc.title }]}
+          tableOfContents={[
+            ...(seoData.howToSteps?.length > 0 ? [{ id: 'how-to-calculate', label: 'How to Calculate' }] : []),
+            ...(seoData.formula ? [{ id: 'formula', label: 'Formula' }] : []),
+            ...(seoData.commissionStructures?.length > 0 ? [{ id: 'commission-structures', label: 'Common Commission Structures' }] : []),
+            ...(seoData.workedExamples?.length > 0 ? [{ id: 'worked-examples', label: 'Worked Examples' }] : []),
+            ...(seoData.faqs?.length > 0 ? [{ id: 'frequently-asked-questions', label: 'FAQs' }] : []),
+            ...(seoData.relatedTools?.length > 0 ? [{ id: 'related-calculators', label: 'Related Calculators' }] : []),
+          ]}
+          howToSteps={seoData.howToSteps}
+          formula={seoData.formula}
+          formulaDescription={seoData.formulaDescription}
+          commissionStructures={seoData.commissionStructures}
+          workedExamples={seoData.workedExamples}
+          faqs={seoData.faqs}
+          relatedTools={seoData.relatedTools}
+        >
+          <CalculatorComponent />
+        </CalculatorLayoutServer>
+      ) : (
+        // Fallback for calculators not yet migrated or without SEO data
+        <CalculatorComponent />
+      )}
     </AppShell>
   );
 }

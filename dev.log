@@ -6,6 +6,16 @@
   · optimizePackageImports
 
 ✓ Starting...
-✓ Ready in 1619ms
- GET / 200 in 1528ms (compile: 1111ms, render: 417ms)
- GET / 200 in 92ms (compile: 44ms, render: 47ms)
+✓ Ready in 946ms
+ GET /calculators/wages-calculator 200 in 212ms (compile: 19ms, generate-params: 11ms, render: 193ms)
+ GET / 200 in 48ms (compile: 25ms, render: 22ms)
+ GET /calculators/payroll-calculator 200 in 93ms (compile: 14ms, generate-params: 8ms, render: 79ms)
+ GET / 200 in 21ms (compile: 5ms, render: 16ms)
+ GET /calculators/bonus-tax-calculator 200 in 80ms (compile: 13ms, generate-params: 8ms, render: 66ms)
+ GET /calculators/commission-calculator 200 in 91ms (compile: 13ms, generate-params: 7ms, render: 79ms)
+ GET /glossary 200 in 240ms (compile: 128ms, render: 112ms)
+ GET /calculators/pro-rata-calculator 200 in 75ms (compile: 12ms, generate-params: 7ms, render: 62ms)
+ GET / 200 in 26ms (compile: 6ms, render: 19ms)
+ GET /calculators/property-tax-calculator 200 in 78ms (compile: 14ms, generate-params: 9ms, render: 65ms)
+ GET / 200 in 21ms (compile: 4ms, render: 17ms)
+ GET /calculators/commission-calculator 200 in 82ms (compile: 13ms, generate-params: 7ms, render: 69ms)
