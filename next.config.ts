@@ -21,6 +21,16 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        // Prevent Google from crawling/indexing font files and other static media
+        source: '/_next/static/media/:path*',
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex, nofollow',
+          },
+        ],
+      },
+      {
         source: '/(.*)',
         headers: [
           {
