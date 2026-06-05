@@ -4,7 +4,6 @@ import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Timer, DollarSign, Clock, Info, TrendingUp } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import CalculatorLayout from '@/components/calculators/CalculatorLayout';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -49,140 +48,66 @@ const formatCurrency = (value: number): string =>
 const formatNumber = (value: number, decimals: number = 2): string =>
   value.toFixed(decimals);
 
-// ---------------------------------------------------------------------------
-// How-to steps
-// ---------------------------------------------------------------------------
-
-const howToSteps = [
-  'Enter your hourly pay rate — this is the standard amount you earn per hour before any overtime calculations are applied.',
-  'Set your regular hours per week. The default is 40 hours, which is the standard full-time threshold under the FLSA. Adjust this if your employer uses a different weekly schedule.',
-  'Enter the number of overtime hours you worked during the week. You can either type this directly or use the optional weekly total field below to auto-calculate it.',
-  'Choose your overtime multiplier from the dropdown — select 1.5x (time-and-a-half) or 2x (double time), or choose "Custom" to enter any multiplier you need for state-specific or contract-based rates.',
-  'Optionally, enter your total weekly hours worked. If this exceeds your regular hours, the calculator will automatically determine your overtime hours for you.',
-  'Click "Calculate Overtime Pay" to see your complete pay breakdown including regular pay, overtime pay, total earnings, the overtime premium above your normal rate, and your effective hourly rate for the week.',
-];
-
-// ---------------------------------------------------------------------------
-// FAQs
-// ---------------------------------------------------------------------------
-
-const faqs = [
-  {
-    question: 'What are the FLSA overtime rules?',
-    answer:
-      'The Fair Labor Standards Act (FLSA) requires that covered, non-exempt employees be paid at least 1.5 times their regular hourly rate for all hours worked beyond 40 in a single workweek. The FLSA establishes the federal baseline for overtime, but individual states may have their own laws that provide additional protections. For example, some states require overtime for hours worked beyond 8 in a single day. Federal law does not limit the number of hours employees aged 16 and older may work in a week, but overtime must be compensated for hours beyond the 40-hour threshold.',
-  },
-  {
-    question: 'How does California daily overtime work?',
-    answer:
-      'California has some of the strictest overtime laws in the country. Under California law, non-exempt employees earn 1.5x their regular rate for any hours worked beyond 8 in a single day, and double time (2x) for hours worked beyond 12 in a day. Additionally, the first 8 overtime hours worked in a workweek are compensated at 1.5x, and any hours beyond the first 8 overtime hours in that week are paid at double time. This means California workers can earn overtime even if they work less than 40 total hours in a week, provided any single day exceeds 8 hours.',
-  },
-  {
-    question: 'Who qualifies for overtime pay?',
-    answer:
-      'Under the FLSA, employees are generally classified as either exempt or non-exempt. Non-exempt employees are entitled to overtime pay, while exempt employees are not. To qualify as exempt, an employee must typically earn at least a minimum salary threshold (set by the Department of Labor), and their job duties must meet specific criteria for executive, administrative, professional, outside sales, or computer professional exemptions. Most hourly workers are non-exempt. If you are unsure about your classification, check with your state labor department or the U.S. Department of Labor.',
-  },
-  {
-    question: 'What is the difference between exempt and non-exempt employees?',
-    answer:
-      'Non-exempt employees are entitled to minimum wage and overtime pay (1.5x for hours over 40 per week) under the FLSA. They are typically paid hourly and must track their time worked. Exempt employees are excluded from overtime requirements and are generally paid a salary rather than hourly. To qualify as exempt, employees must meet specific duties tests and earn above a salary threshold ($684 per week under current federal rules, though some states have higher thresholds). Exempt employees are expected to complete their job responsibilities regardless of how many hours it takes.',
-  },
-  {
-    question: 'Is holiday pay the same as overtime pay?',
-    answer:
-      'No, holiday pay and overtime pay are separate concepts. Federal law does not require employers to pay extra for work performed on holidays, Sundays, or weekends. Overtime is triggered only by exceeding 40 hours in a workweek (or daily thresholds in states like California). However, many employers voluntarily offer premium holiday pay rates (such as 1.5x or 2x) as a company policy or through union contracts. If you work overtime hours during a holiday week, the overtime rules still apply — holiday premium pay does not count toward the overtime calculation unless your employer specifically includes it.',
-  },
-  {
-    question: 'Can employers offer comp time instead of overtime pay?',
-    answer:
-      'Under the FLSA, private-sector employers generally cannot offer compensatory time off (comp time) in place of overtime pay for non-exempt employees. Overtime must be paid as wages. However, there are exceptions for public-sector (government) employers, who may offer comp time at a rate of 1.5 hours for each overtime hour worked, subject to certain limits. Some states have their own rules regarding comp time. If your employer offers comp time instead of overtime pay and you work in the private sector, this may be a violation of federal wage law, and you should consult the Department of Labor or an employment attorney.',
-  },
-];
-
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
-
 export default function OvertimeCalculator() {
-  // Inputs
-  const [hourlyRateInput, setHourlyRateInput] = useState('');
-  const [regularHoursInput, setRegularHoursInput] = useState('40');
-  const [overtimeHoursInput, setOvertimeHoursInput] = useState('');
+  const [hourlyRateInput, setHourlyRateInput] = useState<string>('');
+  const [regularHoursInput, setRegularHoursInput] = useState<string>('40');
+  const [overtimeHoursInput, setOvertimeHoursInput] = useState<string>('');
   const [multiplierPreset, setMultiplierPreset] = useState<OvertimeMultiplierPreset>('1.5');
-  const [customMultiplierInput, setCustomMultiplierInput] = useState('1.5');
-  const [weeklyHoursInput, setWeeklyHoursInput] = useState('');
-
-  // Results
+  const [customMultiplierInput, setCustomMultiplierInput] = useState<string>('1.5');
+  const [weeklyHoursInput, setWeeklyHoursInput] = useState<string>('');
+  
   const [result, setResult] = useState<OvertimeResult | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{
-    hourlyRateInput: string; regularHoursInput: string; overtimeHoursInput: string;
-    multiplierPreset: string; customMultiplierInput: string; weeklyHoursInput: string;
-  }>('overtime-calculator');
-
-  // ---- Comparison state ----
+  const [autoOvertimeHint, setAutoOvertimeHint] = useState<number | null>(null);
+  
   const [compareA, setCompareA] = useState<{ result: OvertimeResult; label: string } | null>(null);
   const [compareB, setCompareB] = useState<{ result: OvertimeResult; label: string } | null>(null);
+  
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<any>('overtime-calculator');
 
-  // Derived overtime hint from weekly total (display only, no side effects)
-  const autoOvertimeHint = useMemo(() => {
-    const weeklyTotal = parseFloat(weeklyHoursInput);
-    const regularHours = parseFloat(regularHoursInput) || 40;
-    if (isNaN(weeklyTotal) || weeklyHoursInput === '') return null;
-    return Math.max(weeklyTotal - regularHours, 0);
+  // Auto overtime hint logic
+  useMemo(() => {
+    const w = parseFloat(weeklyHoursInput);
+    const r = parseFloat(regularHoursInput) || 40;
+    if (!isNaN(w) && !isNaN(r)) {
+      setAutoOvertimeHint(Math.max(0, w - r));
+    } else {
+      setAutoOvertimeHint(null);
+    }
   }, [weeklyHoursInput, regularHoursInput]);
 
   const handleCalculate = () => {
-    const hourlyRate = parseFloat(hourlyRateInput);
-    const regularHours = parseFloat(regularHoursInput) || 40;
-    // Use auto-calculated overtime from weekly total if available, otherwise use manual input
-    const weeklyTotal = parseFloat(weeklyHoursInput);
-    let overtimeHours = parseFloat(overtimeHoursInput) || 0;
-    if (!isNaN(weeklyTotal) && weeklyHoursInput !== '') {
-      overtimeHours = Math.max(weeklyTotal - regularHours, 0);
+    const rRate = parseFloat(hourlyRateInput) || 0;
+    const rHrs = parseFloat(regularHoursInput) || 0;
+    
+    let otHrs = parseFloat(overtimeHoursInput) || 0;
+    const wHrs = parseFloat(weeklyHoursInput);
+    
+    if (!isNaN(wHrs) && wHrs > rHrs) {
+      otHrs = wHrs - rHrs;
+      setOvertimeHoursInput(otHrs.toString());
     }
-    const multiplier =
-      multiplierPreset === 'custom'
-        ? parseFloat(customMultiplierInput) || 1.5
-        : parseFloat(multiplierPreset);
-
-    if (isNaN(hourlyRate) || hourlyRate <= 0) {
-      setResult(null);
-      return;
-    }
-
-    const regularPay = hourlyRate * regularHours;
-    const overtimePay = hourlyRate * multiplier * overtimeHours;
-    const totalPay = regularPay + overtimePay;
-    const overtimePremium = hourlyRate * (multiplier - 1) * overtimeHours;
-    const totalHours = regularHours + overtimeHours;
-    const effectiveHourlyRate = totalHours > 0 ? totalPay / totalHours : 0;
-
+    
+    const mult = multiplierPreset === 'custom' ? (parseFloat(customMultiplierInput) || 1.5) : parseFloat(multiplierPreset);
+    
+    const regPay = rHrs * rRate;
+    const otPay = otHrs * (rRate * mult);
+    const totalPay = regPay + otPay;
+    const totHrs = rHrs + otHrs;
+    
     setResult({
-      regularPay,
-      overtimePay,
-      totalPay,
-      overtimePremium,
-      effectiveHourlyRate,
-      regularHours,
-      overtimeHours,
-      totalHours,
-      hourlyRate,
-      multiplier,
+      regularPay: regPay,
+      overtimePay: otPay,
+      totalPay: totalPay,
+      overtimePremium: otPay - (otHrs * rRate),
+      effectiveHourlyRate: totHrs > 0 ? totalPay / totHrs : 0,
+      regularHours: rHrs,
+      overtimeHours: otHrs,
+      totalHours: totHrs,
+      hourlyRate: rRate,
+      multiplier: mult
     });
-    saveEntry(
-      { hourlyRateInput, regularHoursInput, overtimeHoursInput, multiplierPreset, customMultiplierInput, weeklyHoursInput },
-      `${formatCurrency(totalPay)} total (${formatCurrency(hourlyRate)}/hr × ${multiplier}x, ${overtimeHours}h OT)`
-    );
-  };
-
-  const handleRestore = (inputs: { hourlyRateInput: string; regularHoursInput: string; overtimeHoursInput: string; multiplierPreset: string; customMultiplierInput: string; weeklyHoursInput: string }) => {
-    setHourlyRateInput(inputs.hourlyRateInput);
-    setRegularHoursInput(inputs.regularHoursInput);
-    setOvertimeHoursInput(inputs.overtimeHoursInput);
-    setMultiplierPreset(inputs.multiplierPreset as OvertimeMultiplierPreset);
-    setCustomMultiplierInput(inputs.customMultiplierInput);
-    setWeeklyHoursInput(inputs.weeklyHoursInput);
-    setResult(null);
+    
+    saveEntry({ hourlyRateInput, regularHoursInput, overtimeHoursInput, multiplierPreset, customMultiplierInput, weeklyHoursInput }, `${formatCurrency(totalPay)} (${totHrs}h)`);
   };
 
   const handleReset = () => {
@@ -193,53 +118,21 @@ export default function OvertimeCalculator() {
     setCustomMultiplierInput('1.5');
     setWeeklyHoursInput('');
     setResult(null);
+    setAutoOvertimeHint(null);
   };
 
-  return (
-    <CalculatorLayout
-      title="Overtime Pay Calculator"
-      description="Calculate your overtime pay with time-and-a-half, double time, or custom multipliers. See exactly how much extra you earn beyond your regular hourly rate."
-      icon={<Timer className="h-7 w-7 text-white" />}
-      breadcrumbs={[
-        { label: 'Calculators' },
-        { label: 'Overtime Calculator' },
-      ]}
-      tableOfContents={[
-        { id: 'how-to-calculate', label: 'How to Calculate' },
-        { id: 'formula', label: 'Overtime Formula' },
-        { id: 'worked-examples', label: 'Worked Examples' },
-        { id: 'frequently-asked-questions', label: 'FAQs' },
-        { id: 'related-calculators', label: 'Related Calculators' },
-      ]}
-      howToSteps={howToSteps}
-      formula="Overtime Pay = Hourly Rate × Overtime Multiplier × Overtime Hours"
-      formulaDescription="The overtime pay formula multiplies your regular hourly rate by the overtime multiplier and the number of overtime hours worked. For federal FLSA overtime, the standard multiplier is 1.5 (time-and-a-half). Some states and situations require a 2x multiplier (double time). The overtime premium — the extra amount earned above your regular rate — is calculated as Hourly Rate × (Multiplier − 1) × Overtime Hours."
-      workedExamples={[
-        {
-          title: '$25/hr with 5 Hours Overtime at 1.5x',
-          description:
-            'An employee earning $25 per hour works 45 hours in a week. The regular hours are 40, and overtime hours are 5. Regular pay = $25 × 40 = $1,000. Overtime pay = $25 × 1.5 × 5 = $187.50. Total pay = $1,187.50. The overtime premium (extra earned above regular rate) = $25 × 0.5 × 5 = $62.50. The effective hourly rate for the week is $1,187.50 ÷ 45 = $26.39/hr — significantly higher than the base rate thanks to overtime compensation.',
-        },
-        {
-          title: '$30/hr with 10 Hours Overtime at 2x (Double Time)',
-          description:
-            'A worker earning $30 per hour works 50 hours during a busy week, with the 10 overtime hours compensated at double time. Regular pay = $30 × 40 = $1,200. Overtime pay = $30 × 2 × 10 = $600. Total pay = $1,800. The overtime premium = $30 × 1 × 10 = $300 — this is the extra amount earned on top of what the 10 hours would have paid at the regular rate. The effective hourly rate is $1,800 ÷ 50 = $36.00/hr. Double time is common in California for hours exceeding 12 in a single day or for certain holiday shifts.',
-        },
-        {
-          title: '$18/hr with 8 Hours at 1.5x and 2 Hours at 2x',
-          description:
-            'A retail employee earning $18 per hour works 50 hours total. The first 40 hours are regular, hours 41–48 (8 hours) are at time-and-a-half (1.5x), and hours 49–50 (2 hours) are at double time (2x), per California-style rules. Regular pay = $18 × 40 = $720. Tier-1 overtime pay = $18 × 1.5 × 8 = $216. Tier-2 overtime pay = $18 × 2 × 2 = $72. Total overtime pay = $288. Total pay = $1,008. The combined overtime premium = $18 × 0.5 × 8 + $18 × 1 × 2 = $72 + $36 = $108. Effective hourly rate = $1,008 ÷ 50 = $20.16/hr.',
-        },
-      ]}
-      faqs={faqs}
-      relatedTools={[
-        { slug: 'time-card-calculator', title: 'Time Card Calculator', description: 'Convert work hours to decimal format for payroll', icon: 'Clock' },
-        { slug: 'time-card-calculator-with-lunch', title: 'Time Card Calculator with Lunch', description: 'Track hours with automatic lunch break deduction', icon: 'Coffee' },
-        { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Calculate take-home pay after taxes and deductions', icon: 'CreditCard' },
-        { slug: 'wages-calculator', title: 'Wages Calculator', description: 'Calculate gross and net wages from hours worked', icon: 'Banknote' },
-        { slug: 'salary-converter', title: 'Salary Converter', description: 'Convert between hourly, monthly, and annual salary', icon: 'DollarSign' },
-      ]}
-    >
+  const handleRestore = (item: any) => {
+    setHourlyRateInput(item.hourlyRateInput || '');
+    setRegularHoursInput(item.regularHoursInput || '40');
+    setOvertimeHoursInput(item.overtimeHoursInput || '');
+    setMultiplierPreset(item.multiplierPreset || '1.5');
+    setCustomMultiplierInput(item.customMultiplierInput || '1.5');
+    setWeeklyHoursInput(item.weeklyHoursInput || '');
+    setResult(null);
+  };
+
+return (
+    <div className="w-full">
       {/* ================================================================= */}
       {/* Input Form                                                        */}
       {/* ================================================================= */}
@@ -597,6 +490,6 @@ export default function OvertimeCalculator() {
 
       <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
           onDelete={deleteEntry} />
-    </CalculatorLayout>
+    </div>
   );
 }
