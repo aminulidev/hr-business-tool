@@ -3,9 +3,12 @@ import { calculators, SITE_URL } from '@/lib/calculator-meta';
 import { getSortedPostsData } from '@/lib/blog';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const now = new Date();
+
   // Hub page
   const hubEntry: MetadataRoute.Sitemap[number] = {
     url: SITE_URL,
+    lastModified: now,
     changeFrequency: 'weekly',
     priority: 1.0,
   };
@@ -13,6 +16,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Individual calculator pages
   const calculatorEntries: MetadataRoute.Sitemap = calculators.map((calc) => ({
     url: `${SITE_URL}${calc.path}`,
+    lastModified: now,
     changeFrequency: 'monthly' as const,
     priority: 0.9,
   }));
@@ -22,11 +26,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogEntries: MetadataRoute.Sitemap = [
     {
       url: `${SITE_URL}/blog`,
+      lastModified: now,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     ...posts.map((post) => ({
       url: `${SITE_URL}/blog/${post.slug}`,
+      lastModified: now,
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
@@ -35,6 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Glossary entry
   const glossaryEntry: MetadataRoute.Sitemap[number] = {
     url: `${SITE_URL}/glossary`,
+    lastModified: now,
     changeFrequency: 'monthly',
     priority: 0.7,
   };
@@ -51,6 +58,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const legalEntries: MetadataRoute.Sitemap = legalPages.map((page) => ({
     url: `${SITE_URL}${page.path}`,
+    lastModified: now,
     changeFrequency: page.changeFreq,
     priority: page.priority,
   }));
