@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: SITE_URL,
+    canonical: `${SITE_URL}/`,
   },
   openGraph: {
     type: "website",
@@ -87,9 +87,10 @@ export const metadata: Metadata = {
   verification: {
     // google: "your-google-verification-code", // Uncomment and set when you receive verification from Google Search Console
   },
-  other: {
-    "google-adsense-account": CONFIG.monetization.adSenseId, // Replace with your actual AdSense publisher ID after approval
-  },
+  // AdSense meta tag — uncomment and set real publisher ID after AdSense approval
+  // other: {
+  //   "google-adsense-account": CONFIG.monetization.adSenseId,
+  // },
 };
 
 // JSON-LD WebSite schema for sitelinks search box + site identity
@@ -109,14 +110,6 @@ const websiteJsonLd = {
       email: CONTACT_EMAIL,
       availableLanguage: ["English"],
     },
-  },
-  potentialAction: {
-    "@type": "SearchAction",
-    target: {
-      "@type": "EntryPoint",
-      urlTemplate: `${SITE_URL}/?q={search_term_string}`,
-    },
-    "query-input": "required name=search_term_string",
   },
 };
 
