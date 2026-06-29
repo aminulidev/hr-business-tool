@@ -9,6 +9,6 @@ export const CONFIG = {
     clarityId: isProd ? (process.env.NEXT_PUBLIC_CLARITY_ID || 'XXXXXXXXXX') : undefined,
   },
   monetization: {
-    adSenseId: process.env.NEXT_PUBLIC_ADSENSE_ID || 'ca-pub-XXXXXXXXXXXXXXXX',
+    adSenseId: process.env.NEXT_PUBLIC_ADSENSE_ID || 'ca-pub-5551017813379018',
   },
 };
