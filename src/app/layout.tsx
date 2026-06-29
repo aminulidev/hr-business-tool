@@ -91,10 +91,10 @@ export const metadata: Metadata = {
   verification: {
     // google: "your-google-verification-code", // Uncomment and set when you receive verification from Google Search Console
   },
-  // AdSense meta tag — uncomment and set real publisher ID after AdSense approval
-  // other: {
-  //   "google-adsense-account": CONFIG.monetization.adSenseId,
-  // },
+  // AdSense meta tag — required for Google to verify the site
+  other: {
+    "google-adsense-account": CONFIG.monetization.adSenseId,
+  },
 };
 
 // JSON-LD WebSite schema for sitelinks search box + site identity
