@@ -55,9 +55,13 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  alternates: {
-    canonical: `${SITE_URL}/`,
-  },
+  // Prevent indexing of URL parameter variants (e.g. ?q={search_term_string})
+  // These appear in GSC as "Alternate page with proper canonical tag"
+  // The canonical on the homepage points to itself without query params.
+  // NOTE: Do NOT set a global canonical here — each page sets its own
+  // canonical via generateMetadata / the page-level `alternates.canonical`.
+  // A root-level canonical would override all child pages and cause them to
+  // be reported as "Alternate page with proper canonical tag" in GSC.
   openGraph: {
     type: "website",
     locale: "en_US",
