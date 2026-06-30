@@ -2,12 +2,14 @@
 
 import { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Clock, Plus, Trash2, DollarSign, Timer, AlertCircle, BarChart as BarChartIcon } from 'lucide-react';
+import { Clock, Plus, Trash2, DollarSign, Timer, AlertCircle, BarChart as BarChartIcon, Copy } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import TryExample from './TryExample';
+import { parseTimeToMinutes, minutesToDecimal, formatDecimalHours, formatHHMM, TIME_FORMAT_EXAMPLES } from '@/lib/time-utils';
 
 interface WorkDay {
   id: string;
@@ -43,30 +45,7 @@ function generateId(): string {
   return Math.random().toString(36).substring(2, 9);
 }
 
-function parseTimeToMinutes(timeStr: string): number {
-  const match = timeStr.match(/^(\d{1,2}):(\d{2})$/);
-  if (!match) return -1;
-  const hours = parseInt(match[1], 10);
-  const minutes = parseInt(match[2], 10);
-  if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return -1;
-  return hours * 60 + minutes;
-}
-
-function minutesToDecimal(totalMinutes: number): number {
-  const hours = Math.floor(totalMinutes / 60);
-  const mins = totalMinutes % 60;
-  return parseFloat((hours + mins / 60).toFixed(2));
-}
-
-function formatDecimalHours(decimal: number): string {
-  return decimal.toFixed(2);
-}
-
-function formatHHMM(totalMinutes: number): string {
-  const h = Math.floor(totalMinutes / 60);
-  const m = totalMinutes % 60;
-  return `${h}h ${m}m`;
-}
+// Time parsing functions imported from @/lib/time-utils
 
 const defaultDays: WorkDay[] = DAY_LABELS.slice(0, 5).map((label) => ({
   id: generateId(),
@@ -112,6 +91,34 @@ export default function TimeCardCalculator() {
     );
   }, []);
 
+  // Copy Monday's times to all other days
+  const copyMonToAll = useCallback(() => {
+    setDays((prev) => {
+      if (prev.length === 0) return prev;
+      const mon = prev[0];
+      return prev.map((d, i) =>
+        i === 0 ? d : { ...d, clockIn: mon.clockIn, clockOut: mon.clockOut, lunchBreak: mon.lunchBreak }
+      );
+    });
+  }, []);
+
+  // Try Example: standard 9-5 workweek
+  const handleTryExample = () => {
+    const exampleDays: WorkDay[] = DAY_LABELS.slice(0, 5).map((label) => ({
+      id: generateId(),
+      label,
+      clockIn: '9:00 AM',
+      clockOut: '5:30 PM',
+      lunchBreak: '30',
+    }));
+    setDays(exampleDays);
+    setHourlyRate('25');
+    setOvertimeThreshold('40');
+    setOvertimeMultiplier('1.5');
+    setError(null);
+    setResult(null);
+  };
+
   const handleCalculate = () => {
     setError(null);
     setResult(null);
@@ -129,11 +136,11 @@ export default function TimeCardCalculator() {
       const lunchMinutes = parseFloat(day.lunchBreak) || 0;
 
       if (inMinutes < 0) {
-        setError(`Invalid clock-in time for ${day.label}. Use HH:MM format (e.g., 09:00).`);
+        setError(`Invalid clock-in time for ${day.label}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
         return;
       }
       if (outMinutes < 0) {
-        setError(`Invalid clock-out time for ${day.label}. Use HH:MM format (e.g., 17:00).`);
+        setError(`Invalid clock-out time for ${day.label}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
         return;
       }
       if (outMinutes <= inMinutes) {
@@ -192,21 +199,36 @@ export default function TimeCardCalculator() {
       <div className="p-4 sm:p-6 space-y-6">
         {/* Work Days */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <Label className="text-sm font-semibold text-base">
               <Clock className="inline h-4 w-4 mr-1.5 text-muted-foreground" />
               Work Days
             </Label>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={addDay}
-              className="gap-1.5"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              Add Day
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={copyMonToAll}
+                className="gap-1.5 text-xs"
+                title="Copy first day's times to all other days"
+              >
+                <Copy className="h-3.5 w-3.5" />
+                Copy to All
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={addDay}
+                className="gap-1.5"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Add Day
+              </Button>
+            </div>
           </div>
+          <p className="text-xs text-muted-foreground">
+            Accepts: {TIME_FORMAT_EXAMPLES}
+          </p>
 
           <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
             {days.map((day) => (
@@ -236,7 +258,7 @@ export default function TimeCardCalculator() {
                     <Label className="text-xs text-muted-foreground">Clock In</Label>
                     <Input
                       type="text"
-                      placeholder="09:00"
+                      placeholder="9:00 AM"
                       value={day.clockIn}
                       onChange={(e) => updateDay(day.id, 'clockIn', e.target.value)}
                       className="text-sm"
@@ -246,7 +268,7 @@ export default function TimeCardCalculator() {
                     <Label className="text-xs text-muted-foreground">Clock Out</Label>
                     <Input
                       type="text"
-                      placeholder="17:00"
+                      placeholder="5:30 PM"
                       value={day.clockOut}
                       onChange={(e) => updateDay(day.id, 'clockOut', e.target.value)}
                       className="text-sm"
@@ -339,14 +361,17 @@ export default function TimeCardCalculator() {
           </motion.div>
         )}
 
-        {/* Calculate Button */}
-        <Button
-          onClick={handleCalculate}
-          className="w-full bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
-          size="lg"
-        >
-          Calculate Hours
-        </Button>
+        {/* Action Buttons */}
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <TryExample onClick={handleTryExample} />
+          <Button
+            onClick={handleCalculate}
+            className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
+            size="lg"
+          >
+            Calculate Hours
+          </Button>
+        </div>
       </div>
 
       {/* Results */}
