@@ -268,6 +268,18 @@ return (
           </p>
         </div>
 
+        {/* State-specific OT rules note */}
+        <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
+          <p className="text-sm text-amber-700 dark:text-amber-300">
+            <Info className="inline h-4 w-4 mr-1.5" />
+            <span className="font-semibold">Federal FLSA rules:</span>{' '}
+            This calculator uses weekly overtime (after {regularHoursInput || '40'} hrs/week).
+            Some states have <span className="font-semibold">daily</span> overtime rules —
+            e.g., California requires 1.5x after 8 hrs/day and 2x after 12 hrs/day.
+            Check your state&apos;s labor laws for specific rules.
+          </p>
+        </div>
+
         {/* Action Buttons */}
         <div className="flex gap-3">
           <Button

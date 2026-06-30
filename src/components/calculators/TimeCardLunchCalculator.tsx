@@ -8,12 +8,14 @@ import {
   Info,
   AlertCircle,
   BarChart as BarChartIcon,
+  Copy,
 } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import TryExample from './TryExample';
 import {
   Select,
   SelectContent,
@@ -258,6 +260,44 @@ export default function TimeCardLunchCalculator() {
     setError(null);
   };
 
+  // Copy first enabled day's times to all other enabled days
+  const copyMonToAll = () => {
+    const firstEnabled = days.find((d) => d.enabled);
+    if (!firstEnabled) return;
+    setDays((prev) =>
+      prev.map((d, i) => {
+        if (!d.enabled) return d;
+        if (d === firstEnabled) return d;
+        return {
+          ...d,
+          clockIn: firstEnabled.clockIn,
+          lunchStart: firstEnabled.lunchStart,
+          lunchEnd: firstEnabled.lunchEnd,
+          clockOut: firstEnabled.clockOut,
+        };
+      })
+    );
+    setResult(null);
+  };
+
+  // Try Example: standard 9-5 weekday with 1-hour lunch
+  const handleTryExample = () => {
+    setDays([
+      { enabled: true, clockIn: '09:00', lunchStart: '12:00', lunchEnd: '13:00', clockOut: '17:30' },
+      { enabled: true, clockIn: '09:00', lunchStart: '12:00', lunchEnd: '13:00', clockOut: '17:30' },
+      { enabled: true, clockIn: '09:00', lunchStart: '12:00', lunchEnd: '13:00', clockOut: '17:30' },
+      { enabled: true, clockIn: '09:00', lunchStart: '12:00', lunchEnd: '13:00', clockOut: '17:30' },
+      { enabled: true, clockIn: '09:00', lunchStart: '12:00', lunchEnd: '13:00', clockOut: '17:30' },
+      { enabled: false, clockIn: '', lunchStart: '', lunchEnd: '', clockOut: '' },
+      { enabled: false, clockIn: '', lunchStart: '', lunchEnd: '', clockOut: '' },
+    ]);
+    setLunchMode('manual');
+    setAutoLunchDuration('60');
+    setOvertimeThreshold('40');
+    setResult(null);
+    setError(null);
+  };
+
   // ------ Render ------
 
   return (
@@ -339,10 +379,22 @@ export default function TimeCardLunchCalculator() {
 
         {/* Daily Entries */}
         <div className="space-y-3">
-          <p className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
-            <Clock className="h-3.5 w-3.5" />
-            Daily Time Entries
-          </p>
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <p className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
+              <Clock className="h-3.5 w-3.5" />
+              Daily Time Entries
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={copyMonToAll}
+              className="gap-1.5 text-xs"
+              title="Copy first day's times to all other enabled days"
+            >
+              <Copy className="h-3.5 w-3.5" />
+              Copy to All
+            </Button>
+          </div>
 
           {/* Header row (desktop) */}
           <div className="hidden sm:grid grid-cols-6 gap-2 text-xs text-muted-foreground font-medium px-1">
@@ -525,22 +577,25 @@ export default function TimeCardLunchCalculator() {
         )}
 
         {/* Actions */}
-        <div className="flex gap-3">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="flex gap-3">
+            <TryExample onClick={handleTryExample} />
+            <Button
+              onClick={handleReset}
+              variant="outline"
+              size="lg"
+              className="shrink-0"
+            >
+              Reset
+            </Button>
+          </div>
           <Button
             onClick={handleCalculate}
-            className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
+            className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
             size="lg"
           >
             <Clock className="h-4 w-4 mr-2" />
             Calculate Hours
-          </Button>
-          <Button
-            onClick={handleReset}
-            variant="outline"
-            size="lg"
-            className="shrink-0"
-          >
-            Reset
           </Button>
         </div>
       </div>

@@ -61,14 +61,16 @@ const formatCurrency = (value: number): string =>
 function convertToAnnual(
   amount: number,
   period: PayPeriod,
-  hoursPerWeek: number
+  hoursPerWeek: number,
+  daysPerWeek: number
 ): number {
   const annualHours = hoursPerWeek * 52;
+  const hoursPerDay = hoursPerWeek / daysPerWeek;
   switch (period) {
     case 'hourly':
       return amount * annualHours;
     case 'daily':
-      return amount * (annualHours / 8);
+      return amount * (daysPerWeek * 52);
     case 'weekly':
       return amount * 52;
     case 'biweekly':
@@ -86,10 +88,13 @@ function convertToAnnual(
 
 function annualToAllPeriods(
   annual: number,
-  hoursPerWeek: number
+  hoursPerWeek: number,
+  daysPerWeek: number
 ): PeriodResult[] {
   const annualHours = hoursPerWeek * 52;
   const weeklyHours = hoursPerWeek;
+  const hoursPerDay = hoursPerWeek / daysPerWeek;
+  const annualDays = daysPerWeek * 52;
 
   return [
     {
@@ -101,10 +106,10 @@ function annualToAllPeriods(
     },
     {
       key: 'daily',
-      label: 'Daily (8-hr)',
-      amount: (annual / annualHours) * 8,
-      hoursPerPeriod: '8 hours',
-      description: `${formatCurrency((annual / annualHours) * 8)} per 8-hour workday`,
+      label: `Daily (${hoursPerDay % 1 === 0 ? hoursPerDay : hoursPerDay.toFixed(1)}-hr)`,
+      amount: annual / annualDays,
+      hoursPerPeriod: `${hoursPerDay % 1 === 0 ? hoursPerDay : hoursPerDay.toFixed(1)} hours`,
+      description: `${formatCurrency(annual / annualDays)} per ${hoursPerDay % 1 === 0 ? hoursPerDay : hoursPerDay.toFixed(1)}-hour workday`,
     },
     {
       key: 'weekly',
@@ -152,8 +157,9 @@ export default function SalaryConverterCalculator() {
   const [payAmount, setPayAmount] = useState('');
   const [payPeriod, setPayPeriod] = useState<PayPeriod>('annual');
   const [hoursPerWeek, setHoursPerWeek] = useState('40');
+  const [daysPerWeek, setDaysPerWeek] = useState('5');
   const [results, setResults] = useState<PeriodResult[] | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ payAmount: string; payPeriod: string; hoursPerWeek: string }>('salary-converter');
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ payAmount: string; payPeriod: string; hoursPerWeek: string; daysPerWeek: string }>('salary-converter');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ results: PeriodResult[]; label: string } | null>(null);
@@ -164,19 +170,23 @@ export default function SalaryConverterCalculator() {
     [hoursPerWeek]
   );
 
+  const effectiveDaysPerWeek = useMemo(
+    () => parseFloat(daysPerWeek) || 5,
+    [daysPerWeek]
+  );
+
   const handleTryExample = () => {
     setPayAmount('50000');
     setPayPeriod('annual');
     setHoursPerWeek('40');
+    setDaysPerWeek('5');
     
-    // Trigger conversion
-    const amount = 50000;
     const annual = 50000;
-    const allPeriods = annualToAllPeriods(annual, 40);
+    const allPeriods = annualToAllPeriods(annual, 40, 5);
     setResults(allPeriods);
     saveEntry(
-      { payAmount: '50000', payPeriod: 'annual', hoursPerWeek: '40' },
-      `${formatCurrency(amount)} Annual → ${formatCurrency(annual)}/year`
+      { payAmount: '50000', payPeriod: 'annual', hoursPerWeek: '40', daysPerWeek: '5' },
+      `${formatCurrency(50000)} Annual → ${formatCurrency(annual)}/year`
     );
   };
 
@@ -186,19 +196,20 @@ export default function SalaryConverterCalculator() {
       setResults(null);
       return;
     }
-    const annual = convertToAnnual(amount, payPeriod, effectiveHoursPerWeek);
-    const allPeriods = annualToAllPeriods(annual, effectiveHoursPerWeek);
+    const annual = convertToAnnual(amount, payPeriod, effectiveHoursPerWeek, effectiveDaysPerWeek);
+    const allPeriods = annualToAllPeriods(annual, effectiveHoursPerWeek, effectiveDaysPerWeek);
     setResults(allPeriods);
     saveEntry(
-      { payAmount, payPeriod, hoursPerWeek },
+      { payAmount, payPeriod, hoursPerWeek, daysPerWeek },
       `${formatCurrency(amount)} ${periodLabels[payPeriod]} → ${formatCurrency(annual)}/year`
     );
   };
 
-  const handleRestore = (inputs: { payAmount: string; payPeriod: string; hoursPerWeek: string }) => {
+  const handleRestore = (inputs: { payAmount: string; payPeriod: string; hoursPerWeek: string; daysPerWeek?: string }) => {
     setPayAmount(inputs.payAmount);
     setPayPeriod(inputs.payPeriod as PayPeriod);
     setHoursPerWeek(inputs.hoursPerWeek);
+    setDaysPerWeek(inputs.daysPerWeek || '5');
     setResults(null);
   };
 
@@ -243,7 +254,7 @@ export default function SalaryConverterCalculator() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="hourly">Hourly</SelectItem>
-                <SelectItem value="daily">Daily (8-hr day)</SelectItem>
+                <SelectItem value="daily">Daily</SelectItem>
                 <SelectItem value="weekly">Weekly</SelectItem>
                 <SelectItem value="biweekly">Bi-Weekly</SelectItem>
                 <SelectItem value="semimonthly">Semi-Monthly</SelectItem>
@@ -252,7 +263,10 @@ export default function SalaryConverterCalculator() {
               </SelectContent>
             </Select>
           </div>
+        </div>
 
+        {/* Days Per Week */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="hoursPerWeek" className="text-sm font-medium">
               <Info className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
@@ -268,11 +282,27 @@ export default function SalaryConverterCalculator() {
               value={hoursPerWeek}
               onChange={(e) => setHoursPerWeek(e.target.value)}
             />
-            <p className="text-xs text-muted-foreground">
-              Standard is 40. Adjust for part-time or non-standard schedules.
-            </p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="daysPerWeek" className="text-sm font-medium">
+              <Info className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
+              Work Days per Week
+            </Label>
+            <Input
+              id="daysPerWeek"
+              type="number"
+              min="1"
+              max="7"
+              step="1"
+              placeholder="5"
+              value={daysPerWeek}
+              onChange={(e) => setDaysPerWeek(e.target.value)}
+            />
           </div>
         </div>
+        <p className="text-xs text-muted-foreground -mt-4">
+          Standard: 40 hrs / 5 days. Adjust for non-standard schedules (e.g., 4×10 shifts).
+        </p>
 
         {/* Convert Button */}
         <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
@@ -383,7 +413,7 @@ export default function SalaryConverterCalculator() {
                   {results.map((period) => {
                     const periodsPerYear: Record<PayPeriod, number> = {
                       hourly: annualHours,
-                      daily: annualHours / 8,
+                      daily: effectiveDaysPerWeek * 52,
                       weekly: 52,
                       biweekly: 26,
                       semimonthly: 24,
