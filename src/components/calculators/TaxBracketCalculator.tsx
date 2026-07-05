@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, DollarSign, TrendingDown, Info, BarChart as BarChartIcon } from 'lucide-react';
+import TryExample from './TryExample';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -242,6 +243,13 @@ export default function TaxBracketCalculator() {
   const [compareA, setCompareA] = useState<{ result: TaxResult; label: string } | null>(null);
   const [compareB, setCompareB] = useState<{ result: TaxResult; label: string } | null>(null);
 
+    const handleTryExample = () => {
+    setIncomeInput('120000');
+    setFilingStatus('single');
+    setApplyDeduction(true);
+    setResult(null);
+  };
+
   const handleCalculate = () => {
     const income = parseFloat(incomeInput);
     if (isNaN(income) || income < 0) {
@@ -365,13 +373,17 @@ export default function TaxBracketCalculator() {
         )}
 
         {/* ======== Calculate Button ======== */}
-        <Button
+        
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button
           onClick={handleCalculate}
-          className="w-full bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
+          className=" bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
           size="lg"
         >
           Calculate Federal Tax
         </Button>
+          </div>
       </div>
 
       {/* ======== Results ======== */}

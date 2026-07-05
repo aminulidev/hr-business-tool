@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { AlarmClock } from 'lucide-react';
+import TryExample from './TryExample';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -31,6 +32,13 @@ export default function TimeAndAHalfCalculator() {
   const regPay = rateNum * regHrs;
   const otPay = otRate * otHrs;
   const total = regPay + otPay;
+
+    const handleTryExample = () => {
+    setRegularRate('25');
+    setRegularHours('40');
+    setOvertimeHours('8');
+    setCalculated(false);
+  };
 
   const handleCalculate = () => {
     if (rateNum > 0 && otHrs > 0) {
@@ -82,10 +90,14 @@ export default function TimeAndAHalfCalculator() {
         </div>
 
         <div className="flex gap-3">
-          <Button onClick={handleCalculate} disabled={rateNum <= 0 || otHrs <= 0}
+          
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button onClick={handleCalculate} disabled={rateNum <= 0 || otHrs <= 0}
             className="bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white shadow-lg shadow-amber-500/25 flex-1 sm:flex-none">
             Calculate Time and a Half
           </Button>
+          </div>
           <Button variant="outline" onClick={handleReset}>Reset</Button>
         </div>
 

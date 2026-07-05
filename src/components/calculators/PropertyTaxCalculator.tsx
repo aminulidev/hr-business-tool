@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Building2, DollarSign, Percent, Info, Calculator, ArrowRight, BarChart as BarChartIcon } from 'lucide-react';
+import TryExample from './TryExample';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -138,6 +139,13 @@ export default function PropertyTaxCalculator() {
   const [compareA, setCompareA] = useState<PropertySnapshot | null>(null);
   const [compareB, setCompareB] = useState<PropertySnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; assessedValue: string; rateMode: string; taxRate: string; assessmentRatio: string; exemptions: string }>('property-tax-calculator');
+
+    const handleTryExample = () => {
+    setAssessedValue('350000');
+    setRateMode('percentage');
+    setTaxRate('1.2');
+    setResult(null);
+  };
 
   const handleCalculate = () => {
     setResult(null);
@@ -450,7 +458,10 @@ export default function PropertyTaxCalculator() {
 
         {/* Buttons */}
         <div className="flex gap-3">
-          <Button
+          
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button
             onClick={handleCalculate}
             className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
             size="lg"
@@ -458,6 +469,7 @@ export default function PropertyTaxCalculator() {
             <Building2 className="h-4 w-4 mr-2" />
             Calculate Property Tax
           </Button>
+          </div>
           <Button
             onClick={handleReset}
             variant="outline"

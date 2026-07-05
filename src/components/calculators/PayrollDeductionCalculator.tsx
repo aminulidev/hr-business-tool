@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import TryExample from './TryExample';
 import { motion } from 'framer-motion';
 import {
   FileMinus,
@@ -91,6 +92,14 @@ export default function PayrollDeductionCalculator() {
   const [result, setResult] = useState<DeductionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ grossPay: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string; k401Pct: string }>('payroll-deduction-calculator');
+
+    const handleTryExample = () => {
+    setGrossPay('5000');
+    setPayFrequency('monthly');
+setOtherPreTax('250');
+setOtherPostTax('50');
+    setResult(null);
+  };
 
   const handleCalculate = () => {
     setError(null);
@@ -485,7 +494,10 @@ export default function PayrollDeductionCalculator() {
 
         {/* Actions */}
         <div className="flex gap-3">
-          <Button
+          
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button
             onClick={handleCalculate}
             className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
             size="lg"
@@ -493,6 +505,7 @@ export default function PayrollDeductionCalculator() {
             <FileMinus className="h-4 w-4 mr-2" />
             Calculate Deductions
           </Button>
+          </div>
           <Button
             onClick={handleReset}
             variant="outline"

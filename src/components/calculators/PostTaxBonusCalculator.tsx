@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Gift, ArrowRight, DollarSign, Percent, Info } from 'lucide-react';
+import TryExample from './TryExample';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -42,6 +43,13 @@ export default function PostTaxBonusCalculator() {
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: BonusResult; label: string } | null>(null);
   const [compareB, setCompareB] = useState<{ result: BonusResult; label: string } | null>(null);
+
+    const handleTryExample = () => {
+    setGrossBonus('10000');
+    setFederalRate('22');
+    setStateRate('5');
+    setResult(null);
+  };
 
   const handleCalculate = () => {
     const fed = parseFloat(federalRate) || 0;
@@ -240,13 +248,17 @@ export default function PostTaxBonusCalculator() {
       </div>
 
       {/* Calculate Button */}
-      <Button
+      
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button
         onClick={handleCalculate}
-        className="w-full bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25 font-semibold text-base py-6"
+        className=" bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25 font-semibold text-base py-6"
       >
         {mode === 'gross-to-net' ? 'Calculate Net Bonus' : 'Calculate Gross Bonus'}
         <ArrowRight className="ml-2 h-4 w-4" />
       </Button>
+          </div>
 
       {/* Results */}
       {result && (

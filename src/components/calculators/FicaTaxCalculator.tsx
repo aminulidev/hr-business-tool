@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Landmark } from 'lucide-react';
+import TryExample from './TryExample';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -54,6 +55,12 @@ export default function FicaTaxCalculator() {
     
     return { empSS, empMedicare, addMedicare, empTotal, erSS, erMedicare, erTotal, seTotal, seDeduction, ssWages, taxableGross };
   }, [gross, isSE]);
+
+    const handleTryExample = () => {
+    setGrossWages('85000');
+    
+    
+  };
 
   const handleCalculate = () => {
     if (gross > 0 && result) {
@@ -121,10 +128,14 @@ export default function FicaTaxCalculator() {
         </div>
 
         <div className="flex gap-3">
-          <Button onClick={handleCalculate} disabled={gross <= 0}
+          
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button onClick={handleCalculate} disabled={gross <= 0}
             className="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white shadow-lg shadow-blue-600/25 flex-1 sm:flex-none">
             Calculate FICA Tax
           </Button>
+          </div>
           <Button variant="outline" onClick={handleReset}>Reset</Button>
         </div>
 

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Briefcase } from 'lucide-react';
+import TryExample from './TryExample';
 import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -40,6 +41,13 @@ export default function CostPerHireCalculator() {
   const cph = hiresNum > 0 ? totalCost / hiresNum : 0;
   // SHRM 2024 average: ~$4,700
   const shrm = 4700;
+
+    const handleTryExample = () => {
+    setInternalRecruiting('5000');
+    setExternalAgency('10000');
+    setNumHires('15');
+    setCalculated(false);
+  };
 
   const handleCalculate = () => {
     if (totalCost > 0 && hiresNum > 0) {
@@ -104,10 +112,14 @@ export default function CostPerHireCalculator() {
         )}
 
         <div className="flex gap-3">
-          <Button onClick={handleCalculate} disabled={totalCost <= 0 || hiresNum <= 0}
+          
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button onClick={handleCalculate} disabled={totalCost <= 0 || hiresNum <= 0}
             className="bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 text-white shadow-lg shadow-indigo-500/25 flex-1 sm:flex-none">
             Calculate Cost per Hire
           </Button>
+          </div>
           <Button variant="outline" onClick={handleReset}>Reset</Button>
         </div>
 

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Package, DollarSign, Percent, Info, ArrowRightLeft } from 'lucide-react';
+import TryExample from './TryExample';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -67,6 +68,12 @@ export default function MarkupCalculator() {
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: MarkupResult; label: string } | null>(null);
   const [compareB, setCompareB] = useState<{ result: MarkupResult; label: string } | null>(null);
+
+    const handleTryExample = () => {
+    setCostPrice('50');
+    setMarkupPct('40');
+    setResult(null);
+  };
 
   const handleCalculate = () => {
     setResult(null);
@@ -270,7 +277,10 @@ export default function MarkupCalculator() {
 
         {/* Buttons */}
         <div className="flex gap-3">
-          <Button
+          
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button
             onClick={handleCalculate}
             className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
             size="lg"
@@ -278,6 +288,7 @@ export default function MarkupCalculator() {
             <Package className="h-4 w-4 mr-2" />
             Calculate Markup
           </Button>
+          </div>
           <Button
             onClick={handleReset}
             variant="outline"

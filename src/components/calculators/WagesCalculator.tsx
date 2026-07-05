@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import TryExample from './TryExample';
 import { motion } from 'framer-motion';
 import {
   Banknote,
@@ -133,6 +134,14 @@ export default function WagesCalculator() {
   const removeEntry = (id: number) => {
     if (entries.length <= 1) return;
     setEntries((prev) => prev.filter((e) => e.id !== id));
+    setResult(null);
+  };
+
+    const handleTryExample = () => {
+setEntries([{ id: 1, hourlyRate: '20', regularHours: '40', overtimeHours: '5', doubleTimeHours: '0' }]);
+    setOvertimeMultiplier('1.5');
+    setDoubleTimeMultiplier('2');
+    setPayPeriod('weekly');
     setResult(null);
   };
 
@@ -448,7 +457,10 @@ export default function WagesCalculator() {
 
         {/* Actions */}
         <div className="flex gap-3">
-          <Button
+          
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button
             onClick={handleCalculate}
             className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
             size="lg"
@@ -456,6 +468,7 @@ export default function WagesCalculator() {
             <Banknote className="h-4 w-4 mr-2" />
             Calculate Wages
           </Button>
+          </div>
           <Button
             onClick={handleReset}
             variant="outline"

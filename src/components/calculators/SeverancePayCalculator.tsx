@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { UserMinus } from 'lucide-react';
+import TryExample from './TryExample';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -36,6 +37,13 @@ export default function SeverancePayCalculator() {
   const totalPay = weeklyRate * totalWeeks;
   const monthlyEquivalent = totalPay / (totalWeeks / 4.33);
   const estNetPay = totalPay * 0.72; // rough 28% effective tax estimate
+
+    const handleTryExample = () => {
+    setAnnualSalary('80000');
+    setYearsService('5');
+    setWeeksPerYear('2');
+    setCalculated(false);
+  };
 
   const handleCalculate = () => {
     if (salaryNum > 0 && yearsNum > 0) {
@@ -103,10 +111,14 @@ export default function SeverancePayCalculator() {
         )}
 
         <div className="flex gap-3">
-          <Button onClick={handleCalculate} disabled={salaryNum <= 0 || yearsNum <= 0}
+          
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button onClick={handleCalculate} disabled={salaryNum <= 0 || yearsNum <= 0}
             className="bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 text-white shadow-lg shadow-indigo-500/25 flex-1 sm:flex-none">
             Calculate Severance Pay
           </Button>
+          </div>
           <Button variant="outline" onClick={handleReset}>Reset</Button>
         </div>
 
