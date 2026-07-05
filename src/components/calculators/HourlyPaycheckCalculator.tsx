@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import TryExample from './TryExample';
 import { motion } from 'framer-motion';
 import {
   BadgeDollarSign,
@@ -103,6 +104,15 @@ export default function HourlyPaycheckCalculator() {
   const [compareB, setCompareB] = useState<HourlySnapshot | null>(null);
 
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ hourlyRate: string; regularHours: string; overtimeHours: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string }>('hourly-paycheck-calculator');
+
+    const handleTryExample = () => {
+    setHourlyRate('25');
+    setRegularHours('80');
+    setPayFrequency('bi-weekly');
+    
+    setStateTaxPct('5');
+    setResult(null);
+  };
 
   const handleCalculate = () => {
     setError(null);
@@ -404,7 +414,10 @@ export default function HourlyPaycheckCalculator() {
 
         {/* Actions */}
         <div className="flex gap-3">
-          <Button
+          
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button
             onClick={handleCalculate}
             className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
             size="lg"
@@ -412,6 +425,7 @@ export default function HourlyPaycheckCalculator() {
             <BadgeDollarSign className="h-4 w-4 mr-2" />
             Calculate Paycheck
           </Button>
+          </div>
           <Button
             onClick={handleReset}
             variant="outline"

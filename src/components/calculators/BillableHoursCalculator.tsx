@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Hourglass } from 'lucide-react';
+import TryExample from './TryExample';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -44,6 +45,13 @@ export default function BillableHoursCalculator() {
   const mult = PERIOD_MULT[period] || 50;
   const annualRevenue = billableRevenue * mult;
   const annualHours = billableHours * mult;
+
+    const handleTryExample = () => {
+    setBillingRate('150');
+    setTotalHours('40');
+    setNonBillableHours('0');
+    setCalculated(false);
+  };
 
   const handleCalculate = () => {
     if (totalNum > 0) {
@@ -129,10 +137,14 @@ export default function BillableHoursCalculator() {
         )}
 
         <div className="flex gap-3">
-          <Button onClick={handleCalculate} disabled={totalNum <= 0}
+          
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button onClick={handleCalculate} disabled={totalNum <= 0}
             className="bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white shadow-lg shadow-teal-500/25 flex-1 sm:flex-none">
             Calculate Billable Hours
           </Button>
+          </div>
           <Button variant="outline" onClick={handleReset}>Reset</Button>
         </div>
 

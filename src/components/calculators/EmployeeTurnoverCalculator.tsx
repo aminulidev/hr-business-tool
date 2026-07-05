@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Users } from 'lucide-react';
+import TryExample from './TryExample';
 import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -48,6 +49,13 @@ export default function EmployeeTurnoverCalculator() {
   const retentionRate = 100 - turnoverRate;
   const costPerEmployee = salaryNum * costPct;
   const totalCost = costPerEmployee * sepNum;
+
+    const handleTryExample = () => {
+    setBeginHeadcount('100');
+    setEndHeadcount('110');
+    setSeparations('15');
+    
+  };
 
   const handleCalculate = () => {
     if (beginNum > 0 && sepNum > 0) {
@@ -124,10 +132,14 @@ export default function EmployeeTurnoverCalculator() {
         </div>
 
         <div className="flex gap-3">
-          <Button onClick={handleCalculate} disabled={beginNum <= 0 || sepNum <= 0}
+          
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button onClick={handleCalculate} disabled={beginNum <= 0 || sepNum <= 0}
             className="bg-gradient-to-r from-violet-500 to-violet-700 hover:from-violet-600 hover:to-violet-800 text-white shadow-lg shadow-violet-500/25 flex-1 sm:flex-none">
             Calculate Turnover Rate
           </Button>
+          </div>
           <Button variant="outline" onClick={handleReset}>Reset</Button>
         </div>
 

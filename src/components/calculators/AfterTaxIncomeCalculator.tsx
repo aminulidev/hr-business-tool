@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Wallet, DollarSign, TrendingDown, Info, PieChart as PieChartIcon } from 'lucide-react';
+import TryExample from './TryExample';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -264,6 +265,17 @@ export default function AfterTaxIncomeCalculator() {
     return calculateTaxResults(grossAnnual, filingStatus, stateRate, deductions);
   }, [incomeAmount, payFrequency, hoursPerWeek, filingStatus, stateTaxRate, additionalDeductions]);
 
+    const handleTryExample = () => {
+    setIncomeAmount('75000');
+    setPayFrequency('annual');
+    setHoursPerWeek('40');
+    setFilingStatus('single');
+    setStateTaxRate('5');
+    setAdditionalDeductions('0');
+    
+    setShowResults(false);
+  };
+
   const handleCalculate = () => {
     setShowResults(true);
     if (results) {
@@ -494,12 +506,16 @@ export default function AfterTaxIncomeCalculator() {
           </div>
 
           {/* Calculate Button */}
-          <Button
+          
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button
             onClick={handleCalculate}
-            className="w-full h-11 text-base font-semibold mt-2"
+            className=" h-11 text-base font-semibold "
           >
             Calculate After-Tax Income
           </Button>
+          </div>
         </div>
 
         {/* ================================================================= */}

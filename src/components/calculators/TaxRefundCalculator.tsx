@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Receipt, DollarSign, Percent, Info, PieChart as PieChartIcon } from 'lucide-react';
+import TryExample from './TryExample';
 import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -156,6 +157,15 @@ export default function TaxRefundCalculator() {
   const [result, setResult] = useState<TaxResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ filingStatus: string; grossIncome: string; federalWithheld: string; stateWithheld: string }>('tax-refund-estimator');
+
+    const handleTryExample = () => {
+    setGrossIncome('75000');
+    setFilingStatus('single');
+    setFederalWithheld('10000');
+    setStateWithheld('3000');
+    setDeductionType('standard');
+    setResult(null);
+  };
 
   const handleCalculate = () => {
     setResult(null);
@@ -418,7 +428,10 @@ export default function TaxRefundCalculator() {
 
         {/* Buttons */}
         <div className="flex gap-3">
-          <Button
+          
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button
             onClick={handleCalculate}
             className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
             size="lg"
@@ -426,6 +439,7 @@ export default function TaxRefundCalculator() {
             <Receipt className="h-4 w-4 mr-2" />
             Calculate Refund
           </Button>
+          </div>
           <Button
             onClick={handleReset}
             variant="outline"

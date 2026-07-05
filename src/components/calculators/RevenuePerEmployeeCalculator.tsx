@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Activity } from 'lucide-react';
+import TryExample from './TryExample';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, ReferenceLine, Cell } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -47,6 +48,12 @@ export default function RevenuePerEmployeeCalculator() {
   };
 
   const rating = getRating(rpe);
+
+    const handleTryExample = () => {
+    setAnnualRevenue('5000000');
+    setNumEmployees('25');
+    setCalculated(false);
+  };
 
   const handleCalculate = () => {
     if (revenueNum > 0 && empNum > 0) {
@@ -94,10 +101,14 @@ export default function RevenuePerEmployeeCalculator() {
         )}
 
         <div className="flex gap-3">
-          <Button onClick={handleCalculate} disabled={revenueNum <= 0 || empNum <= 0}
+          
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button onClick={handleCalculate} disabled={revenueNum <= 0 || empNum <= 0}
             className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25 flex-1 sm:flex-none">
             Calculate Revenue per Employee
           </Button>
+          </div>
           <Button variant="outline" onClick={handleReset}>Reset</Button>
         </div>
 

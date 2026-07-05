@@ -5,6 +5,10 @@ import { motion } from 'framer-motion';
 import { CalendarDays, ArrowRight, Calendar, Info, BarChart as BarChartIcon } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
 import { Input } from '@/components/ui/input';
+import { DatePicker } from '@/components/ui/date-picker';
+import TryExample from './TryExample';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -216,6 +220,15 @@ export default function BusinessDayCalculator() {
   // Shared
   const [error, setError] = useState<string | null>(null);
 
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<any>('business-day-calculator');
+
+  const handleTryExample = () => {
+    setCountStart('2025-01-01');
+    setCountEnd('2025-01-31');
+    setAddStart('2025-01-01');
+    setAddDays('10');
+  };
+
   const handleCount = () => {
     setError(null);
     setCountResult(null);
@@ -239,6 +252,7 @@ export default function BusinessDayCalculator() {
       countHolidayOption === 'weekends-holidays'
     );
     setCountResult(result);
+    saveEntry({ mode: "count", inputs: { countStart, countEnd, countHolidayOption } }, `${result.businessDays} days`);
   };
 
   const handleAdd = () => {
@@ -268,6 +282,7 @@ export default function BusinessDayCalculator() {
       addHolidayOption === 'weekends-holidays'
     );
     setAddResult(result);
+    saveEntry({ mode: "add", inputs: { addStart, addDays, addHolidayOption } }, `${result.resultDate.toLocaleDateString()} (Added ${addDays} days)`);
   };
 
   const today = new Date().toISOString().split('T')[0];
@@ -329,26 +344,14 @@ export default function BusinessDayCalculator() {
                   <Calendar className="inline h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
                   Start Date
                 </Label>
-                <Input
-                  id="count-start"
-                  type="date"
-                  value={countStart}
-                  onChange={(e) => setCountStart(e.target.value)}
-                  className="text-sm"
-                />
+                <DatePicker value={countStart} onChange={setCountStart} className="text-sm" />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="count-end" className="text-sm font-medium">
                   <Calendar className="inline h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
                   End Date
                 </Label>
-                <Input
-                  id="count-end"
-                  type="date"
-                  value={countEnd}
-                  onChange={(e) => setCountEnd(e.target.value)}
-                  className="text-sm"
-                />
+                <DatePicker value={countEnd} onChange={setCountEnd} className="text-sm" />
               </div>
             </div>
 
@@ -417,13 +420,7 @@ export default function BusinessDayCalculator() {
                 <Calendar className="inline h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
                 Start Date
               </Label>
-              <Input
-                id="add-start"
-                type="date"
-                value={addStart}
-                onChange={(e) => setAddStart(e.target.value)}
-                className="text-sm"
-              />
+              <DatePicker value={addStart} onChange={setAddStart} className="text-sm" />
             </div>
 
             {/* Days to add */}

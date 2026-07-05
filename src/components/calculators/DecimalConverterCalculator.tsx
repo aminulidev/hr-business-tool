@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import CalcHistoryPanel from './CalcHistoryPanel';
 import { motion } from 'framer-motion';
 import { Hash, Info, ArrowRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -182,6 +184,8 @@ export default function DecimalConverterCalculator() {
   const [fracDecResult, setFracDecResult] = useState<FractionToDecimalResult | null>(null);
   const [decPctResult, setDecPctResult] = useState<DecimalToPercentResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; inputs: any }>('time-to-decimal-calculator');
 
   const handleDecimalToFraction = () => {
     setDecFracResult(null);

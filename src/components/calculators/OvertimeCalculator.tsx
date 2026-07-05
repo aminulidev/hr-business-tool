@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Timer, DollarSign, Clock, Info, TrendingUp } from 'lucide-react';
+import TryExample from './TryExample';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -74,6 +75,13 @@ export default function OvertimeCalculator() {
       setAutoOvertimeHint(null);
     }
   }, [weeklyHoursInput, regularHoursInput]);
+
+    const handleTryExample = () => {
+    setHourlyRateInput('20');
+    setRegularHoursInput('40');
+    setOvertimeHoursInput('10');
+    setResult(null);
+  };
 
   const handleCalculate = () => {
     const rRate = parseFloat(hourlyRateInput) || 0;
@@ -282,13 +290,17 @@ return (
 
         {/* Action Buttons */}
         <div className="flex gap-3">
-          <Button
+          
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
+            <TryExample onClick={handleTryExample} />
+            <Button
             onClick={handleCalculate}
             className="flex-1 sm:flex-none bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
             size="lg"
           >
             Calculate Overtime Pay
           </Button>
+          </div>
           <Button variant="outline" onClick={handleReset} size="lg">
             Reset
           </Button>
