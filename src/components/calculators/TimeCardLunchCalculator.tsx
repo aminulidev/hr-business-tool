@@ -23,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { parseTimeToMinutes, TIME_FORMAT_EXAMPLES } from '@/lib/time-utils';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -66,12 +67,6 @@ interface TimeCardResult {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function timeToMinutes(time: string): number {
-  if (!time) return 0;
-  const [h, m] = time.split(':').map(Number);
-  return h * 60 + (m || 0);
-}
-
 function minutesToDecimal(minutes: number): number {
   return Math.round((minutes / 60) * 100) / 100;
 }
@@ -85,10 +80,10 @@ function minutesToTimeStr(minutes: number): string {
 function createEmptyDay(): DayEntry {
   return {
     enabled: true,
-    clockIn: '09:00',
-    lunchStart: '12:00',
-    lunchEnd: '13:00',
-    clockOut: '17:00',
+    clockIn: '09:00 AM',
+    lunchStart: '12:00 PM',
+    lunchEnd: '01:00 PM',
+    clockOut: '05:00 PM',
   };
 }
 
@@ -164,8 +159,17 @@ export default function TimeCardLunchCalculator() {
         return;
       }
 
-      const clockInMin = timeToMinutes(day.clockIn);
-      const clockOutMin = timeToMinutes(day.clockOut);
+      const clockInMin = parseTimeToMinutes(day.clockIn);
+      const clockOutMin = parseTimeToMinutes(day.clockOut);
+
+      if (clockInMin < 0) {
+        setError(`Invalid clock-in time for ${DAYS[i]}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
+        return;
+      }
+      if (clockOutMin < 0) {
+        setError(`Invalid clock-out time for ${DAYS[i]}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
+        return;
+      }
 
       if (clockOutMin <= clockInMin) {
         setError(
@@ -185,8 +189,17 @@ export default function TimeCardLunchCalculator() {
           );
           return;
         }
-        const lunchStartMin = timeToMinutes(day.lunchStart);
-        const lunchEndMin = timeToMinutes(day.lunchEnd);
+        const lunchStartMin = parseTimeToMinutes(day.lunchStart);
+        const lunchEndMin = parseTimeToMinutes(day.lunchEnd);
+
+        if (lunchStartMin < 0) {
+          setError(`Invalid lunch out time for ${DAYS[i]}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
+          return;
+        }
+        if (lunchEndMin < 0) {
+          setError(`Invalid lunch in time for ${DAYS[i]}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
+          return;
+        }
 
         if (lunchEndMin <= lunchStartMin) {
           setError(
@@ -395,6 +408,9 @@ export default function TimeCardLunchCalculator() {
               Copy to All
             </Button>
           </div>
+          <p className="text-xs text-muted-foreground">
+            Accepts: {TIME_FORMAT_EXAMPLES}
+          </p>
 
           {/* Header row (desktop) */}
           <div className="hidden sm:grid grid-cols-6 gap-2 text-xs text-muted-foreground font-medium px-1">
@@ -463,7 +479,8 @@ export default function TimeCardLunchCalculator() {
                     </Label>
                     <Input
                       id={`in-${idx}`}
-                      type="time"
+                      type="text"
+                      placeholder="9:00 AM"
                       value={day.enabled ? day.clockIn : ''}
                       disabled={!day.enabled}
                       onChange={(e) =>
@@ -484,7 +501,8 @@ export default function TimeCardLunchCalculator() {
                       </Label>
                       <Input
                         id={`ls-${idx}`}
-                        type="time"
+                        type="text"
+                        placeholder="12:00 PM"
                         value={day.enabled ? day.lunchStart : ''}
                         disabled={!day.enabled}
                         onChange={(e) =>
@@ -506,7 +524,8 @@ export default function TimeCardLunchCalculator() {
                       </Label>
                       <Input
                         id={`le-${idx}`}
-                        type="time"
+                        type="text"
+                        placeholder="1:00 PM"
                         value={day.enabled ? day.lunchEnd : ''}
                         disabled={!day.enabled}
                         onChange={(e) =>
@@ -527,7 +546,8 @@ export default function TimeCardLunchCalculator() {
                     </Label>
                     <Input
                       id={`out-${idx}`}
-                      type="time"
+                      type="text"
+                      placeholder="5:00 PM"
                       value={day.enabled ? day.clockOut : ''}
                       disabled={!day.enabled}
                       onChange={(e) =>
