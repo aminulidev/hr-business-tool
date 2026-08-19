@@ -54,7 +54,51 @@ const seoData = {
     },
   ],
 
-  
+  workedExamples: [
+    {
+      title: 'Bi-Weekly Paycheck — $65,000 Annual Salary',
+      description:
+        'An employee earning $65,000/year on a bi-weekly schedule (26 pay periods) has gross pay of $2,500 per period. With 22% federal tax, 5% state tax, and $200/month health insurance ($100/period): Federal tax = $2,500 × 22% = $550. State tax = $2,500 × 5% = $125. Deductions = $100. Net pay per period = $2,500 − $550 − $125 − $100 = $1,725. Annual take-home ≈ $1,725 × 26 = $44,850.',
+    },
+    {
+      title: 'Monthly Payroll — Small Business Owner Employee',
+      description:
+        'An employee is paid monthly with a $5,000/month gross salary. Federal tax rate 24%, state tax rate 6.5%, with a 401(k) contribution of $300/month and health insurance of $250/month. Federal tax = $5,000 × 24% = $1,200. State tax = $5,000 × 6.5% = $325. Total deductions = $300 + $250 = $550. Net monthly pay = $5,000 − $1,200 − $325 − $550 = $2,925.',
+    },
+    {
+      title: 'Hourly Employee — Weekly Payroll',
+      description:
+        'An hourly employee works 45 hours at $18/hour in a week (40 regular + 5 overtime). Gross pay: 40 × $18 + 5 × $27 = $720 + $135 = $855. With 12% federal tax and 4% state tax: Federal = $855 × 12% = $102.60. State = $855 × 4% = $34.20. No other deductions. Net pay = $855 − $102.60 − $34.20 = $718.20 take-home for the week.',
+    },
+  ],
+
+  relatedTools: [
+    {
+      slug: 'after-tax-income-calculator',
+      title: 'After-Tax Income Calculator',
+      description: 'Calculate your full annual net income with progressive federal tax brackets',
+      icon: 'Wallet',
+    },
+    {
+      slug: 'fica-tax-calculator',
+      title: 'FICA Tax Calculator',
+      description: 'Calculate Social Security and Medicare withholdings separately',
+      icon: 'Shield',
+    },
+    {
+      slug: 'payroll-deduction-calculator',
+      title: 'Payroll Deduction Calculator',
+      description: 'Model the impact of 401(k), health insurance, and other pre-tax deductions',
+      icon: 'FileMinus',
+    },
+    {
+      slug: 'hourly-paycheck-calculator',
+      title: 'Hourly Paycheck Calculator',
+      description: 'Calculate gross and net pay for hourly employees including overtime',
+      icon: 'Clock',
+    },
+  ],
+
 };
 
 export default seoData;

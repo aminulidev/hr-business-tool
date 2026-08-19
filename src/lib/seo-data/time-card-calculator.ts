@@ -54,7 +54,51 @@ const seoData = {
     },
   ],
 
-  
+  workedExamples: [
+    {
+      title: 'Standard 9-to-5 Week with 30-Minute Lunch',
+      description:
+        'Clock in at 9:00 AM and clock out at 5:30 PM each day, Monday through Friday, with a 30-minute unpaid lunch each day. Net hours per day: 5:30 PM − 9:00 AM − 0.5h = 8.00 hours. Weekly total: 8.00 × 5 = 40.00 hours. At $20/hour with a 40-hour overtime threshold, all 40 hours are regular time. Total gross pay: 40.00 × $20 = $800.00.',
+    },
+    {
+      title: 'Heavy Overtime Week — Warehouse Supervisor',
+      description:
+        'A warehouse supervisor works Mon–Sat: Mon 7:00 AM–5:00 PM (9h), Tue 7:00 AM–6:00 PM (10h), Wed 7:00 AM–5:00 PM (9h), Thu 7:00 AM–6:00 PM (10h), Fri 7:00 AM–5:00 PM (9h), Sat 8:00 AM–12:00 PM (4h). All with 30-min lunch Mon–Fri. Net hours: 8.5+9.5+8.5+9.5+8.5+4 = 48.50 hours. Overtime hours: 48.50 − 40 = 8.50 hrs. At $24/hour: Regular pay = 40 × $24 = $960. Overtime pay = 8.5 × $36 = $306. Total gross: $1,266.',
+    },
+    {
+      title: 'Part-Time Variable Schedule',
+      description:
+        'A part-time employee works an irregular week: Mon 9:00 AM–1:00 PM (4h), Wed 10:00 AM–3:00 PM (5h), Fri 8:00 AM–5:00 PM with 30-min lunch (8.5h), and Sat 9:00 AM–2:00 PM (5h). Weekly total: 4 + 5 + 8.5 + 5 = 22.50 hours. All regular time (under 40h threshold). At $16/hour: Total gross = 22.50 × $16 = $360.00 for the week.',
+    },
+  ],
+
+  relatedTools: [
+    {
+      slug: 'time-card-calculator-with-lunch',
+      title: 'Time Card Calculator with Lunch',
+      description: 'Calculate work hours with manual lunch entry or auto-deduct for each day',
+      icon: 'Coffee',
+    },
+    {
+      slug: 'overtime-calculator',
+      title: 'Overtime Calculator',
+      description: 'Calculate overtime pay with time-and-a-half and double-time rates',
+      icon: 'Timer',
+    },
+    {
+      slug: 'payroll-calculator',
+      title: 'Payroll Calculator',
+      description: 'Estimate take-home pay after taxes and deductions',
+      icon: 'CreditCard',
+    },
+    {
+      slug: 'time-to-decimal-calculator',
+      title: 'Time to Decimal Calculator',
+      description: 'Convert hours and minutes to decimal format for payroll',
+      icon: 'Hash',
+    },
+  ],
+
 };
 
 export default seoData;
