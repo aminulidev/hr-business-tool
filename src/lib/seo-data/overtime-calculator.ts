@@ -49,6 +49,50 @@ faqs: [
   },
 ],
 
+  workedExamples: [
+    {
+      title: 'Federal Standard Overtime — 48-Hour Week',
+      description:
+        'An employee earns $22/hour and works 48 hours in a standard week. Regular hours: 40. Overtime hours: 8. Regular pay: 40 × $22 = $880. Overtime pay: 8 × ($22 × 1.5) = 8 × $33 = $264. Total weekly gross pay: $880 + $264 = $1,144. Effective hourly rate for the week: $1,144 ÷ 48 = $23.83/hour.',
+    },
+    {
+      title: 'California Daily Overtime — Single Long Day',
+      description:
+        'A California warehouse worker earns $19/hour and works a 13-hour shift. Hours 1–8: regular rate — 8 × $19 = $152. Hours 8–12 (4 hours): time-and-a-half — 4 × $28.50 = $114. Hours 12–13 (1 hour): double-time — 1 × $38 = $38. Total pay for the 13-hour day: $152 + $114 + $38 = $304. Compare to a simple 13 × $19 = $247 calculation — California rules add $57 extra.',
+    },
+    {
+      title: 'Overtime With Non-Discretionary Bonus',
+      description:
+        'An employee earns $18/hour, works 46 hours, and earns a $150 production bonus. Step 1: Total straight-time wages = 46 × $18 + $150 = $828 + $150 = $978. Step 2: Regular rate = $978 ÷ 46 = $21.26/hour. Step 3: Overtime premium (half-time for 6 OT hours): 6 × ($21.26 × 0.5) = $63.78. Total pay: $978 + $63.78 = $1,041.78. This is the legally required calculation under the FLSA when bonuses are included.',
+    },
+  ],
+
+  relatedTools: [
+    {
+      slug: 'time-card-calculator',
+      title: 'Time Card Calculator',
+      description: 'Calculate total hours worked from clock-in/out times for the week',
+      icon: 'Clock',
+    },
+    {
+      slug: 'time-and-a-half-calculator',
+      title: 'Time and a Half Calculator',
+      description: 'Instantly find the 1.5× overtime rate for any hourly wage',
+      icon: 'AlarmClock',
+    },
+    {
+      slug: 'payroll-calculator',
+      title: 'Payroll Calculator',
+      description: 'Estimate take-home pay after taxes and all deductions',
+      icon: 'CreditCard',
+    },
+    {
+      slug: 'time-card-calculator-with-lunch',
+      title: 'Time Card Calculator with Lunch',
+      description: 'Track work hours with lunch break deductions before calculating overtime',
+      icon: 'Coffee',
+    },
+  ],
 
 };
 
