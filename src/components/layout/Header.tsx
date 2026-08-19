@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calculator, ArrowLeft, Info, Mail, Menu, X, Search, BookOpen } from 'lucide-react';
+import { Calculator, ArrowLeft, Info, Mail, Menu, X, Search, BookOpen, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   CommandDialog,
@@ -191,6 +191,12 @@ export default function Header() {
                     Blog
                   </Button>
                 </Link>
+                <Link href="/guides">
+                  <Button variant="ghost" size="sm" className={`cursor-pointer ${pathname.startsWith('/guides') ? 'bg-accent text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
+                    <FileText className="h-3.5 w-3.5 mr-1.5" />
+                    Guides
+                  </Button>
+                </Link>
                 <Link href="/about">
                   <Button variant="ghost" size="sm" className={`cursor-pointer ${pathname === '/about' ? 'bg-accent text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
                     <Info className="h-3.5 w-3.5 mr-1.5" />
@@ -248,6 +254,14 @@ export default function Header() {
               >
                 <BookOpen className="h-4 w-4" />
                 Blog
+              </Link>
+              <Link
+                href="/guides"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors cursor-pointer ${pathname.startsWith('/guides') ? 'bg-accent/50 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'}`}
+              >
+                <FileText className="h-4 w-4" />
+                Guides
               </Link>
               <Link
                 href="/about"
