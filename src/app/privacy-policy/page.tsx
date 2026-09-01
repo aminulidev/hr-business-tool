@@ -71,30 +71,61 @@ export default function PrivacyPolicyPage() {
             .
           </p>
 
-          <h3 className="text-base font-semibold text-foreground mt-4">1.3 Information from Third-Party Services</h3>
+          <h3 className="text-base font-semibold text-foreground mt-4">1.3 Google AdSense and Third-Party Advertising</h3>
           <p>
-            We use Google AdSense to display advertisements on our Site. Google may use cookies and web
-            beacons to serve ads based on your prior visits to our Site or other websites. Google&apos;s use
-            of advertising cookies enables it and its partners to serve ads based on your visit to our
-            Site and/or other sites on the Internet. You may opt out of personalized advertising by
-            visiting{' '}
+            We use <strong>Google AdSense</strong> to display advertisements across the Site. Google is a third-party vendor that uses cookies, web beacons, and unique device identifiers to serve advertisements based on your prior visits to our Site or other websites on the Internet:
+          </p>
+          <ul className="list-disc pl-6 space-y-2 mt-2">
+            <li>
+              <strong>Advertising Cookies:</strong> Google&apos;s use of advertising cookies (including the DoubleClick / DART cookie) enables Google and its certified ad partners to serve personalized or contextual ads to you based on your browsing patterns and interests across the web.
+            </li>
+            <li>
+              <strong>Personalized Ads Opt-Out:</strong> You can opt out of personalized Google advertising at any time by visiting{' '}
+              <Link
+                href="https://adssettings.google.com"
+                className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Google Ads Settings
+              </Link>
+              .
+            </li>
+            <li>
+              <strong>Third-Party Ad Networks:</strong> You may also opt out of third-party vendors&apos; use of cookies for personalized advertising by visiting the Network Advertising Initiative / Digital Advertising Alliance opt-out portal at{' '}
+              <Link
+                href="https://www.aboutads.info/choices/"
+                className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                www.aboutads.info/choices/
+              </Link>{' '}
+              or the European Interactive Digital Advertising Alliance at{' '}
+              <Link
+                href="https://www.youronlinechoices.eu/"
+                className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                youronlinechoices.eu
+              </Link>
+              .
+            </li>
+          </ul>
+
+          <h3 className="text-base font-semibold text-foreground mt-4">1.4 Web Analytics (Google Analytics)</h3>
+          <p>
+            We use Google Analytics to understand how visitors engage with our tools and pages. Google Analytics collects anonymized data such as page views, session duration, device operating systems, and referral sources. We do not transmit personally identifiable information (PII) to Google Analytics. You can prevent your data from being used by Google Analytics by installing the{' '}
             <Link
-              href="https://www.google.com/settings/ads"
+              href="https://tools.google.com/dlpage/gaoptout"
               className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Google Ads Settings
+              Google Analytics Opt-out Browser Add-on
             </Link>
             .
-          </p>
-
-          <p>
-            We may also use Google Analytics to understand how visitors interact with our Site. Google
-            Analytics collects information such as how often users visit the Site, what pages they visit,
-            and what other sites they used prior to coming to the Site. We use this information solely
-            to improve the Site. Google Analytics collects only the IP address assigned to you on the date
-            you visit the Site, rather than your name or other identifying information.
           </p>
 
           <h2 className="text-xl font-semibold text-foreground pt-4">2. How We Use Your Information</h2>
@@ -171,25 +202,23 @@ export default function PrivacyPolicyPage() {
             personal financial data to retain or delete.
           </p>
 
-          <h2 className="text-xl font-semibold text-foreground pt-4">7. Your Rights and Choices</h2>
-          <p>Depending on your jurisdiction, you may have the following rights regarding your data:</p>
+          <h2 className="text-xl font-semibold text-foreground pt-4">7. Your Rights and Choices (CCPA, CPRA, GDPR)</h2>
+          <p>Depending on your jurisdiction (such as California, Virginia, the EU, or the UK), you may have specific statutory privacy rights:</p>
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>
-              <strong>Access:</strong> You may request information about the data we hold about you.
+              <strong>Right to Access / Know:</strong> You may request details on the categories and specific pieces of data collected, used, or shared.
             </li>
             <li>
-              <strong>Correction:</strong> You may request correction of inaccurate data.
+              <strong>Right to Deletion &amp; Correction:</strong> You may request the deletion or correction of your personal data.
             </li>
             <li>
-              <strong>Deletion:</strong> You may request deletion of your data.
+              <strong>Right to Opt-Out of Sale / Sharing:</strong> We do not sell personal data for monetary consideration. Under California CCPA/CPRA, the use of third-party advertising cookies may be considered &quot;sharing&quot; for cross-context behavioral advertising. You can opt out via our cookie banner or through Google Ads Settings.
             </li>
             <li>
-              <strong>Opt-Out:</strong> You may opt out of personalized advertising through Google Ads
-              Settings or use a browser extension to manage cookies.
+              <strong>GDPR / UK GDPR Lawful Basis:</strong> For European users, our legal basis for processing analytics and advertising data is your affirmative consent, which you can manage or revoke at any time via our Cookie Preferences.
             </li>
             <li>
-              <strong>Do Not Track:</strong> Some browsers support a &quot;Do Not Track&quot; feature. Our Site
-              currently does not respond to DNT signals, but you can manage tracking through cookie settings.
+              <strong>Non-Discrimination:</strong> We will never discriminate against you, deny services, or alter calculator functionality for exercising any of your privacy rights.
             </li>
           </ul>
           <p>

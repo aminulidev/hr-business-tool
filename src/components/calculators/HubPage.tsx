@@ -169,6 +169,77 @@ export default function HubPage() {
           ))}
         </div>
 
+        {/* Featured Guides & Strategic Insights Section */}
+        <div className="pt-10 border-t border-border/40">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-600 mb-2">
+                📖 Editorial Insights
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold">Featured HR &amp; Business Guides</h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                Practical, in-depth breakdowns on payroll taxes, overtime regulations, and compensation planning.
+              </p>
+            </div>
+            <Link
+              href="/guides"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
+            >
+              View All Guides &rarr;
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Link
+              href="/blog/fica-tax-guide"
+              className="group p-6 rounded-2xl border border-border/60 bg-card/60 backdrop-blur-sm hover:border-emerald-500/30 hover:shadow-lg transition-all space-y-3"
+            >
+              <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wide">Taxes</span>
+              <h3 className="font-bold text-base group-hover:text-emerald-600 transition-colors">
+                FICA Tax Explained: What You Owe in 2026
+              </h3>
+              <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
+                Social Security wage base limits, Medicare surtaxes, and self-employment adjustments with worked examples.
+              </p>
+              <div className="pt-2 text-xs font-medium text-emerald-600 flex items-center gap-1">
+                Read Guide &rarr;
+              </div>
+            </Link>
+
+            <Link
+              href="/blog/how-to-structure-sales-commission-plan"
+              className="group p-6 rounded-2xl border border-border/60 bg-card/60 backdrop-blur-sm hover:border-emerald-500/30 hover:shadow-lg transition-all space-y-3"
+            >
+              <span className="text-xs font-semibold text-purple-600 uppercase tracking-wide">Compensation</span>
+              <h3 className="font-bold text-base group-hover:text-emerald-600 transition-colors">
+                How to Structure a Sales Commission Plan
+              </h3>
+              <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
+                From flat rate to tiered quotas and accelerators — avoid clawback traps and motivate sales teams.
+              </p>
+              <div className="pt-2 text-xs font-medium text-emerald-600 flex items-center gap-1">
+                Read Guide &rarr;
+              </div>
+            </Link>
+
+            <Link
+              href="/blog/overtime-california-guide"
+              className="group p-6 rounded-2xl border border-border/60 bg-card/60 backdrop-blur-sm hover:border-emerald-500/30 hover:shadow-lg transition-all space-y-3"
+            >
+              <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">Labor Law</span>
+              <h3 className="font-bold text-base group-hover:text-emerald-600 transition-colors">
+                California Overtime Laws: Daily &amp; Weekly OT Rules
+              </h3>
+              <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
+                Understanding daily 8-hour overtime, 12-hour double time, and 7th consecutive day rules.
+              </p>
+              <div className="pt-2 text-xs font-medium text-emerald-600 flex items-center gap-1">
+                Read Guide &rarr;
+              </div>
+            </Link>
+          </div>
+        </div>
+
         {/* SEO & Trust Content Section */}
         <div className="pt-8 border-t border-border/40">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
@@ -176,36 +247,42 @@ export default function HubPage() {
             <div className="lg:col-span-2 space-y-8">
               <section>
                 <h2 className="text-2xl sm:text-3xl font-bold mb-4">
-                  Professional Business & HR Tools You Can Trust
+                  Professional Business &amp; HR Tools You Can Trust
                 </h2>
-                <div className="prose prose-emerald dark:prose-invert max-w-none text-muted-foreground">
+                <div className="prose prose-emerald dark:prose-invert max-w-none text-muted-foreground space-y-3">
                   <p>
-                    At <strong className="text-foreground">QuickBizCalc</strong>, we understand that accuracy is everything when it comes to payroll, commissions, and business finances. Our suite of free online calculators is designed specifically for small business owners, HR professionals, and financial analysts who need instant, reliable results without the complexity of expensive software.
+                    At <strong className="text-foreground">QuickBizCalc</strong>, we understand that accuracy is everything when it comes to payroll, commissions, and business finances. Our suite of 32+ free online calculators is designed specifically for small business owners, HR professionals, and financial analysts who need instant, reliable results without the complexity of expensive software.
                   </p>
                   <p>
-                    Whether you are calculating a <Link href="/calculators/commission-calculator" className="text-emerald-600 hover:underline">sales commission</Link>, estimating <Link href="/calculators/payroll-calculator" className="text-emerald-600 hover:underline">payroll taxes</Link>, or analyzing <Link href="/calculators/roi-calculator" className="text-emerald-600 hover:underline">ROI</Link> for your next investment, our tools provide a transparent breakdown of formulas and worked examples. We bridge the gap between simple math and professional-grade financial analysis.
+                    Whether you are calculating a <Link href="/calculators/commission-calculator" className="text-emerald-600 hover:underline">sales commission</Link>, estimating <Link href="/calculators/payroll-calculator" className="text-emerald-600 hover:underline">payroll taxes</Link>, or analyzing <Link href="/calculators/roi-calculator" className="text-emerald-600 hover:underline">ROI</Link> for your next investment, our tools provide a transparent breakdown of formulas and worked examples.
                   </p>
                 </div>
               </section>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="p-4 sm:p-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/10">
-                  <h3 className="font-bold mb-2 flex items-center gap-2">
+                <div className="p-4 sm:p-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 space-y-2">
+                  <h3 className="font-bold mb-1 flex items-center gap-2">
                     <span className="inline-flex items-center justify-center h-7 w-7 p-1 rounded-full bg-emerald-500/20 text-emerald-600">✓</span>
-                    Accuracy Guaranteed
+                    Peer-Reviewed Accuracy
                   </h3>
-                  <p className="text-sm text-muted-foreground">
-                    All formulas are reviewed by financial experts and updated regularly to reflect the latest tax brackets and employment regulations.
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    All formulas are vetted by CPAs and Senior HR professionals in accordance with IRS Publication 15-T and federal FLSA labor regulations.
                   </p>
+                  <Link href="/about" className="inline-block text-xs font-semibold text-emerald-600 hover:underline pt-1">
+                    Learn about our methodology &rarr;
+                  </Link>
                 </div>
-                <div className="p-4 sm:p-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/10">
-                  <h3 className="font-bold mb-2 flex items-center gap-2">
+                <div className="p-4 sm:p-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 space-y-2">
+                  <h3 className="font-bold mb-1 flex items-center gap-2">
                     <span className="inline-flex items-center justify-center h-7 w-7 p-1 rounded-full bg-emerald-500/20 text-emerald-600">✓</span>
-                    Privacy First
+                    100% Client-Side Privacy
                   </h3>
-                  <p className="text-sm text-muted-foreground">
-                    Your data stays in your browser. We never store or see your financial inputs. Our calculations happen 100% on the client-side.
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    Calculations run locally in your browser. Your salaries, employee numbers, and financial records are never saved to our servers.
                   </p>
+                  <Link href="/privacy-policy" className="inline-block text-xs font-semibold text-emerald-600 hover:underline pt-1">
+                    Read our privacy commitment &rarr;
+                  </Link>
                 </div>
               </div>
             </div>
@@ -221,21 +298,21 @@ export default function HubPage() {
                     <div className="h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-bold">1</div>
                     <div className="text-sm">
                       <strong className="block text-foreground">Zero Cost</strong>
-                      100% free forever. No credit card or registration required.
+                      100% free forever. No credit card, account registration, or subscriptions required.
                     </div>
                   </li>
                   <li className="flex gap-3">
                     <div className="h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-bold">2</div>
                     <div className="text-sm">
                       <strong className="block text-foreground">Instant Reports</strong>
-                      Download your calculations as CSV or PDF instantly.
+                      Download full calculation audits as structured CSV reports instantly.
                     </div>
                   </li>
                   <li className="flex gap-3">
                     <div className="h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-bold">3</div>
                     <div className="text-sm">
-                      <strong className="block text-foreground">Expert Reviewed</strong>
-                      Tools vetted by CPAs and HR Managers for logic and accuracy.
+                      <strong className="block text-foreground">CPA Reviewed</strong>
+                      Tools vetted by CPAs and HR Directors for logic, tax brackets, and regulatory compliance.
                     </div>
                   </li>
                 </ul>

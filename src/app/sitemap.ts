@@ -38,6 +38,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
+  // Guides entry
+  const guidesEntry: MetadataRoute.Sitemap[number] = {
+    url: `${SITE_URL}/guides`,
+    lastModified: now,
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  };
+
   // Glossary entry
   const glossaryEntry: MetadataRoute.Sitemap[number] = {
     url: `${SITE_URL}/glossary`,
@@ -63,5 +71,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: page.priority,
   }));
 
-  return [hubEntry, ...calculatorEntries, ...blogEntries, glossaryEntry, ...legalEntries];
+  return [hubEntry, ...calculatorEntries, ...blogEntries, guidesEntry, glossaryEntry, ...legalEntries];
 }
