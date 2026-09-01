@@ -631,13 +631,28 @@ export default function CalculatorLayoutServer({
           </div>
 
           {/* ---------- Right sidebar: ads + TOC ---------- */}
+          {/* ---------- Right sidebar: widgets + TOC ---------- */}
           <aside className="hidden lg:block w-72 shrink-0">
             <div className="sticky top-24 space-y-6">
-              {/* Top ad space */}
+              {/* Top slot: AdContent if provided, otherwise helpful Calculation Tip */}
               {adContent ? (
                 adContent
               ) : (
-                <div className="ad-space">Advertisement</div>
+                <div className="glass rounded-2xl p-5 border border-emerald-500/20 bg-emerald-500/5 space-y-3">
+                  <div className="flex items-center gap-2 text-emerald-600 font-semibold text-sm">
+                    <span className="flex h-6 w-6 rounded-full bg-emerald-500/20 items-center justify-center text-xs">💡</span>
+                    Pro Tip
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Always maintain detailed records and export your calculations for auditing. Ensure all tax brackets and overtime rates match current state guidelines.
+                  </p>
+                  <Link
+                    href="/guides"
+                    className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
+                  >
+                    Browse HR & Business Guides <ArrowRight className="h-3 w-3" />
+                  </Link>
+                </div>
               )}
 
               {/* Table of Contents */}
@@ -662,22 +677,37 @@ export default function CalculatorLayoutServer({
                 </div>
               )}
 
-              {/* Bottom ad space */}
-              <div className="ad-space">Advertisement</div>
+              {/* Bottom slot: Trust & Methodology Card */}
+              <div className="glass rounded-2xl p-5 border border-border/60 space-y-3">
+                <div className="flex items-center gap-2 font-semibold text-sm text-foreground">
+                  <Shield className="h-4 w-4 text-emerald-600" />
+                  Trust & Accuracy
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Our formulas are peer-reviewed by certified CPAs and HR professionals, complying with IRS and FLSA standards.
+                </p>
+                <div className="pt-2 border-t border-border/40 flex items-center justify-between text-xs text-muted-foreground">
+                  <Link href="/about" className="text-emerald-600 hover:underline">
+                    Our Methodology
+                  </Link>
+                  <span>•</span>
+                  <Link href="/glossary" className="text-emerald-600 hover:underline">
+                    Glossary
+                  </Link>
+                </div>
+              </div>
             </div>
           </aside>
         </div>
 
         {/* ================================================================= */}
-        {/* Mobile Ad                                                         */}
+        {/* Mobile Ad / Slot (only rendered when real ad is provided)        */}
         {/* ================================================================= */}
-        <div className="lg:hidden mt-8 max-w-7xl mx-auto px-4 sm:px-6">
-          {adContent ? (
-            adContent
-          ) : (
-            <div className="ad-space">Advertisement</div>
-          )}
-        </div>
+        {adContent && (
+          <div className="lg:hidden mt-8 max-w-7xl mx-auto px-4 sm:px-6">
+            {adContent}
+          </div>
+        )}
       </div>
     </>
   );

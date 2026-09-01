@@ -1,14 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
-import { Book, Search, ArrowRight, ExternalLink } from 'lucide-react';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import { Book, ArrowRight } from 'lucide-react';
+import AppShell from '@/components/layout/AppShell';
 import { Badge } from '@/components/ui/badge';
-
-import { SITE_URL } from '@/lib/calculator-meta';
+import { SITE_URL, SITE_NAME } from '@/lib/calculator-meta';
 
 export const metadata = {
-  title: 'Business & HR Glossary - QuickBizCalc',
+  title: `Business & HR Glossary | ${SITE_NAME}`,
   description: 'A comprehensive dictionary of business, HR, payroll, and financial terms to help you understand the metrics behind our calculators.',
   alternates: {
     canonical: `${SITE_URL}/glossary`,
@@ -140,30 +138,29 @@ const terms = [
 
 export default function GlossaryPage() {
   return (
-    <div className="min-h-screen flex flex-col mesh-gradient">
-      <Header />
-      <main className="flex-1 container mx-auto px-4 py-12 sm:py-20">
+    <AppShell>
+      <div className="container mx-auto px-4 py-12 sm:py-20">
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-16 space-y-4">
-            <Badge variant="outline" className="px-3 py-1 bg-emerald-500/10 border-emerald-500/30 text-emerald-600">
-              Reference Guide
+            <Badge variant="outline" className="px-3 py-1 bg-emerald-500/10 border-emerald-500/30 text-emerald-600 font-medium">
+              Reference Guide &amp; Terms
             </Badge>
             <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-foreground">
-              Business & HR <span className="text-emerald-600">Glossary</span>
+              Business &amp; HR <span className="text-emerald-600">Glossary</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Master the terminology behind the metrics. A comprehensive dictionary of terms used across our business and HR calculator suite.
             </p>
           </div>
 
-          {/* Quick Search / Alpha Navigation (Simplified for now) */}
+          {/* Term Cards */}
           <div className="grid grid-cols-1 gap-6">
             {terms.sort((a, b) => a.term.localeCompare(b.term)).map((item) => (
               <div 
                 key={item.term}
                 id={item.term.toLowerCase().replace(/\s+/g, '-')}
-                className="group p-6 sm:p-8 rounded-3xl border border-border/50 bg-card/50 backdrop-blur-sm hover:border-emerald-500/30 hover:bg-card/80 transition-all duration-300"
+                className="group p-6 sm:p-8 rounded-3xl border border-border/50 bg-card/50 backdrop-blur-sm hover:border-emerald-500/30 hover:bg-card/80 transition-all duration-300 shadow-sm hover:shadow-md"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                   <div className="flex items-center gap-3">
@@ -179,7 +176,7 @@ export default function GlossaryPage() {
                   </Badge>
                 </div>
                 
-                <p className="text-muted-foreground leading-relaxed mb-6">
+                <p className="text-muted-foreground leading-relaxed mb-6 text-sm sm:text-base">
                   {item.definition}
                 </p>
 
@@ -197,8 +194,8 @@ export default function GlossaryPage() {
           {/* Call to Action */}
           <div className="mt-20 p-8 rounded-3xl bg-gradient-to-br from-emerald-600 to-emerald-800 text-white shadow-xl shadow-emerald-600/20 text-center space-y-6">
             <h2 className="text-2xl sm:text-3xl font-bold">Confused by a metric?</h2>
-            <p className="text-emerald-50/90 max-w-xl mx-auto">
-              Our calculators aren't just tools; they're educational resources. If there's a term you'd like us to explain, or a new tool you need, let us know.
+            <p className="text-emerald-50/90 max-w-xl mx-auto text-sm sm:text-base">
+              Our calculators aren&apos;t just tools; they&apos;re educational resources. If there&apos;s a term you&apos;d like us to explain, or a new tool you need, let us know.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link 
@@ -216,8 +213,7 @@ export default function GlossaryPage() {
             </div>
           </div>
         </div>
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </AppShell>
   );
 }
