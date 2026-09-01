@@ -38,14 +38,14 @@ import CalcHistoryPanel from './CalcHistoryPanel';
 import ComparePanel, { CompareRow } from './ComparePanel';
 import { formatCurrency, formatPercent, formatNumber } from '@/lib/utils';
 
-// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Helpers ───────────────────────────────────────────────────────────────
 
 const parseNum = (val: string): number => {
   const n = parseFloat(val);
   return isNaN(n) || n < 0 ? 0 : n;
 };
 
-// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Types ─────────────────────────────────────────────────────────────────
 
 interface Tier {
   id: string;
@@ -86,7 +86,7 @@ interface CompareSnapshot {
 
 type CalcMode = 'simple' | 'tiered' | 'quota';
 
-// â”€â”€â”€ Defaults â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Defaults ──────────────────────────────────────────────────────────────
 
 const defaultTiers = (): Tier[] => [
   { id: '1', from: '0', to: '50000', rate: '5' },
@@ -99,7 +99,7 @@ const makeId = () => String(nextId++);
 
 const TIER_COLORS = ['#34d399', '#10b981', '#059669', '#047857', '#065f46'];
 
-// â”€â”€â”€ Tooltip Label â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Tooltip Label ─────────────────────────────────────────────────────────
 
 function TipLabel({ children, tip }: { children: React.ReactNode; tip: string }) {
   return (
@@ -117,7 +117,7 @@ function TipLabel({ children, tip }: { children: React.ReactNode; tip: string })
   );
 }
 
-// â”€â”€â”€ Currency Input â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Currency Input ────────────────────────────────────────────────────────
 
 function CurrencyInput({
   id,
@@ -160,7 +160,7 @@ function CurrencyInput({
   );
 }
 
-// â”€â”€â”€ Percent Input â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Percent Input ─────────────────────────────────────────────────────────
 
 function PercentInput({
   id,
@@ -203,7 +203,7 @@ function PercentInput({
   );
 }
 
-// â”€â”€â”€ Quota Progress Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Quota Progress Bar ────────────────────────────────────────────────────
 
 function QuotaProgressBar({ attainment }: { attainment: number }) {
   const clamped = Math.min(Math.max(attainment, 0), 200);
@@ -244,7 +244,7 @@ function QuotaProgressBar({ attainment }: { attainment: number }) {
       </div>
       <div className="flex justify-between items-center">
         <span className="text-xs text-muted-foreground">
-          {attainment < 100 ? 'Below quota' : attainment === 100 ? 'At quota' : 'Above quota â€” accelerator active!'}
+          {attainment < 100 ? 'Below quota' : attainment === 100 ? 'At quota' : 'Above quota — accelerator active!'}
         </span>
         {attainment > 100 && (
           <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30 text-xs">
@@ -257,7 +257,7 @@ function QuotaProgressBar({ attainment }: { attainment: number }) {
   );
 }
 
-// â”€â”€â”€ Insight Box â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Insight Box ───────────────────────────────────────────────────────────
 
 function InsightBox({ children }: { children: React.ReactNode }) {
   return (
@@ -268,7 +268,7 @@ function InsightBox({ children }: { children: React.ReactNode }) {
   );
 }
 
-// â”€â”€â”€ Deductions Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Deductions Section ────────────────────────────────────────────────────
 
 function DeductionsSection({ deductions, setDeductions }: { deductions: Deductions; setDeductions: React.Dispatch<React.SetStateAction<Deductions>> }) {
   return (
@@ -330,11 +330,11 @@ function DeductionsSection({ deductions, setDeductions }: { deductions: Deductio
   );
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════════════════════
 // Main Component
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════════════════════
 
-// â”€â”€â”€ Custom Recharts Tooltip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Custom Recharts Tooltip ──────────────────────────────────────────────
 
 function CustomBarTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number }>; label?: string }) {
   if (!active || !payload?.length) return null;
@@ -347,27 +347,27 @@ function CustomBarTooltip({ active, payload, label }: { active?: boolean; payloa
 }
 
 export default function SalesCommissionCalculator() {
-  // â”€â”€â”€ Tab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── Tab ────────────────────────────────────────────────────────────────
   const [activeTab, setActiveTab] = useState<CalcMode>('simple');
 
-  // â”€â”€â”€ Simple Mode â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── Simple Mode ────────────────────────────────────────────────────────
   const [salesAmount, setSalesAmount] = useState('');
   const [simpleRate, setSimpleRate] = useState('');
   const [simpleBaseSalary, setSimpleBaseSalary] = useState('');
 
-  // â”€â”€â”€ Tiered Mode â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── Tiered Mode ────────────────────────────────────────────────────────
   const [tiers, setTiers] = useState<Tier[]>(defaultTiers());
   const [tieredSalesAmount, setTieredSalesAmount] = useState('');
   const [tieredBaseSalary, setTieredBaseSalary] = useState('');
 
-  // â”€â”€â”€ Quota Mode â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── Quota Mode ─────────────────────────────────────────────────────────
   const [quotaBase, setQuotaBase] = useState('');
   const [quotaRate, setQuotaRate] = useState('');
   const [salesQuota, setSalesQuota] = useState('');
   const [actualSales, setActualSales] = useState('');
   const [accelerator, setAccelerator] = useState('');
 
-  // â”€â”€â”€ Deductions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── Deductions ─────────────────────────────────────────────────────────
   const [deductions, setDeductions] = useState<Deductions>({
     enabled: false,
     brokerFees: '',
@@ -375,7 +375,7 @@ export default function SalesCommissionCalculator() {
     otherDeductions: '',
   });
 
-  // â”€â”€â”€ Comparison â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── Comparison ──────────────────────────────────────────────────────────
   const [compareA, setCompareA] = useState<CompareSnapshot | null>(null);
   const [compareB, setCompareB] = useState<CompareSnapshot | null>(null);
 
@@ -413,17 +413,17 @@ export default function SalesCommissionCalculator() {
     }
   };
 
-  // â”€â”€â”€ Deduction total â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── Deduction total ────────────────────────────────────────────────────
   const totalDeductions = useMemo(() => {
     if (!deductions.enabled) return 0;
     return parseNum(deductions.brokerFees) + parseNum(deductions.processingFees) + parseNum(deductions.otherDeductions);
   }, [deductions]);
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════════════════════════════
   // Calculations
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════════════════════════════
 
-  // â”€â”€â”€ Simple Results â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── Simple Results ──────────────────────────────────────────────────────
   const simpleResults = useMemo(() => {
     const sales = parseNum(salesAmount);
     const rate = parseNum(simpleRate);
@@ -437,7 +437,7 @@ export default function SalesCommissionCalculator() {
     return { commission, gross, net, totalComp, effectiveRate, base, hasInput };
   }, [salesAmount, simpleRate, simpleBaseSalary, totalDeductions]);
 
-  // â”€â”€â”€ Tiered Results â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── Tiered Results ─────────────────────────────────────────────────────
   const tieredResults = useMemo(() => {
     const sales = parseNum(tieredSalesAmount);
     const base = parseNum(tieredBaseSalary);
@@ -502,7 +502,7 @@ export default function SalesCommissionCalculator() {
     return { tierBreakdown, totalCommission, gross, net, totalComp, effectiveRate, base, hasInput, hasGaps };
   }, [tiers, tieredSalesAmount, tieredBaseSalary, totalDeductions]);
 
-  // â”€â”€â”€ Quota Results â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── Quota Results ──────────────────────────────────────────────────────
   const quotaResults = useMemo(() => {
     const base = parseNum(quotaBase);
     const rate = parseNum(quotaRate);
@@ -524,7 +524,7 @@ export default function SalesCommissionCalculator() {
     const gapToQuota = quota > actual ? quota - actual : 0;
 
     // Projected annual earnings: if at current pace, annualized
-    // (We don't know the period â€” just show as if this is the current period's earnings Ã— (12 / months))
+    // (We don't know the period — just show as if this is the current period's earnings × (12 / months))
     // Simple approach: assume current period is annual already, show totalComp as-is
     const projectedAnnual = totalComp; // Since quota/sales are typically annual
 
@@ -548,7 +548,7 @@ export default function SalesCommissionCalculator() {
     };
   }, [quotaBase, quotaRate, salesQuota, actualSales, accelerator, totalDeductions]);
 
-  // â”€â”€â”€ History â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── History ────────────────────────────────────────────────────
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ activeTab: string; salesAmount: string; simpleRate: string; tieredSalesAmount: string; quotaBase: string; salesQuota: string; actualSales: string }>('commission-calculator');
 
   const handleTryExample = useCallback(() => {
@@ -578,7 +578,7 @@ export default function SalesCommissionCalculator() {
     if (!r.hasInput) return;
     saveEntry(
       { activeTab, salesAmount, simpleRate, tieredSalesAmount, quotaBase, salesQuota, actualSales },
-      `${activeTab} mode â€” Net: ${formatCurrency(r.net)} | Total Comp: ${formatCurrency(r.totalComp)}`
+      `${activeTab} mode — Net: ${formatCurrency(r.net)} | Total Comp: ${formatCurrency(r.totalComp)}`
     );
   }, [activeTab, simpleResults, tieredResults, quotaResults, salesAmount, simpleRate, tieredSalesAmount, quotaBase, salesQuota, actualSales, saveEntry]);
 
@@ -621,9 +621,9 @@ export default function SalesCommissionCalculator() {
     []
   );
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════════════════════════════
   // Reset
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════════════════════════════
 
   const handleReset = useCallback(() => {
     if (activeTab === 'simple') {
@@ -644,15 +644,15 @@ export default function SalesCommissionCalculator() {
     setDeductions({ enabled: false, brokerFees: '', processingFees: '', otherDeductions: '' });
   }, [activeTab]);
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════════════════════════════
   // CSV Export
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════════════════════════════
 
   const downloadCSV = useCallback(() => {
     const rows: string[][] = [];
 
     if (activeTab === 'simple') {
-      rows.push(['Sales Commission Calculator â€” Simple Mode']);
+      rows.push(['Sales Commission Calculator — Simple Mode']);
       rows.push([]);
       rows.push(['Field', 'Value']);
       rows.push(['Sales Amount', salesAmount]);
@@ -667,7 +667,7 @@ export default function SalesCommissionCalculator() {
       rows.push(['Total Compensation', simpleResults.totalComp.toFixed(2)]);
       rows.push(['Effective Commission Rate', `${simpleResults.effectiveRate.toFixed(2)}%`]);
     } else if (activeTab === 'tiered') {
-      rows.push(['Sales Commission Calculator â€” Tiered Mode']);
+      rows.push(['Sales Commission Calculator — Tiered Mode']);
       rows.push([]);
       rows.push(['Tier', 'From ($)', 'To ($)', 'Rate (%)', 'Sales in Range ($)', 'Commission ($)']);
       tieredResults.tierBreakdown.forEach((t) => {
@@ -688,7 +688,7 @@ export default function SalesCommissionCalculator() {
       rows.push(['Total Compensation', tieredResults.totalComp.toFixed(2)]);
       rows.push(['Effective Rate', `${tieredResults.effectiveRate.toFixed(2)}%`]);
     } else {
-      rows.push(['Sales Commission Calculator â€” Quota Attainment Mode']);
+      rows.push(['Sales Commission Calculator — Quota Attainment Mode']);
       rows.push([]);
       rows.push(['Field', 'Value']);
       rows.push(['Base Salary', quotaBase || '0']);
@@ -733,9 +733,9 @@ export default function SalesCommissionCalculator() {
     totalDeductions,
   ]);
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════════════════════════════
   // Current results shorthand
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════════════════════════════
 
   const currentResults = activeTab === 'simple'
     ? simpleResults
@@ -745,9 +745,9 @@ export default function SalesCommissionCalculator() {
 
   const hasAnyResult = 'hasInput' in currentResults && currentResults.hasInput;
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════════════════════════════
   // Chart data for tiered mode
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════════════════════════════
 
   const tierChartData = useMemo(() => {
     return tieredResults.tierBreakdown.map((t, i) => ({
@@ -768,15 +768,15 @@ export default function SalesCommissionCalculator() {
 
 
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════════════════════════════
   // SEO Content
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════════════════════════════
 
   return (
     <div className="w-full">
       <TooltipProvider>
         <div className="p-4 sm:p-6 space-y-6">
-          {/* â”€â”€â”€ Mode Tabs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+          {/* ─── Mode Tabs ───────────────────────────────────────────────── */}
           <Tabs
             value={activeTab}
             onValueChange={(val) => setActiveTab(val as CalcMode)}
@@ -801,9 +801,9 @@ export default function SalesCommissionCalculator() {
               <TryExample onClick={handleTryExample} />
             </div>
 
-            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+            {/* ═══════════════════════════════════════════════════════════════ */}
             {/* Simple Mode                                                     */}
-            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+            {/* ═══════════════════════════════════════════════════════════════ */}
             <TabsContent value="simple" className="mt-6 space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <CurrencyInput
@@ -817,7 +817,7 @@ export default function SalesCommissionCalculator() {
                 <PercentInput
                   id="simple-rate"
                   label="Commission Rate"
-                  tip="The percentage of each sale you earn as commission. Common rates range from 2â€“15% depending on your industry and role."
+                  tip="The percentage of each sale you earn as commission. Common rates range from 2–15% depending on your industry and role."
                   placeholder="e.g., 5.00"
                   value={simpleRate}
                   onChange={setSimpleRate}
@@ -834,9 +834,9 @@ export default function SalesCommissionCalculator() {
               </div>
             </TabsContent>
 
-            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+            {/* ═══════════════════════════════════════════════════════════════ */}
             {/* Tiered Mode                                                     */}
-            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+            {/* ═══════════════════════════════════════════════════════════════ */}
             <TabsContent value="tiered" className="mt-6 space-y-6">
               {/* Tiers */}
               <div className="space-y-3">
@@ -904,7 +904,7 @@ export default function SalesCommissionCalculator() {
                         </div>
                         <div className="space-y-1.5">
                           <Label className="text-xs text-muted-foreground">
-                            To ($){index === tiers.length - 1 && <span className="text-emerald-500 ml-1">â€” No limit</span>}
+                            To ($){index === tiers.length - 1 && <span className="text-emerald-500 ml-1">— No limit</span>}
                           </Label>
                           <div className="relative">
                             <span className="absolute left-2.5 top-[18px] -translate-y-1/2 text-muted-foreground text-xs">$</span>
@@ -970,9 +970,9 @@ export default function SalesCommissionCalculator() {
               </div>
             </TabsContent>
 
-            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+            {/* ═══════════════════════════════════════════════════════════════ */}
             {/* Quota Mode                                                      */}
-            {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+            {/* ═══════════════════════════════════════════════════════════════ */}
             <TabsContent value="quota" className="mt-6 space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <CurrencyInput
@@ -1019,10 +1019,10 @@ export default function SalesCommissionCalculator() {
             </TabsContent>
           </Tabs>
 
-          {/* â”€â”€â”€ Deductions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+          {/* ─── Deductions ──────────────────────────────────────────────── */}
           <DeductionsSection deductions={deductions} setDeductions={setDeductions} />
 
-          {/* â”€â”€â”€ Action Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+          {/* ─── Action Buttons ──────────────────────────────────────────── */}
           <div className="flex flex-col sm:flex-row gap-3">
             <Button
               onClick={handleReset}
@@ -1043,9 +1043,9 @@ export default function SalesCommissionCalculator() {
             </Button>
           </div>
 
-          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+          {/* ═══════════════════════════════════════════════════════════════ */}
           {/* Results                                                         */}
-          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+          {/* ═══════════════════════════════════════════════════════════════ */}
           <AnimatePresence mode="wait">
             {hasAnyResult && (
               <motion.div
@@ -1057,7 +1057,7 @@ export default function SalesCommissionCalculator() {
                 className="result-display" aria-live="polite"
               >
                 <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 sm:p-6 space-y-6">
-                  {/* â”€â”€â”€ Main Result â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+                  {/* ─── Main Result ────────────────────────────────────── */}
                   <div className="text-center space-y-1">
                     <p className="text-sm text-muted-foreground font-medium">
                       {activeTab === 'quota' ? 'Total Annual Compensation' : 'Net Commission'}
@@ -1078,12 +1078,12 @@ export default function SalesCommissionCalculator() {
                               ? tieredResults.gross
                               : quotaResults.gross
                         )}</span>{' '}
-                        â†’ Net after {formatCurrency(totalDeductions)} deductions
+                        → Net after {formatCurrency(totalDeductions)} deductions
                       </p>
                     )}
                   </div>
 
-                  {/* â”€â”€â”€ Metric Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+                  {/* ─── Metric Cards ───────────────────────────────────── */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {/* Commission */}
                     <motion.div
@@ -1200,11 +1200,11 @@ export default function SalesCommissionCalculator() {
                     </motion.div>
                   </div>
 
-                  {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+                  {/* ═══════════════════════════════════════════════════════ */}
                   {/* Mode-specific results                                    */}
-                  {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+                  {/* ═══════════════════════════════════════════════════════ */}
 
-                  {/* â”€â”€â”€ Tiered: Per-tier table + chart â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+                  {/* ─── Tiered: Per-tier table + chart ──────────────────── */}
                   {activeTab === 'tiered' && tieredResults.hasInput && (
                     <>
                       <Separator className="opacity-50" />
@@ -1230,7 +1230,7 @@ export default function SalesCommissionCalculator() {
                                 <tr key={i} className={t.commission > 0 ? 'text-emerald-600' : 'text-muted-foreground'}>
                                   <td className="px-3 sm:px-4 py-2.5 font-medium">{t.tierLabel}</td>
                                   <td className="text-right px-3 sm:px-4 py-2.5">
-                                    {formatCurrency(t.from)} â€“ {t.to === Infinity ? 'âˆž' : formatCurrency(t.to)}
+                                    {formatCurrency(t.from)} – {t.to === Infinity ? '∞' : formatCurrency(t.to)}
                                   </td>
                                   <td className="text-right px-3 sm:px-4 py-2.5">{t.rate.toFixed(1)}%</td>
                                   <td className="text-right px-3 sm:px-4 py-2.5">{formatCurrency(t.salesInRange)}</td>
@@ -1270,7 +1270,7 @@ export default function SalesCommissionCalculator() {
                     </>
                   )}
 
-                  {/* â”€â”€â”€ Quota: Attainment bar + breakdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+                  {/* ─── Quota: Attainment bar + breakdown ──────────────── */}
                   {activeTab === 'quota' && quotaResults.hasInput && (
                     <>
                       <Separator className="opacity-50" />
@@ -1327,7 +1327,7 @@ export default function SalesCommissionCalculator() {
                                 {deductions.enabled && totalDeductions > 0 && (
                                   <tr className="text-red-500">
                                     <td className="px-4 py-2.5 font-medium">Deductions</td>
-                                    <td className="text-right px-4 py-2.5 font-medium">âˆ’{formatCurrency(totalDeductions)}</td>
+                                    <td className="text-right px-4 py-2.5 font-medium">−{formatCurrency(totalDeductions)}</td>
                                   </tr>
                                 )}
                                 <tr className="font-bold bg-muted/20">
@@ -1368,7 +1368,7 @@ export default function SalesCommissionCalculator() {
                     </>
                   )}
 
-                  {/* â”€â”€â”€ Deduction Pie Chart â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+                  {/* ─── Deduction Pie Chart ─────────────────────────────── */}
                   {deductionPieData && (
                     <div className="rounded-xl bg-background border border-border/50 p-4">
                       <p className="text-sm font-semibold mb-3">Gross vs Net Commission</p>
@@ -1395,18 +1395,18 @@ export default function SalesCommissionCalculator() {
                     </div>
                   )}
 
-                  {/* â”€â”€â”€ Insight Callout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+                  {/* ─── Insight Callout ─────────────────────────────────── */}
                   {activeTab === 'simple' && simpleResults.hasInput && (
                     <InsightBox>
                       {simpleResults.net > 0 && simpleResults.totalComp > 0
-                        ? `Your net commission of ${formatCurrency(simpleResults.net)} represents ${formatPercent(simpleResults.effectiveRate)} of total compensation. ${simpleResults.effectiveRate > 50 ? 'A significant portion of your income is performance-based â€” strong sales directly boost earnings.' : simpleResults.base > 0 ? 'Your base salary provides a solid foundation, with commission as variable upside.' : 'Consider negotiating a base salary for more income stability alongside your commission.'}`
+                        ? `Your net commission of ${formatCurrency(simpleResults.net)} represents ${formatPercent(simpleResults.effectiveRate)} of total compensation. ${simpleResults.effectiveRate > 50 ? 'A significant portion of your income is performance-based — strong sales directly boost earnings.' : simpleResults.base > 0 ? 'Your base salary provides a solid foundation, with commission as variable upside.' : 'Consider negotiating a base salary for more income stability alongside your commission.'}`
                         : 'Enter your sales amount and commission rate to see your earnings breakdown and insights.'}
                     </InsightBox>
                   )}
 
                   {activeTab === 'tiered' && tieredResults.hasInput && tieredResults.totalCommission > 0 && (
                     <InsightBox>
-                      With a tiered structure, your effective commission rate is {formatPercent(tieredResults.effectiveRate)} across {formatCurrency(parseNum(tieredSalesAmount))} in total sales. {tieredResults.effectiveRate > parseNum(tiers[tiers.length - 1]?.rate || '0') ? 'Your effective rate exceeds the highest tier rate â€” this means most of your sales fall in higher tiers.' : 'As you sell more and enter higher tiers, your effective rate will increase.'}
+                      With a tiered structure, your effective commission rate is {formatPercent(tieredResults.effectiveRate)} across {formatCurrency(parseNum(tieredSalesAmount))} in total sales. {tieredResults.effectiveRate > parseNum(tiers[tiers.length - 1]?.rate || '0') ? 'Your effective rate exceeds the highest tier rate — this means most of your sales fall in higher tiers.' : 'As you sell more and enter higher tiers, your effective rate will increase.'}
                     </InsightBox>
                   )}
 
@@ -1415,12 +1415,12 @@ export default function SalesCommissionCalculator() {
                       {quotaResults.attainment >= 100
                         ? `At ${quotaResults.attainment.toFixed(1)}% attainment, you're earning above-quota commissions. Your total comp of ${formatCurrency(quotaResults.totalComp)} includes ${formatCurrency(quotaResults.acceleratedCommission)} in accelerated earnings.`
                         : quotaResults.attainment >= 75
-                          ? `You're at ${quotaResults.attainment.toFixed(1)}% of quota â€” just ${formatCurrency(quotaResults.gapToQuota)} away from unlocking your accelerator. Pushing to 100% could significantly boost your total comp.`
+                          ? `You're at ${quotaResults.attainment.toFixed(1)}% of quota — just ${formatCurrency(quotaResults.gapToQuota)} away from unlocking your accelerator. Pushing to 100% could significantly boost your total comp.`
                           : `At ${quotaResults.attainment.toFixed(1)}% quota attainment, focus on closing deals to reach your ${formatCurrency(parseNum(salesQuota))} target and unlock your commission accelerator for earnings above quota.`}
                     </InsightBox>
                   )}
 
-                  {/* â”€â”€â”€ Comparison Save Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+                  {/* ─── Comparison Save Buttons ─────────────────────────── */}
                   <div className="flex flex-wrap gap-2 mt-6 pt-6 border-t border-border/40">
                     <Button
                       variant="outline"
@@ -1434,7 +1434,7 @@ export default function SalesCommissionCalculator() {
                       }}
                       className="text-xs h-8 gap-1.5 border-primary/30 bg-primary/5 text-primary hover:bg-primary/10 transition-colors"
                     >
-                      {compareA ? 'â†º Replace Scenario A' : '+ Save as Scenario A'}
+                      {compareA ? '↺ Replace Scenario A' : '+ Save as Scenario A'}
                     </Button>
                     <Button
                       variant="outline"
@@ -1448,7 +1448,7 @@ export default function SalesCommissionCalculator() {
                       }}
                       className="text-xs h-8 gap-1.5 border-amber-500/30 bg-amber-500/5 text-amber-600 hover:bg-amber-500/10 transition-colors"
                     >
-                      {compareB ? 'â†º Replace Scenario B' : '+ Save as Scenario B'}
+                      {compareB ? '↺ Replace Scenario B' : '+ Save as Scenario B'}
                     </Button>
                   </div>
                 </div>
@@ -1456,7 +1456,7 @@ export default function SalesCommissionCalculator() {
             )}
           </AnimatePresence>
 
-          {/* â”€â”€â”€ Comparison Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+          {/* ─── Comparison Panel ────────────────────────────────────────── */}
           {compareA && compareB && (() => {
             const rows: CompareRow[] = [
               { label: 'Total Sales',        valueA: formatCurrency(compareA.result.totalSales),      valueB: formatCurrency(compareB.result.totalSales),      numA: compareA.result.totalSales,      numB: compareB.result.totalSales },

@@ -2,13 +2,11 @@ import Link from 'next/link';
 import { BookOpen, Calendar, User, ChevronRight } from 'lucide-react';
 import { getSortedPostsData } from '@/lib/blog';
 import { Badge } from '@/components/ui/badge';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-
-import { SITE_URL } from '@/lib/calculator-meta';
+import AppShell from '@/components/layout/AppShell';
+import { SITE_URL, SITE_NAME } from '@/lib/calculator-meta';
 
 export const metadata = {
-  title: 'Blog - QuickBizCalc HR & Business Insights',
+  title: `Blog & Business Insights | ${SITE_NAME}`,
   description: 'Expert advice, guides, and insights on HR, payroll, taxation, and business management to help you grow your business.',
   alternates: {
     canonical: `${SITE_URL}/blog`,
@@ -19,14 +17,13 @@ export default async function BlogPage() {
   const posts = await getSortedPostsData();
 
   return (
-    <div className="min-h-screen flex flex-col mesh-gradient">
-      <Header />
-      <main className="flex-1 container mx-auto px-4 py-12 sm:py-20">
+    <AppShell>
+      <div className="container mx-auto px-4 py-12 sm:py-20">
         <div className="max-w-5xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-16 space-y-4">
-            <Badge variant="outline" className="px-3 py-1 bg-emerald-500/10 border-emerald-500/30 text-emerald-600">
-              Latest Insights
+            <Badge variant="outline" className="px-3 py-1 bg-emerald-500/10 border-emerald-500/30 text-emerald-600 font-medium">
+              Latest Insights &amp; Guides
             </Badge>
             <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-foreground">
               QuickBizCalc <span className="text-emerald-600">Insights</span>
@@ -87,8 +84,7 @@ export default async function BlogPage() {
             </div>
           )}
         </div>
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </AppShell>
   );
 }
