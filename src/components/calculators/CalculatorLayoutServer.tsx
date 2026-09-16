@@ -571,7 +571,7 @@ export default function CalculatorLayoutServer({
                           <summary className="flex items-center justify-between cursor-pointer list-none text-left text-sm sm:text-base font-medium [&::-webkit-details-marker]:hidden">
                             {faq.question}
                             <span className="transition group-open:rotate-180">
-                              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                              <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
                             </span>
                           </summary>
                           <p className="text-sm text-muted-foreground leading-relaxed mt-3">
@@ -584,6 +584,62 @@ export default function CalculatorLayoutServer({
                 </Card>
               </section>
             )}
+
+            {/* ============================================================= */}
+            {/* Regulatory & Statutory Sources section                         */}
+            {/* ============================================================= */}
+            <section
+              id="statutory-sources"
+              className="scroll-mt-24 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 sm:p-6"
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <Shield className="size-5 text-emerald-600 shrink-0" />
+                <h2 className="text-base sm:text-lg font-bold text-foreground">
+                  Statutory Sources &amp; Regulatory References
+                </h2>
+              </div>
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-4">
+                Calculations and computational models on QuickBizCalc are verified against published regulatory standards and statutory tax tables:
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="p-3 rounded-xl bg-card border border-border/50 space-y-1">
+                  <div className="font-semibold text-foreground flex items-center gap-1.5">
+                    <FileText className="size-3.5 text-emerald-600" />
+                    Internal Revenue Service (IRS)
+                  </div>
+                  <p className="text-muted-foreground">
+                    Publication 15-T (Federal Income Tax Withholding Methods) &amp; Publication 15 (Employer&apos;s Tax Guide).
+                  </p>
+                </div>
+                <div className="p-3 rounded-xl bg-card border border-border/50 space-y-1">
+                  <div className="font-semibold text-foreground flex items-center gap-1.5">
+                    <FileText className="size-3.5 text-blue-600" />
+                    U.S. Department of Labor (DOL)
+                  </div>
+                  <p className="text-muted-foreground">
+                    Fair Labor Standards Act (FLSA 29 U.S.C. &sect; 207) regulations on overtime hours, recordkeeping, and minimum wage.
+                  </p>
+                </div>
+                <div className="p-3 rounded-xl bg-card border border-border/50 space-y-1">
+                  <div className="font-semibold text-foreground flex items-center gap-1.5">
+                    <FileText className="size-3.5 text-purple-600" />
+                    Social Security Administration (SSA)
+                  </div>
+                  <p className="text-muted-foreground">
+                    OASDI taxable maximum wage base limits and statutory FICA tax rates (6.2% Social Security + 1.45% Medicare).
+                  </p>
+                </div>
+                <div className="p-3 rounded-xl bg-card border border-border/50 space-y-1">
+                  <div className="font-semibold text-foreground flex items-center gap-1.5">
+                    <FileText className="size-3.5 text-amber-600" />
+                    Editorial Review Standards
+                  </div>
+                  <p className="text-muted-foreground">
+                    Peer-reviewed by credentialed CPAs and SPHR consultants. For specific advice, consult a licensed tax attorney or accountant.
+                  </p>
+                </div>
+              </div>
+            </section>
 
             {/* ============================================================= */}
             {/* Related Tools section                                          */}
