@@ -9,6 +9,8 @@ import {
   AlertCircle,
   BarChart as BarChartIcon,
   Copy,
+  Check,
+  Printer,
 } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
 import { Input } from '@/components/ui/input';
@@ -31,7 +33,7 @@ import { parseTimeToMinutes, TIME_FORMAT_EXAMPLES } from '@/lib/time-utils';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
 
-type LunchMode = 'auto' | 'manual';
+type LunchMode = 'manual' | 'auto';
 
 interface DayEntry {
   enabled: boolean;
@@ -108,6 +110,31 @@ export default function TimeCardLunchCalculator() {
   const [overtimeThreshold, setOvertimeThreshold] = useState('40');
   const [result, setResult] = useState<TimeCardResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopySummary = () => {
+    if (!result) return;
+    const dailyLines = result.days
+      .filter((d) => d.enabled)
+      .map((d) => `  • ${d.day}: ${d.totalHours.toFixed(2)} hrs (In: ${d.clockIn}, Out: ${d.clockOut})`)
+      .join('\n');
+
+    const summary = [
+      '--- Weekly Time Card Summary with Lunch (QuickBizCalc) ---',
+      `Total Hours Worked: ${result.totalHours.toFixed(2)} hrs`,
+      `Regular Hours: ${result.totalRegularHours.toFixed(2)} hrs`,
+      result.totalOvertimeHours > 0 ? `Overtime Hours: ${result.totalOvertimeHours.toFixed(2)} hrs` : null,
+      'Daily Breakdown:',
+      dailyLines,
+      'Calculated at: https://www.quickbizcalc.com/calculators/time-card-calculator-with-lunch',
+    ].filter(Boolean).join('\n');
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(summary);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   const updateDay = (idx: number, field: keyof DayEntry, value: string | boolean) => {
     setDays((prev) =>
@@ -315,7 +342,7 @@ export default function TimeCardLunchCalculator() {
 
   return (
     <div className="w-full">
-      <div className="p-4 sm:p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-6 calculator-form">
         {/* Lunch Mode */}
         <div className="space-y-2">
           <Label className="text-sm font-medium">
@@ -626,7 +653,7 @@ export default function TimeCardLunchCalculator() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="mt-8 px-4 sm:px-6"
+          className="mt-8 px-4 sm:px-6 result-display"
           aria-live="polite"
         >
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
@@ -653,6 +680,33 @@ export default function TimeCardLunchCalculator() {
                     {result.totalOvertimeHours.toFixed(2)} overtime
                   </Badge>
                 )}
+              </div>
+
+              <div className="flex items-center justify-center gap-2 pt-2 flex-wrap">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCopySummary}
+                  className="h-7 text-[11px] px-2.5 border-emerald-500/30 bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="h-3 w-3 mr-1" /> Copied Timesheet
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3 w-3 mr-1" /> Copy Summary
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.print()}
+                  className="h-7 text-[11px] px-2.5 border-border hover:bg-muted text-muted-foreground"
+                >
+                  <Printer className="h-3 w-3 mr-1" /> Print Timesheet
+                </Button>
               </div>
             </div>
 

@@ -75,6 +75,7 @@ export type CalculatorSlug =
 export interface CalculatorMeta {
   slug: CalculatorSlug;
   title: string;
+  metaTitle?: string; // High-CTR custom <title> for SERP
   shortDescription: string; // Used on hub cards
   metaDescription: string; // Used in <meta name="description">
   keywords: string[]; // Target keywords for SEO
@@ -255,10 +256,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'overtime-calculator',
     title: 'Overtime Calculator',
+    metaTitle: 'Overtime Calculator (2026) — Time and a Half & Double Time Pay Rates',
     shortDescription:
       'Calculate overtime pay with standard time-and-a-half and double-time rates, weekly and daily tracking with state-specific rules.',
     metaDescription:
-      'Free overtime calculator. Calculate overtime pay at 1.5x and 2x rates, track weekly and daily hours, and see your total earnings with overtime included. Covers federal FLSA rules and common state overtime laws.',
+      'Calculate overtime pay at 1.5x and 2.0x rates. Check weekly overtime thresholds, FLSA rules, and effective hourly take-home pay.',
     keywords: [
       'overtime calculator',
       'overtime calculator',
@@ -284,10 +286,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'payroll-calculator',
     title: 'Payroll & Paycheck Calculator',
+    metaTitle: 'Payroll Calculator (2026) — Salary & Hourly Take-Home Pay Estimator',
     shortDescription:
       'Estimate your take-home pay after federal and state taxes, deductions, and benefits contributions.',
     metaDescription:
-      'Free payroll and paycheck calculator. Estimate your take-home pay after federal tax, state tax, Social Security, Medicare, and custom deductions. See your net pay breakdown for salary and hourly employees.',
+      'Free payroll calculator for employees and employers. Estimate federal, state, and FICA tax withholdings, pre-tax deductions, and net take-home pay per paycheck.',
     keywords: [
       'payroll calculator',
       'online payroll calculator',
@@ -297,10 +300,6 @@ export const calculators: CalculatorMeta[] = [
       'take home pay calculator',
       'net pay calculator',
       'salary after taxes calculator',
-      'paycheck after tax calculator',
-      'federal tax withholding calculator',
-      'state tax calculator paycheck',
-      'payroll deductions calculator',
       'employee payroll calculator',
       'biweekly paycheck calculator',
       'monthly take home pay calculator',
@@ -349,10 +348,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'tax-bracket-calculator',
     title: 'Tax Bracket Calculator',
+    metaTitle: 'Tax Bracket Calculator (2026) — Federal Income Tax & Effective Rate',
     shortDescription:
       'Find your federal tax bracket, effective tax rate, and marginal rate with a detailed breakdown of taxes owed by bracket.',
     metaDescription:
-      'Free tax bracket calculator. Find your federal income tax bracket, calculate effective and marginal tax rates, and see exactly how much tax you owe in each bracket. Covers 2025 federal tax brackets for all filing statuses.',
+      'Find your 2026 federal income tax bracket and effective tax rate. See tax breakdown across single, married, and head of household filing statuses.',
     keywords: [
       'tax bracket calculator',
       'tax bracket calculator',
@@ -423,10 +423,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'time-card-calculator',
     title: 'Time Card & Time-to-Decimal Calculator',
+    metaTitle: 'Time Card Calculator (2026) — Weekly Hours & Overtime Timesheet',
     shortDescription:
       'Calculate total work hours from clock-in/out times, deduct breaks, and convert to decimal format for payroll.',
     metaDescription:
-      'Free time card calculator. Convert clock-in and clock-out times to total hours, deduct breaks, and get decimal-hour output for payroll processing. Supports multiple time entries and AM/PM format.',
+      'Free weekly time card calculator. Enter clock in and out times to calculate daily and weekly hours, overtime, and total wages. Export and print clean timesheets.',
     keywords: [
       'time card calculator',
       'time card calculator',
@@ -455,10 +456,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'business-day-calculator',
     title: 'Business Day Calculator',
+    metaTitle: 'Business Day Calculator (2026) — Working Days & Bank Holiday Counter',
     shortDescription:
       'Calculate business days between two dates, or add/subtract business days from a start date, excluding weekends and holidays.',
     metaDescription:
-      'Free business day calculator. Find the number of business days between two dates, or add/subtract working days from a start date. Excludes weekends and optionally excludes public holidays. Essential for project deadlines and HR planning.',
+      'Calculate the exact number of business days between two dates or add working days to find future dates excluding weekends and US federal holidays.',
     keywords: [
       'business day calculator',
       'business day calculator',
@@ -678,10 +680,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'time-to-decimal-calculator',
     title: 'Decimal & Fraction Converter',
+    metaTitle: 'Time to Decimal Calculator — Convert Hours & Minutes for Payroll',
     shortDescription:
       'Convert between decimals, fractions, percentages, and time formats instantly. Essential for payroll and math calculations.',
     metaDescription:
-      'Free decimal and fraction converter. Convert decimals to fractions, fractions to decimals, decimals to percentages, and time to decimal hours. Perfect for payroll processing, grade calculations, and everyday math conversions.',
+      'Quickly convert work hours and minutes to decimal hours for payroll, timesheets, and client billing. Includes 7-minute, 6-minute, and 15-minute rounding rules.',
     keywords: [
       'time to decimal calculator',
       'decimal calculator',
@@ -706,10 +709,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'wages-calculator',
     title: 'Wages Calculator',
+    metaTitle: 'Wages Calculator (2026) — Calculate Gross Pay & Overtime Earnings',
     shortDescription:
       'Calculate gross and net wages from hours worked and hourly rate, including overtime and multiple pay rates.',
     metaDescription:
-      'Free wages calculator. Compute your gross and net wages from hours worked and pay rate. Includes regular hours, overtime, double-time calculations, and supports multiple hourly rates. See weekly, bi-weekly, and annual wage breakdowns.',
+      'Free wage calculator to compute gross wages from hours worked, hourly rates, and overtime premiums. Breakdown by weekly, bi-weekly, and monthly earnings.',
     keywords: [
       'wages calculator',
       'hourly wage calculator',
@@ -791,10 +795,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'time-card-calculator-with-lunch',
     title: 'Time Card Calculator with Lunch',
+    metaTitle: 'Time Card Calculator with Lunch (2026) — Free Hours & Overtime Tracker',
     shortDescription:
       'Calculate total work hours with automatic lunch break deduction. Supports multiple in/out entries per day and weekly totals.',
     metaDescription:
-      'Free time card calculator with lunch break deduction. Track clock-in and clock-out times with automatic lunch break subtraction. Supports multiple daily entries, custom break durations, and generates weekly hour totals in decimal format for payroll.',
+      'Calculate total work hours with automatic lunch break deductions. Accurately tracks decimal hours, gross wages, and overtime pay with instant printable timesheet summaries.',
     keywords: [
       'time card calculator with lunch',
       'time card calculator with lunch',
@@ -818,10 +823,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'hourly-paycheck-calculator',
     title: 'Hourly Paycheck Calculator',
+    metaTitle: 'Hourly Paycheck Calculator (2026) — Take-Home Pay with Taxes & Overtime',
     shortDescription:
       'Calculate your hourly paycheck after taxes and deductions. See net pay per hour, per week, and per year with full breakdown.',
     metaDescription:
-      'Free hourly paycheck calculator. Enter your hourly rate and hours worked to see your gross pay, federal and state tax withholdings, FICA deductions, and net take-home pay. View results per paycheck, per week, and per year.',
+      'Calculate your exact hourly paycheck and take-home pay after federal, state, and FICA taxes. Free calculator with overtime, deductions, and annual wage conversions.',
     keywords: [
       'hourly paycheck calculator',
       'adp hourly calculator',

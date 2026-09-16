@@ -1,0 +1,21 @@
+▲ Next.js 16.3.1 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.100:3000
+- Environments: .env
+✓ Ready in 712ms
+✓ Running next.config.ts took 134ms
+- Experiments (use with caution):
+  · optimizePackageImports
+
+○ Compiling / ...
+ GET / 200 in 7.6s (next.js: 7.0s, application-code: 658ms)
+ GET /blog 200 in 986ms (next.js: 786ms, application-code: 200ms)
+ GET /blog/4-day-work-week-pros-cons 200 in 1057ms (next.js: 462ms, generate-params: 516ms, application-code: 79ms)
+ GET /blog 200 in 121ms (next.js: 11ms, application-code: 110ms)
+ GET /blog/flsa-overtime-rules-hourly-vs-salary 200 in 75ms (next.js: 8ms, generate-params: 7ms, application-code: 60ms)
+ GET /blog/4-day-work-week-pros-cons 200 in 65ms (next.js: 4ms, generate-params: 7ms, application-code: 54ms)
+ GET / 200 in 26ms (next.js: 9ms, application-code: 17ms)
+ GET /calculators/hourly-paycheck-calculator 200 in 3.0s (next.js: 2.4s, generate-params: 478ms, application-code: 125ms)
+[browser] Invalid DOM property `shape-rendering`. Did you mean `shapeRendering`? 
+ GET /calculators/hourly-paycheck-calculator 200 in 127ms (next.js: 18ms, generate-params: 8ms, application-code: 102ms)
+ GET /calculators/hourly-paycheck-calculator 200 in 579ms (next.js: 5ms, generate-params: 9ms, application-code: 564ms)

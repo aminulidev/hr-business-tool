@@ -107,8 +107,9 @@ export function generateMetadata({
       return { title: 'Calculator Not Found' };
     }
 
-    const title = `${calc.title} — Free Online Calculator`;
-    const fullTitle = `${title} | ${SITE_NAME}`;
+    const currentYear = new Date().getFullYear();
+    const title = calc.metaTitle || `${calc.title} (${currentYear}) — Free Online Calculator`;
+    const fullTitle = calc.metaTitle ? `${calc.metaTitle} | ${SITE_NAME}` : `${title} | ${SITE_NAME}`;
     const url = `${SITE_URL}${calc.path}`;
 
     return {
@@ -203,6 +204,7 @@ export default async function CalculatorPage({
             ...(seoData.commissionStructures?.length > 0 ? [{ id: 'commission-structures', label: 'Common Commission Structures' }] : []),
             ...(seoData.workedExamples?.length > 0 ? [{ id: 'worked-examples', label: 'Worked Examples' }] : []),
             ...(seoData.faqs?.length > 0 ? [{ id: 'frequently-asked-questions', label: 'FAQs' }] : []),
+            { id: 'statutory-sources', label: 'Statutory Sources' },
             ...(seoData.relatedTools?.length > 0 ? [{ id: 'related-calculators', label: 'Related Calculators' }] : []),
           ]}
           howToSteps={seoData.howToSteps}

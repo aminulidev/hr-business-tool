@@ -10,6 +10,9 @@ import {
   Percent,
   Info,
   PieChart as PieChartIcon,
+  Copy,
+  Check,
+  Printer,
 } from 'lucide-react';
 import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
 import { Input } from '@/components/ui/input';
@@ -102,6 +105,31 @@ export default function HourlyPaycheckCalculator() {
   // Comparison State
   const [compareA, setCompareA] = useState<HourlySnapshot | null>(null);
   const [compareB, setCompareB] = useState<HourlySnapshot | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopySummary = () => {
+    if (!result) return;
+    const summary = [
+      '--- Hourly Paycheck Summary (QuickBizCalc) ---',
+      `Pay Frequency: ${FREQ_LABELS[result.payFrequency]}`,
+      `Hourly Rate: $${result.hourlyRate.toFixed(2)}/hr (${result.regularHours} reg hrs + ${result.overtimeHours} OT hrs)`,
+      `Gross Pay / Period: $${result.grossPerPeriod.toFixed(2)}`,
+      `Federal Tax: -$${result.federalTax.toFixed(2)}`,
+      `State Tax: -$${result.stateTax.toFixed(2)}`,
+      `FICA (SS + Medicare): -$${result.fica.toFixed(2)}`,
+      result.otherDeductions > 0 ? `Other Deductions: -$${result.otherDeductions.toFixed(2)}` : null,
+      `Net Take-Home Pay / Period: $${result.netPayPerPeriod.toFixed(2)}`,
+      `Annual Projected Take-Home: $${result.netPayPerYear.toFixed(2)}`,
+      `Effective Hourly Rate: $${result.effectiveHourlyRate.toFixed(2)}/hr`,
+      'Calculated at: https://www.quickbizcalc.com/calculators/hourly-paycheck-calculator',
+    ].filter(Boolean).join('\n');
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(summary);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ hourlyRate: string; regularHours: string; overtimeHours: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string }>('hourly-paycheck-calculator');
 
@@ -228,7 +256,7 @@ export default function HourlyPaycheckCalculator() {
 
   return (
     <div className="w-full">
-      <div className="p-4 sm:p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-6 calculator-form">
         {/* Hourly Rate */}
         <div className="space-y-2">
           <Label htmlFor="hourlyRate" className="text-sm font-medium">
@@ -443,7 +471,7 @@ export default function HourlyPaycheckCalculator() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="mt-8 px-4 sm:px-6"
+          className="mt-8 px-4 sm:px-6 result-display"
           aria-live="polite"
         >
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
@@ -470,7 +498,7 @@ export default function HourlyPaycheckCalculator() {
                 </Badge>
               </div>
 
-              <div className="flex items-center justify-center gap-2 pt-2">
+              <div className="flex items-center justify-center gap-2 pt-2 flex-wrap">
                 <Button
                   variant="outline"
                   size="sm"
@@ -502,6 +530,31 @@ export default function HourlyPaycheckCalculator() {
                   className="h-7 text-[10px] px-2 border-amber-500/30 bg-amber-500/5 text-amber-600"
                 >
                   {compareB ? '↺ Set B' : '+ Save B'}
+                </Button>
+                <span className="text-muted-foreground/40 hidden sm:inline">•</span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCopySummary}
+                  className="h-7 text-[11px] px-2.5 border-emerald-500/30 bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="h-3 w-3 mr-1" /> Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3 w-3 mr-1" /> Copy Summary
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.print()}
+                  className="h-7 text-[11px] px-2.5 border-border hover:bg-muted text-muted-foreground"
+                >
+                  <Printer className="h-3 w-3 mr-1" /> Print
                 </Button>
               </div>
             </div>
