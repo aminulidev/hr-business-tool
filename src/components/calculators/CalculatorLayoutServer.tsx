@@ -12,6 +12,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import ResultActions from './ResultActions';
+import FeedbackWidget from './FeedbackWidget';
 import {
   DollarSign,
   Percent,
@@ -684,6 +685,15 @@ export default function CalculatorLayoutServer({
                 </div>
               </section>
             )}
+
+            {/* ============================================================= */}
+            {/* Feedback widget — "Was this helpful?"                        */}
+            {/* ============================================================= */}
+            <section className="scroll-mt-24 mt-2">
+              <div className="glass rounded-2xl p-5 sm:p-6 border border-border/60">
+                <FeedbackWidget />
+              </div>
+            </section>
           </div>
 
           {/* ---------- Right sidebar: ads + TOC ---------- */}

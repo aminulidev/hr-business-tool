@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
@@ -109,17 +109,19 @@ export default function SeverancePayCalculator() {
             {capNum < Infinity && rawWeeks > capNum && <span className="text-amber-600"> (capped from {rawWeeks} weeks)</span>}
           </motion.div>
         )}
-
-        <div className="flex gap-3">
-          
-          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
-            <TryExample onClick={handleTryExample} />
-            <Button onClick={handleCalculate} disabled={salaryNum <= 0 || yearsNum <= 0}
-            className="bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 text-white shadow-lg shadow-indigo-500/25 flex-1 sm:flex-none">
-            Calculate Severance Pay
-          </Button>
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 mt-6">
+          <TryExample onClick={handleTryExample} />
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={handleCalculate}
+              disabled={salaryNum <= 0 || yearsNum <= 0}
+              className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
+              size="lg"
+            >
+              Calculate Severance Pay
+            </Button>
+            <Button variant="outline" size="lg" onClick={handleReset} className="shrink-0">Reset</Button>
           </div>
-          <Button variant="outline" onClick={handleReset}>Reset</Button>
         </div>
 
         {calculated && (
