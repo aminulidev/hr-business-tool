@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import TryExample from './TryExample';
@@ -456,27 +456,26 @@ setEntries([{ id: 1, hourlyRate: '20', regularHours: '40', overtimeHours: '5', d
         )}
 
         {/* Actions */}
-        <div className="flex gap-3">
-          
-          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
-            <TryExample onClick={handleTryExample} />
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 mt-6">
+          <TryExample onClick={handleTryExample} />
+          <div className="flex items-center gap-3">
             <Button
-            onClick={handleCalculate}
-            className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
-            size="lg"
-          >
-            <Banknote className="h-4 w-4 mr-2" />
-            Calculate Wages
-          </Button>
+              onClick={handleCalculate}
+              className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
+              size="lg"
+            >
+              <Banknote className="h-4 w-4 mr-2" />
+              Calculate Wages
+            </Button>
+            <Button
+              onClick={handleReset}
+              variant="outline"
+              size="lg"
+              className="shrink-0"
+            >
+              Reset
+            </Button>
           </div>
-          <Button
-            onClick={handleReset}
-            variant="outline"
-            size="lg"
-            className="shrink-0"
-          >
-            Reset
-          </Button>
         </div>
       </div>
 

@@ -1,9 +1,19 @@
-import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 import { CONTACT_EMAIL } from '@/lib/calculator-meta';
 
-// Initialize Resend with the API key from environment variables
-const resend = new Resend(process.env.RESEND_API_KEY);
+// ------------------------------------------------------------------
+// Lazy-import Resend only when an API key is configured.
+// This avoids a hard crash during `next build` when the env var is
+// missing (the Resend SDK throws on instantiation without a key).
+// ------------------------------------------------------------------
+let resendInstance: any = null;
+async function getResend() {
+  if (resendInstance) return resendInstance;
+  if (!process.env.RESEND_API_KEY) return null;
+  const { Resend } = await import('resend');
+  resendInstance = new Resend(process.env.RESEND_API_KEY);
+  return resendInstance;
+}
 
 export async function POST(req: Request) {
   try {
@@ -17,16 +27,29 @@ export async function POST(req: Request) {
       );
     }
 
+    const resend = await getResend();
+
+    // No API key configured — accept the submission gracefully
+    // (log to server, return success so users are not blocked)
+    if (!resend) {
+      console.warn(
+        '[contact] RESEND_API_KEY not set — submission logged but not emailed:',
+        { name, email, subject, message }
+      );
+      return NextResponse.json({
+        success: true,
+        message: 'Submission received. RESEND_API_KEY not configured.',
+      });
+    }
+
     // Send the email
-    // NOTE: Using 'onboarding@resend.dev' as the 'from' address works for testing.
-    // To use your own domain, you must verify it in the Resend dashboard.
     const { data, error } = await resend.emails.send({
       from: 'QuickBizCalc <onboarding@resend.dev>',
-      to: CONTACT_EMAIL, // Updated to verified Resend email
+      to: CONTACT_EMAIL,
       subject: `[Contact Form] ${subject}`,
       replyTo: email,
       html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; rounded: 8px;">
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
           <h2 style="color: #059669; border-bottom: 2px solid #059669; padding-bottom: 10px;">New Contact Submission</h2>
           <div style="margin-top: 20px;">
             <p><strong>Name:</strong> ${name}</p>
@@ -37,7 +60,7 @@ export async function POST(req: Request) {
               ${message.replace(/\n/g, '<br>')}
             </div>
           </div>
-          <p style="margin-top: 30px; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0; pt-10;">
+          <p style="margin-top: 30px; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 10px;">
             Submitted via QuickBizCalc Contact Form
           </p>
         </div>
