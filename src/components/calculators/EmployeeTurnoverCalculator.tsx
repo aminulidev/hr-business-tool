@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -131,16 +131,19 @@ export default function EmployeeTurnoverCalculator() {
           )}
         </div>
 
-        <div className="flex gap-3">
-          
-          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
-            <TryExample onClick={handleTryExample} />
-            <Button onClick={handleCalculate} disabled={beginNum <= 0 || sepNum <= 0}
-            className="bg-gradient-to-r from-violet-500 to-violet-700 hover:from-violet-600 hover:to-violet-800 text-white shadow-lg shadow-violet-500/25 flex-1 sm:flex-none">
-            Calculate Turnover Rate
-          </Button>
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 mt-6">
+          <TryExample onClick={handleTryExample} />
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={handleCalculate}
+              disabled={beginNum <= 0 || sepNum <= 0}
+              className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
+              size="lg"
+            >
+              Calculate Turnover Rate
+            </Button>
+            <Button variant="outline" size="lg" onClick={handleReset} className="shrink-0">Reset</Button>
           </div>
-          <Button variant="outline" onClick={handleReset}>Reset</Button>
         </div>
 
         {calculated && (

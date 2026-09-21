@@ -141,10 +141,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'commission-calculator',
     title: 'Sales Commission Calculator',
+    metaTitle: 'Free Sales Commission Calculator 2026 — Tiered, Split & Quota Plans',
     shortDescription:
       'Calculate take-home commission from flat rates, tiered structures, and quota-based plans with deductions and visual charts.',
     metaDescription:
-      'Free sales commission calculator. Calculate your commission from flat rate, tiered, or quota attainment structures. Includes deductions, visual charts, and CSV export. Accurate results for real estate, SaaS, B2B, and retail sales professionals.',
+      'Free sales commission calculator 2026. Calculate earnings from flat, tiered, quota attainment, and split-commission plans. Includes deductions, accelerators, and visual earnings charts.',
     keywords: [
       'commission calculator',
       'sales commission calculator',
@@ -170,10 +171,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'salary-converter',
     title: 'Salary Converter Calculator',
+    metaTitle: 'Free Salary Converter 2026 — Hourly / Weekly / Monthly / Annual',
     shortDescription:
       'Convert between hourly, daily, weekly, bi-weekly, semi-monthly, monthly, and annual salary rates instantly.',
     metaDescription:
-      'Free salary converter calculator. Instantly convert your pay between hourly, daily, weekly, bi-weekly, semi-monthly, monthly, and annual rates. See equivalent earnings across all pay periods with overtime adjustments.',
+      'Free salary converter 2026. Instantly convert pay between hourly, daily, weekly, bi-weekly, semi-monthly, monthly, and annual rates. Includes overtime adjustment and 2,080-hour assumption.',
     keywords: [
       'salary converter',
       'hourly to salary calculator',
@@ -203,10 +205,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'pro-rata-calculator',
     title: 'Pro Rata Salary Calculator',
+    metaTitle: 'Free Pro Rata Salary Calculator 2026 — Mid-Year Start & Part-Time',
     shortDescription:
       'Calculate prorated salary when an employee starts mid-year, works part-time, or is on a fixed-term contract.',
     metaDescription:
-      'Free pro rata salary calculator. Quickly calculate prorated pay for mid-year starts, part-time employees, and contract workers. Includes daily rate, percentage of full salary, and detailed worked examples.',
+      'Free pro rata salary calculator 2026. Calculate prorated pay for mid-year hires, part-time employees, and contract workers. See daily rate, percent of full salary, and full worked example.',
     keywords: [
       'pro rata calculator',
       'pro rata salary calculator',
@@ -229,10 +232,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'salary-increase-calculator',
     title: 'Salary Increase Calculator',
+    metaTitle: 'Free Salary Increase Calculator 2026 — Raise %, Inflation Adjusted',
     shortDescription:
       'See what a percentage raise looks like in actual paycheck dollars, with inflation adjustment and future projections.',
     metaDescription:
-      'Free salary increase calculator. See exactly how a percentage raise affects your paycheck with before-and-after comparison, inflation adjustment, and future salary projections. Plan your next raise with confidence.',
+      'Free salary increase calculator 2026. See exactly how a percentage raise affects your paycheck. Compare gross and net before/after, adjust for inflation, and project 5-year compound growth.',
     keywords: [
       'salary increase calculator',
       'salary increase calculator',
@@ -256,11 +260,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'overtime-calculator',
     title: 'Overtime Calculator',
-    metaTitle: 'Overtime Calculator (2026) — Time and a Half & Double Time Pay Rates',
+    metaTitle: 'Free Overtime Calculator 2026 — Time-and-a-Half & Double-Time Pay',
     shortDescription:
       'Calculate overtime pay with standard time-and-a-half and double-time rates, weekly and daily tracking with state-specific rules.',
     metaDescription:
-      'Calculate overtime pay at 1.5x and 2.0x rates. Check weekly overtime thresholds, FLSA rules, and effective hourly take-home pay.',
+      'Free overtime calculator 2026. Calculate overtime pay at 1.5x time-and-a-half and 2x double-time rates. Includes FLSA weekly rules, California daily overtime, and effective hourly rate.',
     keywords: [
       'overtime calculator',
       'overtime calculator',
@@ -286,11 +290,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'payroll-calculator',
     title: 'Payroll & Paycheck Calculator',
-    metaTitle: 'Payroll Calculator (2026) — Salary & Hourly Take-Home Pay Estimator',
+    metaTitle: 'Free Payroll Calculator 2026 — Net Paycheck, Taxes & Deductions',
     shortDescription:
       'Estimate your take-home pay after federal and state taxes, deductions, and benefits contributions.',
     metaDescription:
-      'Free payroll calculator for employees and employers. Estimate federal, state, and FICA tax withholdings, pre-tax deductions, and net take-home pay per paycheck.',
+      'Free payroll calculator 2026. Estimate take-home pay after federal, state, and FICA taxes plus 401(k), HSA, and insurance deductions. Supports weekly, bi-weekly, semi-monthly, and monthly pay.',
     keywords: [
       'payroll calculator',
       'online payroll calculator',
@@ -321,10 +325,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'bonus-tax-calculator',
     title: 'Post-Tax & Bonus Calculator',
+    metaTitle: 'Free Bonus Tax Calculator 2026 — Federal Supplemental Withholding',
     shortDescription:
       'Calculate your net bonus after federal and state tax withholding, or find your gross bonus from a desired net amount.',
     metaDescription:
-      'Free bonus tax calculator. Find your take-home bonus after supplemental tax withholding, or reverse-calculate the gross bonus needed for a specific net amount. Covers federal flat rate, state taxes, and the bonus tax methodology.',
+      'Free bonus tax calculator 2026. Calculate take-home bonus after the 22% federal supplemental rate, state tax, and FICA. Reverse mode: find gross bonus for a target net amount.',
     keywords: [
       'bonus tax calculator',
       'bonus tax calculator',
@@ -348,11 +353,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'tax-bracket-calculator',
     title: 'Tax Bracket Calculator',
-    metaTitle: 'Tax Bracket Calculator (2026) — Federal Income Tax & Effective Rate',
+    metaTitle: 'Free Tax Bracket Calculator 2026 — Federal Marginal & Effective Rate',
     shortDescription:
       'Find your federal tax bracket, effective tax rate, and marginal rate with a detailed breakdown of taxes owed by bracket.',
     metaDescription:
-      'Find your 2026 federal income tax bracket and effective tax rate. See tax breakdown across single, married, and head of household filing statuses.',
+      'Free 2026 federal tax bracket calculator. Find your marginal and effective tax rate for single, married, or head of household. See tax owed by bracket with full breakdown and examples.',
     keywords: [
       'tax bracket calculator',
       'tax bracket calculator',
@@ -389,10 +394,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'after-tax-income-calculator',
     title: 'After-Tax Income Calculator',
+    metaTitle: 'Free After-Tax Income Calculator 2026 — Net Take-Home Pay',
     shortDescription:
       'Calculate your net income after federal and state taxes with a detailed breakdown of tax savings and take-home pay.',
     metaDescription:
-      'Free after-tax income calculator. See your take-home pay after federal and state income taxes, Social Security, and Medicare. Compare your gross vs. net income with a clear tax breakdown for any salary or hourly rate.',
+      'Free after-tax income calculator 2026. See your true net take-home pay after federal tax, state tax, FICA, and deductions. Compare gross vs net across all 50 states with full breakdown.',
     keywords: [
       'after tax income calculator',
       'after tax calculator',
@@ -423,11 +429,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'time-card-calculator',
     title: 'Time Card & Time-to-Decimal Calculator',
-    metaTitle: 'Time Card Calculator (2026) — Weekly Hours & Overtime Timesheet',
+    metaTitle: 'Free Time Card Calculator 2026 — Weekly Hours & Decimal Payroll',
     shortDescription:
       'Calculate total work hours from clock-in/out times, deduct breaks, and convert to decimal format for payroll.',
     metaDescription:
-      'Free weekly time card calculator. Enter clock in and out times to calculate daily and weekly hours, overtime, and total wages. Export and print clean timesheets.',
+      'Free weekly time card calculator. Enter clock-in and clock-out times to calculate daily hours, weekly totals, overtime pay, and decimal conversion for payroll entry. Print-ready timesheets.',
     keywords: [
       'time card calculator',
       'time card calculator',
@@ -456,11 +462,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'business-day-calculator',
     title: 'Business Day Calculator',
-    metaTitle: 'Business Day Calculator (2026) — Working Days & Bank Holiday Counter',
+    metaTitle: 'Free Business Day Calculator 2026 — Add or Subtract Working Days',
     shortDescription:
       'Calculate business days between two dates, or add/subtract business days from a start date, excluding weekends and holidays.',
     metaDescription:
-      'Calculate the exact number of business days between two dates or add working days to find future dates excluding weekends and US federal holidays.',
+      'Free business day calculator. Add or subtract working days from any date, skip weekends and US federal holidays, and get exact delivery, payment, or contract due dates instantly.',
     keywords: [
       'business day calculator',
       'business day calculator',
@@ -485,10 +491,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'profit-margin-calculator',
     title: 'Profit Margin & Markup Calculator',
+    metaTitle: 'Free Profit Margin Calculator 2026 — Formula, Examples, Benchmarks',
     shortDescription:
       'Calculate retail pricing, profit margins, and markup percentages from wholesale costs and selling prices.',
     metaDescription:
-      'Free profit margin and markup calculator. Calculate profit margin, markup percentage, gross profit, and selling price from cost and revenue. Essential for retail pricing, wholesale, and business financial planning.',
+      'Free profit margin calculator 2026. Calculate net, gross, and operating margin with full formula, worked examples for retail, SaaS, and services, and industry benchmarks. No signup.',
     keywords: [
       'profit margin calculator',
       'omni margin calculator',
@@ -517,10 +524,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'roi-calculator',
     title: 'ROI Calculator',
+    metaTitle: 'Free ROI Calculator 2026 — Return on Investment Formula & Examples',
     shortDescription:
       'Calculate Return on Investment from initial cost, final value, and time period with annualized returns.',
     metaDescription:
-      'Free ROI calculator. Calculate Return on Investment percentage, net profit/loss, and annualized returns from your investment costs and gains. Perfect for business decisions, marketing campaigns, and investment analysis.',
+      'Free ROI calculator 2026. Calculate return on investment with full formula, annualized ROI, NPV, and IRR. Worked examples for marketing campaigns, real estate, and equipment purchases.',
     keywords: [
       'roi calculator',
       'roi formula',
@@ -545,10 +553,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'discount-calculator',
     title: 'Discount Calculator',
+    metaTitle: 'Free Discount Calculator 2026 — Sale Price, Stack Discounts, Tax',
     shortDescription:
       'Calculate sale prices, discount amounts, and savings from percentage or fixed discounts. Compare original vs. discounted prices.',
     metaDescription:
-      'Free discount calculator. Quickly calculate the sale price after a percentage or fixed-amount discount. See how much you save, compare multiple discounts, and find the original price from a discounted amount. Perfect for retail and business pricing.',
+      'Free discount calculator 2026. Calculate sale price from original price and discount %. Stack multiple discounts (10% + 15%), include sales tax, and reverse-mode to find original price.',
     keywords: [
       'discount calculator',
       'discount formula',
@@ -576,10 +585,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'property-tax-calculator',
     title: 'Property Tax Calculator',
+    metaTitle: 'Free Property Tax Calculator 2026 — Annual, Monthly Escrow & Appeal',
     shortDescription:
       'Estimate your annual property tax from assessed value, tax rate, and exemptions. Compare effective rates across jurisdictions.',
     metaDescription:
-      'Free property tax calculator. Estimate your annual property tax bill based on assessed value, millage rate, and applicable exemptions. Compare effective tax rates, see monthly breakdowns, and plan your housing budget with accuracy.',
+      'Free property tax calculator 2026. Estimate annual property tax from assessed value and mill rate. See monthly escrow payment, 5-year projection, and appeal-process guidance for high-tax areas.',
     keywords: [
       'property tax calculator',
       'property tax calculator',
@@ -601,10 +611,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'gross-margin-calculator',
     title: 'Gross Margin Calculator',
+    metaTitle: 'Free Gross Margin Calculator 2026 — COGS, Markup, Benchmarks',
     shortDescription:
       'Calculate gross margin, gross profit, and COGS from revenue and cost of goods sold with detailed financial analysis.',
     metaDescription:
-      'Free gross margin calculator. Quickly compute gross margin percentage, gross profit, and cost of goods sold from your revenue and costs. Includes visual breakdowns, industry benchmarks, and multi-product comparison for business financial analysis.',
+      'Free gross margin calculator 2026. Calculate gross profit margin from revenue and COGS. See markup %, industry benchmarks (retail, SaaS, grocery), and break-even point instantly.',
     keywords: [
       'gross margin calculator',
       'gross margin calculator',
@@ -626,10 +637,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'markup-calculator',
     title: 'Markup Calculator',
+    metaTitle: 'Free Markup Calculator 2026 — Markup vs Margin, Keystone Pricing',
     shortDescription:
       'Calculate selling price from cost and desired markup percentage, with margin vs markup comparison and multi-tier pricing.',
     metaDescription:
-      'Free markup calculator. Determine the right selling price from your cost basis and desired markup percentage. Includes margin vs markup comparison, cost-based pricing tables, and visual charts for wholesale and retail pricing decisions.',
+      'Free markup calculator 2026. Calculate markup percentage from cost, see side-by-side margin conversion, use keystone (2x) quick button, and benchmark against retail industry standards.',
     keywords: [
       'markup calculator',
       'markup formula',
@@ -652,10 +664,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'tax-refund-estimator',
     title: 'Tax Refund Calculator',
+    metaTitle: 'Free Tax Refund Estimator 2026 — Federal Refund or Balance Due',
     shortDescription:
       'Estimate your federal and state tax refund based on income, withholding, deductions, and filing status.',
     metaDescription:
-      'Free tax refund estimator. Calculate your expected tax refund or amount owed based on your income, federal and state tax withholdings, deductions, credits, and filing status. Plan your tax season with confidence.',
+      'Free 2026 tax refund estimator. Estimate your federal refund or balance due from income, withholding, dependents, and credits (CTC, EITC, education). See prior-year comparison instantly.',
     keywords: [
       'tax refund estimator',
       'tax refund calculator 2022 2023',
@@ -680,11 +693,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'time-to-decimal-calculator',
     title: 'Decimal & Fraction Converter',
-    metaTitle: 'Time to Decimal Calculator — Convert Hours & Minutes for Payroll',
+    metaTitle: 'Free Time to Decimal Calculator 2026 — Payroll Hours Conversion',
     shortDescription:
       'Convert between decimals, fractions, percentages, and time formats instantly. Essential for payroll and math calculations.',
     metaDescription:
-      'Quickly convert work hours and minutes to decimal hours for payroll, timesheets, and client billing. Includes 7-minute, 6-minute, and 15-minute rounding rules.',
+      'Free time to decimal calculator 2026. Convert clock time (HH:MM) to decimal hours for payroll entry. Batch mode for multiple entries, reverse mode decimal to HH:MM, and minutes-to-decimal tool.',
     keywords: [
       'time to decimal calculator',
       'decimal calculator',
@@ -709,11 +722,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'wages-calculator',
     title: 'Wages Calculator',
-    metaTitle: 'Wages Calculator (2026) — Calculate Gross Pay & Overtime Earnings',
+    metaTitle: 'Free Wages Calculator 2026 — Hourly to Annual Pay Conversion',
     shortDescription:
       'Calculate gross and net wages from hours worked and hourly rate, including overtime and multiple pay rates.',
     metaDescription:
-      'Free wage calculator to compute gross wages from hours worked, hourly rates, and overtime premiums. Breakdown by weekly, bi-weekly, and monthly earnings.',
+      'Free wages calculator 2026. Convert hourly rate to weekly, bi-weekly, semi-monthly, monthly, and annual wages. Includes overtime, FICA, and net take-home pay estimate.',
     keywords: [
       'wages calculator',
       'hourly wage calculator',
@@ -738,10 +751,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'payroll-deduction-calculator',
     title: 'Payroll Deduction Calculator',
+    metaTitle: 'Free Payroll Deduction Calculator 2026 — 401(k), HSA, FSA, Insurance',
     shortDescription:
       'Calculate detailed paycheck deductions including federal tax, state tax, Social Security, Medicare, insurance, and retirement contributions.',
     metaDescription:
-      'Free payroll deduction calculator. Itemize all paycheck deductions including federal and state income tax, FICA (Social Security and Medicare), health insurance, 401(k) contributions, and other pre-tax and post-tax deductions. See your gross-to-net pay breakdown.',
+      'Free payroll deduction calculator. Calculate take-home pay after 401(k), HSA, FSA, health, dental, vision, life insurance, and garnishment deductions. See per-paycheck and annual impact.',
     keywords: [
       'payroll deduction calculator',
       'payroll deductions online calculator',
@@ -766,10 +780,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'salary-tax-calculator',
     title: 'Salary Tax Calculator',
+    metaTitle: 'Free Salary Tax Calculator 2026 — Take-Home Pay by State',
     shortDescription:
       'Calculate total tax on your salary including federal, state, FICA, and local taxes with a comprehensive breakdown by tax type.',
     metaDescription:
-      'Free salary tax calculator. See exactly how much tax you pay on your salary, broken down by federal income tax, state income tax, Social Security, Medicare, and local taxes. Supports all filing statuses and compares effective tax rates across income levels.',
+      'Free salary tax calculator 2026. Calculate your net take-home pay from gross annual salary after federal tax, state tax, FICA, and deductions. See monthly, bi-weekly, and 401(k) impact.',
     keywords: [
       'salary tax calculator',
       'salary after tax calculator',
@@ -795,11 +810,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'time-card-calculator-with-lunch',
     title: 'Time Card Calculator with Lunch',
-    metaTitle: 'Time Card Calculator with Lunch (2026) — Free Hours & Overtime Tracker',
+    metaTitle: 'Free Time Card Calculator with Lunch 2026 — Weekly Timesheet',
     shortDescription:
       'Calculate total work hours with automatic lunch break deduction. Supports multiple in/out entries per day and weekly totals.',
     metaDescription:
-      'Calculate total work hours with automatic lunch break deductions. Accurately tracks decimal hours, gross wages, and overtime pay with instant printable timesheet summaries.',
+      'Free time card calculator with lunch break. Track clock-in/out times, auto-deduct lunch, calculate regular and overtime hours, and export a clean printable weekly timesheet in seconds.',
     keywords: [
       'time card calculator with lunch',
       'time card calculator with lunch',
@@ -823,11 +838,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'hourly-paycheck-calculator',
     title: 'Hourly Paycheck Calculator',
-    metaTitle: 'Hourly Paycheck Calculator (2026) — Take-Home Pay with Taxes & Overtime',
+    metaTitle: 'Free Hourly Paycheck Calculator 2026 — Take-Home Pay After Taxes',
     shortDescription:
       'Calculate your hourly paycheck after taxes and deductions. See net pay per hour, per week, and per year with full breakdown.',
     metaDescription:
-      'Calculate your exact hourly paycheck and take-home pay after federal, state, and FICA taxes. Free calculator with overtime, deductions, and annual wage conversions.',
+      'Free hourly paycheck calculator 2026. Calculate your net take-home pay after federal tax, state tax, FICA, and deductions. See annual, monthly, and bi-weekly take-home in seconds.',
     keywords: [
       'hourly paycheck calculator',
       'adp hourly calculator',
@@ -853,10 +868,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'severance-pay-calculator',
     title: 'Severance Pay Calculator',
+    metaTitle: 'Free Severance Pay Calculator 2026 — Weeks of Pay & Tax Withholding',
     shortDescription:
       'Calculate total severance pay based on salary, years of service, and company multiplier. Includes monthly equivalent and tax estimate.',
     metaDescription:
-      'Free severance pay calculator. Estimate your total severance package based on years of service, base salary, and severance multiplier. See weekly rate, total weeks, and monthly equivalent. Covers common severance formulas used in the US.',
+      'Free severance pay calculator 2026. Estimate severance based on years of service, weekly pay, and state rules. See supplemental tax withholding and COBRA continuation cost projection.',
     keywords: [
       'severance pay calculator',
       'severance calculator',
@@ -879,10 +895,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'workers-comp-calculator',
     title: 'Workers Comp Calculator',
+    metaTitle: 'Free Workers Comp Calculator 2026 — Annual Premium Estimate',
     shortDescription:
       'Estimate your annual workers compensation insurance premium from payroll, class code rate, and experience modification factor.',
     metaDescription:
-      'Free workers comp calculator. Estimate your workers compensation insurance premium based on annual payroll, classification rate per $100, and experience modification rate (EMR). Compare costs by class code and see per-employee cost breakdown.',
+      'Free workers comp calculator 2026. Estimate annual workers compensation premium from payroll and class code rate. See per-$100 payroll cost, experience mod impact, and 5-year projection.',
     keywords: [
       'workers comp calculator',
       'workers compensation calculator',
@@ -904,10 +921,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'fica-tax-calculator',
     title: 'FICA Tax Calculator',
+    metaTitle: 'Free FICA Tax Calculator 2026 — Social Security & Medicare',
     shortDescription:
       'Calculate Social Security and Medicare FICA taxes for employees and self-employed individuals with a full employer/employee breakdown.',
     metaDescription:
-      'Free FICA tax calculator. Calculate Social Security tax (6.2%), Medicare tax (1.45%), and Additional Medicare tax (0.9%) for employees and self-employed workers. See employer and employee share, annual wage base limits, and self-employment tax deduction.',
+      'Free FICA tax calculator 2026. Calculate Social Security (6.2% up to $176,100 wage base) and Medicare (1.45%) employee withholding. Includes employer match and self-employment SECA tax.',
     keywords: [
       'FICA tax calculator',
       'social security tax calculator',
@@ -930,10 +948,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'time-and-a-half-calculator',
     title: 'Time and a Half Calculator',
+    metaTitle: 'Free Time-and-a-Half Calculator 2026 — Overtime Pay Rate',
     shortDescription:
       'Calculate overtime pay at 1.5× your regular rate. Enter your hourly wage and OT hours to instantly see your time and a half earnings.',
     metaDescription:
-      'Free time and a half calculator. Instantly calculate your overtime pay at 1.5 times your regular hourly rate. Enter your hourly wage and overtime hours to see regular pay, overtime pay, and total gross earnings for the week.',
+      'Free time-and-a-half calculator. Instantly calculate 1.5x overtime pay for any hourly rate and hours worked. See gross overtime pay, FLSA compliance, and double-time comparison.',
     keywords: [
       'time and a half calculator',
       'time and a half pay calculator',
@@ -955,6 +974,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'employee-turnover-calculator',
     title: 'Employee Turnover Rate Calculator',
+    metaTitle: 'Free Employee Turnover Calculator 2026 — Rate & Cost of Attrition',
     shortDescription:
       'Calculate your employee turnover rate, retention rate, and estimated cost of attrition with industry benchmark comparisons.',
     metaDescription:
@@ -979,6 +999,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'cost-per-hire-calculator',
     title: 'Cost per Hire Calculator',
+    metaTitle: 'Free Cost Per Hire Calculator 2026 — Recruiting ROI & SHRM Benchmark',
     shortDescription:
       'Calculate your average cost per hire from internal and external recruiting costs. See total spend breakdown and cost benchmarks.',
     metaDescription:
@@ -1003,10 +1024,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'billable-hours-calculator',
     title: 'Billable Hours Calculator',
+    metaTitle: 'Free Billable Hours Calculator 2026 — Utilization & Revenue',
     shortDescription:
       'Calculate billable hours, utilization rate, and billable revenue from total hours worked and non-billable time.',
     metaDescription:
-      'Free billable hours calculator. Track your billable hours, calculate utilization rate, and estimate billable revenue. Enter total work hours, non-billable time (admin, training), and hourly billing rate to see how efficiently your time generates income.',
+      'Free billable hours calculator. Track billable vs non-billable hours, calculate utilization rate, project monthly and annual revenue from your hourly rate, and export invoice-ready totals.',
     keywords: [
       'billable hours calculator',
       'utilization rate calculator',
@@ -1027,10 +1049,11 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'revenue-per-employee-calculator',
     title: 'Revenue per Employee Calculator',
+    metaTitle: 'Free Revenue Per Employee Calculator 2026 — Workforce Productivity',
     shortDescription:
       'Calculate revenue per employee ratio and benchmark against industry averages to measure workforce productivity and efficiency.',
     metaDescription:
-      'Free revenue per employee calculator. Divide your annual revenue by headcount to get a key productivity metric. Compare your revenue per employee against industry benchmarks and track efficiency improvements over time.',
+      'Free revenue per employee calculator 2026. Measure workforce productivity by dividing revenue by FTE count. Compare to industry benchmarks, see 5-year trend, and plan headcount growth.',
     keywords: [
       'revenue per employee calculator',
       'revenue per employee ratio',
