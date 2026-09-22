@@ -105,31 +105,18 @@ const websiteJsonLd = {
   alternateName: "Quick Biz Calc",
   url: SITE_URL,
   description:
-    "Free online business and HR calculators — payroll, paycheck, time card, profit margin, ROI, commission, overtime, and 27 more tools for US small business owners.",
+    "Free online business and HR calculators — payroll, paycheck, time card, profit margin, ROI, commission, overtime, and more tools for US small business owners.",
   inLanguage: "en-US",
   publisher: {
     "@type": "Organization",
     name: SITE_NAME,
     url: SITE_URL,
-    logo: {
-      "@type": "ImageObject",
-      url: `${SITE_URL}/logo.svg`,
-      width: 512,
-      height: 512,
-    },
-    contactPoint: {
-      "@type": "ContactPoint",
-      contactType: "customer support",
-      email: CONTACT_EMAIL,
-      availableLanguage: ["English"],
-    },
+    logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.svg`, width: 512, height: 512 },
+    contactPoint: { "@type": "ContactPoint", contactType: "customer support", email: CONTACT_EMAIL, availableLanguage: ["English"] },
   },
   potentialAction: {
     "@type": "SearchAction",
-    target: {
-      "@type": "EntryPoint",
-      urlTemplate: `${SITE_URL}/?q={search_term_string}`,
-    },
+    target: { "@type": "EntryPoint", urlTemplate: `${SITE_URL}/?q={search_term_string}` },
     "query-input": "required name=search_term_string",
   },
 };
@@ -141,26 +128,12 @@ const organizationJsonLd = {
   name: SITE_NAME,
   url: SITE_URL,
   logo: `${SITE_URL}/logo.svg`,
-  description:
-    "QuickBizCalc publishes free, ad-supported business and HR calculators for US small business owners, HR professionals, and accountants.",
+  description: "QuickBizCalc publishes free, ad-supported business and HR calculators for US small business owners, HR professionals, and accountants.",
   foundingDate: "2025",
-  sameAs: [
-    "https://twitter.com/QuickBizCalc",
-  ],
+  sameAs: ["https://twitter.com/QuickBizCalc"],
   contactPoint: [
-    {
-      "@type": "ContactPoint",
-      contactType: "customer support",
-      email: CONTACT_EMAIL,
-      availableLanguage: ["English"],
-      url: `${SITE_URL}/contact`,
-    },
-    {
-      "@type": "ContactPoint",
-      contactType: "privacy",
-      email: CONTACT_EMAIL,
-      availableLanguage: ["English"],
-    },
+    { "@type": "ContactPoint", contactType: "customer support", email: CONTACT_EMAIL, availableLanguage: ["English"], url: `${SITE_URL}/contact` },
+    { "@type": "ContactPoint", contactType: "privacy", email: CONTACT_EMAIL, availableLanguage: ["English"] },
   ],
 };
 

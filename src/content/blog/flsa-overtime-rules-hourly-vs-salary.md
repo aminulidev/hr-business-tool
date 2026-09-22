@@ -96,3 +96,14 @@ Convert and project your pay across all schedules with our [Hourly Paycheck Calc
 1. **Audit Job Descriptions:** Do not rely on titles like "Assistant Manager" or "Lead Coordinator" without auditing actual daily decision-making power.
 2. **Track All Hours for Non-Exempt Staff:** Even if salaried, non-exempt staff must log every hour worked to ensure proper compensation.
 3. **Check State Regulations:** California, New York, Alaska, and Washington enforce higher salary thresholds and daily overtime rules that supersede federal standards.
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Overtime Calculator](/calculators/overtime-calculator)
+- [Time-and-a-Half Calculator](/calculators/time-and-a-half-calculator)
+- [Salary Converter](/calculators/salary-converter)
+- [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator)

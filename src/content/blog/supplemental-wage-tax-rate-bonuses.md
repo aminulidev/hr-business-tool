@@ -79,3 +79,14 @@ $$\text{Gross Required} = \frac{\$5,000}{1 - 0.3465} = \frac{\$5,000}{0.6535} = 
 The employer cuts a payroll check for **$7,651.11**, remits $2,651.11 in mandatory withholdings to tax authorities, and Jane receives exactly **$5,000.00 net**.
 
 Check tax brackets and marginal liability with our [Tax Bracket Calculator](/calculators/tax-bracket-calculator) and [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator).
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Bonus Tax Calculator](/calculators/bonus-tax-calculator)
+- [Tax Bracket Calculator](/calculators/tax-bracket-calculator)
+- [After-Tax Income Calculator](/calculators/after-tax-income-calculator)
+- [Salary Tax Calculator](/calculators/salary-tax-calculator)

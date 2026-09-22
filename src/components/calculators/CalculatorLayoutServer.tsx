@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import ResultActions from './ResultActions';
 import FeedbackWidget from './FeedbackWidget';
+import MobileResultSheet from './MobileResultSheet';
 import {
   DollarSign,
   Percent,
@@ -421,7 +422,9 @@ export default function CalculatorLayoutServer({
           <div className="flex-1 min-w-0 space-y-8">
             {/* Calculator card */}
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <Card className="glass-strong overflow-hidden calculator-form">{children}</Card>
+              <MobileResultSheet title={title}>
+                <Card className="glass-strong overflow-hidden calculator-form">{children}</Card>
+              </MobileResultSheet>
             </div>
 
             {/* ============================================================= */}
@@ -686,9 +689,7 @@ export default function CalculatorLayoutServer({
               </section>
             )}
 
-            {/* ============================================================= */}
-            {/* Feedback widget — "Was this helpful?"                        */}
-            {/* ============================================================= */}
+            {/* Feedback widget — "Was this helpful?" */}
             <section className="scroll-mt-24 mt-2">
               <div className="glass rounded-2xl p-5 sm:p-6 border border-border/60">
                 <FeedbackWidget />

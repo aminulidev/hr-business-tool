@@ -100,3 +100,14 @@ To avoid wage claims and Department of Labor audits:
 1. **Never deduct lunch automatically on weekend or travel shifts** without signed employee confirmation.
 2. **Retain time cards for at least 3 years** to comply with FLSA § 11(c) recordkeeping mandates.
 3. **Use standardized digital tools** like the [Time Card Calculator](/calculators/time-card-calculator) and export records weekly for employee review and signature.
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Time Card Calculator with Lunch](/calculators/time-card-calculator-with-lunch)
+- [Time Card Calculator](/calculators/time-card-calculator)
+- [Time to Decimal Calculator](/calculators/time-to-decimal-calculator)
+- [Overtime Calculator](/calculators/overtime-calculator)

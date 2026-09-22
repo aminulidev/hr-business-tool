@@ -70,3 +70,14 @@ To prevent reps from closing bad-fit clients who churn immediately, best-in-clas
 2. **Statutory Clawback Provisions:** If a customer cancels or defaults on payment within 90 days of contract execution, the commission paid on that deal is deducted from the salesperson's next commission cycle.
 
 Convert and analyze full compensation packages with our [Salary Converter Calculator](/calculators/salary-converter) and [Gross Margin Calculator](/calculators/gross-margin-calculator).
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Sales Commission Calculator](/calculators/commission-calculator)
+- [Salary Increase Calculator](/calculators/salary-increase-calculator)
+- [Bonus Tax Calculator](/calculators/bonus-tax-calculator)
+- [Salary Converter](/calculators/salary-converter)

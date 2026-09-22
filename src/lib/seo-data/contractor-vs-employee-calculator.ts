@@ -1,0 +1,45 @@
+const seoData = {
+  breadcrumbs: [{ label: 'Calculators' }, { label: '1099 vs W-2 Calculator' }],
+  tableOfContents: [
+    { id: 'how-to-calculate', label: 'How to Calculate' },
+    { id: 'formula', label: 'Formula' },
+    { id: 'worked-examples', label: 'Worked Examples' },
+    { id: 'frequently-asked-questions', label: 'FAQs' },
+    { id: 'related-calculators', label: 'Related Calculators' },
+  ],
+  howToSteps: [
+    'Enter the annual gross income you would earn in either scenario (use the same number for fair comparison).',
+    'Enter your state income tax rate as a percentage (Texas 0%, California ~9%, New York ~7%).',
+    'Click "Calculate" to see the side-by-side comparison of 1099 contractor vs W-2 employee.',
+    'Review the winner banner, tax breakdown, and effective tax rate for each option.',
+    'Remember: this calculator compares TAXES ONLY. W-2 employees typically receive $10,000-$25,000/year in benefits (health insurance, 401k match, paid leave) that are NOT included in the calculation.',
+  ],
+  formula: 'SECA Tax (1099) = (SS Wages × 12.4%) + (All Wages × 2.9%) = 15.3% total\nFICA Tax (W-2) = (SS Wages × 6.2%) + (All Wages × 1.45%) = 7.65% total\n2026 SS Wage Base = $176,100',
+  formulaDescription: 'The key tax difference between 1099 contractors and W-2 employees is FICA vs SECA. Employees pay half of FICA (7.65%); their employer pays the other half. Contractors pay the full SECA tax (15.3%) because they are both employer and employee. However, contractors can deduct half of SECA from taxable income, reducing their income tax burden. Contractors can also deduct legitimate business expenses (home office, mileage, equipment) before calculating taxable income — a significant advantage not available to W-2 employees.',
+  workedExamples: [
+    { title: '$75,000 Annual Income (Texas — no state tax)', description: '1099 Contractor: SECA = $11,475, federal income tax = $8,238, total tax = $19,713, net = $55,287. W-2 Employee: FICA = $5,738, federal income tax = $8,580, total tax = $14,318, net = $60,682. W-2 wins by $5,395/year (9.7% more) before benefits. With $10k+ in benefits, W-2 is clearly better at this income level.' },
+    { title: '$150,000 Annual Income (California — 9% state tax)', description: '1099 Contractor: SECA = $15,525 (capped SS at $176,100), federal = $24,262, state = $11,998, total = $51,785, net = $98,215. W-2 Employee: FICA = $7,763, federal = $26,156, state = $12,506, total = $46,425, net = $103,575. W-2 wins by $5,360. With $15k+ in benefits, W-2 still wins.' },
+    { title: '$250,000 Annual Income (Texas)', description: '1099 Contractor: SECA = $15,525 (SS capped), Medicare = $7,250, federal = $51,749, total = $74,524, net = $175,476. W-2 Employee: FICA = $7,763, Medicare = $3,625, federal = $53,965, total = $65,353, net = $184,647. W-2 wins by $9,171 in tax alone. Note: high earners hit the SS wage base ($176,100), so the SECA penalty shrinks at higher incomes.' },
+    { title: '$80,000 Annual Income (New York — 7% state tax)', description: '1099 Contractor: SECA = $12,240, federal = $9,053, state = $4,520, total = $25,813, net = $54,187. W-2 Employee: FICA = $6,120, federal = $9,420, state = $4,690, total = $20,230, net = $59,770. W-2 wins by $5,583. With benefits, W-2 is clearly better.' },
+    { title: 'When does 1099 win? $300k with $50k in business expenses', description: '1099 Contractor with $50k deductible expenses: SECA on $250k = $15,525, Medicare = $7,250, federal on $200k taxable = $41,849, total tax = $64,624, net = $185,376. W-2 Employee at $300k: FICA = $7,763, Medicare = $4,350, federal on $284,700 = $65,373, total = $77,486, net = $222,514. W-2 STILL wins by $37k in tax. 1099 only wins if (a) hourly rate is 30%+ higher, (b) substantial business expense deductions, AND (c) no need for employer benefits.' },
+  ],
+  faqs: [
+    { question: 'Is it better to be a 1099 contractor or W-2 employee?', answer: 'For most workers earning under $200k/year with available W-2 benefits, the W-2 option is typically better because: (1) You pay only half of FICA (7.65% vs 15.3% SECA), saving $7,650/year per $100k of income. (2) Employer benefits (health insurance, 401k match, paid leave, workers comp, unemployment insurance) are typically worth $10,000-$25,000/year. (3) W-2 employees have legal protections (minimum wage, overtime, anti-discrimination) that contractors lack. 1099 is better only when: (a) you can charge 30%+ more per hour, (b) you have substantial business expense deductions, (c) you don\'t need benefits (covered by spouse), AND (d) you want schedule autonomy.' },
+    { question: 'What is SECA tax?', answer: 'SECA (Self-Employment Contributions Act) tax is the self-employed version of FICA. It totals 15.3%: 12.4% for Social Security (on first $176,100 in 2026) + 2.9% for Medicare (on all earnings). Contractors pay the full 15.3% themselves because they are both employer and employee. However, contractors can deduct the "employer half" (7.65%) from taxable income, which softens the blow slightly. SECA is calculated on Schedule SE of Form 1040.' },
+    { question: 'What is FICA tax?', answer: 'FICA (Federal Insurance Contributions Act) tax is the payroll tax that funds Social Security and Medicare. Employees pay 7.65%: 6.2% Social Security (on first $176,100 in 2026) + 1.45% Medicare (on all earnings). The employer pays a matching 7.65%, making the total FICA contribution 15.3%. High earners also pay Additional Medicare Tax of 0.9% on wages over $200,000 (single) or $250,000 (married filing jointly).' },
+    { question: 'What is the ABC test for worker classification?', answer: 'The ABC test (used in California and increasingly in other states) presumes a worker is an employee UNLESS: (A) the worker is free from control and direction in performing the work; (B) the work is performed outside the usual course of the hiring entity\'s business; AND (C) the worker is customarily engaged in an independent trade or occupation. If any of these fail, the worker is an employee. Misclassification can result in back taxes, penalties, and class-action liability.' },
+    { question: 'Can I be both 1099 and W-2 at the same time?', answer: 'Yes — many people have multiple jobs, some as W-2 employees and others as 1099 contractors. Each job is taxed according to its classification. Your W-2 employer withholds FICA from your paycheck; you pay SECA on your 1099 income. Note: Social Security tax (6.2% employee or 12.4% self-employed) is capped at the wage base ($176,100 in 2026) across ALL your combined income — so if your W-2 wages exceed the cap, your SECA Social Security portion may be reduced or eliminated.' },
+    { question: 'What business expenses can a 1099 contractor deduct?', answer: 'Contractors can deduct ordinary and necessary business expenses, including: home office (simplified $5/sq ft up to 300 sq ft, or actual expenses), vehicle mileage (2026 IRS rate ~$0.67/mile), equipment and software, professional development, health insurance premiums (above-the-line deduction), 50% of meals for business, retirement contributions to a Solo 401(k) or SEP-IRA (up to $69,000 in 2026), and half of SECA tax. These deductions can reduce effective tax rate by 5-15%.' },
+    { question: 'Does the 1099 vs W-2 choice affect my Social Security benefit?', answer: 'No — both 1099 contractors and W-2 employees earn Social Security credits the same way: 1 credit per $1,810 of earnings (2026), up to 4 credits per year, 40 credits needed to qualify for retirement benefits. The benefit calculation uses your 35 highest-earning years regardless of whether they were 1099 or W-2 income. The only difference: 1099 contractors who net less than $400 in SECA income may not earn credits in a given year.' },
+    { question: 'Should I form an LLC or S-Corp to reduce 1099 taxes?', answer: 'An LLC by itself does not reduce taxes — single-member LLCs are taxed as sole proprietors by default. However, an LLC taxed as an S-Corp can save SECA tax: you pay yourself a "reasonable salary" (subject to FICA/SECA) and take the rest as distributions (not subject to SECA). The break-even is typically $80k-$100k of net self-employment income — below that, the accounting and payroll costs exceed the tax savings. Above $150k, the savings can be $5k-$15k/year.' },
+  ],
+  relatedTools: [
+    { slug: 'after-tax-income-calculator', title: 'After-Tax Income Calculator', description: 'Net take-home by state', icon: 'Wallet' },
+    { slug: 'fica-tax-calculator', title: 'FICA Tax Calculator', description: 'Social Security + Medicare breakdown', icon: 'Landmark' },
+    { slug: 'salary-tax-calculator', title: 'Salary Tax Calculator', description: 'Annual salary tax calculation', icon: 'FileText' },
+    { slug: 'hourly-paycheck-calculator', title: 'Hourly Paycheck Calculator', description: 'Full paycheck with taxes', icon: 'Wallet' },
+    { slug: 'tax-bracket-calculator', title: 'Tax Bracket Calculator', description: 'Federal marginal & effective rate', icon: 'FileText' },
+  ],
+};
+
+export default seoData;

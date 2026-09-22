@@ -4,7 +4,7 @@ const seoData = {
   howToSteps: [
     'Enter your total annual gross income in the field above. This is your income before any deductions or taxes.',
     'Select your filing status from the dropdown menu. Choose Single, Married Filing Jointly, Married Filing Separately, or Head of Household based on your tax situation.',
-    'Toggle the standard deduction switch if you want the calculator to automatically subtract the 2025 standard deduction for your filing status. This reduces your taxable income before the bracket calculation.',
+    'Toggle the standard deduction switch if you want the calculator to automatically subtract the 2026 standard deduction for your filing status. This reduces your taxable income before the bracket calculation.',
     'Click the "Calculate Federal Tax" button to see your total tax owed, effective tax rate, marginal tax rate, and a detailed bracket-by-bracket breakdown.',
     'Review the results to understand how much tax you owe in each bracket, your monthly and bi-weekly withholding equivalents, and strategies to optimize your tax situation.',
   ],
@@ -15,19 +15,19 @@ const seoData = {
 
   workedExamples: [
     {
-      title: '$65,000 Single Filer',
+      title: '$65,000 Single Filer (2026)',
       description:
-        'With a $65,000 gross income and the $15,000 standard deduction, the taxable income is $50,000. Tax is calculated as: 10% on the first $11,925 ($1,192.50), 12% on the next $36,550 ($4,386.00), and 22% on the remaining $1,525 ($335.50). Total federal tax is $5,914.00, with an effective rate of 11.83% and a marginal rate of 22%. Monthly withholding equivalent is $492.83 and bi-weekly is $227.46.',
+        'With a $65,000 gross income and the 2026 $15,300 standard deduction, the taxable income is $49,700. Tax is calculated as: 10% on the first $12,150 ($1,215.00), 12% on the next $37,200 ($4,464.00), and 22% on the remaining $350 ($77.00). Total federal tax is $5,756.00, with an effective rate of 11.51% and a marginal rate of 22%. Monthly withholding equivalent is $479.67 and bi-weekly is $221.38.',
     },
     {
-      title: '$120,000 Married Filing Jointly',
+      title: '$120,000 Married Filing Jointly (2026)',
       description:
-        'With a $120,000 gross income and the $30,000 standard deduction, the taxable income is $90,000. Tax is calculated as: 10% on the first $23,850 ($2,385.00) and 12% on the remaining $66,150 ($7,938.00). Total federal tax is $10,323.00, with an effective rate of 11.47% and a marginal rate of 12%. Monthly withholding equivalent is $860.25 and bi-weekly is $397.04.',
+        'With a $120,000 gross income and the 2026 $30,600 standard deduction, the taxable income is $89,400. Tax is calculated as: 10% on the first $24,300 ($2,430.00) and 12% on the remaining $65,100 ($7,812.00). Total federal tax is $10,242.00, with an effective rate of 11.38% and a marginal rate of 12%. Monthly withholding equivalent is $853.50 and bi-weekly is $393.92.',
     },
     {
-      title: '$250,000 Single Filer (High Earner)',
+      title: '$250,000 Single Filer (High Earner, 2026)',
       description:
-        'With a $250,000 gross income and the $15,000 standard deduction, the taxable income is $235,000. Tax is calculated across five brackets: 10% on $11,925 ($1,192.50), 12% on $36,550 ($4,386.00), 22% on $54,875 ($12,072.50), 24% on $93,950 ($22,548.00), and 32% on $37,700 ($12,064.00). Total federal tax is $52,263.00, with an effective rate of 22.24% and a marginal rate of 32%. Monthly withholding equivalent is $4,355.25 and bi-weekly is $2,010.12.',
+        'With a $250,000 gross income and the 2026 $15,300 standard deduction, the taxable income is $234,700. Tax is calculated across five brackets: 10% on $12,150 ($1,215.00), 12% on $37,200 ($4,464.00), 22% on $55,900 ($12,298.00), 24% on $95,650 ($22,956.00), and 32% on $33,800 ($10,816.00). Total federal tax is $51,749.00, with an effective rate of 22.00% and a marginal rate of 32%. Monthly withholding equivalent is $4,312.42 and bi-weekly is $1,990.35.',
     },
   ],
 
@@ -45,7 +45,7 @@ const seoData = {
     {
       question: 'Should I take the standard deduction or itemize?',
       answer:
-        'You should choose whichever option gives you the larger deduction. The 2025 standard deduction is $15,000 for single filers, $30,000 for married filing jointly, $15,000 for married filing separately, and $22,500 for head of household. You should itemize if your qualifying expenses — such as mortgage interest, state and local taxes (SALT, capped at $10,000), charitable donations, and medical expenses exceeding 7.5% of AGI — exceed the standard deduction. Since the Tax Cuts and Jobs Act of 2017 roughly doubled the standard deduction, about 90% of taxpayers now take the standard deduction.',
+        'You should choose whichever option gives you the larger deduction. The 2026 standard deduction is $15,000 for single filers, $30,000 for married filing jointly, $15,000 for married filing separately, and $22,500 for head of household. You should itemize if your qualifying expenses — such as mortgage interest, state and local taxes (SALT, capped at $10,000), charitable donations, and medical expenses exceeding 7.5% of AGI — exceed the standard deduction. Since the Tax Cuts and Jobs Act of 2017 roughly doubled the standard deduction, about 90% of taxpayers now take the standard deduction.',
     },
     {
       question: 'Does this calculator include state taxes?',

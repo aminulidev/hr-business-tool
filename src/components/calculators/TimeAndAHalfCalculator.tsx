@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -88,18 +88,15 @@ export default function TimeAndAHalfCalculator() {
             <p className="text-xs text-muted-foreground">Hours worked over 40</p>
           </div>
         </div>
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 mt-6">
+
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
           <TryExample onClick={handleTryExample} />
-          <div className="flex items-center gap-3">
-            <Button
-              onClick={handleCalculate}
-              disabled={rateNum <= 0 || otHrs <= 0}
-              className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
-              size="lg"
-            >
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <Button onClick={handleCalculate} disabled={rateNum <= 0 || otHrs <= 0}
+              className="bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white shadow-lg shadow-amber-500/25 flex-1 sm:flex-none">
               Calculate Time and a Half
             </Button>
-            <Button variant="outline" size="lg" onClick={handleReset} className="shrink-0">Reset</Button>
+            <Button variant="outline" onClick={handleReset} className="shrink-0">Reset</Button>
           </div>
         </div>
 
