@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import TryExample from './TryExample';
@@ -29,6 +29,7 @@ import CalcHistoryPanel from './CalcHistoryPanel';
 import ComparePanel, { CompareRow } from './ComparePanel';
 import { formatCurrency, formatPercent } from '@/lib/utils';
 
+import UnitToggle from './UnitToggle';
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -456,12 +457,12 @@ setEntries([{ id: 1, hourlyRate: '20', regularHours: '40', overtimeHours: '5', d
         )}
 
         {/* Actions */}
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 mt-6">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
           <TryExample onClick={handleTryExample} />
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
             <Button
               onClick={handleCalculate}
-              className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
+              className="flex-1 sm:flex-none bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
               size="lg"
             >
               <Banknote className="h-4 w-4 mr-2" />
@@ -480,7 +481,17 @@ setEntries([{ id: 1, hourlyRate: '20', regularHours: '40', overtimeHours: '5', d
       </div>
 
       {/* Results */}
-      {result && (
+      {/* UnitToggle — show pay-period equivalents */}
+        {(() => {
+          const _hr = parseFloat(entries[0]?.hourlyRate) || 0;
+          if (!_hr) return null;
+          return (
+            <div className="px-4 sm:px-6 mt-3 mb-1">
+              <UnitToggle hourlyRate={_hr} />
+            </div>
+          );
+        })()}
+        {result && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

@@ -97,3 +97,14 @@ Hiring expenses vary significantly by industry sector, skill rarity, and require
 3. **Build an In-House Talent Pipeline:** Maintaining ongoing relationships with silver-medalist candidates reduces reliance on expensive emergency agency placements.
 
 Analyze workforce retention and replacement economics with our [Employee Turnover Calculator](/calculators/employee-turnover-calculator) and [Revenue Per Employee Calculator](/calculators/revenue-per-employee-calculator).
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Cost per Hire Calculator](/calculators/cost-per-hire-calculator)
+- [Employee Turnover Calculator](/calculators/employee-turnover-calculator)
+- [Salary Increase Calculator](/calculators/salary-increase-calculator)
+- [Revenue per Employee Calculator](/calculators/revenue-per-employee-calculator)

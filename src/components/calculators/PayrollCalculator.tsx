@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
+import UnitToggle from './UnitToggle';
 import {
   Select,
   SelectContent,
@@ -356,12 +357,24 @@ export default function PayrollCalculator() {
       </div>
 
       {/* Results */}
-      {result && (
+      {/* UnitToggle — show pay-period equivalents */}
+        {(() => {
+          const _sal = parseFloat(salaryInput) || 0;
+          if (!_sal) return null;
+          const _periods = frequency === 'annual' ? 1 : frequency === 'monthly' ? 12 : frequency === 'biweekly' ? 26 : 52;
+          const _ann = frequency === 'annual' ? _sal : _sal * _periods;
+          return (
+            <div className="px-4 sm:px-6 mt-3 mb-1">
+              <UnitToggle annualSalary={_ann} />
+            </div>
+          );
+        })()}
+        {result && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="result-display mt-8" aria-live="polite"
+          className="result-display px-4 sm:px-6 pb-4 sm:pb-6 mt-8" aria-live="polite"
         >
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
             {/* Main Result */}

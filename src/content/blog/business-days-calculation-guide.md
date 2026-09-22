@@ -67,3 +67,14 @@ Under National Automated Clearing House Association (NACHA) guidelines, standard
 Missing this holiday offset causes employee paychecks to clear on Monday, July 6, potentially violating state prompt-payment statutes.
 
 Track and verify regular hours and overtime before payroll cutoff using our [Time Card Calculator](/calculators/time-card-calculator) and [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator).
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Business Day Calculator](/calculators/business-day-calculator)
+- [Time Card Calculator with Lunch](/calculators/time-card-calculator-with-lunch)
+- [Time to Decimal Calculator](/calculators/time-to-decimal-calculator)
+- [Payroll Calculator](/calculators/payroll-calculator)

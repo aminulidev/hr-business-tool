@@ -13,6 +13,7 @@ import CalcHistoryPanel from './CalcHistoryPanel';
 import ComparePanel, { CompareRow } from './ComparePanel';
 import TryExample from './TryExample';
 
+import UnitToggle from './UnitToggle';
 interface SalaryIncreaseResult {
   currentSalary: number;
   salaryIncrease: number;
@@ -182,8 +183,19 @@ export default function SalaryIncreaseCalculator() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}
-          className="result-display mt-6" aria-live="polite"
+          className="result-display px-4 sm:px-6 pb-4 sm:pb-6 mt-6" aria-live="polite"
         >
+          {/* UnitToggle — show pay-period equivalents */}
+          {(() => {
+            const _ann = parseFloat(currentSalary) || 0;
+            if (!_ann) return null;
+            return (
+              <div className="mt-3 mb-3">
+                <UnitToggle annualSalary={_ann} />
+              </div>
+            );
+          })()}
+
           <div className="text-center mb-4">
             <p className="text-sm text-muted-foreground mb-1">Your New Salary</p>
             <p className="text-4xl font-bold text-emerald-600">

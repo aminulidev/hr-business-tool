@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
 import ComparePanel, { CompareRow } from './ComparePanel';
+import UnitToggle from './UnitToggle';
 import {
   Select,
   SelectContent,
@@ -289,12 +290,12 @@ return (
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 mt-6">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
           <TryExample onClick={handleTryExample} />
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
             <Button
               onClick={handleCalculate}
-              className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
+              className="flex-1 sm:flex-none bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
               size="lg"
             >
               Calculate Overtime Pay
@@ -309,12 +310,22 @@ return (
       {/* ================================================================= */}
       {/* Results                                                           */}
       {/* ================================================================= */}
-      {result && (
+      {/* UnitToggle — show pay-period equivalents of the entered hourly rate */}
+        {(() => {
+          const _hr = parseFloat(hourlyRateInput) || 0;
+          if (!_hr) return null;
+          return (
+            <div className="px-4 sm:px-6 mt-3 mb-1">
+              <UnitToggle hourlyRate={_hr} />
+            </div>
+          );
+        })()}
+        {result && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="result-display mt-8" aria-live="polite"
+          className="result-display px-4 sm:px-6 pb-4 sm:pb-6 mt-8" aria-live="polite"
         >
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
             {/* Main Result */}

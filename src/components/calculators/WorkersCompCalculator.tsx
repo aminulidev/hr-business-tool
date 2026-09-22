@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
@@ -140,18 +140,15 @@ export default function WorkersCompCalculator() {
               : `⚠️ EMR ${emrNum} — Your claims history adds a ${formatPercent((emrNum - 1) * 100)} surcharge to your base premium.`}
           </motion.div>
         )}
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 mt-6">
+
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
           <TryExample onClick={handleTryExample} />
-          <div className="flex items-center gap-3">
-            <Button
-              onClick={handleCalculate}
-              disabled={payrollNum <= 0 || rateNum <= 0}
-              className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
-              size="lg"
-            >
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <Button onClick={handleCalculate} disabled={payrollNum <= 0 || rateNum <= 0}
+              className="bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white shadow-lg shadow-teal-500/25 flex-1 sm:flex-none">
               Calculate Premium
             </Button>
-            <Button variant="outline" size="lg" onClick={handleReset} className="shrink-0">Reset</Button>
+            <Button variant="outline" onClick={handleReset} className="shrink-0">Reset</Button>
           </div>
         </div>
 

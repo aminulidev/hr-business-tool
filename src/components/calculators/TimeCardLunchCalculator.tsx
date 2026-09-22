@@ -624,17 +624,9 @@ export default function TimeCardLunchCalculator() {
         )}
 
         {/* Actions */}
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-3">
-          <TryExample onClick={handleTryExample} />
-          <div className="flex items-center gap-3">
-            <Button
-              onClick={handleCalculate}
-              className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
-              size="lg"
-            >
-              <Clock className="h-4 w-4 mr-2" />
-              Calculate Hours
-            </Button>
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="flex gap-3">
+            <TryExample onClick={handleTryExample} />
             <Button
               onClick={handleReset}
               variant="outline"
@@ -644,6 +636,14 @@ export default function TimeCardLunchCalculator() {
               Reset
             </Button>
           </div>
+          <Button
+            onClick={handleCalculate}
+            className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
+            size="lg"
+          >
+            <Clock className="h-4 w-4 mr-2" />
+            Calculate Hours
+          </Button>
         </div>
       </div>
 

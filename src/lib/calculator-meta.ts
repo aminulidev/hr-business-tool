@@ -31,6 +31,7 @@ import {
   Briefcase,
   Hourglass,
   Activity,
+  Target,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -70,7 +71,12 @@ export type CalculatorSlug =
   | 'employee-turnover-calculator'
   | 'cost-per-hire-calculator'
   | 'billable-hours-calculator'
-  | 'revenue-per-employee-calculator';
+  | 'revenue-per-employee-calculator'
+  | 'pto-accrual-calculator'
+  | 'contractor-vs-employee-calculator'
+  | 'break-even-calculator'
+  | 'cash-flow-forecast-calculator'
+  | 'social-security-estimator';
 
 export interface CalculatorMeta {
   slug: CalculatorSlug;
@@ -1069,6 +1075,143 @@ export const calculators: CalculatorMeta[] = [
     tier: 'tier2',
     category: 'HR Analytics',
     path: '/calculators/revenue-per-employee-calculator',
+  },
+
+  // ── 5 new calculators (Phase 3 expansion) ──
+
+  // PTO Accrual Calculator
+  {
+    slug: 'pto-accrual-calculator',
+    title: 'PTO Accrual Calculator',
+    metaTitle: 'Free PTO Accrual Calculator 2026 — Vacation Time Tracking',
+    shortDescription:
+      'Calculate paid time off accrual per pay period, project year-end balance, and convert accrued hours to cash value.',
+    metaDescription:
+      'Free PTO accrual calculator 2026. Calculate vacation time accrual per paycheck, project year-end balance, and convert PTO hours to dollar cash value. Supports hourly, per-pay-period, and annual lump-sum policies.',
+    keywords: [
+      'PTO accrual calculator',
+      'vacation accrual calculator',
+      'paid time off calculator',
+      'PTO calculator',
+      'vacation time accrual',
+      'PTO balance calculator',
+      'paid leave accrual',
+      'how to calculate PTO accrual',
+      'PTO payout calculator',
+      'vacation accrual formula',
+    ],
+    icon: CalendarDays,
+    tier: 'tier2',
+    category: 'Time & Attendance',
+    path: '/calculators/pto-accrual-calculator',
+  },
+
+  // Contractor vs Employee Calculator
+  {
+    slug: 'contractor-vs-employee-calculator',
+    title: '1099 vs W-2 Calculator',
+    metaTitle: 'Free 1099 vs W-2 Calculator 2026 — Contractor vs Employee Tax',
+    shortDescription:
+      'Compare total take-home pay as a 1099 contractor vs W-2 employee. Includes SECA tax (15.3%) vs FICA (7.65%) and federal income tax.',
+    metaDescription:
+      'Free 1099 vs W-2 calculator 2026. Compare take-home pay as an independent contractor vs employee. Includes SECA tax (15.3%), FICA (7.65%), federal tax brackets, and effective tax rate for each scenario.',
+    keywords: [
+      '1099 vs W2 calculator',
+      'contractor vs employee calculator',
+      '1099 tax calculator',
+      'self employment tax calculator',
+      'SECA tax calculator',
+      'independent contractor tax',
+      '1099 vs W2 take home pay',
+      'contractor vs employee tax comparison',
+      'self employment vs employee',
+      '1099 tax rate calculator',
+    ],
+    icon: Briefcase,
+    tier: 'tier1',
+    category: 'Payroll & Taxes',
+    path: '/calculators/contractor-vs-employee-calculator',
+  },
+
+  // Break-Even Calculator
+  {
+    slug: 'break-even-calculator',
+    title: 'Break-Even Calculator',
+    metaTitle: 'Free Break-Even Calculator 2026 — Units, Revenue & Margin of Safety',
+    shortDescription:
+      'Calculate break-even point in units and revenue, contribution margin, and margin of safety with worked examples.',
+    metaDescription:
+      'Free break-even calculator 2026. Calculate break-even point in units and revenue, contribution margin per unit, margin of safety, and target profit units. Worked examples for retail, SaaS, and services businesses.',
+    keywords: [
+      'break even calculator',
+      'break even point calculator',
+      'break even analysis',
+      'break even units calculator',
+      'break even revenue calculator',
+      'contribution margin calculator',
+      'margin of safety calculator',
+      'how to calculate break even point',
+      'break even formula',
+      'target profit calculator',
+    ],
+    icon: Target,
+    tier: 'tier1',
+    category: 'Business Finance',
+    path: '/calculators/break-even-calculator',
+  },
+
+  // Cash Flow Forecast Calculator
+  {
+    slug: 'cash-flow-forecast-calculator',
+    title: 'Cash Flow Forecast Calculator',
+    metaTitle: 'Free Cash Flow Forecast Calculator 2026 — 12-Month Projection',
+    shortDescription:
+      'Project 12-month cash flow with growth rates, identify the lowest-cash month, and visualize cumulative cash position.',
+    metaDescription:
+      'Free cash flow forecast calculator 2026. Project 12-month cash flow with monthly revenue, expenses, and growth rates. See when cash runs out, identify lowest-cash month, and visualize cumulative cash position on a chart.',
+    keywords: [
+      'cash flow forecast calculator',
+      'cash flow projection',
+      'cash flow calculator',
+      '12 month cash flow forecast',
+      'business cash flow projection',
+      'cash position calculator',
+      'runway calculator',
+      'burn rate calculator',
+      'cash flow analysis',
+      'small business cash flow forecast',
+    ],
+    icon: TrendingUp,
+    tier: 'tier1',
+    category: 'Business Finance',
+    path: '/calculators/cash-flow-forecast-calculator',
+  },
+
+  // Social Security Estimator
+  {
+    slug: 'social-security-estimator',
+    title: 'Social Security Estimator',
+    metaTitle: 'Free Social Security Estimator 2026 — Retirement Benefit Calculator',
+    shortDescription:
+      'Estimate your monthly Social Security retirement benefit at ages 62, 67 (FRA), and 70 using the 2026 PIA bend points.',
+    metaDescription:
+      'Free Social Security estimator 2026. Calculate your monthly retirement benefit at age 62, 67 (Full Retirement Age), and 70 using 2026 PIA bend points and AIME formula. See lifetime payout projections and claiming strategy impact.',
+    keywords: [
+      'social security calculator',
+      'social security estimator',
+      'retirement benefit calculator',
+      'SSA benefit estimator',
+      'social security PIA calculator',
+      'primary insurance amount calculator',
+      'social security at 62 calculator',
+      'social security at 70 calculator',
+      'AIME calculator',
+      'social security retirement estimate',
+    ],
+    icon: Landmark,
+    tier: 'tier1',
+    category: 'Payroll & Taxes',
+    path: '/calculators/social-security-estimator',
   },
 ];
 

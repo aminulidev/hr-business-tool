@@ -72,3 +72,14 @@ A construction firm with $1,000,000 in carpentry payroll (Class Code 5403 @ $10.
 3. **Exclude Overtime Premium Pay from Audits:** Verify that your payroll software separates overtime premium hours from straight-time wages during your end-of-year insurance audit.
 
 Monitor your overall compensation and payroll liabilities with our [Payroll Calculator](/calculators/payroll-calculator) and [Cost Per Hire Calculator](/calculators/cost-per-hire-calculator).
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Workers Comp Calculator](/calculators/workers-comp-calculator)
+- [Payroll Calculator](/calculators/payroll-calculator)
+- [Employee Turnover Calculator](/calculators/employee-turnover-calculator)
+- [Overtime Calculator](/calculators/overtime-calculator)

@@ -67,3 +67,14 @@ $$\text{Minimum 1099 Hourly Rate} = \frac{\text{Desired W-2 Annual Equivalent} \
   * At 1,100 billable hours: $\$121,500 \div 1,100 = \mathbf{\$110.45/\text{hour}}$.
 
 Model your billing targets using our [Billable Hours Calculator](/calculators/billable-hours-calculator) and [After-Tax Income Calculator](/calculators/after-tax-income-calculator).
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Wages Calculator](/calculators/wages-calculator)
+- [Salary Converter](/calculators/salary-converter)
+- [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator)
+- [Time-and-a-Half Calculator](/calculators/time-and-a-half-calculator)

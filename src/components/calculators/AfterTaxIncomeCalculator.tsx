@@ -222,6 +222,7 @@ const STATE_PRESETS = [
 
 import { Variants } from 'framer-motion';
 
+import UnitToggle from './UnitToggle';
 const resultVariants: Variants = {
   hidden: { opacity: 0, y: 10 },
   visible: (i: number) => ({
@@ -523,12 +524,25 @@ export default function AfterTaxIncomeCalculator() {
         {/* ================================================================= */}
         {showResults && results && (
           <motion.div
-            className="space-y-6 pt-2"
+            className="space-y-6 pt-2 px-4 sm:px-6 pb-4 sm:pb-6"
             aria-live="polite"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
           >
+          {/* UnitToggle — show pay-period equivalents */}
+            {(() => {
+              const _sal = parseFloat(incomeAmount) || 0;
+              if (!_sal) return null;
+              const _periods = payFrequency === 'annual' ? 1 : payFrequency === 'monthly' ? 12 : payFrequency === 'biweekly' ? 26 : payFrequency === 'weekly' ? 52 : 2080;
+              const _ann = payFrequency === 'annual' ? _sal : payFrequency === 'hourly' ? _sal * 2080 : _sal * _periods;
+              return (
+                <div className="mt-3 mb-1">
+                  <UnitToggle annualSalary={_ann} />
+                </div>
+              );
+            })()}
+
             {/* Divider */}
             <div className="border-t" />
 

@@ -1,104 +1,45 @@
 const seoData = {
-  // ------ SEO content ------
-
+  breadcrumbs: [{ label: 'Calculators' }, { label: 'Business Day Calculator' }],
+  tableOfContents: [
+    { id: 'how-to-calculate', label: 'How to Calculate' },
+    { id: 'formula', label: 'Formula' },
+    { id: 'worked-examples', label: 'Worked Examples' },
+    { id: 'frequently-asked-questions', label: 'FAQs' },
+    { id: 'related-calculators', label: 'Related Calculators' },
+  ],
   howToSteps: [
-    'Choose your calculation mode: count business days between two dates, or add/subtract business days from a start date.',
-    'Enter your start date using the date picker. You can select any date in 2025 or nearby years.',
-    'For counting mode, also enter the end date. For add/subtract mode, enter the number of business days (use a negative number to subtract).',
-    'Select whether to exclude weekends only, or both weekends and US federal holidays.',
-    'Click "Calculate" to see the detailed result including the total business days, calendar days, weekend days, and holidays excluded.',
+    'Enter your start date — this is the date from which the calculation begins. Most contracts and shipping calculations use "today" as the start date.',
+    'Enter the number of business days to add (for forward calculation) or subtract (for backward calculation). Use a positive number to add days, negative to subtract.',
+    'Choose whether to skip US federal holidays. The calculator excludes weekends (Saturday and Sunday) by default. Checking "Skip US federal holidays" also excludes the 11 recognized federal holidays.',
+    'Click "Calculate" to see the target date, the day of the week it falls on, and a breakdown of how many calendar days were skipped (weekend days + holidays).',
+    'Review the worked examples below for common use cases — contract deadlines, payment terms, shipping estimates, and notice periods.',
   ],
-
-  formula: 'Business Days = Calendar Days − Weekend Days − Holidays',
-
-  formulaDescription:
-    'Business days are calculated by taking the total calendar days between two dates and subtracting all weekend days (Saturdays and Sundays) and any observed US federal holidays that fall on weekdays. When adding or subtracting business days, the calculator advances one calendar day at a time, skipping weekends and holidays until the target number of business days is reached.',
-
+  formula: 'Target Date = Start Date + N business days\nWhere: business days exclude Saturdays, Sundays, and optionally US federal holidays',
+  formulaDescription: "A business day is any day that is not a Saturday, Sunday, or recognized holiday. The federal government recognizes 11 holidays per year (New Year\'s Day, Martin Luther King Jr. Day, Washington\'s Birthday, Memorial Day, Juneteenth National Independence Day, Independence Day, Labor Day, Columbus Day, Veterans Day, Thanksgiving, and Christmas). When a federal holiday falls on a Saturday, it is observed on the preceding Friday; when it falls on a Sunday, it is observed on the following Monday. Business day calculations are critical for contract deadlines, shipping estimates, and statutory notice periods.",
   workedExamples: [
-    {
-      title: 'Count Business Days: Jan 6, 2025 – Mar 28, 2025',
-      description:
-        'Counting from Monday, January 6, 2025 to Friday, March 28, 2025 with weekends and US federal holidays excluded. The period spans 82 calendar days. Subtracting 23 weekend days (Saturdays and Sundays) and 3 holidays (MLK Jr. Day on Jan 20, Presidents\' Day on Feb 17) yields 56 business days.',
-    },
-    {
-      title: 'Add 30 Business Days to Jan 1, 2025',
-      description:
-        'Starting from New Year\'s Day (Wednesday, January 1, 2025 — which is a holiday, so the count effectively begins from the next business day), adding 30 business days while skipping weekends and US federal holidays lands on Monday, February 10, 2025. The calculation skips 12 weekend days and 2 holidays (MLK Jr. Day on Jan 20).',
-    },
-    {
-      title: 'Subtract 10 Business Days from April 1, 2025',
-      description:
-        'Starting from Tuesday, April 1, 2025 and going backwards 10 business days, skipping weekends and holidays, arrives at Friday, March 18, 2025. The calculation moves back through 14 calendar days, skipping 4 weekend days.',
-    },
+    { title: 'Shipping Estimate: 5 Business Days from Monday', description: 'A package ships on Monday and the carrier promises "5 business days" delivery. Count: Monday (day 1), Tuesday (2), Wednesday (3), Thursday (4), Friday (5). The package arrives on Friday the same week. If it shipped on Wednesday: Wednesday (1), Thursday (2), Friday (3), [skip weekend], Monday (4), Tuesday (5). Delivery is the following Tuesday — 7 calendar days after shipping.' },
+    { title: 'Net 30 Payment Terms from Invoice', description: 'An invoice is dated October 15, 2025, with Net 30 payment terms (30 business days). Counting forward, skipping weekends and federal holidays: October 15 + 30 business days = November 26, 2025 — but that\'s the day before Thanksgiving. Since Thanksgiving (Nov 27) is a federal holiday, the deadline extends to Friday Nov 28. But Nov 28 is also a holiday for many employers. The actual due date becomes Monday, December 1, 2025.' },
+    { title: '3 Business Days From Today (Standard Notice)', description: 'A common contract clause is "3 business days written notice." If today is Wednesday, count: Wednesday (1), Thursday (2), Friday (3). Notice must be given by Friday to be effective Monday. If today is Thursday: Thursday (1), Friday (2), [skip weekend], Monday (3). Notice given on Thursday is effective the following Tuesday.' },
+    { title: 'Statutory Notice: 60-Day RIF Notice (WARN Act)', description: 'The federal WARN Act requires employers with 100+ employees to give 60 days advance notice of mass layoffs. The 60 days are CALENDAR days, not business days. However, if the 60th day falls on a weekend or federal holiday, the notice deadline extends to the next business day. For a layoff planned for March 31, 2026 (Tuesday), the 60-day notice must be given by January 30, 2026 (Friday).' },
+    { title: 'Add 10 Business Days Skipping Federal Holidays', description: 'Starting January 2, 2026 (Friday after New Year\'s), add 10 business days skipping federal holidays. January 2 (1), January 5 (2), January 6 (3), January 7 (4), January 8 (5), January 9 (6), January 12 (7), January 13 (8), January 14 (9), January 15 (10). Result: January 15, 2026 (Thursday). Note that MLK Day (Jan 19) falls after the calculation window, so it does not affect this result.' },
+    { title: 'Contract Effective Date (Reverse Calculation)', description: 'A contract requires notice "not less than 90 days before termination." Termination is set for December 31, 2025. Counting backward 90 business days: December 31 - 90 business days = approximately August 22, 2025 (Friday). The notice must be given by August 22 to be valid.' },
   ],
-
   faqs: [
-    {
-      question: 'What counts as a business day?',
-      answer:
-        'A business day is any weekday (Monday through Friday) that is not a public holiday. In the United States, this typically means any day from Monday to Friday excluding the 11 federally recognized holidays. Business days are the standard days on which most businesses, banks, and government offices operate. Some industries or organizations may define business days differently (e.g., excluding Friday for certain religious observances), but the Monday–Friday definition is the most common.',
-    },
-    {
-      question: 'Are holidays included in the business day count?',
-      answer:
-        'By default, this calculator gives you the option to either exclude or include holidays. When the "Exclude weekends + holidays" option is selected, all 11 US federal holidays for 2025 are excluded from the count. When only weekends are excluded, holidays that fall on weekdays are still counted as business days. You can choose the option that best fits your use case — for example, financial or legal deadlines typically exclude holidays, while informal planning might not.',
-    },
-    {
-      question: 'Do weekends count as business days?',
-      answer:
-        'No, weekends (Saturdays and Sundays) are never counted as business days in this calculator. This is the standard definition used in the United States and most Western countries. Some Middle Eastern countries consider Sunday a business day and Friday a non-business day, but this calculator follows the US convention where the business week runs Monday through Friday.',
-    },
-    {
-      question: 'What about state and local holidays?',
-      answer:
-        'This calculator only accounts for US federal holidays. State and local holidays (such as Patriot\'s Day in Massachusetts, César Chávez Day in California, or Good Friday in many states) are not included. If you need to account for state-specific holidays, we recommend using the "weekends only" exclusion and manually subtracting any additional holidays relevant to your location.',
-    },
-    {
-      question: 'How accurate is this for project planning?',
-      answer:
-        'This calculator is highly accurate for standard US business day calculations. It correctly accounts for weekends and all 11 federal holidays with their 2025 observed dates. However, it does not account for company-specific holidays, part-time schedules, or international holidays. For critical project deadlines, always verify against your organization\'s official holiday calendar. The calculator is ideal for estimating delivery timelines, contract deadlines, payment terms, and general business scheduling.',
-    },
-    {
-      question: 'Do different countries have different business days?',
-      answer:
-        'Yes, business days vary significantly by country. While Monday through Friday is standard in most of the Americas, Europe, and parts of Asia, many Middle Eastern and North African countries have a Sunday–Thursday business week. Additionally, each country has its own set of public holidays. This calculator is specifically designed for the US calendar, so if you are working with international deadlines, you should use a country-specific business day calculator or manually adjust for local holidays and workweek conventions.',
-    },
+    { question: 'What counts as a business day?', answer: 'A business day is any day that is not a Saturday, Sunday, or recognized holiday. The federal government recognizes 11 holidays: New Year\'s Day (Jan 1), MLK Day (3rd Monday in January), Washington\'s Birthday (3rd Monday in February), Memorial Day (last Monday in May), Juneteenth (June 19), Independence Day (July 4), Labor Day (1st Monday in September), Columbus Day (2nd Monday in October), Veterans Day (Nov 11), Thanksgiving (4th Thursday in November), and Christmas (Dec 25). State holidays may differ.' },
+    { question: 'How are business days calculated for shipping?', answer: 'For shipping carriers (USPS, UPS, FedEx, DHL), business days typically exclude Saturdays, Sundays, and federal holidays. Some carriers offer Saturday delivery for an additional fee — this counts as a business day for delivery purposes but not for pickup. Most carriers use "transit time" rather than business days: USPS Priority Mail is 1-3 business days, UPS Ground is 1-5 business days based on distance.' },
+    { question: 'What is the difference between calendar days and business days?', answer: 'Calendar days include every day of the week (Monday through Sunday, including holidays). Business days exclude Saturdays, Sundays, and recognized holidays — typically Monday through Friday only. For example, "30 calendar days" from a Wednesday is the following Thursday 4 weeks later. "30 business days" from the same Wednesday is approximately 6 weeks later.' },
+    { question: 'How does Net 30 / Net 60 / Net 90 work?', answer: 'Net 30 (or Net 60, Net 90) is a payment term meaning the buyer has 30 (or 60, or 90) business days from the invoice date to pay the seller. Some B2B contracts offer a 1-2% discount for early payment ("2/10 Net 30" means 2% discount if paid within 10 days, otherwise full amount due in 30 days). Always clarify which day-count applies when reviewing contracts.' },
+    { question: 'Does Saturday count as a business day?', answer: 'By default, no — Saturday is part of the weekend and not a business day. However, there are exceptions: Banking (some banks process transactions on Saturdays but post them on Monday), Shipping (UPS and FedEx offer Saturday delivery for an extra fee), Retail (many retail businesses operate 6 or 7 days a week, but contract law still typically defines "business day" as Monday-Friday).' },
+    { question: 'What if a deadline falls on a weekend or holiday?', answer: 'Under federal Rule of Civil Procedure 6(a) and most state laws, if a deadline falls on a Saturday, Sunday, or federal holiday, the deadline extends to the next business day. For example, if a tax return is due on Saturday April 15 (typical federal tax deadline), the actual deadline becomes Monday April 17 (assuming Monday is not a holiday).' },
+    { question: 'How do I count business days for a legal notice period?', answer: 'The general rule for legal notice periods (eviction notices, contract terminations, IRS response letters, court filings) is: count the day after the notice is served as Day 1, count every day except weekends and federal holidays, and the deadline is the last day of the count. If the deadline falls on a weekend or federal holiday, extend to the next business day. Always check the specific statute — for example, SEC Rule 13d-1 requires 10 calendar days (not business days) for Schedule 13D filings.' },
+    { question: 'Are state holidays counted as business days?', answer: 'It depends on the context. For federal contracts and filings, only federal holidays are excluded — state holidays are business days. For state contracts, state-specific holidays are also excluded. For example, a contract governed by California law would exclude Cesar Chavez Day (March 31) as a state holiday. For private contracts between businesses, the governing state law typically determines which holidays count.' },
   ],
-
   relatedTools: [
-    {
-      slug: 'time-card-calculator',
-      title: 'Time Card Calculator',
-      description: 'Calculate total work hours from clock-in/out times',
-      icon: 'Clock',
-    },
-    {
-      slug: 'payroll-calculator',
-      title: 'Payroll Calculator',
-      description: 'Calculate take-home pay after taxes and deductions',
-      icon: 'CreditCard',
-    },
-    {
-      slug: 'overtime-calculator',
-      title: 'Overtime Calculator',
-      description: 'Calculate overtime pay and total earnings',
-      icon: 'Timer',
-    },
-    {
-      slug: 'salary-converter',
-      title: 'Salary Converter',
-      description: 'Convert between hourly, monthly, and annual salary',
-      icon: 'DollarSign',
-    },
-    {
-      slug: 'pro-rata-calculator',
-      title: 'Pro Rata Salary Calculator',
-      description: 'Calculate prorated salary for partial periods',
-      icon: 'CalendarClock',
-    },
+    { slug: 'time-card-calculator', title: 'Time Card Calculator', description: 'Weekly hours and payroll calculation', icon: 'Clock' },
+    { slug: 'time-card-calculator-with-lunch', title: 'Time Card Calculator with Lunch', description: 'Timesheet with lunch break deduction', icon: 'CalendarDays' },
+    { slug: 'time-to-decimal-calculator', title: 'Time to Decimal Calculator', description: 'Convert clock time to decimal hours', icon: 'Hash' },
+    { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Pay period and date calculations', icon: 'CreditCard' },
+    { slug: 'overtime-calculator', title: 'Overtime Calculator', description: 'Weekly overtime threshold tracking', icon: 'Timer' },
   ],
-
-  
 };
-
 export default seoData;
