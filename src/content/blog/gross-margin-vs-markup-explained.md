@@ -86,3 +86,14 @@ Keep this reference table handy when pricing inventory or drafting client propos
 1. **Calculate Fixed Operating Expenses First:** Your gross margin must exceed your operating expense ratio (SG&A as a % of sales) for your business to earn a positive net operating income.
 2. **Account for Discounts and Returns:** If you regularly offer 10% promotional discounts or suffer 5% return rates, factor these deductions into your initial gross markup.
 3. **Use Discount Calculators for Sales Promotions:** Check how price drops impact your unit profit with our [Discount Calculator](/calculators/discount-calculator).
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Gross Margin Calculator](/calculators/gross-margin-calculator)
+- [Markup Calculator](/calculators/markup-calculator)
+- [Profit Margin Calculator](/calculators/profit-margin-calculator)
+- [Discount Calculator](/calculators/discount-calculator)

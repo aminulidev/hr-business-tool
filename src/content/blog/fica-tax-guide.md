@@ -240,3 +240,14 @@ Every quarter you work and earn wages, you accumulate **Social Security credits*
 - The social security wage base adjusts annually — plan for the mid-year "bonus" when withholding stops for high earners
 
 Use our [FICA tax calculator](/calculators/fica-tax-calculator) to compute your exact Social Security and Medicare taxes for any income level, pay frequency, and filing scenario — including the wage base cutoff and Additional Medicare Tax threshold.
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [FICA Tax Calculator](/calculators/fica-tax-calculator)
+- [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator)
+- [Salary Tax Calculator](/calculators/salary-tax-calculator)
+- [Payroll Deduction Calculator](/calculators/payroll-deduction-calculator)

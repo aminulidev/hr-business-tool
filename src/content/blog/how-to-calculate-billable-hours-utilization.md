@@ -76,3 +76,14 @@ Where the billed revenue is distributed as:
 * **Example:** If an engineer earns $100,000 annually ($50/hour base cost), the target billing rate should be $\$50 \times 3 = \mathbf{\$150/\text{hour}}$.
 
 Check your overall workforce turnover and retention health with our [Employee Turnover Calculator](/calculators/employee-turnover-calculator) and [Cost Per Hire Calculator](/calculators/cost-per-hire-calculator).
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Billable Hours Calculator](/calculators/billable-hours-calculator)
+- [Time Card Calculator](/calculators/time-card-calculator)
+- [Salary Converter](/calculators/salary-converter)
+- [Wages Calculator](/calculators/wages-calculator)

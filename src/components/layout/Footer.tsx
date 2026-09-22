@@ -2,6 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+// Lazy-load NewsletterSignup so it doesn't bloat the initial bundle
+const NewsletterSignup = dynamic(
+  () => import('@/components/newsletter/NewsletterSignup'),
+  { ssr: false }
+);
 
 const PinterestIcon = ({ className }: { className?: string }) => (
   <svg
@@ -64,6 +71,11 @@ export default function Footer() {
   return (
     <footer className="border-t border-border/50 bg-muted/30 py-8 mt-auto">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Newsletter signup banner */}
+        <div className="max-w-3xl mx-auto mb-8">
+          <NewsletterSignup variant="inline" />
+        </div>
+
         {/* Brand row */}
         <div className="flex items-center justify-center gap-2 text-muted-foreground mb-4">
           <img src="/logo.svg" alt="QuickBizCalc" className="h-5 w-5" />
@@ -83,6 +95,9 @@ export default function Footer() {
         {/* Legal links - 2 rows for better mobile layout */}
         <nav aria-label="Footer navigation">
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground/60 mb-6">
+            <Link href="/newsletter" className={linkClass('/newsletter')}>
+              Newsletter
+            </Link>
             <Link href="/blog" className={linkClass('/blog')}>
               Blog
             </Link>

@@ -1,91 +1,50 @@
 const seoData = {
-  breadcrumbs: [
-        { label: 'Calculators' },
-        { label: 'ROI Calculator' },
-      ],
+  breadcrumbs: [{ label: 'Calculators' }, { label: 'ROI Calculator' }],
   tableOfContents: [
-        { id: 'how-to-calculate', label: 'How to Calculate' },
-        { id: 'formula', label: 'ROI Formula' },
-        { id: 'worked-examples', label: 'Worked Examples' },
-        { id: 'frequently-asked-questions', label: 'FAQs' },
-        { id: 'related-calculators', label: 'Related Calculators' },
-      ],
-  workedExamples: [
-        {
-          title: 'Stock Investment',
-          description:
-            'You invested $10,000 in stocks. After 2 years, the portfolio is worth $13,000. Your profit is $3,000, giving a total ROI of 30%. The annualized ROI is 14.02%, meaning your investment grew at an equivalent rate of about 14% per year on a compound basis.',
-        },
-        {
-          title: 'Marketing Campaign',
-          description:
-            'A marketing campaign cost $5,000 in labor plus $2,000 in ad spend, totaling $7,000 invested. It generated $12,000 in revenue. The profit is $5,000, yielding an ROI of 71.43% ($5,000 profit on $7,000 invested).',
-        },
-        {
-          title: 'Real Estate Investment',
-          description:
-            'You put a $50,000 down payment on a property and sold it 5 years later, netting $80,000 after all costs. Your profit is $30,000, for a total ROI of 60%. The annualized ROI is 9.86%, reflecting the compound annual growth rate over the 5-year holding period.',
-        },
-      ],
-  relatedTools: [
-        { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Calculate profit margins on sales', icon: 'Percent' },
-        { slug: 'commission-calculator', title: 'Sales Commission Calculator', description: 'Calculate commission costs vs revenue', icon: 'DollarSign' },
-        { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Factor labor costs into ROI', icon: 'CreditCard' },
-        { slug: 'salary-increase-calculator', title: 'Salary Increase Calculator', description: 'Evaluate ROI of career growth', icon: 'TrendingUp' },
-        { slug: 'time-card-calculator', title: 'Time Card Calculator', description: 'Track hours for project ROI', icon: 'Clock' },
-        { slug: 'bonus-tax-calculator', title: 'Bonus Tax Calculator', description: 'Calculate net returns after tax', icon: 'Gift' },
-      ],
+    { id: 'how-to-calculate', label: 'How to Calculate' },
+    { id: 'formula', label: 'ROI Formula' },
+    { id: 'worked-examples', label: 'Worked Examples' },
+    { id: 'frequently-asked-questions', label: 'FAQs' },
+    { id: 'related-calculators', label: 'Related Calculators' },
+  ],
   howToSteps: [
-        'Enter your Initial Investment amount — the original capital you put into the investment at the start.',
-        'Enter the Final Value — the total amount the investment is worth now, including your original capital and all gains.',
-        'Optionally, enter any Additional Contributions you made during the investment period (beyond the initial investment).',
-        'Specify the Investment Duration in years to calculate the annualized return rate.',
-        'Click "Calculate ROI" to see your total profit, overall ROI percentage, annualized return, and a visual investment health assessment.',
-      ],
-  formula: "ROI (%) = ((Final Value - Cost) / Cost) × 100",
-  formulaDescription: "ROI measures the profitability of an investment as a percentage of the total cost. The annualized ROI formula accounts for the time period, allowing you to compare investments of different durations on equal footing: Annualized ROI = ((Final Value / Cost)^(1/n) - 1) × 100, where n is the number of years.",
+    'Enter your Initial Investment amount — the original capital you put into the investment at the start.',
+    'Enter the Final Value — the total amount the investment is worth now, including your original capital and all gains.',
+    'Optionally, enter any Additional Contributions you made during the investment period (beyond the initial investment).',
+    'Specify the Investment Duration in years to calculate the annualized return rate.',
+    'Click "Calculate ROI" to see your total profit, overall ROI percentage, annualized return, and a visual investment health assessment.',
+    'Review the worked examples below to see how ROI applies to stocks, marketing campaigns, real estate, equipment purchases, and business acquisitions.',
+    'Bookmark or share your calculation using the Share button — the URL encodes your inputs so you can revisit the exact scenario later.',
+  ],
+  formula: "ROI (%) = ((Final Value - Cost) / Cost) × 100\nAnnualized ROI = ((Final Value / Cost)^(1/n) - 1) × 100",
+  formulaDescription: "ROI measures the profitability of an investment as a percentage of the total cost. The annualized ROI formula accounts for the time period, allowing you to compare investments of different durations on equal footing: Annualized ROI = ((Final Value / Cost)^(1/n) - 1) × 100, where n is the number of years. Annualized ROI is also called Compound Annual Growth Rate (CAGR). The key limitation of basic ROI is that it ignores time — a 50% return over 1 year is very different from 50% over 10 years. Always use annualized ROI when comparing investments held for different periods.",
+  workedExamples: [
+    { title: 'Stock Investment: $10,000 Over 2 Years', description: 'You invested $10,000 in stocks. After 2 years, the portfolio is worth $13,000. Your profit is $3,000, giving a total ROI of 30%. The annualized ROI is 14.02%, meaning your investment grew at an equivalent rate of about 14% per year on a compound basis. This compares favorably to the S&P 500 historical average of ~10% annualized.' },
+    { title: 'Marketing Campaign: $7,000 Cost → $12,000 Revenue', description: 'A marketing campaign cost $5,000 in labor plus $2,000 in ad spend, totaling $7,000 invested. It generated $12,000 in revenue. The profit is $5,000, yielding an ROI of 71.43% ($5,000 profit on $7,000 invested). Marketing ROI is often expressed as a ratio: $5,000 / $7,000 = 0.71x return, or in marketing-speak, "5:7 ROAS" (return on ad spend).' },
+    { title: 'Real Estate Investment: $50K Down Payment Over 5 Years', description: 'You put a $50,000 down payment on a rental property. Over 5 years, you collect $30,000 in net rental income and sell the property for $300,000 (your purchase price was $250,000, so $50,000 appreciation). Total return = $30,000 + $50,000 = $80,000. Total ROI = $80,000 / $50,000 × 100 = 160% over 5 years. Annualized ROI = ((130,000 / 50,000)^(1/5) - 1) × 100 = 21% per year.' },
+    { title: 'Equipment Purchase: $20K Machine Saving $6K/Year', description: 'A manufacturer buys a $20,000 machine that saves $6,000 in labor costs per year. The payback period is $20,000 / $6,000 = 3.33 years. After 5 years, the machine has saved $30,000 in labor costs. ROI = ($30,000 - $20,000) / $20,000 × 100 = 50% over 5 years. Annualized ROI = ((30,000 / 20,000)^(1/5) - 1) × 100 = 8.45% per year.' },
+    { title: 'Business Acquisition: $500K Purchase Generating $150K Annual Profit', description: 'You buy a small business for $500,000. It generates $150,000 in annual owner cash flow. After 3 years, you have collected $450,000 in profits and sell the business for $600,000. Total return = $450,000 + $600,000 - $500,000 = $550,000. Total ROI = $550,000 / $500,000 × 100 = 110% over 3 years. Annualized ROI = ((1,050,000 / 500,000)^(1/3) - 1) × 100 = 28% per year.' },
+    { title: 'Education Investment: $40K MBA Boosting Salary by $20K/Year', description: 'You spend $40,000 on an MBA program. Your salary increases by $20,000/year after graduation. After 10 years, the cumulative salary increase = $200,000. ROI = ($200,000 - $40,000) / $40,000 × 100 = 400% over 10 years. Annualized ROI = ((240,000 / 40,000)^(1/10) - 1) × 100 = 19.6% per year.' },
+  ],
   faqs: [
-        {
-          question: 'What is a good ROI?',
-          answer:
-            'A "good" ROI depends on the investment type and risk level. For the stock market, the S&P 500 historically returns about 10% annually before inflation, so an annualized ROI above 10% is generally considered strong. Real estate investments typically target 8-12% annual returns. For startup investments or venture capital, investors often look for 25%+ annual returns to compensate for the higher risk. Always compare your ROI against benchmarks relevant to your specific investment category.',
-        },
-        {
-          question: 'How is ROI different from profit?',
-          answer:
-            'Profit is an absolute dollar amount — the difference between what you invested and what you received. ROI expresses that profit as a percentage of the total cost, making it easy to compare investments of different sizes. For example, a $1,000 profit on a $2,000 investment (50% ROI) is proportionally much better than a $1,000 profit on a $50,000 investment (2% ROI), even though the dollar profit is the same.',
-        },
-        {
-          question: 'What is annualized ROI?',
-          answer:
-            'Annualized ROI converts your total return into an equivalent yearly rate, allowing you to compare investments held for different periods. For instance, a 30% return over 3 years is equivalent to roughly 9.14% per year. The formula uses compound growth: Annualized ROI = ((Final Value / Cost)^(1/years) - 1) × 100. This is sometimes called Compound Annual Growth Rate (CAGR) and gives a more accurate picture of long-term investment performance.',
-        },
-        {
-          question: 'How does ROI account for time?',
-          answer:
-            'Basic ROI does not account for time — a 50% return over 1 year and a 50% return over 10 years both show the same ROI. That is why annualized ROI is important. Annualized ROI normalizes returns to a per-year basis using compound growth calculations, enabling apples-to-apples comparisons across investments with different holding periods. This metric reveals the true efficiency of capital deployment over time.',
-        },
-        {
-          question: 'What is considered a good ROI?',
-          answer:
-            'A good ROI depends on the investment type and risk level. Stock market long-term average is 7-10% annualized. Real estate typically 8-12%. Marketing campaigns often target 300-500% ROI (5:1 return). Venture capital targets 10x+ ROI. Always compare against your cost of capital and industry benchmarks.',
-        },
-        {
-          question: 'How is ROI different from profit?',
-          answer:
-            'Profit is the absolute dollar amount gained ($), while ROI is the percentage return relative to the amount invested. A $1,000 profit on a $100 investment is 1,000% ROI — very different from $1,000 profit on a $100,000 investment (1% ROI). ROI enables comparison across different investment sizes.',
-        },
-        {
-          question: 'Does ROI account for the time value of money?',
-          answer:
-            'Simple ROI does not account for time — a 50% ROI over 1 year is very different from 50% over 10 years. Annualized ROI addresses this by expressing the return as an equivalent yearly rate, enabling fair comparison regardless of investment duration.',
-        },
-        {
-          question: 'How do taxes affect ROI?',
-          answer:
-            'Taxes can significantly reduce your actual ROI. Investment gains may be subject to capital gains tax (short-term: ordinary income rate; long-term: 0-20%). Real estate has depreciation benefits. Always calculate after-tax ROI for accurate investment comparison, especially across different asset classes with different tax treatments.',
-        },
-      ],
+    { question: 'What is a good ROI?', answer: 'A "good" ROI depends on the investment type and risk level. For the stock market, the S&P 500 historically returns about 10% annually before inflation, so an annualized ROI above 10% is generally considered strong. Real estate investments typically target 8-12% annual returns. For startup investments or venture capital, investors often look for 25%+ annual returns to compensate for the higher risk. For marketing campaigns, a 5:1 ratio (500% ROI) is the typical target.' },
+    { question: 'How is ROI different from profit?', answer: 'Profit is an absolute dollar amount — the difference between what you invested and what you received. ROI expresses that profit as a percentage of the total cost, making it easy to compare investments of different sizes. For example, a $1,000 profit on a $2,000 investment (50% ROI) is proportionally much better than a $1,000 profit on a $50,000 investment (2% ROI), even though the dollar profit is the same.' },
+    { question: 'What is annualized ROI?', answer: 'Annualized ROI converts your total return into an equivalent yearly rate, allowing you to compare investments held for different periods. For instance, a 30% return over 3 years is equivalent to roughly 9.14% per year. The formula uses compound growth: Annualized ROI = ((Final Value / Cost)^(1/years) - 1) × 100. This is sometimes called Compound Annual Growth Rate (CAGR) and gives a more accurate picture of long-term investment performance.' },
+    { question: 'How does ROI account for time?', answer: 'Basic ROI does not account for time — a 50% return over 1 year and a 50% return over 10 years both show the same ROI. That is why annualized ROI is important. Annualized ROI normalizes returns to a per-year basis using compound growth calculations, enabling apples-to-apples comparisons across investments with different holding periods. For investments with cash flows over time, use Net Present Value (NPV) and Internal Rate of Return (IRR) for a more accurate picture.' },
+    { question: 'What is the difference between ROI and IRR?', answer: 'ROI is a simple percentage: (gain / cost) × 100. IRR (Internal Rate of Return) is the discount rate at which the Net Present Value of all cash flows equals zero. The key difference: IRR accounts for the timing of cash flows, while simple ROI does not. Use ROI for simple "buy once, sell once" investments; use IRR (and NPV) for cash-flowing investments like real estate, equipment, or marketing campaigns.' },
+    { question: 'How do taxes affect ROI?', answer: 'Taxes can significantly reduce your actual ROI. Investment gains may be subject to: (1) Short-term capital gains tax (ordinary income rate, up to 37%) for assets held under 1 year. (2) Long-term capital gains tax (0%, 15%, or 20% depending on income) for assets held over 1 year. (3) Net investment income tax (3.8%) for high earners. (4) State capital gains tax (varies by state, 0-13.3%). For real estate, depreciation can shelter rental income from tax. For business equipment, Section 179 deduction lets you expense up to $1.16M of equipment purchases in year 1.' },
+    { question: 'What is a good ROI for a marketing campaign?', answer: 'Marketing ROI benchmarks vary widely by channel and industry. Typical targets: Email marketing 3,000-4,000% ROI (the highest, due to low cost per email), SEO 200-500% (long-term play, 6-12 months to materialize), paid search 100-300%, social media ads 50-200%, content marketing 200-400% (long-term). For e-commerce, the typical benchmark is "ROAS" (Return on Ad Spend) of 4:1 — meaning $4 in revenue per $1 in ad spend, equivalent to 300% ROI.' },
+    { question: 'What is ROI vs ROAS?', answer: 'ROI (Return on Investment) = (Revenue - Cost) / Cost × 100. ROAS (Return on Ad Spend) = Revenue / Ad Spend. The difference: ROI subtracts the cost from revenue before dividing; ROAS does not. A 4:1 ROAS means $4 in revenue per $1 in ad spend — but if the product itself costs $2 to make, your profit is $4 - $2 - $1 = $1, and ROI is $1 / $3 = 33%. ROAS overstates profitability because it ignores product cost. Always use ROI for true profitability analysis; use ROAS only for top-of-funnel ad efficiency comparison.' },
+    { question: 'How do I calculate ROI for a real estate investment?', answer: 'For a flip: ROI = (Sale Price - Purchase Price - Renovation Costs - Holding Costs - Selling Costs) / (Purchase Price + Renovation Costs) × 100. For a rental: ROI = (Annual Rental Income - Operating Expenses - Mortgage Payment) / (Down Payment + Closing Costs) × 100. This is also called "cash-on-cash return." A typical target is 8-12% cash-on-cash return for rental properties. Note: ROI understates total return because it ignores appreciation, principal paydown, and tax benefits (depreciation).' },
+    { question: 'What is the difference between ROI and payback period?', answer: 'Payback period measures how long it takes to recoup your initial investment: Payback = Initial Cost / Annual Cash Flow. For example, a $20,000 machine saving $5,000/year has a 4-year payback period. ROI measures the profitability percentage over a period: the same machine over 10 years generates ($50,000 - $20,000) / $20,000 = 150% ROI. Payback is a risk metric (how long is my capital at risk?); ROI is a profitability metric (how much did I earn?). Most capital budgeting decisions use both.' },
+  ],
+  relatedTools: [
+    { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Calculate profit margins on sales', icon: 'Percent' },
+    { slug: 'commission-calculator', title: 'Sales Commission Calculator', description: 'Calculate commission costs vs revenue', icon: 'DollarSign' },
+    { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Factor labor costs into ROI', icon: 'CreditCard' },
+    { slug: 'salary-increase-calculator', title: 'Salary Increase Calculator', description: 'Evaluate ROI of career growth', icon: 'TrendingUp' },
+    { slug: 'time-card-calculator', title: 'Time Card Calculator', description: 'Track hours for project ROI', icon: 'Clock' },
+    { slug: 'bonus-tax-calculator', title: 'Bonus Tax Calculator', description: 'Calculate net returns after tax', icon: 'Gift' },
+  ],
 };
-
 export default seoData;

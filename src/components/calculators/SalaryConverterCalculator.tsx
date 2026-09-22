@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
 import ComparePanel, { CompareRow } from './ComparePanel';
+import UnitToggle from './UnitToggle';
 import {
   Select,
   SelectContent,
@@ -323,8 +324,21 @@ export default function SalaryConverterCalculator() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="result-display mt-8" aria-live="polite"
+          className="result-display px-4 sm:px-6 pb-4 sm:pb-6 mt-8" aria-live="polite"
         >
+          {/* UnitToggle — show all pay-period equivalents */}
+          {(() => {
+            const _amt = parseFloat(payAmount) || 0;
+            if (!_amt) return null;
+            const _periods = payPeriod === 'annual' ? 1 : payPeriod === 'monthly' ? 12 : payPeriod === 'semimonthly' ? 24 : payPeriod === 'biweekly' ? 26 : payPeriod === 'weekly' ? 52 : 2080;
+            const _ann = payPeriod === 'annual' ? _amt : payPeriod === 'hourly' ? _amt * 2080 : _amt * _periods;
+            return (
+              <div className="mt-3 mb-3">
+                <UnitToggle annualSalary={_ann} />
+              </div>
+            );
+          })()}
+
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
             {/* Summary Header */}
             <div className="text-center space-y-2">

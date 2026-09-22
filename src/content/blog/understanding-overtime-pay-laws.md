@@ -178,3 +178,14 @@ For employees who take unpaid meal breaks, our [time card calculator with lunch]
 - Overtime is calculated per workweek — you cannot average hours across pay periods
 
 Maintaining compliance with overtime laws is not just about avoiding devastating lawsuits; it's about building trust and maintaining morale with your workforce. Regularly audit your employee classifications, ensure your payroll software correctly handles your state requirements, and when in doubt, consult an employment attorney before the Department of Labor finds the issue first.
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Overtime Calculator](/calculators/overtime-calculator)
+- [Time-and-a-Half Calculator](/calculators/time-and-a-half-calculator)
+- [Wages Calculator](/calculators/wages-calculator)
+- [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator)

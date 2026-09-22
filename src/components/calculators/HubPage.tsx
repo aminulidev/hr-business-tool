@@ -5,6 +5,7 @@ import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
 import { Search, X } from 'lucide-react';
 import { calculators, categoryOrder, categoryMeta, type CalculatorMeta } from '@/lib/calculator-meta';
+import { searchCalculators } from '@/lib/search-calculators';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -28,38 +29,53 @@ const cardVariants: Variants = {
 export default function HubPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
+  const isSearching = searchQuery.trim().length > 0;
+  const searchResults = useMemo(() => {
+    if (!isSearching) return null;
+    return searchCalculators(searchQuery);
+  }, [searchQuery, isSearching]);
+
   // Filter and group calculators based on search query
   const filteredCalculators = useMemo(() => {
-    if (!searchQuery.trim()) return calculators;
-    const query = searchQuery.toLowerCase();
-    return calculators.filter(
-      (calc) =>
-        calc.title.toLowerCase().includes(query) ||
-        calc.shortDescription.toLowerCase().includes(query) ||
-        calc.keywords.some((kw) => kw.toLowerCase().includes(query))
-    );
-  }, [searchQuery]);
+    if (!searchResults) return calculators;
+    return searchResults.map((r) => r.calculator);
+  }, [searchResults]);
 
   const grouped = useMemo(() => {
     const groups: {
       category: string;
       meta: { emoji: string; description: string };
       items: typeof calculators;
+      maxScore: number;
     }[] = [];
 
     categoryOrder.forEach((cat) => {
       const items = filteredCalculators.filter((c) => c.category === cat);
       if (items.length > 0 && categoryMeta[cat]) {
+        let maxScore = 0;
+        if (searchResults) {
+          for (const item of items) {
+            const found = searchResults.find((r) => r.calculator.slug === item.slug);
+            if (found && found.score > maxScore) {
+              maxScore = found.score;
+            }
+          }
+        }
         groups.push({
           category: cat,
           meta: categoryMeta[cat],
           items,
+          maxScore,
         });
       }
     });
 
+    if (searchResults) {
+      groups.sort((a, b) => b.maxScore - a.maxScore);
+    }
+
     return groups;
-  }, [filteredCalculators]);
+  }, [filteredCalculators, searchResults]);
 
   return (
     <motion.div
@@ -137,36 +153,60 @@ export default function HubPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-20 py-6 sm:py-12">
         {/* Calculator Grid */}
         <div className="space-y-12">
-          {grouped.map((group) => (
-            <section key={group.category}>
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-2xl">{group.meta.emoji}</span>
-                <div>
-                  <h2 className="text-xl font-bold">
-                    {group.category}
-                    <span className="ml-2 text-sm font-medium text-muted-foreground">
-                      ({group.items.length} tool{group.items.length > 1 ? 's' : ''})
-                    </span>
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    {group.meta.description}
-                  </p>
-                </div>
+          {grouped.length === 0 ? (
+            <div className="text-center py-16 px-4 max-w-md mx-auto rounded-3xl border border-border/60 bg-card/50 backdrop-blur-sm">
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 mb-4">
+                <Search className="h-6 w-6" />
               </div>
-              <motion.div
-                key={group.category}
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.1 }}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
-              >
-                {group.items.map((calc) => (
-                  <CalculatorCardComponent key={calc.slug} calc={calc} />
+              <h3 className="text-lg font-bold text-foreground">No calculators found</h3>
+              <p className="text-sm text-muted-foreground mt-1.5">
+                We couldn&apos;t find any tool matching &ldquo;{searchQuery}&rdquo;. Try another search term:
+              </p>
+              <div className="mt-5 flex flex-wrap justify-center gap-2">
+                {['ROI', 'Commission', 'Payroll', 'Overtime', 'Break-Even', 'PTO'].map((term) => (
+                  <button
+                    key={term}
+                    type="button"
+                    onClick={() => setSearchQuery(term)}
+                    className="text-xs font-medium px-3 py-1.5 rounded-full bg-muted hover:bg-accent text-foreground transition-colors border border-border/60"
+                  >
+                    {term}
+                  </button>
                 ))}
-              </motion.div>
-            </section>
-          ))}
+              </div>
+            </div>
+          ) : (
+            grouped.map((group) => (
+              <section key={group.category}>
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="text-2xl">{group.meta.emoji}</span>
+                  <div>
+                    <h2 className="text-xl font-bold">
+                      {group.category}
+                      <span className="ml-2 text-sm font-medium text-muted-foreground">
+                        ({group.items.length} tool{group.items.length > 1 ? 's' : ''})
+                      </span>
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      {group.meta.description}
+                    </p>
+                  </div>
+                </div>
+                <motion.div
+                  key={group.category}
+                  variants={containerVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.1 }}
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+                >
+                  {group.items.map((calc) => (
+                    <CalculatorCardComponent key={calc.slug} calc={calc} />
+                  ))}
+                </motion.div>
+              </section>
+            ))
+          )}
         </div>
 
         {/* Featured Guides & Strategic Insights Section */}
@@ -333,100 +373,27 @@ export default function HubPage() {
             </div>
           </div>
         </div>
-
-        {/* ============================================================= */}
-        {/* Long-form SEO content — helps AdSense approval & ranks for    */}
-        {/* head terms like "free business calculators"                   */}
-        {/* ============================================================= */}
+        {/* Long-form SEO content */}
         <section className="pt-10 border-t border-border/40">
           <div className="max-w-4xl mx-auto space-y-6 text-muted-foreground">
-            <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
-              Free Business &amp; HR Calculators for Small Business Owners
-            </h2>
-
-            <p className="leading-relaxed">
-              QuickBizCalc hosts 32 free business and HR calculators built for US small business owners, payroll
-              administrators, HR managers, and self-employed professionals. Every tool on this site is 100% free
-              with no signup, no paywall, and no usage limit. Calculations run entirely in your browser, which
-              means your salary, employee count, and financial inputs never leave your device. Our calculators
-              cover six functional clusters — payroll &amp; taxes, salary &amp; compensation, time &amp; attendance,
-              commission &amp; compensation, HR analytics, and business finance — and each tool ships with a full
-              formula explanation, worked examples, FAQs, and links to related tools so you can verify every
-              number against the underlying math.
-            </p>
-
-            <h3 className="text-xl sm:text-2xl font-bold text-foreground pt-4">
-              Why use a dedicated business calculator instead of a spreadsheet?
-            </h3>
-            <p className="leading-relaxed">
-              Spreadsheets are powerful but error-prone. A misplaced parenthesis in a payroll formula can cost
-              an employee hundreds of dollars per paycheck, and a wrong overtime multiplier can trigger a
-              Department of Labor audit. Our calculators encode the correct formulas for the 2026 tax year —
-              including the 6.2% Social Security wage base limit ($176,100 in 2026), the 1.45% Medicare
-              employee portion, the 22% federal supplemental withholding rate for bonuses, and FLSA
-              time-and-a-half overtime rules — so you can rely on the math without re-deriving it from IRS
-              Publication 15-T every time. For California employers, our overtime calculator also handles
-              the state&apos;s daily overtime rules (over 8 hours in a day) and 7th-consecutive-day rules.
-            </p>
-
-            <h3 className="text-xl sm:text-2xl font-bold text-foreground pt-4">
-              Who uses QuickBizCalc?
-            </h3>
-            <p className="leading-relaxed">
-              Our typical users are US-based hourly employees checking their next paycheck, small business
-              owners running payroll for 1-10 employees, HR directors benchmarking turnover and cost-per-hire
-              against industry averages, freelance consultants tracking billable hours and utilization rate,
-              and sales reps modeling commission under tiered or quota-based plans. The most-visited
-              calculators on the site are the <Link href="/calculators/hourly-paycheck-calculator" className="text-emerald-600 hover:underline">hourly paycheck calculator</Link>,
-              the <Link href="/calculators/time-card-calculator-with-lunch" className="text-emerald-600 hover:underline">time card calculator with lunch</Link>,
-              and the <Link href="/calculators/business-day-calculator" className="text-emerald-600 hover:underline">business day calculator</Link> —
-              tools that solve a specific, high-frequency calculation that would otherwise require
-              manual arithmetic or a paid SaaS subscription.
-            </p>
-
-            <h3 className="text-xl sm:text-2xl font-bold text-foreground pt-4">
-              Are these calculators accurate for the 2026 tax year?
-            </h3>
-            <p className="leading-relaxed">
-              Yes. Our tax calculators use the 2026 federal income tax brackets, the 2026 Social Security
-              wage base ($176,100), and the 2026 FICA rates (6.2% + 1.45% = 7.65% employee portion). State
-              tax calculations use the most recently published top marginal rate for each state as a
-              simplifying assumption; for a state-specific withholding calculation that accounts for
-              deductions, credits, and reciprocity agreements, consult a licensed CPA in your state. Every
-              calculator page includes a Statutory Sources section citing the IRS publication, FLSA section,
-              or SSA regulation that the formula is based on, so you can verify the math against the
-              primary source.
-            </p>
-
-            <h3 className="text-xl sm:text-2xl font-bold text-foreground pt-4">
-              Can I embed these calculators on my own website?
-            </h3>
-            <p className="leading-relaxed">
-              Yes — every calculator has an Embed button in the top-right of the page that generates a
-              one-line iframe snippet you can paste into your own website or blog. Embedding is free for
-              personal and commercial use, and the embedded calculator includes a small &quot;Powered by
-              QuickBizCalc&quot; attribution link. Accountants, HR consultants, bookkeeping firms, and
-              small-business bloggers use the embed widget to add instant calculation tools to their own
-              sites without writing any code.
-            </p>
-
-            <h3 className="text-xl sm:text-2xl font-bold text-foreground pt-4">
-              How is QuickBizCalc monetized?
-            </h3>
-            <p className="leading-relaxed">
-              QuickBizCalc is supported by display advertising. We do not sell user data, we do not
-              require an account, and we do not email you after you use a calculator. The ads you see
-              on each page keep the tools free for everyone. If you prefer an ad-free experience for your
-              team, contact us about a white-label embeddable widget for your company intranet or
-              accounting firm website.
-            </p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground">Free Business &amp; HR Calculators for Small Business Owners</h2>
+            <p className="leading-relaxed">QuickBizCalc hosts 32 free business and HR calculators built for US small business owners, payroll administrators, HR managers, and self-employed professionals. Every tool on this site is 100% free with no signup, no paywall, and no usage limit. Calculations run entirely in your browser, which means your salary, employee count, and financial inputs never leave your device.</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground pt-4">Why use a dedicated business calculator instead of a spreadsheet?</h3>
+            <p className="leading-relaxed">Spreadsheets are powerful but error-prone. A misplaced parenthesis in a payroll formula can cost an employee hundreds of dollars per paycheck, and a wrong overtime multiplier can trigger a Department of Labor audit. Our calculators encode the correct formulas for the 2026 tax year — including the 6.2% Social Security wage base limit ($176,100 in 2026), the 1.45% Medicare employee portion, the 22% federal supplemental withholding rate for bonuses, and FLSA time-and-a-half overtime rules — so you can rely on the math without re-deriving it from IRS Publication 15-T every time.</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground pt-4">Who uses QuickBizCalc?</h3>
+            <p className="leading-relaxed">Our typical users are US-based hourly employees checking their next paycheck, small business owners running payroll for 1-10 employees, HR directors benchmarking turnover and cost-per-hire against industry averages, freelance consultants tracking billable hours and utilization rate, and sales reps modeling commission under tiered or quota-based plans. The most-visited calculators on the site are the <Link href="/calculators/hourly-paycheck-calculator" className="text-emerald-600 hover:underline">hourly paycheck calculator</Link>, the <Link href="/calculators/time-card-calculator-with-lunch" className="text-emerald-600 hover:underline">time card calculator with lunch</Link>, and the <Link href="/calculators/business-day-calculator" className="text-emerald-600 hover:underline">business day calculator</Link>.</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground pt-4">Are these calculators accurate for the 2026 tax year?</h3>
+            <p className="leading-relaxed">Yes. Our tax calculators use the 2026 federal income tax brackets, the 2026 Social Security wage base ($176,100), and the 2026 FICA rates (6.2% + 1.45% = 7.65% employee portion). Every calculator page includes a Statutory Sources section citing the IRS publication, FLSA section, or SSA regulation that the formula is based on.</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground pt-4">Can I embed these calculators on my own website?</h3>
+            <p className="leading-relaxed">Yes — every calculator has an Embed button in the top-right of the page that generates a one-line iframe snippet you can paste into your own website or blog. Embedding is free for personal and commercial use, and the embedded calculator includes a small &quot;Powered by QuickBizCalc&quot; attribution link.</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground pt-4">How is QuickBizCalc monetized?</h3>
+            <p className="leading-relaxed">QuickBizCalc is supported by display advertising. We do not sell user data, we do not require an account, and we do not email you after you use a calculator. The ads you see on each page keep the tools free for everyone.</p>
           </div>
         </section>
       </div>
     </motion.div>
   );
 }
-
 function CalculatorCardComponent({ calc }: { calc: CalculatorMeta }) {
   const Icon = calc.icon;
 

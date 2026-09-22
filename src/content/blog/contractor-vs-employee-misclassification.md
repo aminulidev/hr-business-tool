@@ -187,3 +187,14 @@ Voluntarily reclassifying is almost always better than waiting to be audited.
 - Always compare the total loaded cost of contractors vs. employees before making a workforce decision
 
 Worker classification is a complex and highly scrutinized area of employment law. It is crucial to evaluate every working relationship individually, document your analysis, and consult with a legal professional when uncertain. The short-term savings of a 1099 arrangement can become a devastating long-term liability if the relationship doesn't hold up to regulatory scrutiny.
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [After-Tax Income Calculator](/calculators/after-tax-income-calculator)
+- [Salary Converter](/calculators/salary-converter)
+- [Wages Calculator](/calculators/wages-calculator)
+- [FICA Tax Calculator](/calculators/fica-tax-calculator)

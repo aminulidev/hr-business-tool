@@ -14,12 +14,14 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { calculators, type CalculatorMeta } from '@/lib/calculator-meta';
+import { calculators, categoryOrder, type CalculatorMeta } from '@/lib/calculator-meta';
+import { searchCalculators, popularCalculators } from '@/lib/search-calculators';
 
 // ─── Search Component ────────────────────────────────────────────────────────
 
 function SearchBar() {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState('');
   const router = useRouter();
 
   // Ctrl+K / Cmd+K keyboard shortcut
@@ -34,13 +36,21 @@ function SearchBar() {
     return () => document.removeEventListener('keydown', onKey);
   }, []);
 
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) {
+      setSearch('');
+    }
+  };
+
   const handleSelect = (path: string) => {
     setOpen(false);
+    setSearch('');
     router.push(path);
   };
 
-  // Group calculators by category
-  const categories = Array.from(new Set(calculators.map((c) => c.category)));
+  const isSearching = search.trim().length > 0;
+  const searchResults = isSearching ? searchCalculators(search) : [];
 
   return (
     <>
@@ -59,41 +69,141 @@ function SearchBar() {
 
       <CommandDialog
         open={open}
-        onOpenChange={setOpen}
+        onOpenChange={handleOpenChange}
+        shouldFilter={false}
         title="Search Calculators"
         description="Search for any business or HR calculator"
         showCloseButton={false}
-        className="sm:max-w-lg"
+        className="sm:max-w-xl"
       >
-        <CommandInput placeholder="Search…" />
+        <CommandInput
+          placeholder="Search calculators (e.g. 'roi', 'commission', 'payroll', 'tax')..."
+          value={search}
+          onValueChange={setSearch}
+        />
         <CommandList className="max-h-[60vh]">
-          <CommandEmpty>No calculators found.</CommandEmpty>
-          {categories.map((category) => {
-            const group = calculators.filter((c) => c.category === category);
-            return (
-              <CommandGroup key={category} heading={category}>
-                {group.map((calc) => {
+          {isSearching ? (
+            searchResults.length === 0 ? (
+              <div className="py-10 px-4 text-center">
+                <p className="text-sm font-semibold text-foreground">No calculators found</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  We couldn&apos;t find any tool matching &ldquo;{search}&rdquo;.
+                </p>
+                <div className="mt-4 flex flex-wrap justify-center gap-1.5">
+                  <span className="text-xs text-muted-foreground self-center mr-1">Try:</span>
+                  {['ROI', 'Commission', 'Payroll', 'Overtime', 'Break-Even', 'PTO'].map((term) => (
+                    <button
+                      key={term}
+                      type="button"
+                      onClick={() => setSearch(term)}
+                      className="text-xs px-2.5 py-1 rounded-md bg-muted hover:bg-accent hover:text-foreground text-muted-foreground transition-colors"
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <CommandGroup heading={`Matching Calculators (${searchResults.length})`}>
+                {searchResults.map(({ calculator: calc, score }, idx) => {
                   const Icon = calc.icon;
+                  const isTopMatch = idx === 0 && score >= 1000;
                   return (
                     <CommandItem
                       key={calc.slug}
-                      value={`${calc.title} ${calc.category} ${calc.keywords.join(' ')}`}
+                      value={calc.slug}
                       onSelect={() => handleSelect(calc.path)}
-                      className="flex items-center gap-3 cursor-pointer"
+                      className="flex items-center justify-between gap-3 px-3 py-2.5 cursor-pointer rounded-lg aria-selected:bg-accent"
                     >
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-emerald-500/10">
-                        <Icon className="h-4 w-4 text-emerald-600" />
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600">
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-medium truncate text-foreground">{calc.title}</p>
+                            {isTopMatch && (
+                              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-600 border border-emerald-500/20 shrink-0">
+                                Best Match
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground truncate">{calc.shortDescription}</p>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium truncate">{calc.title}</p>
-                        <p className="text-xs text-muted-foreground truncate">{calc.shortDescription}</p>
-                      </div>
+                      <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-muted/80 text-muted-foreground shrink-0 hidden sm:inline">
+                        {calc.category}
+                      </span>
                     </CommandItem>
                   );
                 })}
               </CommandGroup>
-            );
-          })}
+            )
+          ) : (
+            <>
+              {/* Popular Calculators Quick Access */}
+              <CommandGroup heading="Popular Calculators">
+                {popularCalculators.map((calc) => {
+                  const Icon = calc.icon;
+                  return (
+                    <CommandItem
+                      key={calc.slug}
+                      value={calc.slug}
+                      onSelect={() => handleSelect(calc.path)}
+                      className="flex items-center justify-between gap-3 px-3 py-2.5 cursor-pointer rounded-lg aria-selected:bg-accent"
+                    >
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600">
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium truncate text-foreground">{calc.title}</p>
+                          <p className="text-xs text-muted-foreground truncate">{calc.shortDescription}</p>
+                        </div>
+                      </div>
+                      <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-muted/80 text-muted-foreground shrink-0 hidden sm:inline">
+                        {calc.category}
+                      </span>
+                    </CommandItem>
+                  );
+                })}
+              </CommandGroup>
+
+              {/* All Categories */}
+              {categoryOrder.map((category) => {
+                const group = calculators.filter((c) => c.category === category);
+                if (group.length === 0) return null;
+                return (
+                  <CommandGroup key={category} heading={category}>
+                    {group.map((calc) => {
+                      const Icon = calc.icon;
+                      return (
+                        <CommandItem
+                          key={calc.slug}
+                          value={calc.slug}
+                          onSelect={() => handleSelect(calc.path)}
+                          className="flex items-center justify-between gap-3 px-3 py-2.5 cursor-pointer rounded-lg aria-selected:bg-accent"
+                        >
+                          <div className="flex items-center gap-3 min-w-0 flex-1">
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600">
+                              <Icon className="h-4 w-4" />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm font-medium truncate text-foreground">{calc.title}</p>
+                              <p className="text-xs text-muted-foreground truncate">{calc.shortDescription}</p>
+                            </div>
+                          </div>
+                          <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-muted/80 text-muted-foreground shrink-0 hidden sm:inline">
+                            {calc.category}
+                          </span>
+                        </CommandItem>
+                      );
+                    })}
+                  </CommandGroup>
+                );
+              })}
+            </>
+          )}
         </CommandList>
 
         {/* Footer hint */}

@@ -398,7 +398,7 @@ export default function GrossMarginCalculator() {
         )}
 
         {/* Buttons */}
-        <div className="flex items-center gap-3">
+        <div className="flex gap-3">
           <Button
             onClick={isMultiProduct && products.length > 1 ? handleMultiCalculate : handleSingleCalculate}
             className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"

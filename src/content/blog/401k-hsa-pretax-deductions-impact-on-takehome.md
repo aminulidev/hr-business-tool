@@ -87,3 +87,14 @@ For an employee paying 22% Federal + 5% State + 7.65% FICA, saving $100 in an HS
 3. **Plan Around Annual IRS Limits:** Check IRS statutory contribution caps for 401(k)s and HSAs each year to avoid excess contribution penalties.
 
 Model your overall compensation and annual salary projections with our [Salary Converter Calculator](/calculators/salary-converter) and [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator).
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Payroll Deduction Calculator](/calculators/payroll-deduction-calculator)
+- [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator)
+- [Salary Tax Calculator](/calculators/salary-tax-calculator)
+- [After-Tax Income Calculator](/calculators/after-tax-income-calculator)

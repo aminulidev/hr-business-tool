@@ -46,6 +46,12 @@ import EmployeeTurnoverCalculator from '@/components/calculators/EmployeeTurnove
 import CostPerHireCalculator from '@/components/calculators/CostPerHireCalculator';
 import BillableHoursCalculator from '@/components/calculators/BillableHoursCalculator';
 import RevenuePerEmployeeCalculator from '@/components/calculators/RevenuePerEmployeeCalculator';
+// ── 5 new calculators ──
+import PTOAccrualCalculator from '@/components/calculators/PTOAccrualCalculator';
+import ContractorVsEmployeeCalculator from '@/components/calculators/ContractorVsEmployeeCalculator';
+import BreakEvenCalculator from '@/components/calculators/BreakEvenCalculator';
+import CashFlowForecastCalculator from '@/components/calculators/CashFlowForecastCalculator';
+import SocialSecurityEstimator from '@/components/calculators/SocialSecurityEstimator';
 
 const componentMap: Record<string, React.ComponentType> = {
   'commission-calculator': SalesCommissionCalculator,
@@ -81,6 +87,12 @@ const componentMap: Record<string, React.ComponentType> = {
   'cost-per-hire-calculator': CostPerHireCalculator,
   'billable-hours-calculator': BillableHoursCalculator,
   'revenue-per-employee-calculator': RevenuePerEmployeeCalculator,
+  // ── 5 new calculators ──
+  'pto-accrual-calculator': PTOAccrualCalculator,
+  'contractor-vs-employee-calculator': ContractorVsEmployeeCalculator,
+  'break-even-calculator': BreakEvenCalculator,
+  'cash-flow-forecast-calculator': CashFlowForecastCalculator,
+  'social-security-estimator': SocialSecurityEstimator,
 };
 
 // ---------------------------------------------------------------------------

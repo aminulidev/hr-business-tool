@@ -52,57 +52,57 @@ interface TaxResult {
 }
 
 // ---------------------------------------------------------------------------
-// 2025 Federal Tax Brackets
+// 2026 Federal Tax Brackets (IRS Rev. Proc. 2025-32, adjusted for inflation)
 // ---------------------------------------------------------------------------
 
-const brackets2025: Record<FilingStatus, BracketDefinition[]> = {
+const brackets2026: Record<FilingStatus, BracketDefinition[]> = {
   single: [
-    { min: 0, max: 11925, rate: 0.1 },
-    { min: 11925, max: 48475, rate: 0.12 },
-    { min: 48475, max: 103350, rate: 0.22 },
-    { min: 103350, max: 197300, rate: 0.24 },
-    { min: 197300, max: 250525, rate: 0.32 },
-    { min: 250525, max: 626350, rate: 0.35 },
-    { min: 626350, max: Infinity, rate: 0.37 },
+    { min: 0, max: 12150, rate: 0.1 },
+    { min: 12150, max: 49350, rate: 0.12 },
+    { min: 49350, max: 105250, rate: 0.22 },
+    { min: 105250, max: 200900, rate: 0.24 },
+    { min: 200900, max: 255350, rate: 0.32 },
+    { min: 255350, max: 639950, rate: 0.35 },
+    { min: 639950, max: Infinity, rate: 0.37 },
   ],
   mfj: [
-    { min: 0, max: 23850, rate: 0.1 },
-    { min: 23850, max: 96950, rate: 0.12 },
-    { min: 96950, max: 206700, rate: 0.22 },
-    { min: 206700, max: 394600, rate: 0.24 },
-    { min: 394600, max: 501050, rate: 0.32 },
-    { min: 501050, max: 751600, rate: 0.35 },
-    { min: 751600, max: Infinity, rate: 0.37 },
+    { min: 0, max: 24300, rate: 0.1 },
+    { min: 24300, max: 98700, rate: 0.12 },
+    { min: 98700, max: 210500, rate: 0.22 },
+    { min: 210500, max: 401800, rate: 0.24 },
+    { min: 401800, max: 510700, rate: 0.32 },
+    { min: 510700, max: 766900, rate: 0.35 },
+    { min: 766900, max: Infinity, rate: 0.37 },
   ],
   mfs: [
-    { min: 0, max: 11925, rate: 0.1 },
-    { min: 11925, max: 48475, rate: 0.12 },
-    { min: 48475, max: 103350, rate: 0.22 },
-    { min: 103350, max: 197300, rate: 0.24 },
-    { min: 197300, max: 250525, rate: 0.32 },
-    { min: 250525, max: 375800, rate: 0.35 },
-    { min: 375800, max: Infinity, rate: 0.37 },
+    { min: 0, max: 12150, rate: 0.1 },
+    { min: 12150, max: 49350, rate: 0.12 },
+    { min: 49350, max: 105250, rate: 0.22 },
+    { min: 105250, max: 200900, rate: 0.24 },
+    { min: 200900, max: 255350, rate: 0.32 },
+    { min: 255350, max: 383450, rate: 0.35 },
+    { min: 383450, max: Infinity, rate: 0.37 },
   ],
   hoh: [
-    { min: 0, max: 17000, rate: 0.1 },
-    { min: 17000, max: 64850, rate: 0.12 },
-    { min: 64850, max: 103350, rate: 0.22 },
-    { min: 103350, max: 197300, rate: 0.24 },
-    { min: 197300, max: 250500, rate: 0.32 },
-    { min: 250500, max: 626350, rate: 0.35 },
-    { min: 626350, max: Infinity, rate: 0.37 },
+    { min: 0, max: 17300, rate: 0.1 },
+    { min: 17300, max: 66000, rate: 0.12 },
+    { min: 66000, max: 105250, rate: 0.22 },
+    { min: 105250, max: 200900, rate: 0.24 },
+    { min: 200900, max: 255350, rate: 0.32 },
+    { min: 255350, max: 639950, rate: 0.35 },
+    { min: 639950, max: Infinity, rate: 0.37 },
   ],
 };
 
 // ---------------------------------------------------------------------------
-// 2025 Standard Deductions
+// 2026 Standard Deductions
 // ---------------------------------------------------------------------------
 
 const standardDeductions: Record<FilingStatus, number> = {
-  single: 15000,
-  mfj: 30000,
-  mfs: 15000,
-  hoh: 22500,
+  single: 15300,
+  mfj: 30600,
+  mfs: 15300,
+  hoh: 22950,
 };
 
 // ---------------------------------------------------------------------------
@@ -179,7 +179,7 @@ function calculateTax(
 ): TaxResult {
   const deduction = applyStandardDeduction ? standardDeductions[filingStatus] : 0;
   const taxableIncome = Math.max(0, grossIncome - deduction);
-  const brackets = brackets2025[filingStatus];
+  const brackets = brackets2026[filingStatus];
   let remaining = taxableIncome;
   let totalTax = 0;
   let marginalRate = 0;
@@ -332,7 +332,7 @@ export default function TaxBracketCalculator() {
               htmlFor="standard-deduction"
               className="text-sm font-medium cursor-pointer select-none"
             >
-              Apply 2025 Standard Deduction
+              Apply 2026 Standard Deduction
             </Label>
             <Badge
               variant="secondary"
@@ -531,7 +531,7 @@ export default function TaxBracketCalculator() {
             <div className="px-5 py-3 bg-muted/30 border-b border-border/50">
               <p className="text-sm font-semibold">Bracket-by-Bracket Breakdown</p>
               <p className="text-xs text-muted-foreground">
-                {filingStatusLabels[filingStatus]} — 2025 Tax Year
+                {filingStatusLabels[filingStatus]} — 2026 Tax Year
               </p>
             </div>
             <div className="overflow-x-auto">
@@ -662,7 +662,7 @@ export default function TaxBracketCalculator() {
           {/* ---------- Tax Savings Note ---------- */}
           {result.effectiveRate > 0 && (
             <p className="text-xs text-center text-muted-foreground leading-relaxed">
-              This calculation uses 2025 federal tax brackets only. Actual tax liability may
+              This calculation uses 2026 federal tax brackets only. Actual tax liability may
               differ based on additional factors such as state taxes, credits, deductions
               beyond the standard deduction, and other adjustments. Consult a tax
               professional for personalized advice.

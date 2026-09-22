@@ -186,3 +186,14 @@ For time tracking and weekly hour summaries, our [time card calculator with lunc
 - PAGA lawsuits mean that California overtime violations frequently result in class-action-style litigation
 
 Staying compliant with California overtime laws requires understanding both the daily and weekly thresholds, correctly calculating the regular rate including all required compensation components, and regularly auditing your exempt employee classifications against California's stricter standards.
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Overtime Calculator](/calculators/overtime-calculator)
+- [Time-and-a-Half Calculator](/calculators/time-and-a-half-calculator)
+- [Time Card Calculator with Lunch](/calculators/time-card-calculator-with-lunch)
+- [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator)

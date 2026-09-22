@@ -68,3 +68,14 @@ $$\text{Regular Rate} = \frac{\text{Total Hourly Earnings} + \text{Non-Discretio
 Failing to blend bonuses into the regular rate when computing overtime results in statutory underpayment penalties under California Labor Code § 203.
 
 Check your full post-tax take-home pay with our [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator).
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Overtime Calculator](/calculators/overtime-calculator)
+- [Time-and-a-Half Calculator](/calculators/time-and-a-half-calculator)
+- [Wages Calculator](/calculators/wages-calculator)
+- [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator)

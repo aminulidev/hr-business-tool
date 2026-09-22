@@ -160,3 +160,14 @@ Use our [revenue per employee calculator](/calculators/revenue-per-employee-calc
 - Stay interviews are more valuable than exit interviews — use them proactively
 
 Turnover is a silent killer of profitability. By measuring it accurately, understanding its true cost, and taking proactive steps to retain your top talent, you can drastically reduce your operational costs and build a more resilient, motivated workforce.
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Employee Turnover Calculator](/calculators/employee-turnover-calculator)
+- [Cost per Hire Calculator](/calculators/cost-per-hire-calculator)
+- [Revenue per Employee Calculator](/calculators/revenue-per-employee-calculator)
+- [Salary Increase Calculator](/calculators/salary-increase-calculator)

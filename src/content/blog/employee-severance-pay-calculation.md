@@ -73,3 +73,14 @@ Estimate your take-home amount using our [Post-Tax Bonus Calculator](/calculator
 2. **COBRA Health Insurance:** Under federal COBRA, employers with 20+ employees must offer continuing health coverage for 18 months, though the employer may subsidize COBRA premiums as part of the severance package.
 
 Review workforce retention and hiring replacement costs with our [Cost Per Hire Calculator](/calculators/cost-per-hire-calculator) and [Employee Turnover Calculator](/calculators/employee-turnover-calculator).
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Severance Pay Calculator](/calculators/severance-pay-calculator)
+- [Bonus Tax Calculator](/calculators/bonus-tax-calculator)
+- [Payroll Deduction Calculator](/calculators/payroll-deduction-calculator)
+- [Salary Tax Calculator](/calculators/salary-tax-calculator)

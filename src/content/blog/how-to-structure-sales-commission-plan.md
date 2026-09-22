@@ -142,3 +142,14 @@ The best commission plan in the world fails if your reps don't understand it. Re
 - Use tools like our [sales commission calculator](/calculators/commission-calculator) to model the financial impact before rolling out any new plan
 
 A well-designed commission plan is one of the highest-leverage investments a business owner can make. Test the math rigorously, communicate it clearly, and revisit it annually to ensure it continues to align with your evolving business goals.
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Sales Commission Calculator](/calculators/commission-calculator)
+- [Salary Increase Calculator](/calculators/salary-increase-calculator)
+- [Bonus Tax Calculator](/calculators/bonus-tax-calculator)
+- [Salary Converter](/calculators/salary-converter)

@@ -225,3 +225,14 @@ Rather than doing this math manually for every employee every week, our free onl
 - Use our free time card calculators to eliminate manual errors and save time on weekly payroll calculations
 
 Accurate time tracking protects both employees and employers. Whether you're verifying a single paycheck or running payroll for 20 people, getting the hours right is the foundation of fair and legally compliant compensation.
+
+---
+
+## Related Calculators
+
+Apply what you've just learned with these free, instant calculators:
+
+- [Time Card Calculator with Lunch](/calculators/time-card-calculator-with-lunch)
+- [Time Card Calculator](/calculators/time-card-calculator)
+- [Time to Decimal Calculator](/calculators/time-to-decimal-calculator)
+- [Overtime Calculator](/calculators/overtime-calculator)
