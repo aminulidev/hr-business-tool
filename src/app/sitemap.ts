@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { calculators, SITE_URL } from '@/lib/calculator-meta';
+import { getPublishedCalculators, SITE_URL } from '@/lib/calculator-meta';
 import { getSortedPostsData } from '@/lib/blog';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   };
 
   // Individual calculator pages
-  const calculatorEntries: MetadataRoute.Sitemap = calculators.map((calc) => ({
+  const calculatorEntries: MetadataRoute.Sitemap = getPublishedCalculators().map((calc) => ({
     url: `${SITE_URL}${calc.path}`,
     lastModified: now,
     changeFrequency: 'monthly' as const,

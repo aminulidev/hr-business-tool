@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
 import { Search, X } from 'lucide-react';
-import { calculators, categoryOrder, categoryMeta, type CalculatorMeta } from '@/lib/calculator-meta';
+import { getPublishedCalculators, categoryOrder, categoryMeta, type CalculatorMeta } from '@/lib/calculator-meta';
 import { searchCalculators } from '@/lib/search-calculators';
 
 const containerVariants: Variants = {
@@ -36,16 +36,18 @@ export default function HubPage() {
   }, [searchQuery, isSearching]);
 
   // Filter and group calculators based on search query
+  const activeCalculators = useMemo(() => getPublishedCalculators(), []);
+
   const filteredCalculators = useMemo(() => {
-    if (!searchResults) return calculators;
+    if (!searchResults) return activeCalculators;
     return searchResults.map((r) => r.calculator);
-  }, [searchResults]);
+  }, [searchResults, activeCalculators]);
 
   const grouped = useMemo(() => {
     const groups: {
       category: string;
       meta: { emoji: string; description: string };
-      items: typeof calculators;
+      items: CalculatorMeta[];
       maxScore: number;
     }[] = [];
 
@@ -69,6 +71,31 @@ export default function HubPage() {
         });
       }
     });
+
+    // Safeguard: include any categories not explicitly listed in categoryOrder
+    const coveredCategories = new Set(groups.map((g) => g.category));
+    const remainingItems = filteredCalculators.filter((c) => !coveredCategories.has(c.category));
+    if (remainingItems.length > 0) {
+      const remainingCats = Array.from(new Set(remainingItems.map((c) => c.category)));
+      remainingCats.forEach((cat) => {
+        const items = remainingItems.filter((c) => c.category === cat);
+        let maxScore = 0;
+        if (searchResults) {
+          for (const item of items) {
+            const found = searchResults.find((r) => r.calculator.slug === item.slug);
+            if (found && found.score > maxScore) {
+              maxScore = found.score;
+            }
+          }
+        }
+        groups.push({
+          category: cat,
+          meta: categoryMeta[cat] || { emoji: '📊', description: `${cat} calculators and tools` },
+          items,
+          maxScore,
+        });
+      });
+    }
 
     if (searchResults) {
       groups.sort((a, b) => b.maxScore - a.maxScore);

@@ -14,7 +14,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { calculators, categoryOrder, type CalculatorMeta } from '@/lib/calculator-meta';
+import { getPublishedCalculators, categoryOrder, calculators, type CalculatorMeta } from '@/lib/calculator-meta';
 import { searchCalculators, popularCalculators } from '@/lib/search-calculators';
 
 // ─── Search Component ────────────────────────────────────────────────────────
@@ -50,7 +50,7 @@ function SearchBar() {
   };
 
   const isSearching = search.trim().length > 0;
-  const searchResults = isSearching ? searchCalculators(search) : [];
+  const searchResults = isSearching ? searchCalculators(search, getPublishedCalculators()) : [];
 
   return (
     <>
@@ -171,7 +171,7 @@ function SearchBar() {
 
               {/* All Categories */}
               {categoryOrder.map((category) => {
-                const group = calculators.filter((c) => c.category === category);
+                const group = getPublishedCalculators().filter((c) => c.category === category);
                 if (group.length === 0) return null;
                 return (
                   <CommandGroup key={category} heading={category}>

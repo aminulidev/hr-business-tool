@@ -36,7 +36,14 @@ export async function getSortedPostsData() {
     // Combine the data with the slug
     return {
       slug,
-      ...(matterResult.data as { title: string; date: string; excerpt: string; author: string; category: string; coverImage?: string }),
+      ...(matterResult.data as {
+        title: string;
+        date: string;
+        excerpt: string;
+        author: string;
+        category: string;
+        coverImage?: string;
+      }),
     };
   });
 
@@ -52,7 +59,7 @@ export async function getSortedPostsData() {
   // Dynamically map dates to 2 months ago, staggered by 5 days per post
   return sortedPosts.map((post, index) => {
     const currentYear = new Date().getFullYear().toString();
-    const dynamicTitle = post.title.replace(/\b20\d{2}\b/g, currentYear);
+    const dynamicTitle = (post.title || '').replace(/\b20\d{2}\b/g, currentYear);
 
     const dateObj = new Date();
     dateObj.setMonth(dateObj.getMonth() - 2);
@@ -74,6 +81,9 @@ export async function getSortedPostsData() {
 
 export async function getPostData(slug: string) {
   const fullPath = path.join(postsDirectory, `${slug}.md`);
+  if (!fs.existsSync(fullPath)) {
+    throw new Error('Post not found');
+  }
   const fileContents = fs.readFileSync(fullPath, 'utf8');
 
   // Use gray-matter to parse the post metadata section
@@ -90,7 +100,14 @@ export async function getPostData(slug: string) {
   return {
     slug,
     contentHtml,
-    ...(matterResult.data as { excerpt: string; author: string; category: string; coverImage?: string }),
+    ...(matterResult.data as {
+      title: string;
+      excerpt: string;
+      author: string;
+      category: string;
+      coverImage?: string;
+      date: string;
+    }),
     title: postInfo?.title || matterResult.data.title,
     date: postInfo?.date || matterResult.data.date,
   };
