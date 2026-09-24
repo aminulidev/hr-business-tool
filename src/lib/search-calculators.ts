@@ -1,4 +1,4 @@
-import { calculators, type CalculatorMeta } from './calculator-meta';
+import { calculators, getPublishedCalculators, type CalculatorMeta } from './calculator-meta';
 
 export interface SearchResult {
   calculator: CalculatorMeta;
@@ -6,7 +6,7 @@ export interface SearchResult {
   matchReason?: string;
 }
 
-export function searchCalculators(query: string, items: CalculatorMeta[] = calculators): SearchResult[] {
+export function searchCalculators(query: string, items: CalculatorMeta[] = getPublishedCalculators()): SearchResult[] {
   const trimmed = query.trim().toLowerCase();
   if (!trimmed) {
     return items.map((c) => ({ calculator: c, score: 0 }));
