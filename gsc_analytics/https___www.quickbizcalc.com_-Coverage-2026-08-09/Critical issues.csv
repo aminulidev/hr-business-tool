@@ -1,8 +1,0 @@
-Reason,Source,Validation,Pages
-Blocked by robots.txt,Website,Failed,2
-Alternate page with proper canonical tag,Website,Failed,1
-Crawled - currently not indexed,Google systems,Failed,4
-Excluded by ‘noindex’ tag,Website,Not Started,1
-Not found (404),Website,Started,3
-"Duplicate, Google chose different canonical than user",Google systems,N/A,0
-Discovered - currently not indexed,Google systems,Passed,0
