@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import {
   getCalculatorBySlug,
   getAllSlugs,
+  getLiveRelatedTools,
   isCalculatorPublished,
   SITE_URL,
   SITE_NAME,
@@ -11,6 +12,9 @@ import {
 import AppShell from '@/components/layout/AppShell';
 import CalculatorLayoutServer from '@/components/calculators/CalculatorLayoutServer';
 import CalculatorSkeleton from '@/components/calculators/CalculatorSkeleton';
+
+// One component serves every state paycheck page, configured by its state prop
+const StatePaycheckCalculator = dynamic(() => import('@/components/calculators/StatePaycheckCalculator'), { loading: () => <CalculatorSkeleton /> });
 
 // Use dynamic imports to reduce memory - only load the component needed for each page
 const componentMap: Record<string, React.ComponentType> = {
@@ -38,6 +42,11 @@ const componentMap: Record<string, React.ComponentType> = {
   'salary-tax-calculator': dynamic(() => import('@/components/calculators/SalaryTaxCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'time-card-calculator-with-lunch': dynamic(() => import('@/components/calculators/TimeCardLunchCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'hourly-paycheck-calculator': dynamic(() => import('@/components/calculators/HourlyPaycheckCalculator'), { loading: () => <CalculatorSkeleton /> }),
+  'california-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="CA" />,
+  'texas-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="TX" />,
+  'florida-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="FL" />,
+  'new-york-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="NY" />,
+  'illinois-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="IL" />,
   'severance-pay-calculator': dynamic(() => import('@/components/calculators/SeverancePayCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'workers-comp-calculator': dynamic(() => import('@/components/calculators/WorkersCompCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'fica-tax-calculator': dynamic(() => import('@/components/calculators/FicaTaxCalculator'), { loading: () => <CalculatorSkeleton /> }),
@@ -233,6 +242,10 @@ export function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
 }
 
+// Only published slugs exist. Unknown, draft, and merged slugs get a real 404
+// status — loading.tsx streams the page, so notFound() inside it would send 200.
+export const dynamicParams = false;
+
 export function generateMetadata({
   params,
 }: {
@@ -322,6 +335,7 @@ export default async function CalculatorPage({
   } catch (e) {
     // If no SEO data exists yet for this slug, fallback gracefully
   }
+  const relatedTools = getLiveRelatedTools(seoData?.relatedTools, slug);
 
   return (
     <AppShell>
@@ -338,7 +352,7 @@ export default async function CalculatorPage({
             ...(seoData.workedExamples?.length > 0 ? [{ id: 'worked-examples', label: 'Worked Examples' }] : []),
             ...(seoData.faqs?.length > 0 ? [{ id: 'frequently-asked-questions', label: 'FAQs' }] : []),
             { id: 'statutory-sources', label: 'Statutory Sources' },
-            ...(seoData.relatedTools?.length > 0 ? [{ id: 'related-calculators', label: 'Related Calculators' }] : []),
+            ...(relatedTools.length > 0 ? [{ id: 'related-calculators', label: 'Related Calculators' }] : []),
           ]}
           howToSteps={seoData.howToSteps}
           formula={seoData.formula}
@@ -346,7 +360,7 @@ export default async function CalculatorPage({
           commissionStructures={seoData.commissionStructures}
           workedExamples={seoData.workedExamples}
           faqs={seoData.faqs}
-          relatedTools={seoData.relatedTools}
+          relatedTools={relatedTools}
         >
           <CalculatorComponent />
         </CalculatorLayoutServer>

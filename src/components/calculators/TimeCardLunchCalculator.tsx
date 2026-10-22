@@ -11,6 +11,8 @@ import {
   Copy,
   Check,
   Printer,
+  CalendarDays,
+  DollarSign,
 } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
 import { Input } from '@/components/ui/input';
@@ -58,11 +60,15 @@ interface DayResult {
 
 interface TimeCardResult {
   days: DayResult[];
+  weeks: number;
   totalRegularHours: number;
   totalOvertimeHours: number;
   totalHours: number;
   overtimeThreshold: number;
-  weeklyDecimal: number;
+  hourlyRate: number;
+  regularPay: number;
+  overtimePay: number;
+  totalPay: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -89,15 +95,31 @@ function createEmptyDay(): DayEntry {
   };
 }
 
-const DEFAULT_DAYS: DayEntry[] = [
+const OFF_DAY: DayEntry = { enabled: false, clockIn: '', lunchStart: '', lunchEnd: '', clockOut: '' };
+
+const DEFAULT_WEEK: DayEntry[] = [
   createEmptyDay(),
   createEmptyDay(),
   createEmptyDay(),
   createEmptyDay(),
   createEmptyDay(),
-  { enabled: false, clockIn: '', lunchStart: '', lunchEnd: '', clockOut: '' },
-  { enabled: false, clockIn: '', lunchStart: '', lunchEnd: '', clockOut: '' },
+  OFF_DAY,
+  OFF_DAY,
 ];
+
+// State always holds two weeks; only the first 7 × weeks entries are shown and calculated
+const DEFAULT_DAYS: DayEntry[] = [...DEFAULT_WEEK, ...DEFAULT_WEEK];
+
+const MINUTES_PER_DAY = 24 * 60;
+const OVERTIME_MULTIPLIER = 1.5;
+
+function dayLabel(idx: number, weeks: number): string {
+  const name = DAYS[idx % 7];
+  return weeks > 1 ? `Wk${Math.floor(idx / 7) + 1} ${name}` : name;
+}
+
+const formatCurrency = (value: number): string =>
+  value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
 // ---------------------------------------------------------------------------
 // Component
@@ -108,6 +130,8 @@ export default function TimeCardLunchCalculator() {
   const [lunchMode, setLunchMode] = useState<LunchMode>('manual');
   const [autoLunchDuration, setAutoLunchDuration] = useState('60');
   const [overtimeThreshold, setOvertimeThreshold] = useState('40');
+  const [weeks, setWeeks] = useState(1);
+  const [hourlyRate, setHourlyRate] = useState('');
   const [result, setResult] = useState<TimeCardResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -120,10 +144,11 @@ export default function TimeCardLunchCalculator() {
       .join('\n');
 
     const summary = [
-      '--- Weekly Time Card Summary with Lunch (QuickBizCalc) ---',
+      `--- ${result.weeks > 1 ? 'Biweekly' : 'Weekly'} Time Card Summary with Lunch (QuickBizCalc) ---`,
       `Total Hours Worked: ${result.totalHours.toFixed(2)} hrs`,
       `Regular Hours: ${result.totalRegularHours.toFixed(2)} hrs`,
       result.totalOvertimeHours > 0 ? `Overtime Hours: ${result.totalOvertimeHours.toFixed(2)} hrs` : null,
+      result.hourlyRate > 0 ? `Gross Pay: ${formatCurrency(result.totalPay)} at ${formatCurrency(result.hourlyRate)}/hr` : null,
       'Daily Breakdown:',
       dailyLines,
       'Calculated at: https://www.quickbizcalc.com/calculators/time-card-calculator-with-lunch',
@@ -159,15 +184,24 @@ export default function TimeCardLunchCalculator() {
       return;
     }
 
+    const rate = hourlyRate.trim() === '' ? 0 : parseFloat(hourlyRate);
+    if (isNaN(rate) || rate < 0) {
+      setError('Please enter a valid hourly rate, or leave it blank.');
+      return;
+    }
+
     const dayResults: DayResult[] = [];
     let totalMinutes = 0;
+    // FLSA overtime is per workweek, so track each week separately
+    const weekMinutes = Array.from({ length: weeks }, () => 0);
 
-    for (let i = 0; i < days.length; i++) {
+    for (let i = 0; i < weeks * 7; i++) {
       const day = days[i];
+      const label = dayLabel(i, weeks);
 
       if (!day.enabled) {
         dayResults.push({
-          day: DAYS[i],
+          day: label,
           enabled: false,
           clockIn: '',
           lunchStart: '',
@@ -182,28 +216,31 @@ export default function TimeCardLunchCalculator() {
       }
 
       if (!day.clockIn || !day.clockOut) {
-        setError(`Please enter clock-in and clock-out times for ${DAYS[i]}.`);
+        setError(`Please enter clock-in and clock-out times for ${label}.`);
         return;
       }
 
       const clockInMin = parseTimeToMinutes(day.clockIn);
-      const clockOutMin = parseTimeToMinutes(day.clockOut);
+      const rawClockOutMin = parseTimeToMinutes(day.clockOut);
+      // Times earlier than clock-in belong to the next day (overnight shift)
+      const afterClockIn = (t: number) => (t < clockInMin ? t + MINUTES_PER_DAY : t);
 
       if (clockInMin < 0) {
-        setError(`Invalid clock-in time for ${DAYS[i]}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
+        setError(`Invalid clock-in time for ${label}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
         return;
       }
-      if (clockOutMin < 0) {
-        setError(`Invalid clock-out time for ${DAYS[i]}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
+      if (rawClockOutMin < 0) {
+        setError(`Invalid clock-out time for ${label}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
         return;
       }
 
-      if (clockOutMin <= clockInMin) {
+      if (rawClockOutMin === clockInMin) {
         setError(
-          `Clock-out time must be after clock-in time for ${DAYS[i]}.`
+          `Clock-in and clock-out are the same time for ${label}.`
         );
         return;
       }
+      const clockOutMin = afterClockIn(rawClockOutMin);
 
       let lunchMin = 0;
       let hoursBefore = 0;
@@ -212,31 +249,33 @@ export default function TimeCardLunchCalculator() {
       if (lunchMode === 'manual') {
         if (!day.lunchStart || !day.lunchEnd) {
           setError(
-            `Please enter lunch start and end times for ${DAYS[i]} (or switch to auto-deduct mode).`
+            `Please enter lunch start and end times for ${label} (or switch to auto-deduct mode).`
           );
           return;
         }
-        const lunchStartMin = parseTimeToMinutes(day.lunchStart);
-        const lunchEndMin = parseTimeToMinutes(day.lunchEnd);
+        const rawLunchStartMin = parseTimeToMinutes(day.lunchStart);
+        const rawLunchEndMin = parseTimeToMinutes(day.lunchEnd);
 
-        if (lunchStartMin < 0) {
-          setError(`Invalid lunch out time for ${DAYS[i]}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
+        if (rawLunchStartMin < 0) {
+          setError(`Invalid lunch out time for ${label}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
           return;
         }
-        if (lunchEndMin < 0) {
-          setError(`Invalid lunch in time for ${DAYS[i]}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
+        if (rawLunchEndMin < 0) {
+          setError(`Invalid lunch in time for ${label}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
           return;
         }
+        const lunchStartMin = afterClockIn(rawLunchStartMin);
+        const lunchEndMin = afterClockIn(rawLunchEndMin);
 
         if (lunchEndMin <= lunchStartMin) {
           setError(
-            `Lunch end must be after lunch start for ${DAYS[i]}.`
+            `Lunch end must be after lunch start for ${label}.`
           );
           return;
         }
         if (lunchStartMin < clockInMin || lunchEndMin > clockOutMin) {
           setError(
-            `Lunch times must be within clock-in and clock-out times for ${DAYS[i]}.`
+            `Lunch times must be within clock-in and clock-out times for ${label}.`
           );
           return;
         }
@@ -250,7 +289,7 @@ export default function TimeCardLunchCalculator() {
         const totalShiftMin = clockOutMin - clockInMin;
         if (totalShiftMin <= lunchMin) {
           setError(
-            `Total shift time for ${DAYS[i]} is less than or equal to the lunch duration.`
+            `Total shift time for ${label} is less than or equal to the lunch duration.`
           );
           return;
         }
@@ -262,9 +301,10 @@ export default function TimeCardLunchCalculator() {
 
       const totalDayMin = hoursBefore + hoursAfter;
       totalMinutes += totalDayMin;
+      weekMinutes[Math.floor(i / 7)] += totalDayMin;
 
       dayResults.push({
-        day: DAYS[i],
+        day: label,
         enabled: true,
         clockIn: day.clockIn,
         lunchStart: lunchMode === 'manual' ? day.lunchStart : '',
@@ -278,16 +318,26 @@ export default function TimeCardLunchCalculator() {
     }
 
     const totalHours = minutesToDecimal(totalMinutes);
-    const totalRegularHours = Math.min(totalHours, otThresh);
-    const totalOvertimeHours = Math.max(totalHours - otThresh, 0);
+    // Overtime can't be averaged across weeks: 45h + 35h is still 5h of OT
+    const totalOvertimeHours = weekMinutes.reduce(
+      (sum, mins) => sum + Math.max(minutesToDecimal(mins) - otThresh, 0),
+      0
+    );
+    const totalRegularHours = totalHours - totalOvertimeHours;
+    const regularPay = rate * totalRegularHours;
+    const overtimePay = rate * OVERTIME_MULTIPLIER * totalOvertimeHours;
 
     setResult({
       days: dayResults,
+      weeks,
       totalRegularHours,
       totalOvertimeHours,
       totalHours,
       overtimeThreshold: otThresh,
-      weeklyDecimal: totalHours,
+      hourlyRate: rate,
+      regularPay,
+      overtimePay,
+      totalPay: regularPay + overtimePay,
     });
   };
 
@@ -296,17 +346,19 @@ export default function TimeCardLunchCalculator() {
     setLunchMode('manual');
     setAutoLunchDuration('60');
     setOvertimeThreshold('40');
+    setWeeks(1);
+    setHourlyRate('');
     setResult(null);
     setError(null);
   };
 
-  // Copy first enabled day's times to all other enabled days
+  // Copy first enabled day's times to all other enabled (visible) days
   const copyMonToAll = () => {
     const firstEnabled = days.find((d) => d.enabled);
     if (!firstEnabled) return;
     setDays((prev) =>
       prev.map((d, i) => {
-        if (!d.enabled) return d;
+        if (!d.enabled || i >= weeks * 7) return d;
         if (d === firstEnabled) return d;
         return {
           ...d,
@@ -322,18 +374,13 @@ export default function TimeCardLunchCalculator() {
 
   // Try Example: standard 9-5 weekday with 1-hour lunch
   const handleTryExample = () => {
-    setDays([
-      { enabled: true, clockIn: '09:00', lunchStart: '12:00', lunchEnd: '13:00', clockOut: '17:30' },
-      { enabled: true, clockIn: '09:00', lunchStart: '12:00', lunchEnd: '13:00', clockOut: '17:30' },
-      { enabled: true, clockIn: '09:00', lunchStart: '12:00', lunchEnd: '13:00', clockOut: '17:30' },
-      { enabled: true, clockIn: '09:00', lunchStart: '12:00', lunchEnd: '13:00', clockOut: '17:30' },
-      { enabled: true, clockIn: '09:00', lunchStart: '12:00', lunchEnd: '13:00', clockOut: '17:30' },
-      { enabled: false, clockIn: '', lunchStart: '', lunchEnd: '', clockOut: '' },
-      { enabled: false, clockIn: '', lunchStart: '', lunchEnd: '', clockOut: '' },
-    ]);
+    const exampleDay: DayEntry = { enabled: true, clockIn: '09:00', lunchStart: '12:00', lunchEnd: '13:00', clockOut: '17:30' };
+    const exampleWeek = [exampleDay, exampleDay, exampleDay, exampleDay, exampleDay, OFF_DAY, OFF_DAY];
+    setDays([...exampleWeek, ...exampleWeek]);
     setLunchMode('manual');
     setAutoLunchDuration('60');
     setOvertimeThreshold('40');
+    setHourlyRate('22');
     setResult(null);
     setError(null);
   };
@@ -398,24 +445,65 @@ export default function TimeCardLunchCalculator() {
           </motion.div>
         )}
 
-        {/* Overtime Threshold */}
-        <div className="space-y-2">
-          <Label htmlFor="otThresh" className="text-sm font-medium">
-            <AlertCircle className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
-            Weekly Overtime Threshold (hours)
-          </Label>
-          <Input
-            id="otThresh"
-            type="number"
-            min="0"
-            step="1"
-            value={overtimeThreshold}
-            onChange={(e) => setOvertimeThreshold(e.target.value)}
-          />
-          <p className="text-xs text-muted-foreground">
-            Federal default: 40 hours/week
-          </p>
+        {/* Pay Period, Rate & Overtime Threshold */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="payPeriod" className="text-sm font-medium">
+              <CalendarDays className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
+              Time Card Period
+            </Label>
+            <Select
+              value={String(weeks)}
+              onValueChange={(v) => {
+                setWeeks(Number(v));
+                setResult(null);
+              }}
+            >
+              <SelectTrigger id="payPeriod" className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">1 week</SelectItem>
+                <SelectItem value="2">2 weeks (biweekly)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="hourlyRate" className="text-sm font-medium">
+              <DollarSign className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
+              Hourly Rate (optional)
+            </Label>
+            <Input
+              id="hourlyRate"
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="22.00"
+              value={hourlyRate}
+              onChange={(e) => {
+                setHourlyRate(e.target.value);
+                setResult(null);
+              }}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="otThresh" className="text-sm font-medium">
+              <AlertCircle className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
+              Weekly OT Threshold (hrs)
+            </Label>
+            <Input
+              id="otThresh"
+              type="number"
+              min="0"
+              step="1"
+              value={overtimeThreshold}
+              onChange={(e) => setOvertimeThreshold(e.target.value)}
+            />
+          </div>
         </div>
+        <p className="text-xs text-muted-foreground -mt-3">
+          Federal default is 40 hours per week. Overtime is paid at 1.5× and calculated separately for each week.
+        </p>
 
         {/* Daily Entries */}
         <div className="space-y-3">
@@ -436,7 +524,7 @@ export default function TimeCardLunchCalculator() {
             </Button>
           </div>
           <p className="text-xs text-muted-foreground">
-            Accepts: {TIME_FORMAT_EXAMPLES}
+            Accepts: {TIME_FORMAT_EXAMPLES}. Overnight shifts work too (e.g. 10:00 PM to 6:30 AM).
           </p>
 
           {/* Header row (desktop) */}
@@ -450,7 +538,7 @@ export default function TimeCardLunchCalculator() {
           </div>
 
           <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
-            {days.map((day, idx) => (
+            {days.slice(0, weeks * 7).map((day, idx) => (
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 5 }}
@@ -464,7 +552,7 @@ export default function TimeCardLunchCalculator() {
               >
                 {/* Mobile label */}
                 <div className="sm:hidden flex items-center justify-between">
-                  <span className="text-sm font-medium">{DAYS[idx]}</span>
+                  <span className="text-sm font-medium">{dayLabel(idx, weeks)}</span>
                   <button
                     type="button"
                     onClick={() => updateDay(idx, 'enabled', !day.enabled)}
@@ -493,7 +581,7 @@ export default function TimeCardLunchCalculator() {
                 >
                   {/* Day label (desktop) */}
                   <div className="hidden sm:flex items-center">
-                    <span className="text-sm font-medium">{DAYS[idx]}</span>
+                    <span className="text-sm font-medium">{dayLabel(idx, weeks)}</span>
                   </div>
 
                   {/* Clock In */}
@@ -660,7 +748,7 @@ export default function TimeCardLunchCalculator() {
             {/* Main Result */}
             <div className="text-center space-y-2">
               <p className="text-sm text-muted-foreground font-medium">
-                Total Weekly Hours
+                {result.weeks > 1 ? 'Total Biweekly Hours' : 'Total Weekly Hours'}
               </p>
               <p className="text-4xl font-bold text-emerald-600">
                 {result.totalHours.toFixed(2)} hrs
@@ -745,6 +833,29 @@ export default function TimeCardLunchCalculator() {
                 </motion.div>
               ))}
             </div>
+
+            {/* Pay (only when an hourly rate is entered) */}
+            {result.hourlyRate > 0 && (
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { label: 'Regular Pay', value: formatCurrency(result.regularPay), color: 'text-blue-600' },
+                  {
+                    label: `Overtime Pay (${OVERTIME_MULTIPLIER}×)`,
+                    value: formatCurrency(result.overtimePay),
+                    color: result.overtimePay > 0 ? 'text-amber-600' : 'text-muted-foreground',
+                  },
+                  { label: 'Gross Pay', value: formatCurrency(result.totalPay), color: 'text-emerald-600' },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="rounded-xl bg-background border border-border/50 p-3 text-center"
+                  >
+                    <p className="text-xs text-muted-foreground mb-1">{item.label}</p>
+                    <p className={`text-base sm:text-lg font-bold ${item.color}`}>{item.value}</p>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Daily Hours Bar Chart */}
             {result.days.some((d) => d.enabled) && (
@@ -870,7 +981,8 @@ export default function TimeCardLunchCalculator() {
                 <strong>Note:</strong> Hours are displayed in decimal format
                 (e.g., 7.50 = 7 hours 30 minutes) which is standard for payroll
                 processing. Overtime is calculated for hours exceeding{' '}
-                {result.overtimeThreshold} per week. Federal FLSA requires overtime
+                {result.overtimeThreshold} in each workweek — weeks are never averaged
+                together. Federal FLSA requires overtime
                 pay at 1.5x the regular rate for non-exempt employees. State laws
                 may have additional daily overtime requirements.
               </p>

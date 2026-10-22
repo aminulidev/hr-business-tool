@@ -47,6 +47,9 @@ export async function generateStaticParams() {
   }));
 }
 
+// Unknown slugs return a real 404 instead of a streamed 200 soft-404
+export const dynamicParams = false;
+
 export default async function PostPage({ params }: Props) {
   const { slug } = await params;
   let post;

@@ -1,74 +1,85 @@
 const seoData = {
   howToSteps: [
-    'Enter your clock-in and clock-out times for each workday using the HH:MM 24-hour format. For example, enter 09:00 for 9:00 AM and 17:00 for 5:00 PM.',
-    'Specify your lunch break duration in minutes for each day. The default is 30 minutes, which will be subtracted from your total worked hours automatically.',
-    'If you want to calculate your wages, enter your hourly rate in dollars. You can also adjust the overtime threshold (default 40 hours/week) and overtime multiplier (default 1.5x).',
-    'Add or remove workdays as needed. The calculator starts with a standard Monday through Friday week, but you can add weekend shifts or remove days you did not work.',
-    'Click "Calculate Hours" to see a detailed breakdown of regular hours, overtime hours, decimal hours, and—if provided—your total earnings for the period.',
+    'Enter the clock-in and clock-out time for each workday. Both 12-hour (9:00 AM, 5:30 PM, 9am) and 24-hour (09:00, 17:30) formats work. For a night shift, enter the real times — a clock-out earlier than the clock-in (e.g. 10:00 PM to 6:30 AM) is counted as ending the next morning.',
+    'Enter the unpaid lunch or meal break for each day in minutes. The default is 30 minutes. Leave paid rest breaks (usually 5–20 minutes) out — under federal rules they count as time worked.',
+    'Use "Copy to All" if you work the same schedule every day, or "Add Day" for weekend shifts. Add up to 14 days to total a biweekly timesheet.',
+    'Optionally choose a punch rounding rule — nearest 5 minutes, nearest 6 minutes (a tenth of an hour), or nearest 15 minutes (the 7-minute rule) — to match how your employer\'s time clock records punches.',
+    'To see pay, enter your hourly rate. Overtime is calculated on hours over the weekly threshold (40 by default under the FLSA) at the multiplier you set (1.5× by default).',
+    'Click "Calculate Hours" to see total hours in both decimal (for payroll) and hours:minutes, a per-day breakdown, regular vs. overtime hours, and gross pay.',
   ],
 
-  formula: 'Total Hours = Σ(Clock Out − Clock In) − Σ(Lunch Break / 60)',
+  formula: 'Daily Hours = (Clock Out − Clock In) − Unpaid Break\nWeekly Hours = Σ Daily Hours\nOvertime Hours = max(0, Weekly Hours − 40)\nGross Pay = (Regular Hours × Rate) + (Overtime Hours × Rate × 1.5)',
   formulaDescription:
-    'The total hours worked is calculated by summing the difference between clock-out and clock-in times for each day, then subtracting the total lunch break time converted to hours. Decimal hours are calculated as Hours + Minutes / 60 (e.g., 8 hours 30 minutes = 8.50 decimal hours).',
+    'Each day\'s hours are the time between clock-in and clock-out minus the unpaid meal break. If the clock-out is earlier than the clock-in, the shift crossed midnight and 24 hours are added to the clock-out. The days are summed for the week, and anything over the overtime threshold (40 hours under the federal FLSA) is paid at the overtime multiplier. Payroll systems need decimal hours, so minutes are divided by 60: 7 hours 45 minutes = 7 + 45 ÷ 60 = 7.75 hours. Common conversions: 15 min = 0.25, 30 min = 0.50, 45 min = 0.75, 6 min = 0.10, 20 min = 0.33, 40 min = 0.67.',
 
   faqs: [
     {
-      question: 'How do you convert minutes to decimal hours?',
+      question: 'What is the difference between a time card and a timesheet?',
       answer:
-        'To convert minutes to decimal hours, divide the minutes by 60 and add the result to the whole hours. For example, 8 hours and 45 minutes becomes 8 + 45/60 = 8.75 decimal hours. This format is commonly used in payroll systems and time tracking software because it makes it easier to calculate wages. Most employers require time entries in decimal format for accurate payment processing.',
+        'They record the same thing — when an employee started and stopped work each day — and the terms are used interchangeably. Traditionally a "time card" was the physical card punched by a time clock, while a "timesheet" is a written or digital log of hours, often with project or job codes. For payroll, both are totaled the same way: daily hours minus unpaid breaks, summed for the workweek, with overtime above 40 hours.',
     },
     {
-      question: 'What is overtime and when does it apply?',
+      question: 'How do I convert time card minutes to decimal hours?',
       answer:
-        'Overtime is the time an employee works beyond their standard scheduled hours, typically beyond 40 hours in a workweek in the United States under the Fair Labor Standards Act (FLSA). Overtime must be compensated at a rate of at least 1.5 times the employee\'s regular hourly rate, known as "time and a half." Some states have additional daily overtime rules, such as California where exceeding 8 hours in a single day also triggers overtime pay.',
+        'Divide the minutes by 60 and add them to the whole hours. 8 hours 45 minutes = 8 + 45/60 = 8.75 hours. The most common values are 15 minutes = 0.25, 30 minutes = 0.50, and 45 minutes = 0.75. Decimal hours are what payroll software expects — entering 8.45 for "8 hours 45 minutes" is a common mistake that underpays by 18 minutes. For converting individual times without a full time card, use the Time to Decimal Calculator.',
     },
     {
-      question: 'How does time rounding work in time cards?',
+      question: 'How do I calculate hours for an overnight shift?',
       answer:
-        'Many employers use time rounding to simplify payroll calculations. The most common rounding methods include rounding to the nearest quarter-hour (15 minutes), nearest tenth of an hour (6 minutes), or nearest 5 minutes. For example, if an employee clocks in at 8:53 AM and the system rounds to the nearest quarter-hour, the time would be recorded as 9:00 AM. Federal law permits rounding as long as it does not systematically result in the employee losing pay over time.',
+        'Enter the actual clock-in and clock-out times; when the clock-out is earlier than the clock-in, this calculator treats the shift as ending the next day. For example, 10:00 PM to 6:30 AM with a 30-minute meal break is 8 hours 30 minutes minus 30 minutes = 8.00 hours. Under the FLSA, the hours belong to the workweek in which they are worked, so a shift that crosses from Saturday into Sunday may need to be split if your workweek starts on Sunday.',
     },
     {
-      question: 'Can lunch breaks be unpaid?',
+      question: 'What is the 7-minute rule for time card rounding?',
       answer:
-        'Yes, in most U.S. states, meal breaks of 30 minutes or more can be unpaid as long as the employee is completely relieved of all duties during the break. The federal FLSA does not require employers to provide meal or rest breaks, though many states have their own laws mandating break times. Shorter breaks (typically 5-20 minutes) are generally considered compensable work time and must be paid. Always check your state and local labor laws for specific requirements.',
+        'When an employer rounds punches to the nearest quarter-hour, 1–7 minutes past a quarter-hour round down and 8–14 minutes round up. So a clock-in at 8:07 AM is recorded as 8:00 and 8:08 AM becomes 8:15. The Department of Labor allows rounding to the nearest 5 minutes, tenth of an hour, or quarter-hour only if it averages out so employees are fully paid over time (29 CFR 785.48). Rounding that consistently favors the employer is not allowed, and some states, including California, scrutinize rounding closely.',
     },
     {
-      question: 'How do I calculate overtime pay?',
+      question: 'Do lunch breaks count as hours worked?',
       answer:
-        'Overtime is typically calculated at 1.5 times your regular hourly rate for any hours exceeding 40 in a single workweek under US federal law. The formula is: OT pay = overtime hours × regular hourly rate × 1.5. Some states, such as California, also require daily overtime for hours worked beyond 8 in a single day, and double-time for hours beyond 12. Always check your state\'s specific overtime rules for the most accurate calculation.',
+        'A bona fide meal period — usually 30 minutes or more with the employee completely relieved of duty — is not work time and can be unpaid (29 CFR 785.19). Short rest breaks of about 5 to 20 minutes are work time and must be paid (29 CFR 785.18). If you eat at your desk while answering calls or emails, that meal period is generally compensable. Federal law does not require meal breaks, but many states do, so check your state rules.',
     },
     {
-      question: 'What is time rounding and is it legal?',
+      question: 'How is overtime calculated on a time card?',
       answer:
-        'Time rounding is the practice of rounding clock-in and clock-out times to the nearest preset increment, commonly 5, 10, or 15 minutes. Under federal law, time rounding is legal as long as it does not consistently disadvantage employees over time. For example, if rounding sometimes benefits the employer and sometimes benefits the employee, it is generally permissible. However, if rounding systematically shortchanges workers, the employer may be required to pay back wages.',
+        'Under the federal FLSA, non-exempt employees earn at least 1.5 times their regular rate for hours over 40 in a workweek. Overtime pay = overtime hours × hourly rate × 1.5. For a 46-hour week at $20/hour: 40 × $20 = $800 regular, plus 6 × $30 = $180 overtime, for $980 gross. Some states add daily overtime — California requires 1.5× after 8 hours in a day and 2× after 12 — so adjust the threshold and multiplier to match your state.',
     },
     {
-      question: 'How do I handle on-call hours?',
+      question: 'Can I total a biweekly timesheet?',
       answer:
-        'On-call hours where you are required to remain at the workplace or are severely restricted in your activities are typically counted as hours worked and must be compensated. On-call hours where you are free to pursue personal activities at home and simply carry a phone or pager may not count as compensable time, depending on your jurisdiction. Check your local labor laws and company policy, as rules vary significantly between states and industries.',
+        'Yes — add up to 14 days with "Add Day." Be aware that overtime is calculated per workweek, not per pay period: 45 hours in week one and 35 in week two is 80 hours total but still includes 5 overtime hours, because the weeks cannot be averaged. For an accurate biweekly overtime figure, total each week separately.',
     },
     {
-      question: 'Can my employer require me to work through lunch?',
+      question: 'How long do employers have to keep time cards?',
       answer:
-        'In most US states, employers must provide a meal break for shifts exceeding 6 hours, but they may not be required to pay for it if you are fully relieved of all work duties. If your employer requires you to work through your lunch period or respond to calls and emails during the break, that time is typically compensable under the FLSA. Some states like California impose strict penalties for missed meal breaks. Document any instances where you are asked to work through lunch to protect your right to compensation.',
+        'The FLSA requires employers to keep time cards and work schedules for at least 2 years, and payroll records for 3 years (29 CFR 516.5–516.6). Several states require longer — California 3 years and New York 6 years, for example. Employees should keep their own record of hours too, which is useful if a paycheck ever looks short.',
     },
   ],
 
   workedExamples: [
     {
-      title: 'Standard 9-to-5 Week with 30-Minute Lunch',
+      title: 'Standard 9-to-5:30 Week with 30-Minute Lunch',
       description:
-        'Clock in at 9:00 AM and clock out at 5:30 PM each day, Monday through Friday, with a 30-minute unpaid lunch each day. Net hours per day: 5:30 PM − 9:00 AM − 0.5h = 8.00 hours. Weekly total: 8.00 × 5 = 40.00 hours. At $20/hour with a 40-hour overtime threshold, all 40 hours are regular time. Total gross pay: 40.00 × $20 = $800.00.',
+        'Clock in 9:00 AM and out 5:30 PM, Monday through Friday, with a 30-minute unpaid lunch. Daily hours: 8.5 − 0.5 = 8.00. Weekly total: 8.00 × 5 = 40.00 hours, all regular time. At $20/hour, gross pay = 40.00 × $20 = $800.00.',
     },
     {
       title: 'Heavy Overtime Week — Warehouse Supervisor',
       description:
-        'A warehouse supervisor works Mon–Sat: Mon 7:00 AM–5:00 PM (9h), Tue 7:00 AM–6:00 PM (10h), Wed 7:00 AM–5:00 PM (9h), Thu 7:00 AM–6:00 PM (10h), Fri 7:00 AM–5:00 PM (9h), Sat 8:00 AM–12:00 PM (4h). All with 30-min lunch Mon–Fri. Net hours: 8.5+9.5+8.5+9.5+8.5+4 = 48.50 hours. Overtime hours: 48.50 − 40 = 8.50 hrs. At $24/hour: Regular pay = 40 × $24 = $960. Overtime pay = 8.5 × $36 = $306. Total gross: $1,266.',
+        'Mon 7:00 AM–5:00 PM, Tue 7:00 AM–6:00 PM, Wed 7:00 AM–5:00 PM, Thu 7:00 AM–6:00 PM, Fri 7:00 AM–5:00 PM, each with a 30-minute lunch, plus Sat 8:00 AM–12:00 PM with no break. Net hours: 9.5 + 10.5 + 9.5 + 10.5 + 9.5 + 4 = 53.50. Overtime: 53.50 − 40 = 13.50 hours. At $24/hour: regular 40 × $24 = $960, overtime 13.5 × $36 = $486, total gross $1,446.',
+    },
+    {
+      title: 'Overnight Shift — Night Nurse Aide',
+      description:
+        'Four shifts of 7:00 PM to 7:30 AM with a 30-minute unpaid meal break. Each shift: 12.5 − 0.5 = 12.00 hours. Weekly total: 48.00 hours, so 8 hours of overtime under the 40-hour rule. At $19/hour: regular 40 × $19 = $760, overtime 8 × $28.50 = $228, total gross $988.',
+    },
+    {
+      title: 'Punch Rounding with the 7-Minute Rule',
+      description:
+        'An employee punches in at 8:07 AM and out at 4:38 PM with a 30-minute lunch. Exact time: 8 hours 31 minutes − 30 = 8.02 hours. Rounded to the nearest 15 minutes, 8:07 becomes 8:00 (7 minutes rounds down) and 4:38 becomes 4:45 (8 minutes rounds up), giving 8.75 − 0.5 = 8.25 hours. Rounding must balance out over time — some days it favors the employee, some days the employer.',
     },
     {
       title: 'Part-Time Variable Schedule',
       description:
-        'A part-time employee works an irregular week: Mon 9:00 AM–1:00 PM (4h), Wed 10:00 AM–3:00 PM (5h), Fri 8:00 AM–5:00 PM with 30-min lunch (8.5h), and Sat 9:00 AM–2:00 PM (5h). Weekly total: 4 + 5 + 8.5 + 5 = 22.50 hours. All regular time (under 40h threshold). At $16/hour: Total gross = 22.50 × $16 = $360.00 for the week.',
+        'Mon 9:00 AM–1:00 PM (4h), Wed 10:00 AM–3:00 PM (5h), Fri 8:00 AM–5:00 PM with a 30-minute lunch (8.5h), and Sat 9:00 AM–2:00 PM (5h). Weekly total: 4 + 5 + 8.5 + 5 = 22.50 hours, all regular time. At $16/hour, gross pay = 22.50 × $16 = $360.00.',
     },
   ],
 
@@ -76,8 +87,14 @@ const seoData = {
     {
       slug: 'time-card-calculator-with-lunch',
       title: 'Time Card Calculator with Lunch',
-      description: 'Calculate work hours with manual lunch entry or auto-deduct for each day',
+      description: 'Track lunch-out and lunch-in punches or auto-deduct meal breaks',
       icon: 'Coffee',
+    },
+    {
+      slug: 'time-to-decimal-calculator',
+      title: 'Time to Decimal Calculator',
+      description: 'Convert hours and minutes to decimal format for payroll',
+      icon: 'Hash',
     },
     {
       slug: 'overtime-calculator',
@@ -86,19 +103,18 @@ const seoData = {
       icon: 'Timer',
     },
     {
-      slug: 'payroll-calculator',
-      title: 'Payroll Calculator',
-      description: 'Estimate take-home pay after taxes and deductions',
-      icon: 'CreditCard',
+      slug: 'hourly-paycheck-calculator',
+      title: 'Hourly Paycheck Calculator',
+      description: 'Turn your weekly hours into take-home pay after taxes',
+      icon: 'DollarSign',
     },
     {
-      slug: 'time-to-decimal-calculator',
-      title: 'Time to Decimal Calculator',
-      description: 'Convert hours and minutes to decimal format for payroll',
-      icon: 'Hash',
+      slug: 'shift-hours-calculator',
+      title: 'Shift Hours Calculator',
+      description: 'Hours for 8, 10, and 12-hour shifts including overnight',
+      icon: 'Clock',
     },
   ],
-
 };
 
 export default seoData;

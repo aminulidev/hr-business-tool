@@ -33,6 +33,7 @@ const PayrollDeductionCalculator = dynamic(() => import('@/components/calculator
 const SalaryTaxCalculator = dynamic(() => import('@/components/calculators/SalaryTaxCalculator'), { loading: () => <CalculatorSkeleton /> });
 const TimeCardLunchCalculator = dynamic(() => import('@/components/calculators/TimeCardLunchCalculator'), { loading: () => <CalculatorSkeleton /> });
 const HourlyPaycheckCalculator = dynamic(() => import('@/components/calculators/HourlyPaycheckCalculator'), { loading: () => <CalculatorSkeleton /> });
+const StatePaycheckCalculator = dynamic(() => import('@/components/calculators/StatePaycheckCalculator'), { loading: () => <CalculatorSkeleton /> });
 const SeverancePayCalculator = dynamic(() => import('@/components/calculators/SeverancePayCalculator'), { loading: () => <CalculatorSkeleton /> });
 const WorkersCompCalculator = dynamic(() => import('@/components/calculators/WorkersCompCalculator'), { loading: () => <CalculatorSkeleton /> });
 const FicaTaxCalculator = dynamic(() => import('@/components/calculators/FicaTaxCalculator'), { loading: () => <CalculatorSkeleton /> });
@@ -257,6 +258,11 @@ const componentMap: Record<string, React.ComponentType> = {
   'salary-tax-calculator': SalaryTaxCalculator,
   'time-card-calculator-with-lunch': TimeCardLunchCalculator,
   'hourly-paycheck-calculator': HourlyPaycheckCalculator,
+  'california-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="CA" />,
+  'texas-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="TX" />,
+  'florida-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="FL" />,
+  'new-york-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="NY" />,
+  'illinois-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="IL" />,
   'severance-pay-calculator': SeverancePayCalculator,
   'workers-comp-calculator': WorkersCompCalculator,
   'fica-tax-calculator': FicaTaxCalculator,
@@ -483,6 +489,9 @@ export async function generateMetadata({
 export function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
 }
+
+// Unknown, draft, and merged slugs return a real 404 instead of a streamed 200
+export const dynamicParams = false;
 
 // ---------------------------------------------------------------------------
 // Embed page — chrome-free calculator shell for iframe embedding
