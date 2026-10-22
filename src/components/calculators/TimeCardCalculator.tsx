@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import TryExample from './TryExample';
 import { parseTimeToMinutes, minutesToDecimal, formatDecimalHours, formatHHMM, TIME_FORMAT_EXAMPLES } from '@/lib/time-utils';
 
@@ -47,6 +48,14 @@ function generateId(): string {
 
 // Time parsing functions imported from @/lib/time-utils
 
+const MINUTES_PER_DAY = 24 * 60;
+
+// Round a punch to the nearest increment (15 min = the "7-minute rule": 1-7 down, 8-14 up)
+function roundPunch(minutes: number, increment: number): number {
+  if (increment <= 0) return minutes;
+  return Math.round(minutes / increment) * increment;
+}
+
 const defaultDays: WorkDay[] = DAY_LABELS.slice(0, 5).map((label) => ({
   id: generateId(),
   label,
@@ -60,6 +69,7 @@ export default function TimeCardCalculator() {
   const [hourlyRate, setHourlyRate] = useState('');
   const [overtimeThreshold, setOvertimeThreshold] = useState('40');
   const [overtimeMultiplier, setOvertimeMultiplier] = useState('1.5');
+  const [rounding, setRounding] = useState('0');
   const [result, setResult] = useState<TimeCardResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -126,27 +136,33 @@ export default function TimeCardCalculator() {
     const rate = parseFloat(hourlyRate) || 0;
     const threshold = parseFloat(overtimeThreshold) || 40;
     const multiplier = parseFloat(overtimeMultiplier) || 1.5;
+    const roundingIncrement = parseInt(rounding, 10) || 0;
 
     const parsedDays: TimeCardResult['days'] = [];
     let totalHours = 0;
 
     for (const day of days) {
-      const inMinutes = parseTimeToMinutes(day.clockIn);
-      const outMinutes = parseTimeToMinutes(day.clockOut);
+      const rawIn = parseTimeToMinutes(day.clockIn);
+      const rawOut = parseTimeToMinutes(day.clockOut);
       const lunchMinutes = parseFloat(day.lunchBreak) || 0;
 
-      if (inMinutes < 0) {
+      if (rawIn < 0) {
         setError(`Invalid clock-in time for ${day.label}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
         return;
       }
-      if (outMinutes < 0) {
+      if (rawOut < 0) {
         setError(`Invalid clock-out time for ${day.label}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
         return;
       }
-      if (outMinutes <= inMinutes) {
-        setError(`Clock-out must be after clock-in for ${day.label}.`);
+      if (rawOut === rawIn) {
+        setError(`Clock-in and clock-out are the same time for ${day.label}.`);
         return;
       }
+
+      const inMinutes = roundPunch(rawIn, roundingIncrement);
+      // A clock-out earlier than clock-in is an overnight shift ending the next day
+      let outMinutes = roundPunch(rawOut < rawIn ? rawOut + MINUTES_PER_DAY : rawOut, roundingIncrement);
+      if (outMinutes <= inMinutes) outMinutes = inMinutes;
 
       const workedMinutes = outMinutes - inMinutes - lunchMinutes;
       if (workedMinutes < 0) {
@@ -227,7 +243,7 @@ export default function TimeCardCalculator() {
             </div>
           </div>
           <p className="text-xs text-muted-foreground">
-            Accepts: {TIME_FORMAT_EXAMPLES}
+            Accepts: {TIME_FORMAT_EXAMPLES}. Overnight shifts work too (e.g. 10:00 PM to 6:30 AM).
           </p>
 
           <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
@@ -296,9 +312,9 @@ export default function TimeCardCalculator() {
         <div className="rounded-xl border border-border/50 bg-muted/20 p-4 space-y-4">
           <Label className="text-sm font-semibold">
             <DollarSign className="inline h-4 w-4 mr-1.5 text-muted-foreground" />
-            Wage Settings (Optional)
+            Pay & Rounding Settings (Optional)
           </Label>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="hourlyRate" className="text-xs text-muted-foreground">
                 <DollarSign className="inline h-3 w-3 mr-1" />
@@ -345,6 +361,21 @@ export default function TimeCardCalculator() {
                 onChange={(e) => setOvertimeMultiplier(e.target.value)}
                 className="text-sm"
               />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="punchRounding" className="text-xs text-muted-foreground">
+                <Clock className="inline h-3 w-3 mr-1" />
+                Punch Rounding
+              </Label>
+              <Select value={rounding} onValueChange={setRounding}>
+                <SelectTrigger id="punchRounding" className="text-sm"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">Exact (no rounding)</SelectItem>
+                  <SelectItem value="5">Nearest 5 minutes</SelectItem>
+                  <SelectItem value="6">Nearest 6 min (1/10 hr)</SelectItem>
+                  <SelectItem value="15">Nearest 15 min (7-minute rule)</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>
