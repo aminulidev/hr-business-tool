@@ -302,8 +302,9 @@ export interface CalculatorMeta {
   tier: 'tier1' | 'tier2' | 'tier3';
   category: string; // Hub section label
   path: string; // Full URL path e.g. /calculators/sales-commission
-  status?: 'published' | 'draft' | 'scheduled';
+  status?: 'published' | 'draft' | 'scheduled' | 'merged';
   publishDate?: string; // YYYY-MM-DD
+  mergedInto?: CalculatorSlug; // Required when status is 'merged' — the page that absorbed this one
 }
 
 // ---------------------------------------------------------------------------
@@ -704,6 +705,16 @@ export const calculators: CalculatorMeta[] = [
       'decimal to fraction calculator',
       'time card calculator with lunch',
       'payroll hours calculator',
+      'timesheet calculator',
+      'weekly timesheet calculator',
+      'timesheet with pay calculator',
+      'printable timesheet',
+      'timesheet template calculator',
+      'hours to pay calculator',
+      'convert hours to dollars',
+      'payroll hours conversion',
+      'hours worked to gross pay',
+      'payroll hours per pay period',
     ],
     icon: Clock,
     tier: 'tier2',
@@ -768,6 +779,11 @@ export const calculators: CalculatorMeta[] = [
       'omni margin calculator',
       'gross margin calculator',
       'markup formula',
+      'retail margin calculator',
+      'retail margin',
+      'how to calculate retail margin',
+      'retail markup',
+      'keystone pricing',
     ],
     icon: Percent,
     tier: 'tier2',
@@ -883,6 +899,11 @@ export const calculators: CalculatorMeta[] = [
       'gross margin percentage calculator',
       'gross profit analysis',
       'product profitability calculator',
+      'gross profit',
+      'how to calculate gross profit',
+      'revenue minus COGS',
+      'gross profit formula',
+      'gross earnings',
     ],
     icon: PieChart,
     tier: 'tier2',
@@ -1091,6 +1112,11 @@ export const calculators: CalculatorMeta[] = [
       'clock in clock out with lunch',
       'work hours minus break',
       'time sheet with lunch break',
+      'lunch deduction calculator',
+      'lunch break deduction',
+      'auto lunch deduction calculator',
+      'work hours minus lunch',
+      'lunch time calculator',
     ],
     icon: Coffee,
     tier: 'tier2',
@@ -1260,6 +1286,16 @@ export const calculators: CalculatorMeta[] = [
       'cost of employee turnover calculator',
       'workforce turnover calculator',
       'HR turnover metrics',
+      'attrition calculator',
+      'attrition rate calculator',
+      'employee attrition rate',
+      'how to calculate attrition',
+      'churn rate calculator',
+      'employee retention calculator',
+      'retention rate calculator',
+      'employee retention rate',
+      'how to calculate retention rate',
+      'workforce retention',
     ],
     icon: Users,
     tier: 'tier2',
@@ -1312,6 +1348,21 @@ export const calculators: CalculatorMeta[] = [
       'billable utilization calculator',
       'time tracking billable hours',
       'billable revenue calculator',
+      'resource utilization calculator',
+      'staff utilization rate',
+      'utilization rate formula',
+      'how to calculate utilization rate',
+      'consultant utilization rate',
+      'employee utilization calculator',
+      'workforce utilization rate',
+      'capacity utilization calculator',
+      'employee utilization rate',
+      'staff utilization',
+      'how to calculate billable rate',
+      'required hourly rate',
+      'billable hourly rate',
+      'agency billable rate',
+      'target billable rate',
     ],
     icon: Hourglass,
     tier: 'tier2',
@@ -1337,6 +1388,11 @@ export const calculators: CalculatorMeta[] = [
       'how to calculate revenue per employee',
       'employee productivity ratio',
       'headcount efficiency calculator',
+      'employee productivity calculator',
+      'productivity per employee',
+      'revenue per employee',
+      'labor productivity',
+      'output per employee',
     ],
     icon: Activity,
     tier: 'tier2',
@@ -1367,6 +1423,11 @@ export const calculators: CalculatorMeta[] = [
       'how to calculate PTO accrual',
       'PTO payout calculator',
       'vacation accrual formula',
+      'leave calculator',
+      'leave balance calculator',
+      'leave entitlement calculator',
+      'paid leave calculator',
+      'annual leave calculator',
     ],
     icon: CalendarDays,
     tier: 'tier2',
@@ -1657,6 +1718,11 @@ export const calculators: CalculatorMeta[] = [
       '2026 federal tax calculator',
       'US federal tax calculator',
       'federal income tax estimator',
+      'income tax calculator',
+      'how to calculate income tax',
+      'federal income tax',
+      'taxable income',
+      'income tax brackets',
     ],
     icon: Landmark,
     tier: 'tier1',
@@ -1803,6 +1869,11 @@ export const calculators: CalculatorMeta[] = [
       'total hours worked calculator',
       'work hours from time entries',
       'hours worked per week',
+      'working hours calculator',
+      'annual working hours calculator',
+      'monthly working hours',
+      'how many work hours in a year',
+      'work hours per year calculator',
     ],
     icon: Clock,
     tier: 'tier2',
@@ -1866,7 +1937,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'attendance-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'absenteeism-calculator',
     title: 'Attendance Calculator',
     metaTitle: 'Free Attendance Calculator 2026 — Track Attendance Rate & Absences',
     shortDescription:
@@ -1893,7 +1965,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'leave-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'pto-accrual-calculator',
     title: 'Leave Calculator',
     metaTitle: 'Free Leave Calculator 2026 — PTO, Vacation & Sick Leave Tracking',
     shortDescription:
@@ -1974,7 +2047,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'working-hours-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'work-hours-calculator',
     title: 'Working Hours Calculator',
     metaTitle: 'Free Working Hours Calculator 2026 — Annual & Monthly Hours',
     shortDescription:
@@ -2001,7 +2075,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'timesheet-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'time-card-calculator',
     title: 'Timesheet Calculator',
     metaTitle: 'Free Timesheet Calculator 2026 — Weekly Timesheet with Pay',
     shortDescription:
@@ -2028,7 +2103,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'payroll-hours-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'time-card-calculator',
     title: 'Payroll Hours Calculator',
     metaTitle: 'Free Payroll Hours Calculator 2026 — Convert Hours to Pay',
     shortDescription:
@@ -2055,7 +2131,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'clock-in-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'clock-out-calculator',
     title: 'Clock In Calculator',
     metaTitle: 'Free Clock In Calculator 2026 — Track Start Times & Hours',
     shortDescription:
@@ -2100,6 +2177,11 @@ export const calculators: CalculatorMeta[] = [
       'clock out time for target hours',
       'shift end calculator',
       'exact clock out time',
+      'clock in calculator',
+      'clock in time calculator',
+      'when can I clock out',
+      'shift end time calculator',
+      '8 hour shift calculator',
     ],
     icon: LogOut,
     tier: 'tier3',
@@ -2136,7 +2218,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'utilization-rate-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'billable-hours-calculator',
     title: 'Utilization Rate Calculator',
     metaTitle: 'Free Utilization Rate Calculator 2026 — Billable vs Total Hours',
     shortDescription:
@@ -2271,7 +2354,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'lunch-deduction-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'time-card-calculator-with-lunch',
     title: 'Lunch Deduction Calculator',
     metaTitle: 'Free Lunch Deduction Calculator 2026 — Auto-Deduct Lunch Breaks',
     shortDescription:
@@ -2300,7 +2384,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'employee-retention-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'employee-turnover-calculator',
     title: 'Employee Retention Calculator',
     metaTitle: 'Free Employee Retention Calculator 2026 — Retention Rate & Trends',
     shortDescription:
@@ -2327,7 +2412,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'attrition-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'employee-turnover-calculator',
     title: 'Attrition Calculator',
     metaTitle: 'Free Attrition Calculator 2026 — Attrition Rate & Cost',
     shortDescription:
@@ -2426,6 +2512,11 @@ export const calculators: CalculatorMeta[] = [
       'cost per departure',
       'turnover cost analysis',
       'HR turnover cost',
+      'cost to replace an employee',
+      'employee replacement cost',
+      'turnover replacement cost',
+      'cost of replacing an employee',
+      'replacement cost formula',
     ],
     icon: DollarSign,
     tier: 'tier1',
@@ -2462,7 +2553,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'employee-productivity-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'revenue-per-employee-calculator',
     title: 'Employee Productivity Calculator',
     metaTitle: 'Free Employee Productivity Calculator 2026 — Revenue per Hour',
     shortDescription:
@@ -2696,6 +2788,16 @@ export const calculators: CalculatorMeta[] = [
       'fully loaded cost',
       'employee overhead cost',
       'cost of employing someone',
+      'payroll cost calculator',
+      'total payroll cost',
+      'employer payroll taxes',
+      'cost of payroll',
+      'payroll tax calculator employer',
+      'employee benefit cost calculator',
+      'benefits cost per employee',
+      'employee benefits cost',
+      'benefits as percent of salary',
+      'total benefits cost',
     ],
     icon: DollarSign,
     tier: 'tier1',
@@ -2723,6 +2825,11 @@ export const calculators: CalculatorMeta[] = [
       'sick absence rate',
       'absence frequency',
       'workplace absenteeism',
+      'attendance calculator',
+      'attendance rate calculator',
+      'absenteeism rate calculator',
+      'employee attendance tracker',
+      'attendance percentage calculator',
     ],
     icon: CalendarCheck,
     tier: 'tier2',
@@ -2732,7 +2839,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'replacement-cost-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'cost-of-turnover-calculator',
     title: 'Replacement Cost Calculator',
     metaTitle: 'Free Replacement Cost Calculator 2026 — Cost to Replace Employee',
     shortDescription:
@@ -2813,7 +2921,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'employee-benefit-cost-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'employee-cost-calculator',
     title: 'Employee Benefit Cost Calculator',
     metaTitle: 'Free Employee Benefit Cost Calculator 2026 — Per-Employee Benefits',
     shortDescription:
@@ -2840,7 +2949,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'employee-utilization-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'billable-hours-calculator',
     title: 'Employee Utilization Calculator',
     metaTitle: 'Free Employee Utilization Calculator 2026 — Capacity Utilization',
     shortDescription:
@@ -2867,7 +2977,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'payroll-cost-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'employee-cost-calculator',
     title: 'Payroll Cost Calculator',
     metaTitle: 'Free Payroll Cost Calculator 2026 — Total Cost of Payroll',
     shortDescription:
@@ -2912,6 +3023,11 @@ export const calculators: CalculatorMeta[] = [
       'workforce model',
       'talent planning calculator',
       'headcount forecast',
+      'workforce capacity calculator',
+      'capacity planning calculator',
+      'workforce capacity',
+      'maximum output calculator',
+      'capacity utilization',
     ],
     icon: CalendarRange,
     tier: 'tier2',
@@ -2921,7 +3037,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'workforce-capacity-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'workforce-planning-calculator',
     title: 'Workforce Capacity Calculator',
     metaTitle: 'Free Workforce Capacity Calculator 2026 — Max Output per FTE',
     shortDescription:
@@ -3184,6 +3301,11 @@ export const calculators: CalculatorMeta[] = [
       'net margin ratio',
       'net profit ratio',
       'bottom line margin',
+      'net profit calculator',
+      'net income calculator',
+      'net profit',
+      'how to calculate net profit',
+      'bottom line profit',
     ],
     icon: Percent,
     tier: 'tier2',
@@ -3211,6 +3333,11 @@ export const calculators: CalculatorMeta[] = [
       'contribution margin formula',
       'break even contribution',
       'unit contribution',
+      'contribution calculator',
+      'total contribution margin',
+      'CVP analysis',
+      'cost volume profit',
+      'contribution to profit',
     ],
     icon: Percent,
     tier: 'tier2',
@@ -3274,7 +3401,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'gross-profit-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'gross-margin-calculator',
     title: 'Gross Profit Calculator',
     metaTitle: 'Free Gross Profit Calculator 2026 — Revenue Minus COGS',
     shortDescription:
@@ -3301,7 +3429,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'net-profit-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'net-margin-calculator',
     title: 'Net Profit Calculator',
     metaTitle: 'Free Net Profit Calculator 2026 — Net Income Calculation',
     shortDescription:
@@ -3382,7 +3511,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'retail-margin-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'profit-margin-calculator',
     title: 'Retail Margin Calculator',
     metaTitle: 'Free Retail Margin Calculator 2026 — Margin, Markup, Keystone',
     shortDescription:
@@ -3832,6 +3962,16 @@ export const calculators: CalculatorMeta[] = [
       'asset depreciation',
       'accumulated depreciation',
       'book value calculator',
+      'straight line depreciation calculator',
+      'straight line method',
+      'how to calculate straight line depreciation',
+      'depreciation schedule',
+      'annual depreciation',
+      'declining balance calculator',
+      'ddb calculator',
+      'accelerated depreciation',
+      'how to calculate ddb',
+      'declining balance method',
     ],
     icon: TrendingDown,
     tier: 'tier2',
@@ -3976,7 +4116,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'contribution-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'contribution-margin-calculator',
     title: 'Contribution Calculator',
     metaTitle: 'Free Contribution Calculator 2026 — Total Contribution Margin',
     shortDescription:
@@ -4032,7 +4173,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'split-commission-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'commission-split-calculator',
     title: 'Split Commission Calculator',
     metaTitle: 'Free Split Commission Calculator 2026 — Multi-Rep Deal Split',
     shortDescription:
@@ -4077,6 +4219,11 @@ export const calculators: CalculatorMeta[] = [
       'quarterly quota',
       'annual quota',
       'quota attainment',
+      'sales target calculator',
+      'sales goal calculator',
+      'how to calculate sales target',
+      'revenue target calculator',
+      'sales activity target',
     ],
     icon: Target,
     tier: 'tier2',
@@ -4086,7 +4233,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'sales-target-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'quota-calculator',
     title: 'Sales Target Calculator',
     metaTitle: 'Free Sales Target Calculator 2026 — Revenue & Unit Goals',
     shortDescription:
@@ -4158,6 +4306,11 @@ export const calculators: CalculatorMeta[] = [
       'sales agent commission',
       'broker split',
       'commission distribution',
+      'split commission calculator',
+      'commission split',
+      'multi rep commission',
+      'shared deal commission',
+      'team commission split',
     ],
     icon: ArrowLeftRight,
     tier: 'tier2',
@@ -4329,7 +4482,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'lead-cost-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'cpl-calculator',
     title: 'Lead Cost Calculator',
     metaTitle: 'Free Lead Cost Calculator 2026 — Cost Per Lead by Channel',
     shortDescription:
@@ -4482,6 +4636,11 @@ export const calculators: CalculatorMeta[] = [
       'Facebook CPL',
       'lead generation cost',
       'CPL benchmark',
+      'lead cost calculator',
+      'how to calculate lead cost',
+      'marketing lead cost',
+      'lead cost by channel',
+      'cost per MQL',
     ],
     icon: DollarSign,
     tier: 'tier2',
@@ -4754,6 +4913,21 @@ export const calculators: CalculatorMeta[] = [
       'project rate calculator',
       'project estimate pricing',
       'fixed price project',
+      'proposal price calculator',
+      'RFP pricing calculator',
+      'bid price calculator',
+      'proposal cost calculator',
+      'how to price a proposal',
+      'quote calculator',
+      'client quote generator',
+      'price quote calculator',
+      'job quote calculator',
+      'how to calculate a quote',
+      'estimate calculator',
+      'project estimate calculator',
+      'time estimate calculator',
+      'cost estimate calculator',
+      'three point estimate',
     ],
     icon: DollarSign,
     tier: 'tier1',
@@ -4790,7 +4964,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'client-profit-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'profit-per-client-calculator',
     title: 'Client Profit Calculator',
     metaTitle: 'Free Client Profit Calculator 2026 — Profit Per Client Account',
     shortDescription:
@@ -4844,7 +5019,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'proposal-price-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'project-pricing-calculator',
     title: 'Proposal Price Calculator',
     metaTitle: 'Free Proposal Price Calculator 2026 — RFP & Bid Pricing',
     shortDescription:
@@ -4925,7 +5101,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'billable-rate-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'billable-hours-calculator',
     title: 'Billable Rate Calculator',
     metaTitle: 'Free Billable Rate Calculator 2026 — Required Hourly Rate',
     shortDescription:
@@ -4970,6 +5147,11 @@ export const calculators: CalculatorMeta[] = [
       'revenue per client',
       'client value calculator',
       'account profitability',
+      'client profit calculator',
+      'client profitability',
+      'client margin calculator',
+      'profit by client',
+      'client revenue vs cost',
     ],
     icon: DollarSign,
     tier: 'tier2',
@@ -5060,7 +5242,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'quote-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'project-pricing-calculator',
     title: 'Quote Calculator',
     metaTitle: 'Free Quote Calculator 2026 — Client Quote Generator',
     shortDescription:
@@ -5087,7 +5270,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'estimate-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'project-pricing-calculator',
     title: 'Estimate Calculator',
     metaTitle: 'Free Estimate Calculator 2026 — Project Time & Cost Estimate',
     shortDescription:
@@ -5191,12 +5375,13 @@ export const calculators: CalculatorMeta[] = [
     metaTitle: 'Free Trial Conversion Calculator 2026 — Trial to Paid',
     shortDescription: 'Calculate trial-to-paid conversion rate. SaaS benchmark: 15-25% for free trials, 2-5% for freemium.',
     metaDescription: 'Free trial conversion rate calculator 2026. Calculate trial-to-paid conversion = paid users / trial users x 100. SaaS benchmarks: free trial 15-25%, freemium 2-5%. Track by cohort, source, and plan.',
-    keywords: ['trial conversion calculator', 'trial to paid conversion', 'free trial conversion rate', 'saas trial conversion', 'trial conversion formula', 'trial signup conversion'],
+    keywords: ['trial conversion calculator', 'trial to paid conversion', 'free trial conversion rate', 'saas trial conversion', 'trial conversion formula', 'trial signup conversion', 'free to paid conversion calculator', 'freemium conversion', 'free to paid conversion rate', 'freemium saas', 'free user conversion'],
     icon: BarChart3, tier: 'tier2', category: 'Startup & SaaS', path: '/calculators/trial-conversion-calculator',
   },
   {
     slug: 'free-to-paid-conversion-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'trial-conversion-calculator',
     title: 'Free-to-Paid Conversion Calculator',
     metaTitle: 'Free Free-to-Paid Conversion Calculator 2026 — Freemium',
     shortDescription: 'Calculate free-to-paid conversion rate for freemium SaaS. Benchmark: 2-5%.',
@@ -5339,7 +5524,8 @@ export const calculators: CalculatorMeta[] = [
   },
   {
     slug: 'income-tax-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'federal-tax-calculator',
     title: 'Income Tax Calculator',
     metaTitle: 'Free Income Tax Calculator 2026 — Federal Income Tax',
     shortDescription: 'Calculate federal income tax from taxable income using 2026 IRS tax brackets and filing status.',
@@ -5349,7 +5535,8 @@ export const calculators: CalculatorMeta[] = [
   },
   {
     slug: 'straight-line-depreciation-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'depreciation-calculator',
     title: 'Straight Line Depreciation Calculator',
     metaTitle: 'Free Straight Line Depreciation Calculator 2026',
     shortDescription: 'Calculate straight-line depreciation: equal annual expense over useful life.',
@@ -5359,7 +5546,8 @@ export const calculators: CalculatorMeta[] = [
   },
   {
     slug: 'declining-balance-depreciation-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'depreciation-calculator',
     title: 'Declining Balance Depreciation Calculator',
     metaTitle: 'Free Declining Balance Depreciation Calculator 2026',
     shortDescription: 'Calculate declining balance and double-declining balance depreciation. Accelerated method.',
@@ -5424,12 +5612,13 @@ export const calculators: CalculatorMeta[] = [
     metaTitle: 'Free Inventory Valuation Calculator 2026 — FIFO, LIFO, WAC',
     shortDescription: 'Calculate inventory value using FIFO, LIFO, and weighted average cost methods.',
     metaDescription: 'Free inventory valuation calculator 2026. Compare inventory valuation methods: FIFO (first in first out), LIFO (last in first out), and weighted average cost. See COGS and ending inventory for each method.',
-    keywords: ['inventory valuation calculator', 'inventory valuation methods', 'fifo lifo wac', 'ending inventory', 'cogs calculator', 'inventory cost'],
+    keywords: ['inventory valuation calculator', 'inventory valuation methods', 'fifo lifo wac', 'ending inventory', 'cogs calculator', 'inventory cost', 'fifo calculator', 'first in first out', 'fifo method', 'fifo cogs', 'fifo ending inventory', 'lifo calculator', 'last in first out', 'lifo method', 'lifo cogs', 'lifo ending inventory', 'weighted average cost calculator', 'wac calculator', 'weighted average method', 'average cost inventory', 'how to calculate wac'],
     icon: Boxes, tier: 'tier2', category: 'Accounting', path: '/calculators/inventory-valuation-calculator',
   },
   {
     slug: 'fifo-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'inventory-valuation-calculator',
     title: 'FIFO Calculator',
     metaTitle: 'Free FIFO Calculator 2026 — First In First Out Inventory',
     shortDescription: 'Calculate COGS and ending inventory using FIFO (first in, first out) method.',
@@ -5439,7 +5628,8 @@ export const calculators: CalculatorMeta[] = [
   },
   {
     slug: 'lifo-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'inventory-valuation-calculator',
     title: 'LIFO Calculator',
     metaTitle: 'Free LIFO Calculator 2026 — Last In First Out Inventory',
     shortDescription: 'Calculate COGS and ending inventory using LIFO (last in, first out) method.',
@@ -5449,7 +5639,8 @@ export const calculators: CalculatorMeta[] = [
   },
   {
     slug: 'weighted-average-cost-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'inventory-valuation-calculator',
     title: 'Weighted Average Cost Calculator',
     metaTitle: 'Free Weighted Average Cost Calculator 2026 — WAC Inventory',
     shortDescription: 'Calculate weighted average cost per unit for inventory valuation.',
@@ -5589,7 +5780,7 @@ export function getCalculatorsByCategory() {
  * If status is scheduled, it is active only if today is on or after publishDate.
  */
 export function isCalculatorPublished(calc: CalculatorMeta): boolean {
-  if (calc.status === 'draft') return false;
+  if (calc.status === 'draft' || calc.status === 'merged') return false;
   if (calc.status === 'scheduled') {
     if (!calc.publishDate) return false;
     const publishTime = new Date(calc.publishDate).getTime();
@@ -5601,4 +5792,47 @@ export function isCalculatorPublished(calc: CalculatorMeta): boolean {
 /** Get only published calculators */
 export function getPublishedCalculators(): CalculatorMeta[] {
   return calculators.filter(isCalculatorPublished);
+}
+
+/**
+ * Follow mergedInto links to the calculator that now owns this slug.
+ * Returns the calculator itself if it was not merged.
+ */
+export function resolveMergedCalculator(calc: CalculatorMeta): CalculatorMeta {
+  let current = calc;
+  const seen = new Set<string>();
+  while (current.status === 'merged' && current.mergedInto && !seen.has(current.slug)) {
+    seen.add(current.slug);
+    const next = getCalculatorBySlug(current.mergedInto);
+    if (!next) break;
+    current = next;
+  }
+  return current;
+}
+
+/**
+ * Filter SEO relatedTools down to live pages: merged slugs are swapped for
+ * the calculator that absorbed them, unpublished ones are dropped, and
+ * duplicates / self-links are removed.
+ */
+export function getLiveRelatedTools<T extends { slug: string; title: string; description: string; icon: string }>(
+  tools: T[] | undefined,
+  currentSlug: string,
+): T[] {
+  if (!tools) return [];
+  const seen = new Set<string>([currentSlug]);
+  const result: T[] = [];
+  for (const tool of tools) {
+    const calc = getCalculatorBySlug(tool.slug);
+    if (!calc) continue;
+    const target = resolveMergedCalculator(calc);
+    if (!isCalculatorPublished(target) || seen.has(target.slug)) continue;
+    seen.add(target.slug);
+    result.push(
+      target.slug === tool.slug
+        ? tool
+        : { ...tool, slug: target.slug, title: target.title, description: target.shortDescription },
+    );
+  }
+  return result;
 }

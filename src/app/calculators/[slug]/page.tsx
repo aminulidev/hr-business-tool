@@ -1,10 +1,12 @@
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import {
   getCalculatorBySlug,
   getAllSlugs,
+  getLiveRelatedTools,
   isCalculatorPublished,
+  resolveMergedCalculator,
   SITE_URL,
   SITE_NAME,
 } from '@/lib/calculator-meta';
@@ -305,6 +307,14 @@ export default async function CalculatorPage({
   const { slug } = await params;
   const calc = getCalculatorBySlug(slug);
 
+  // Merged calculators 308 to the page that absorbed them (once it is live)
+  if (calc?.status === 'merged') {
+    const target = resolveMergedCalculator(calc);
+    if (target !== calc && isCalculatorPublished(target)) {
+      permanentRedirect(target.path);
+    }
+  }
+
   if (!calc || !isCalculatorPublished(calc)) {
     notFound();
   }
@@ -322,6 +332,7 @@ export default async function CalculatorPage({
   } catch (e) {
     // If no SEO data exists yet for this slug, fallback gracefully
   }
+  const relatedTools = getLiveRelatedTools(seoData?.relatedTools, slug);
 
   return (
     <AppShell>
@@ -338,7 +349,7 @@ export default async function CalculatorPage({
             ...(seoData.workedExamples?.length > 0 ? [{ id: 'worked-examples', label: 'Worked Examples' }] : []),
             ...(seoData.faqs?.length > 0 ? [{ id: 'frequently-asked-questions', label: 'FAQs' }] : []),
             { id: 'statutory-sources', label: 'Statutory Sources' },
-            ...(seoData.relatedTools?.length > 0 ? [{ id: 'related-calculators', label: 'Related Calculators' }] : []),
+            ...(relatedTools.length > 0 ? [{ id: 'related-calculators', label: 'Related Calculators' }] : []),
           ]}
           howToSteps={seoData.howToSteps}
           formula={seoData.formula}
@@ -346,7 +357,7 @@ export default async function CalculatorPage({
           commissionStructures={seoData.commissionStructures}
           workedExamples={seoData.workedExamples}
           faqs={seoData.faqs}
-          relatedTools={seoData.relatedTools}
+          relatedTools={relatedTools}
         >
           <CalculatorComponent />
         </CalculatorLayoutServer>
