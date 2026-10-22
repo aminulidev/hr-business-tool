@@ -93,6 +93,11 @@ export type CalculatorSlug =
   | 'salary-tax-calculator'
   | 'time-card-calculator-with-lunch'
   | 'hourly-paycheck-calculator'
+  | 'california-hourly-paycheck-calculator'
+  | 'texas-hourly-paycheck-calculator'
+  | 'florida-hourly-paycheck-calculator'
+  | 'new-york-hourly-paycheck-calculator'
+  | 'illinois-hourly-paycheck-calculator'
   | 'severance-pay-calculator'
   | 'workers-comp-calculator'
   | 'fica-tax-calculator'
@@ -1145,6 +1150,118 @@ export const calculators: CalculatorMeta[] = [
     tier: 'tier2',
     category: 'Payroll & Taxes',
     path: '/calculators/hourly-paycheck-calculator',
+  },
+
+  // ── State hourly paycheck pages (src/lib/payroll) ──
+  {
+    slug: 'california-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'California Hourly Paycheck Calculator',
+    metaTitle: 'California Hourly Paycheck Calculator 2026 — Take-Home Pay After Taxes',
+    shortDescription:
+      'Take-home pay for hourly workers in California using 2026 federal and California withholding (CA SDI (1.3%)).',
+    metaDescription:
+      'Free California hourly paycheck calculator for 2026. Enter your wage and hours to see take-home pay after federal tax, Social Security, Medicare and California deductions — includes CA SDI (1.3%).',
+    keywords: [
+      'california hourly paycheck calculator',
+      'california paycheck calculator',
+      'ca hourly paycheck calculator',
+      'california take home pay calculator',
+      'california sdi calculator',
+      'california paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/california-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'texas-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Texas Hourly Paycheck Calculator',
+    metaTitle: 'Texas Hourly Paycheck Calculator 2026 — Take-Home Pay After Taxes',
+    shortDescription:
+      'Take-home pay for hourly workers in Texas using 2026 federal and Texas withholding (no state income tax).',
+    metaDescription:
+      'Free Texas hourly paycheck calculator for 2026. Enter your wage and hours to see take-home pay after federal tax, Social Security, Medicare and Texas deductions — Texas has no state income tax.',
+    keywords: [
+      'texas hourly paycheck calculator',
+      'texas paycheck calculator',
+      'tx hourly paycheck calculator',
+      'texas take home pay calculator',
+      'texas salary after taxes',
+      'texas paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/texas-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'florida-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Florida Hourly Paycheck Calculator',
+    metaTitle: 'Florida Hourly Paycheck Calculator 2026 — Take-Home Pay After Taxes',
+    shortDescription:
+      'Take-home pay for hourly workers in Florida using 2026 federal and Florida withholding (no state income tax).',
+    metaDescription:
+      'Free Florida hourly paycheck calculator for 2026. Enter your wage and hours to see take-home pay after federal tax, Social Security, Medicare and Florida deductions — Florida has no state income tax.',
+    keywords: [
+      'florida hourly paycheck calculator',
+      'florida paycheck calculator',
+      'fl hourly paycheck calculator',
+      'florida take home pay calculator',
+      '15 an hour after taxes florida',
+      'florida paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/florida-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'new-york-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'New York Hourly Paycheck Calculator',
+    metaTitle: 'New York Hourly Paycheck Calculator 2026 — Take-Home Pay After Taxes',
+    shortDescription:
+      'Take-home pay for hourly workers in New York using 2026 federal and New York withholding (NYC tax, PFL & SDI).',
+    metaDescription:
+      'Free New York hourly paycheck calculator for 2026. Enter your wage and hours to see take-home pay after federal tax, Social Security, Medicare and New York deductions — includes NYC tax, PFL & SDI.',
+    keywords: [
+      'new york hourly paycheck calculator',
+      'new york paycheck calculator',
+      'ny hourly paycheck calculator',
+      'nyc paycheck calculator',
+      'new york take home pay calculator',
+      'new york paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/new-york-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'illinois-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Illinois Hourly Paycheck Calculator',
+    metaTitle: 'Illinois Hourly Paycheck Calculator 2026 — Take-Home Pay After Taxes',
+    shortDescription:
+      'Take-home pay for hourly workers in Illinois using 2026 federal and Illinois withholding (4.95% flat state tax).',
+    metaDescription:
+      'Free Illinois hourly paycheck calculator for 2026. Enter your wage and hours to see take-home pay after federal tax, Social Security, Medicare and Illinois deductions — includes 4.95% flat state tax.',
+    keywords: [
+      'illinois hourly paycheck calculator',
+      'illinois paycheck calculator',
+      'il hourly paycheck calculator',
+      'illinois take home pay calculator',
+      'chicago paycheck calculator',
+      'illinois paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/illinois-hourly-paycheck-calculator',
   },
 
   // ── HR Analytics ──

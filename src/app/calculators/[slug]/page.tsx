@@ -13,6 +13,9 @@ import AppShell from '@/components/layout/AppShell';
 import CalculatorLayoutServer from '@/components/calculators/CalculatorLayoutServer';
 import CalculatorSkeleton from '@/components/calculators/CalculatorSkeleton';
 
+// One component serves every state paycheck page, configured by its state prop
+const StatePaycheckCalculator = dynamic(() => import('@/components/calculators/StatePaycheckCalculator'), { loading: () => <CalculatorSkeleton /> });
+
 // Use dynamic imports to reduce memory - only load the component needed for each page
 const componentMap: Record<string, React.ComponentType> = {
   'commission-calculator': dynamic(() => import('@/components/calculators/SalesCommissionCalculator'), { loading: () => <CalculatorSkeleton /> }),
@@ -39,6 +42,11 @@ const componentMap: Record<string, React.ComponentType> = {
   'salary-tax-calculator': dynamic(() => import('@/components/calculators/SalaryTaxCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'time-card-calculator-with-lunch': dynamic(() => import('@/components/calculators/TimeCardLunchCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'hourly-paycheck-calculator': dynamic(() => import('@/components/calculators/HourlyPaycheckCalculator'), { loading: () => <CalculatorSkeleton /> }),
+  'california-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="CA" />,
+  'texas-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="TX" />,
+  'florida-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="FL" />,
+  'new-york-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="NY" />,
+  'illinois-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="IL" />,
   'severance-pay-calculator': dynamic(() => import('@/components/calculators/SeverancePayCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'workers-comp-calculator': dynamic(() => import('@/components/calculators/WorkersCompCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'fica-tax-calculator': dynamic(() => import('@/components/calculators/FicaTaxCalculator'), { loading: () => <CalculatorSkeleton /> }),

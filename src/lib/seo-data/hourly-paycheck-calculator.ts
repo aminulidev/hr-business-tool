@@ -1,3 +1,5 @@
+import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
+
 const seoData = {
   howToSteps: [
     'Enter your hourly pay rate — this is the amount you earn per regular hour worked before any taxes or deductions.',
@@ -65,6 +67,12 @@ const seoData = {
   ],
 
   relatedTools: [
+    ...STATE_CODES.map((code) => ({
+      slug: STATE_PAYCHECK_PAGES[code].slug,
+      title: `${STATE_PAYCHECK_PAGES[code].name} Hourly Paycheck Calculator`,
+      description: `2026 take-home pay with exact ${STATE_PAYCHECK_PAGES[code].name} withholding`,
+      icon: 'Map',
+    })),
     {
       slug: 'payroll-calculator',
       title: 'Payroll & Paycheck Calculator',
