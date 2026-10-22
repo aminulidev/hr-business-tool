@@ -1,4 +1,4 @@
-import { notFound, permanentRedirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import {
@@ -6,7 +6,6 @@ import {
   getAllSlugs,
   getLiveRelatedTools,
   isCalculatorPublished,
-  resolveMergedCalculator,
   SITE_URL,
   SITE_NAME,
 } from '@/lib/calculator-meta';
@@ -235,6 +234,10 @@ export function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
 }
 
+// Only published slugs exist. Unknown, draft, and merged slugs get a real 404
+// status — loading.tsx streams the page, so notFound() inside it would send 200.
+export const dynamicParams = false;
+
 export function generateMetadata({
   params,
 }: {
@@ -306,14 +309,6 @@ export default async function CalculatorPage({
 }) {
   const { slug } = await params;
   const calc = getCalculatorBySlug(slug);
-
-  // Merged calculators 308 to the page that absorbed them (once it is live)
-  if (calc?.status === 'merged') {
-    const target = resolveMergedCalculator(calc);
-    if (target !== calc && isCalculatorPublished(target)) {
-      permanentRedirect(target.path);
-    }
-  }
 
   if (!calc || !isCalculatorPublished(calc)) {
     notFound();

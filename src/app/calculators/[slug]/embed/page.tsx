@@ -484,6 +484,9 @@ export function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
 }
 
+// Unknown, draft, and merged slugs return a real 404 instead of a streamed 200
+export const dynamicParams = false;
+
 // ---------------------------------------------------------------------------
 // Embed page — chrome-free calculator shell for iframe embedding
 // ---------------------------------------------------------------------------
