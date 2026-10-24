@@ -40,18 +40,18 @@ const fmt = (n: number) =>
 
 const fmtPct = (n: number) => `${n.toFixed(1)}%`;
 
-// 2026 federal tax brackets (single filer, standard deduction $15,300)
+// 2026 federal tax brackets (single filer, standard deduction $16,100)
 function calcFederalTax(taxableIncome: number): number {
   if (taxableIncome <= 0) return 0;
   let tax = 0;
   const brackets = [
-    { min: 0, max: 12150, rate: 0.10 },
-    { min: 12150, max: 49350, rate: 0.12 },
-    { min: 49350, max: 105250, rate: 0.22 },
-    { min: 105250, max: 200900, rate: 0.24 },
-    { min: 200900, max: 255350, rate: 0.32 },
-    { min: 255350, max: 639950, rate: 0.35 },
-    { min: 639950, max: Infinity, rate: 0.37 },
+    { min: 0, max: 12400, rate: 0.10 },
+    { min: 12400, max: 50400, rate: 0.12 },
+    { min: 50400, max: 105700, rate: 0.22 },
+    { min: 105700, max: 201775, rate: 0.24 },
+    { min: 201775, max: 256225, rate: 0.32 },
+    { min: 256225, max: 640600, rate: 0.35 },
+    { min: 640600, max: Infinity, rate: 0.37 },
   ];
   for (const b of brackets) {
     if (taxableIncome > b.min) {
@@ -70,7 +70,7 @@ export default function ContractorVsEmployeeCalculator() {
     const stateRate = parseFloat(stateTaxRate) / 100;
     if (isNaN(gross) || isNaN(stateRate) || gross <= 0) return null;
 
-    const SS_WAGE_BASE = 176100;
+    const SS_WAGE_BASE = 184500;
     const SS_RATE = 0.124; // 12.4% combined
     const MEDICARE_RATE = 0.029; // 2.9% combined
 
@@ -82,7 +82,7 @@ export default function ContractorVsEmployeeCalculator() {
     const secaTax = secaSS + secaMedicare;
     // SECA deduction: half of SECA reduces taxable income
     const secaDeduction = secaTax / 2;
-    const taxableIncome1099 = Math.max(0, gross - secaDeduction - 15300); // standard deduction
+    const taxableIncome1099 = Math.max(0, gross - secaDeduction - 16100); // standard deduction
     const fedTax1099 = calcFederalTax(taxableIncome1099);
     const stateTax1099 = taxableIncome1099 * stateRate;
     const totalTax1099 = secaTax + fedTax1099 + stateTax1099;
@@ -93,7 +93,7 @@ export default function ContractorVsEmployeeCalculator() {
     const ficaSS = Math.min(gross, SS_WAGE_BASE) * 0.062;
     const ficaMedicare = gross * 0.0145;
     const ficaTax = ficaSS + ficaMedicare;
-    const taxableIncomeW2 = Math.max(0, gross - 15300);
+    const taxableIncomeW2 = Math.max(0, gross - 16100);
     const fedTaxW2 = calcFederalTax(taxableIncomeW2);
     const stateTaxW2 = taxableIncomeW2 * stateRate;
     const totalTaxW2 = ficaTax + fedTaxW2 + stateTaxW2;
@@ -252,7 +252,7 @@ export default function ContractorVsEmployeeCalculator() {
               <li><strong>SECA (1099):</strong> 12.4% Social Security + 2.9% Medicare = 15.3% total (both halves)</li>
               <li><strong>FICA (W-2):</strong> 6.2% Social Security + 1.45% Medicare = 7.65% total (employee half only)</li>
               <li><strong>SECA deduction:</strong> Contractors can deduct half of SECA from taxable income (effectively reducing income tax)</li>
-              <li><strong>2026 Social Security wage base:</strong> $176,100 — Social Security portion stops above this income</li>
+              <li><strong>2026 Social Security wage base:</strong> $184,500 — Social Security portion stops above this income</li>
               <li><strong>Benefits NOT included:</strong> W-2 employees typically receive health insurance, 401(k) match, paid leave worth $10k-$25k/year</li>
               <li><strong>1099 deductions:</strong> Contractors can deduct business expenses (home office, mileage, equipment) — not modeled here</li>
             </ul>

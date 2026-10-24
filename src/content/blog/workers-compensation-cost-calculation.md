@@ -2,7 +2,7 @@
 title: "How to Calculate Workers' Compensation Insurance Costs: Rates, Class Codes & EMR"
 date: "2026-07-25"
 excerpt: "Learn the statutory formula for calculating workers' comp premiums, how NCCI class codes affect pricing, how your Experience Modification Rating (EMR) works, and ways to lower costs."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "HR Analytics"
 ---
 

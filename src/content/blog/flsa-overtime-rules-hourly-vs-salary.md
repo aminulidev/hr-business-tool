@@ -2,7 +2,7 @@
 title: "FLSA Overtime Rules: Complete Guide to Exempt vs. Non-Exempt Employees"
 date: "2026-08-28"
 excerpt: "Understand the Fair Labor Standards Act overtime requirements, salary thresholds, executive, administrative, and professional duties tests, and common misclassification risks."
-author: "David Miller, SPHR"
+author: "QuickBizCalc Team"
 category: "Salary & Compensation"
 ---
 

@@ -2,7 +2,7 @@
 title: "Understanding Overtime Pay Laws: A Comprehensive Guide for Employers"
 date: "2026-04-25"
 excerpt: "Are you paying your employees fairly for extra hours? Discover the essential rules of the FLSA regarding overtime compensation, state-by-state differences, exemptions, and how to avoid costly wage and hour lawsuits."
-author: "Sarah Jenkins, HR Specialist"
+author: "QuickBizCalc Team"
 category: "Legal"
 ---
 

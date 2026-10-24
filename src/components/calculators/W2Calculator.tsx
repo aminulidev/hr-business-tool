@@ -25,33 +25,33 @@ const PAY_FREQS: Record<PayFreq, number> = {
 // 2026 Federal brackets (single) - simplified; use full set
 const FED_BRACKETS: Record<FilingStatus, { min: number; max: number; rate: number }[]> = {
   single: [
-    { min: 0, max: 12150, rate: 0.10 }, { min: 12150, max: 49350, rate: 0.12 },
-    { min: 49350, max: 105250, rate: 0.22 }, { min: 105250, max: 200900, rate: 0.24 },
-    { min: 200900, max: 255350, rate: 0.32 }, { min: 255350, max: 639950, rate: 0.35 },
-    { min: 639950, max: Infinity, rate: 0.37 },
+    { min: 0, max: 12400, rate: 0.10 }, { min: 12400, max: 50400, rate: 0.12 },
+    { min: 50400, max: 105700, rate: 0.22 }, { min: 105700, max: 201775, rate: 0.24 },
+    { min: 201775, max: 256225, rate: 0.32 }, { min: 256225, max: 640600, rate: 0.35 },
+    { min: 640600, max: Infinity, rate: 0.37 },
   ],
   mfj: [
-    { min: 0, max: 24300, rate: 0.10 }, { min: 24300, max: 98700, rate: 0.12 },
-    { min: 98700, max: 210500, rate: 0.22 }, { min: 210500, max: 401800, rate: 0.24 },
-    { min: 401800, max: 510700, rate: 0.32 }, { min: 510700, max: 766900, rate: 0.35 },
-    { min: 766900, max: Infinity, rate: 0.37 },
+    { min: 0, max: 24800, rate: 0.10 }, { min: 24800, max: 100800, rate: 0.12 },
+    { min: 100800, max: 211400, rate: 0.22 }, { min: 211400, max: 403550, rate: 0.24 },
+    { min: 403550, max: 512450, rate: 0.32 }, { min: 512450, max: 768700, rate: 0.35 },
+    { min: 768700, max: Infinity, rate: 0.37 },
   ],
   mfs: [
-    { min: 0, max: 12150, rate: 0.10 }, { min: 12150, max: 49350, rate: 0.12 },
-    { min: 49350, max: 105250, rate: 0.22 }, { min: 105250, max: 200900, rate: 0.24 },
-    { min: 200900, max: 255350, rate: 0.32 }, { min: 255350, max: 383450, rate: 0.35 },
-    { min: 383450, max: Infinity, rate: 0.37 },
+    { min: 0, max: 12400, rate: 0.10 }, { min: 12400, max: 50400, rate: 0.12 },
+    { min: 50400, max: 105700, rate: 0.22 }, { min: 105700, max: 201775, rate: 0.24 },
+    { min: 201775, max: 256225, rate: 0.32 }, { min: 256225, max: 384350, rate: 0.35 },
+    { min: 384350, max: Infinity, rate: 0.37 },
   ],
   hoh: [
-    { min: 0, max: 17300, rate: 0.10 }, { min: 17300, max: 66000, rate: 0.12 },
-    { min: 66000, max: 105250, rate: 0.22 }, { min: 105250, max: 200900, rate: 0.24 },
-    { min: 200900, max: 255350, rate: 0.32 }, { min: 255350, max: 639950, rate: 0.35 },
-    { min: 639950, max: Infinity, rate: 0.37 },
+    { min: 0, max: 17700, rate: 0.10 }, { min: 17700, max: 67450, rate: 0.12 },
+    { min: 67450, max: 105700, rate: 0.22 }, { min: 105700, max: 201775, rate: 0.24 },
+    { min: 201775, max: 256225, rate: 0.32 }, { min: 256225, max: 640600, rate: 0.35 },
+    { min: 640600, max: Infinity, rate: 0.37 },
   ],
 };
 
-const STD_DED: Record<FilingStatus, number> = { single: 15300, mfj: 30600, mfs: 15300, hoh: 22950 };
-const SS_WAGE_BASE = 176100;
+const STD_DED: Record<FilingStatus, number> = { single: 16100, mfj: 32200, mfs: 16100, hoh: 24150 };
+const SS_WAGE_BASE = 184500;
 const SS_RATE = 0.062;
 const MEDICARE_RATE = 0.0145;
 const ADD_MEDICARE_RATE = 0.009;

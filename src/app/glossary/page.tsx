@@ -36,7 +36,7 @@ const terms = [
     term: 'Deductions',
     definition: 'Amounts taken out of an employee\'s gross pay for taxes, insurance premiums, retirement contributions, and other benefits.',
     category: 'Payroll',
-    link: '/calculators/payroll-deduction-calculator'
+    link: '/calculators/payroll-calculator'
   },
   {
     term: 'Effective Tax Rate',
@@ -78,7 +78,7 @@ const terms = [
     term: 'Net Pay (Take-Home Pay)',
     definition: 'The amount of money an employee actually receives in their paycheck after all taxes and deductions have been subtracted from their gross pay.',
     category: 'Payroll',
-    link: '/calculators/after-tax-income-calculator'
+    link: '/calculators/payroll-calculator'
   },
   {
     term: 'Overtime',

@@ -20,6 +20,8 @@ export const metadata: Metadata = {
     'free payroll newsletter',
     'business finance newsletter',
   ],
+  // Signup page with no search value: excluded from search
+  robots: { index: false, follow: true },
   alternates: {
     canonical: `${SITE_URL}/newsletter`,
   },
@@ -137,10 +139,10 @@ export default function NewsletterPage() {
                 Week of Sept 15, 2026
               </p>
               <h3 className="font-semibold mb-2">
-                The 2026 Social Security wage base is $176,100 — here&apos;s what changes for high earners
+                The 2026 Social Security wage base is $184,500 — here&apos;s what changes for high earners
               </h3>
               <p className="text-sm text-muted-foreground">
-                Employees earning over $176,100 stop paying Social Security tax mid-year.
+                Employees earning over $184,500 stop paying Social Security tax mid-year.
                 Their paychecks suddenly look bigger — but the FICA deduction returns in January.
                 Learn how to communicate this to your high-earning team and avoid &quot;why did my
                 paycheck change?&quot; questions.

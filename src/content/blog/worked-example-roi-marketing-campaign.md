@@ -2,7 +2,7 @@
 title: "Worked Example: Marketing Campaign ROI Calculation (5:1 ROAS Target)"
 date: "2026-09-10"
 excerpt: "Step-by-step ROI calculation for a marketing campaign — ad spend, labor, attribution, and ROAS comparison. Use the QuickBizCalc ROI calculator to verify."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Business Finance"
 ---
 

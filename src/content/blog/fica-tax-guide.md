@@ -2,7 +2,7 @@
 title: "FICA Tax Explained: What It Is, How It's Calculated, and What You Owe in 2026"
 date: "2026-08-01"
 excerpt: "FICA tax funds Social Security and Medicare. Learn exactly how it's calculated for employees, employers, and the self-employed — including the 2026 wage base, Additional Medicare Tax, and worked examples."
-author: "Sarah Jenkins, HR Specialist"
+author: "QuickBizCalc Team"
 category: "Taxes"
 ---
 
@@ -38,11 +38,11 @@ Self-employed individuals — sole proprietors, freelancers, and independent con
 | Employer | 6.2% |
 | **Combined total** | **12.4%** |
 
-**2026 Wage Base Limit:** $176,100
+**2026 Wage Base Limit:** $184,500
 
-Social Security tax applies only to wages up to the annual wage base limit. Once a worker earns $176,100 in a calendar year (from a single employer), Social Security withholding stops for the remainder of that year. The wage base is adjusted annually by the Social Security Administration based on changes in average wages nationally.
+Social Security tax applies only to wages up to the annual wage base limit. Once a worker earns $184,500 in a calendar year (from a single employer), Social Security withholding stops for the remainder of that year. The wage base is adjusted annually by the Social Security Administration based on changes in average wages nationally.
 
-**What this means in practice:** A worker who earns exactly $176,100 by late October or November will see their Social Security withholding stop — and their take-home pay will increase by 6.2% for the remaining paychecks of the year.
+**What this means in practice:** A worker who earns exactly $184,500 by late October or November will see their Social Security withholding stop — and their take-home pay will increase by 6.2% for the remaining paychecks of the year.
 
 ### Medicare Tax (HI)
 
@@ -113,10 +113,10 @@ Let's walk through the FICA calculation for a few different scenarios.
 **Gross pay per period:** $240,000 ÷ 24 = **$10,000.00**
 
 **Social Security:**
-- Wage base limit: $176,100
-- Social Security stops when cumulative earnings reach $176,100
-- $176,100 × 6.2% = **$10,918.20** total Social Security for the year
-- This happens mid-year; once wages reach $176,100, SS withholding stops for the remaining paychecks
+- Wage base limit: $184,500
+- Social Security stops when cumulative earnings reach $184,500
+- $184,500 × 6.2% = **$11,439.00** total Social Security for the year
+- This happens mid-year; once wages reach $184,500, SS withholding stops for the remaining paychecks
 
 **Medicare (no wage base cap):**
 - Standard Medicare: $240,000 × 1.45% = **$3,480.00**
@@ -124,14 +124,14 @@ Let's walk through the FICA calculation for a few different scenarios.
 - Total Medicare employee: **$3,840.00**
 
 **Employee FICA total:**
-- Social Security: $10,918.20
+- Social Security: $11,439.00
 - Medicare + Additional Medicare: $3,840.00
-- **Total: $14,758.20**
+- **Total: $15,279.00**
 
 **Employer FICA total:**
-- Social Security: $10,918.20 (employer matches, up to the same wage base)
+- Social Security: $11,439.00 (employer matches, up to the same wage base)
 - Standard Medicare: $3,480.00 (employer does NOT match the additional 0.9%)
-- **Total employer FICA: $14,398.20**
+- **Total employer FICA: $14,919.00**
 
 ### Scenario 3: Self-Employed — Net Income $80,000
 
@@ -156,7 +156,7 @@ $11,303.64 × 50% = $5,651.82 deductible from adjusted gross income
 
 This deduction partially offsets the "double burden" of paying both halves.
 
-> **Important:** At $80,000 net income, the Social Security wage base ($176,100) is not a concern. At higher income levels, the 12.4% SS rate would stop applying once the SE income hits the wage base.
+> **Important:** At $80,000 net income, the Social Security wage base ($184,500) is not a concern. At higher income levels, the 12.4% SS rate would stop applying once the SE income hits the wage base.
 
 ## The Social Security Wage Base: Historical Context and 2026 Update
 
@@ -170,9 +170,9 @@ The Social Security wage base is not fixed — it adjusts annually based on chan
 | 2023 | $160,200 |
 | 2024 | $168,600 |
 | 2025 | $176,100 |
-| 2026 | $176,100 (estimated — subject to SSA announcement) |
+| 2026 | $184,500 |
 
-**Practical implication:** In the 1990s, only top earners hit the wage base. Today, at $176,100, a significant number of professional workers reach the cap annually and experience that "raise" in their net take-home pay for Q4. High-earning employees and their employers should plan for this shift in their Q4 cash flow.
+**Practical implication:** In the 1990s, only top earners hit the wage base. Today, at $184,500, a significant number of professional workers reach the cap annually and experience that "raise" in their net take-home pay for Q4. High-earning employees and their employers should plan for this shift in their Q4 cash flow.
 
 ## FICA and Bonuses
 
@@ -190,14 +190,14 @@ If you work two jobs and earn wages from both employers, each employer withholds
 
 **Example:**
 - Job 1 wages: $130,000 → Social Security withheld: $130,000 × 6.2% = $8,060
-- Job 2 wages: $80,000 → Social Security withheld on first $46,100 (up to the total $176,100 cap): $46,100 × 6.2% = $2,858.20
+- Job 2 wages: $80,000 → Social Security withheld on first $54,500 (up to the total $184,500 cap): $54,500 × 6.2% = $3,379.00
 
-Total SS withheld: $10,918.20 — correct (matches the wage base calculation)
+Total SS withheld: $11,439.00 — correct (matches the wage base calculation)
 
 However, if Job 1 withheld $8,060 and Job 2 withheld $4,960 (on $80,000 without knowing about the other job):
 - Total withheld: $13,020
-- SS tax owed: $10,918.20
-- **Excess SS withheld: $2,101.80** — claimed as a credit on Form 1040
+- SS tax owed: $11,439.00
+- **Excess SS withheld: $1,581.00** — claimed as a credit on Form 1040
 
 Employers are not required to coordinate their withholding with other employers. The reconciliation happens on the worker's annual tax return.
 
@@ -232,7 +232,7 @@ Every quarter you work and earn wages, you accumulate **Social Security credits*
 ## Key Takeaways
 
 - FICA = Social Security (6.2%) + Medicare (1.45%) = 7.65% employee rate + 7.65% employer rate
-- Social Security wage base in 2026: $176,100 — withholding stops after this threshold
+- Social Security wage base in 2026: $184,500 — withholding stops after this threshold
 - Medicare has no wage base — applies to all wages
 - High earners (over $200k single/$250k married) owe an additional 0.9% Additional Medicare Tax (employee only)
 - Self-employed workers pay the full 15.3% SE tax but deduct 50% of it as a business expense
@@ -249,5 +249,4 @@ Apply what you've just learned with these free, instant calculators:
 
 - [FICA Tax Calculator](/calculators/fica-tax-calculator)
 - [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator)
-- [Salary Tax Calculator](/calculators/salary-tax-calculator)
-- [Payroll Deduction Calculator](/calculators/payroll-deduction-calculator)
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator)

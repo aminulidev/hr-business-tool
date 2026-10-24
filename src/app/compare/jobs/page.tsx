@@ -19,6 +19,8 @@ export const metadata: Metadata = {
     'job offer analyzer',
     'salary vs benefits calculator',
   ],
+  // Thin utility page: kept for users, excluded from search
+  robots: { index: false, follow: true },
   alternates: {
     canonical: `${SITE_URL}/compare/jobs`,
   },

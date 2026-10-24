@@ -2,7 +2,7 @@
 title: "Supplemental Wage Tax Rates: How Bonuses, Commissions & Overtime Are Taxed"
 date: "2026-07-05"
 excerpt: "Understand how the IRS taxes bonuses and supplemental wages. Learn the 22% flat withholding method vs. the aggregate method, gross-up bonuses, and year-end tax refunds."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Payroll & Taxes"
 ---
 
@@ -88,5 +88,4 @@ Apply what you've just learned with these free, instant calculators:
 
 - [Bonus Tax Calculator](/calculators/bonus-tax-calculator)
 - [Tax Bracket Calculator](/calculators/tax-bracket-calculator)
-- [After-Tax Income Calculator](/calculators/after-tax-income-calculator)
-- [Salary Tax Calculator](/calculators/salary-tax-calculator)
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator)

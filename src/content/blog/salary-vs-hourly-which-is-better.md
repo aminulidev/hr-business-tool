@@ -2,7 +2,7 @@
 title: "Salary vs. Hourly Pay: Which is Better for Your Business?"
 date: "2026-04-24"
 excerpt: "Deciding between salaried and hourly compensation models is a pivotal choice for employers. We compare the pros, cons, legal implications, and tax effects of each to help you decide."
-author: "Sarah Jenkins, HR Specialist"
+author: "QuickBizCalc Team"
 category: "HR Strategy"
 ---
 
@@ -125,7 +125,7 @@ From a payroll tax perspective, the mechanics are largely the same — both hour
 
 **For salaried workers:** Fixed paychecks make tax planning straightforward. Withholding is highly consistent period to period, making it easier for employees to accurately predict their tax liability.
 
-> **Tool:** Use our [hourly paycheck calculator](/calculators/hourly-paycheck-calculator) to see the exact take-home pay for any hourly rate and hours worked scenario, including overtime. For salaried employees, the [after-tax income calculator](/calculators/after-tax-income-calculator) shows annual take-home pay broken down by tax component.
+> **Tool:** Use our [hourly paycheck calculator](/calculators/hourly-paycheck-calculator) to see the exact take-home pay for any hourly rate and hours worked scenario, including overtime. For salaried employees, the [Payroll & Paycheck Calculator](/calculators/payroll-calculator) shows annual take-home pay broken down by tax component.
 
 ## Hybrid Models: Salaried Non-Exempt
 
@@ -178,5 +178,5 @@ Apply what you've just learned with these free, instant calculators:
 
 - [Salary Converter](/calculators/salary-converter)
 - [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator)
-- [Salary Tax Calculator](/calculators/salary-tax-calculator)
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator)
 - [Wages Calculator](/calculators/wages-calculator)

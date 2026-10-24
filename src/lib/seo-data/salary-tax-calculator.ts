@@ -11,7 +11,7 @@ const seoData = {
     'Effective Tax Rate = (Total Taxes / Gross Salary) × 100%',
 
   formulaDescription:
-    'The United States uses a progressive tax system, meaning income is taxed at increasing rates as it rises through tax brackets. Your first dollars of taxable income are taxed at 10%, and only the dollars above each bracket threshold are taxed at the higher rate. Your effective tax rate is the average rate across all brackets — it is always lower than your marginal (top) bracket rate because of this graduated structure. FICA taxes (Social Security at 6.2% up to the $176,100 wage base, and Medicare at 1.45% on all wages plus 0.9% on earnings above $200,000) are separate from income tax and are calculated on your gross salary before the standard deduction. The standard deduction ($15,000 single / $30,000 MFJ / $22,500 HoH for 2025) reduces your taxable income before bracket calculations begin.',
+    'The United States uses a progressive tax system, meaning income is taxed at increasing rates as it rises through tax brackets. Your first dollars of taxable income are taxed at 10%, and only the dollars above each bracket threshold are taxed at the higher rate. Your effective tax rate is the average rate across all brackets — it is always lower than your marginal (top) bracket rate because of this graduated structure. FICA taxes (Social Security at 6.2% up to the $184,500 wage base, and Medicare at 1.45% on all wages plus 0.9% on earnings above $200,000) are separate from income tax and are calculated on your gross salary before the standard deduction. The standard deduction ($15,000 single / $30,000 MFJ / $22,500 HoH for 2025) reduces your taxable income before bracket calculations begin.',
 
   workedExamples: [
     {
@@ -27,7 +27,7 @@ const seoData = {
     {
       title: '$200,000 Salary — Single Filer',
       description:
-        'A $200,000 single salary with standard deduction $15,000 gives $185,000 taxable. Federal tax spans four brackets: 10% on $11,925 ($1,192.50) + 12% on $36,550 ($4,386.00) + 22% on $54,875 ($12,072.50) + 24% on $81,650 ($19,596.00) = $37,247.00. Social Security: 6.2% on $176,100 = $10,918.20. Medicare: 1.45% on $200,000 = $2,900 + 0.9% on amount above $200,000 = $0 (exactly at threshold). State tax (5%): $10,000. Total taxes: ~$61,065.20. Effective rate: 30.5%. Marginal rate: 24%. Take-home: ~$138,935/year ($11,578/month).',
+        'A $200,000 single salary with standard deduction $15,000 gives $185,000 taxable. Federal tax spans four brackets: 10% on $11,925 ($1,192.50) + 12% on $36,550 ($4,386.00) + 22% on $54,875 ($12,072.50) + 24% on $81,650 ($19,596.00) = $37,247.00. Social Security: 6.2% on $184,500 = $11,439.00. Medicare: 1.45% on $200,000 = $2,900 + 0.9% on amount above $200,000 = $0 (exactly at threshold). State tax (5%): $10,000. Total taxes: ~$61,586.00. Effective rate: 30.8%. Marginal rate: 24%. Take-home: ~$138,414/year ($11,535/month).',
     },
   ],
 
@@ -40,12 +40,12 @@ const seoData = {
     {
       question: 'What is FICA and how is it calculated?',
       answer:
-        'FICA (Federal Insurance Contributions Act) is the combined tax for Social Security and Medicare, totaling 7.65% of your wages. Social Security tax is 6.2% on wages up to $176,100 (2025 wage base) — once you earn above this amount, no more Social Security tax is withheld for the year. Medicare tax is 1.45% on all wages with no cap. Additionally, high earners pay an Additional Medicare Tax of 0.9% on wages exceeding $200,000 (single) or $250,000 (married filing jointly). Your employer matches your FICA contributions, paying an equal 7.65%, so the total cost is 15.3% of your wages.',
+        'FICA (Federal Insurance Contributions Act) is the combined tax for Social Security and Medicare, totaling 7.65% of your wages. Social Security tax is 6.2% on wages up to $184,500 (2026 wage base) — once you earn above this amount, no more Social Security tax is withheld for the year. Medicare tax is 1.45% on all wages with no cap. Additionally, high earners pay an Additional Medicare Tax of 0.9% on wages exceeding $200,000 (single) or $250,000 (married filing jointly). Your employer matches your FICA contributions, paying an equal 7.65%, so the total cost is 15.3% of your wages.',
     },
     {
       question: 'What is the Social Security wage base?',
       answer:
-        'The Social Security wage base is the maximum amount of earnings subject to Social Security tax in a given year. For 2025, the wage base is $176,100. Once your cumulative earnings reach this amount, no further Social Security tax (6.2%) is withheld for the rest of the year, though Medicare tax (1.45%) continues on all earnings. The wage base is adjusted annually for inflation by the Social Security Administration. If you earn $200,000, you\'ll pay Social Security tax on the first $176,100 ($10,918.20) and Medicare tax on the full $200,000 ($2,900.00 plus potential additional Medicare tax).',
+        'The Social Security wage base is the maximum amount of earnings subject to Social Security tax in a given year. For 2026, the wage base is $184,500. Once your cumulative earnings reach this amount, no further Social Security tax (6.2%) is withheld for the rest of the year, though Medicare tax (1.45%) continues on all earnings. The wage base is adjusted annually for inflation by the Social Security Administration. If you earn $200,000, you\'ll pay Social Security tax on the first $184,500 ($10,918.20) and Medicare tax on the full $200,000 ($2,900.00 plus potential additional Medicare tax).',
     },
     {
       question: 'What is the Additional Medicare Tax?',

@@ -2,7 +2,7 @@
 title: "Sales Commission Structures: Flat, Tiered & Quota Accelerators Explained"
 date: "2026-07-20"
 excerpt: "Compare the most effective sales commission models: flat-rate commissions, tiered bracket accelerators, draw against commission, and gross margin compensation plans."
-author: "David Miller, SPHR"
+author: "QuickBizCalc Team"
 category: "Commission & Compensation"
 ---
 

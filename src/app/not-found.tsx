@@ -27,8 +27,8 @@ export default function NotFound() {
             Page Not Found
           </h2>
           <p className="text-muted-foreground">
-            The calculator you are looking for does not exist or has been moved.
-            Browse our collection of 24 free business and HR calculators.
+            The page you are looking for does not exist or has been moved.
+            Browse all of our free business and HR calculators from the homepage.
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">

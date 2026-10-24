@@ -2,7 +2,7 @@
 title: "Statutory Payroll Deductions: Mandatory vs. Voluntary Employee Withholdings"
 date: "2026-08-15"
 excerpt: "A complete guide to statutory payroll deductions. Learn how FICA, federal and state income tax withholding, FUTA, SUTA, and voluntary pre-tax deductions impact employee paychecks."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Payroll & Taxes"
 ---
 
@@ -83,7 +83,7 @@ The sequence of deductions significantly impacts an employee's tax liability:
   * *Benefit:* Reduces taxable income, lowering FIT and state tax withholdings.
 * **Post-Tax Deductions:** Subtracted **after** all taxes have been computed. Examples include Roth 401(k) contributions, wage garnishments, child support orders, and charitable donations.
 
-Calculate your complete paycheck deductions using our [Payroll Deduction Calculator](/calculators/payroll-deduction-calculator) and [Payroll Calculator](/calculators/payroll-calculator).
+Calculate your complete paycheck deductions using our [Payroll & Paycheck Calculator](/calculators/payroll-calculator) and [Payroll Calculator](/calculators/payroll-calculator).
 
 ---
 
@@ -91,7 +91,5 @@ Calculate your complete paycheck deductions using our [Payroll Deduction Calcula
 
 Apply what you've just learned with these free, instant calculators:
 
-- [Payroll Deduction Calculator](/calculators/payroll-deduction-calculator)
-- [Payroll Calculator](/calculators/payroll-calculator)
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator)
 - [FICA Tax Calculator](/calculators/fica-tax-calculator)
-- [Salary Tax Calculator](/calculators/salary-tax-calculator)

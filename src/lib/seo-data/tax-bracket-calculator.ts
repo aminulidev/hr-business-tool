@@ -17,17 +17,17 @@ const seoData = {
     {
       title: '$65,000 Single Filer (2026)',
       description:
-        'With a $65,000 gross income and the 2026 $15,300 standard deduction, the taxable income is $49,700. Tax is calculated as: 10% on the first $12,150 ($1,215.00), 12% on the next $37,200 ($4,464.00), and 22% on the remaining $350 ($77.00). Total federal tax is $5,756.00, with an effective rate of 11.51% and a marginal rate of 22%. Monthly withholding equivalent is $479.67 and bi-weekly is $221.38.',
+        'With a $65,000 gross income and the 2026 $16,100 standard deduction, the taxable income is $48,900. Tax is calculated as: 10% on the first $12,400 ($1,240.00) and 12% on the remaining $36,500 ($4,380.00). Total federal tax is $5,620.00, with an effective rate of 8.65% of gross income and a marginal rate of 12%. Monthly withholding equivalent is $468.33 and bi-weekly is $216.15.',
     },
     {
       title: '$120,000 Married Filing Jointly (2026)',
       description:
-        'With a $120,000 gross income and the 2026 $30,600 standard deduction, the taxable income is $89,400. Tax is calculated as: 10% on the first $24,300 ($2,430.00) and 12% on the remaining $65,100 ($7,812.00). Total federal tax is $10,242.00, with an effective rate of 11.38% and a marginal rate of 12%. Monthly withholding equivalent is $853.50 and bi-weekly is $393.92.',
+        'With a $120,000 gross income and the 2026 $32,200 standard deduction, the taxable income is $87,800. Tax is calculated as: 10% on the first $24,800 ($2,480.00) and 12% on the remaining $63,000 ($7,560.00). Total federal tax is $10,040.00, with an effective rate of 8.37% of gross income and a marginal rate of 12%. Monthly withholding equivalent is $836.67 and bi-weekly is $386.15.',
     },
     {
       title: '$250,000 Single Filer (High Earner, 2026)',
       description:
-        'With a $250,000 gross income and the 2026 $15,300 standard deduction, the taxable income is $234,700. Tax is calculated across five brackets: 10% on $12,150 ($1,215.00), 12% on $37,200 ($4,464.00), 22% on $55,900 ($12,298.00), 24% on $95,650 ($22,956.00), and 32% on $33,800 ($10,816.00). Total federal tax is $51,749.00, with an effective rate of 22.00% and a marginal rate of 32%. Monthly withholding equivalent is $4,312.42 and bi-weekly is $1,990.35.',
+        'With a $250,000 gross income and the 2026 $16,100 standard deduction, the taxable income is $233,900. Tax is calculated across five brackets: 10% on $12,400 ($1,240.00), 12% on $38,000 ($4,560.00), 22% on $55,300 ($12,166.00), 24% on $96,075 ($23,058.00), and 32% on $32,125 ($10,280.00). Total federal tax is $51,304.00, with an effective rate of 20.52% of gross income and a marginal rate of 32%. Monthly withholding equivalent is $4,275.33 and bi-weekly is $1,973.23.',
     },
   ],
 

@@ -71,7 +71,7 @@ const FEDERAL_BRACKETS_2025: Record<string, TaxBracket[]> = {
 // FICA Constants (2025)
 // ---------------------------------------------------------------------------
 
-const SS_WAGE_CAP = 176100;
+const SS_WAGE_CAP = 184500;
 const SS_RATE = 0.062;
 const MEDICARE_RATE = 0.0145;
 const ADDITIONAL_MEDICARE_THRESHOLD = 200000;

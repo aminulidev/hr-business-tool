@@ -2,7 +2,7 @@
 title: "Worked Example: Calculating Hourly Paycheck With Overtime (Step-by-Step)"
 date: "2026-09-15"
 excerpt: "Walk through a real hourly paycheck calculation with overtime: $18/hr, 45 hours, FICA, federal and state tax. Step-by-step with the QuickBizCalc hourly paycheck calculator."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Taxes"
 ---
 

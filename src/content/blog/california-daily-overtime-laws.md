@@ -2,7 +2,7 @@
 title: "California Overtime Laws: Daily Overtime, Double Time & 7th Day Rules"
 date: "2026-08-25"
 excerpt: "California has some of the strictest overtime mandates in the United States. Learn how daily overtime, double-time after 12 hours, and the mandatory 7th-consecutive-day rule work."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Salary & Compensation"
 ---
 

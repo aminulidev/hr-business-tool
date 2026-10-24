@@ -19,6 +19,8 @@ export const TAX_YEAR = 2026;
 export type FilingStatus = 'single' | 'married' | 'hoh';
 export type PayFrequency = 'weekly' | 'bi-weekly' | 'semi-monthly' | 'monthly';
 export type StateCode = 'CA' | 'TX' | 'FL' | 'NY' | 'IL';
+/** StateCode plus the two generic options used by the national hourly paycheck calculator */
+export type PaycheckState = StateCode | 'none' | 'other';
 
 export const PERIODS_PER_YEAR: Record<PayFrequency, number> = {
   weekly: 52,
@@ -229,7 +231,15 @@ function illinoisIncomeTax(annualWages: number, allowances: number): number {
 // ---------------------------------------------------------------------------
 
 export interface PaycheckInput {
-  state: StateCode;
+  state: PaycheckState;
+  /** 'other' state only: flat state income tax rate as a decimal (0.05 = 5%) */
+  customStateRate?: number;
+  /** Flat after-tax deductions taken from every paycheck (union dues, garnishments, post-tax insurance) */
+  otherDeductionsPerPeriod?: number;
+  /** Annual pre-tax retirement contributions (401(k), 403(b)): exempt from income tax, still subject to FICA */
+  preTaxRetirementAnnual?: number;
+  /** Annual Section 125 benefits (health, dental, FSA, HSA through payroll): exempt from income tax and FICA */
+  preTaxBenefitsAnnual?: number;
   hourlyRate: number;
   regularHoursPerWeek: number;
   overtimeHoursPerWeek: number;
@@ -272,21 +282,35 @@ export function calculatePaycheck(input: PaycheckInput): PaycheckResult {
     input.hourlyRate * input.overtimeMultiplier * input.overtimeHoursPerWeek;
   const grossAnnual = weeklyGross * 52;
 
-  const lines: { key: string; label: string; annual: number }[] = [
-    { key: 'federal', label: 'Federal income tax', annual: federalIncomeTax(grossAnnual, input.filingStatus) },
+  // Pre-tax deductions. Section 125 benefits come out before every tax;
+  // retirement contributions come out before income tax only.
+  const benefits = Math.min(grossAnnual, Math.max(0, input.preTaxBenefitsAnnual ?? 0));
+  const retirement = Math.min(grossAnnual - benefits, Math.max(0, input.preTaxRetirementAnnual ?? 0));
+  const ficaWages = grossAnnual - benefits;
+  const taxableWages = ficaWages - retirement;
+
+  const lines: { key: string; label: string; annual: number }[] = [];
+  if (retirement > 0) {
+    lines.push({ key: 'retirement', label: '401(k) / retirement (pre-tax)', annual: retirement });
+  }
+  if (benefits > 0) {
+    lines.push({ key: 'benefits', label: 'Health & Section 125 benefits (pre-tax)', annual: benefits });
+  }
+  lines.push(
+    { key: 'federal', label: 'Federal income tax', annual: federalIncomeTax(taxableWages, input.filingStatus) },
     {
       key: 'social-security',
       label: 'Social Security (6.2%)',
-      annual: Math.min(grossAnnual, SOCIAL_SECURITY_WAGE_BASE) * SOCIAL_SECURITY_RATE,
+      annual: Math.min(ficaWages, SOCIAL_SECURITY_WAGE_BASE) * SOCIAL_SECURITY_RATE,
     },
     {
       key: 'medicare',
       label: 'Medicare (1.45%)',
       annual:
-        grossAnnual * MEDICARE_RATE +
-        Math.max(0, grossAnnual - ADDITIONAL_MEDICARE_THRESHOLD) * ADDITIONAL_MEDICARE_RATE,
+        ficaWages * MEDICARE_RATE +
+        Math.max(0, ficaWages - ADDITIONAL_MEDICARE_THRESHOLD) * ADDITIONAL_MEDICARE_RATE,
     },
-  ];
+  );
 
   switch (input.state) {
     case 'CA':
@@ -294,34 +318,34 @@ export function calculatePaycheck(input: PaycheckInput): PaycheckResult {
         {
           key: 'state',
           label: 'California income tax',
-          annual: californiaIncomeTax(grossAnnual, input.filingStatus, input.stateAllowances),
+          annual: californiaIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
         },
-        { key: 'sdi', label: 'CA SDI (1.3%)', annual: grossAnnual * CA_SDI_RATE },
+        { key: 'sdi', label: 'CA SDI (1.3%)', annual: ficaWages * CA_SDI_RATE },
       );
       break;
     case 'NY':
       lines.push({
         key: 'state',
         label: 'New York State income tax',
-        annual: newYorkStateIncomeTax(grossAnnual, input.filingStatus, input.stateAllowances),
+        annual: newYorkStateIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
       });
       if (input.nycResident) {
         lines.push({
           key: 'local',
           label: 'New York City income tax',
-          annual: newYorkCityIncomeTax(grossAnnual, input.filingStatus, input.stateAllowances),
+          annual: newYorkCityIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
         });
       }
       lines.push(
         {
           key: 'pfl',
           label: 'NY Paid Family Leave (0.432%)',
-          annual: Math.min(grossAnnual * NY_PFL_RATE, NY_PFL_ANNUAL_CAP),
+          annual: Math.min(ficaWages * NY_PFL_RATE, NY_PFL_ANNUAL_CAP),
         },
         {
           key: 'sdi',
           label: 'NY Disability (SDI)',
-          annual: Math.min(grossAnnual * NY_SDI_RATE, NY_SDI_WEEKLY_CAP * 52),
+          annual: Math.min(ficaWages * NY_SDI_RATE, NY_SDI_WEEKLY_CAP * 52),
         },
       );
       break;
@@ -329,13 +353,34 @@ export function calculatePaycheck(input: PaycheckInput): PaycheckResult {
       lines.push({
         key: 'state',
         label: 'Illinois income tax (4.95%)',
-        annual: illinoisIncomeTax(grossAnnual, input.stateAllowances),
+        annual: illinoisIncomeTax(taxableWages, input.stateAllowances),
       });
       break;
     case 'TX':
     case 'FL':
+    case 'none':
       // No state income tax and no employee-paid state payroll taxes
       break;
+    case 'other': {
+      // State without exact tables: the user supplies a flat rate
+      const rate = input.customStateRate ?? 0;
+      if (rate > 0) {
+        lines.push({
+          key: 'state',
+          label: `State income tax (${+(rate * 100).toFixed(2)}%)`,
+          annual: taxableWages * rate,
+        });
+      }
+      break;
+    }
+  }
+
+  if (input.otherDeductionsPerPeriod && input.otherDeductionsPerPeriod > 0) {
+    lines.push({
+      key: 'other',
+      label: 'Other deductions',
+      annual: input.otherDeductionsPerPeriod * periodsPerYear,
+    });
   }
 
   const deductions = lines.map((l) => ({

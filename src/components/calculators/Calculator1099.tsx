@@ -20,34 +20,34 @@ type FilingStatus = 'single' | 'mfj' | 'mfs' | 'hoh';
 // 2026 Federal brackets
 const FED_BRACKETS: Record<FilingStatus, { min: number; max: number; rate: number }[]> = {
   single: [
-    { min: 0, max: 12150, rate: 0.10 }, { min: 12150, max: 49350, rate: 0.12 },
-    { min: 49350, max: 105250, rate: 0.22 }, { min: 105250, max: 200900, rate: 0.24 },
-    { min: 200900, max: 255350, rate: 0.32 }, { min: 255350, max: 639950, rate: 0.35 },
-    { min: 639950, max: Infinity, rate: 0.37 },
+    { min: 0, max: 12400, rate: 0.10 }, { min: 12400, max: 50400, rate: 0.12 },
+    { min: 50400, max: 105700, rate: 0.22 }, { min: 105700, max: 201775, rate: 0.24 },
+    { min: 201775, max: 256225, rate: 0.32 }, { min: 256225, max: 640600, rate: 0.35 },
+    { min: 640600, max: Infinity, rate: 0.37 },
   ],
   mfj: [
-    { min: 0, max: 24300, rate: 0.10 }, { min: 24300, max: 98700, rate: 0.12 },
-    { min: 98700, max: 210500, rate: 0.22 }, { min: 210500, max: 401800, rate: 0.24 },
-    { min: 401800, max: 510700, rate: 0.32 }, { min: 510700, max: 766900, rate: 0.35 },
-    { min: 766900, max: Infinity, rate: 0.37 },
+    { min: 0, max: 24800, rate: 0.10 }, { min: 24800, max: 100800, rate: 0.12 },
+    { min: 100800, max: 211400, rate: 0.22 }, { min: 211400, max: 403550, rate: 0.24 },
+    { min: 403550, max: 512450, rate: 0.32 }, { min: 512450, max: 768700, rate: 0.35 },
+    { min: 768700, max: Infinity, rate: 0.37 },
   ],
   mfs: [
-    { min: 0, max: 12150, rate: 0.10 }, { min: 12150, max: 49350, rate: 0.12 },
-    { min: 49350, max: 105250, rate: 0.22 }, { min: 105250, max: 200900, rate: 0.24 },
-    { min: 200900, max: 255350, rate: 0.32 }, { min: 255350, max: 383450, rate: 0.35 },
-    { min: 383450, max: Infinity, rate: 0.37 },
+    { min: 0, max: 12400, rate: 0.10 }, { min: 12400, max: 50400, rate: 0.12 },
+    { min: 50400, max: 105700, rate: 0.22 }, { min: 105700, max: 201775, rate: 0.24 },
+    { min: 201775, max: 256225, rate: 0.32 }, { min: 256225, max: 384350, rate: 0.35 },
+    { min: 384350, max: Infinity, rate: 0.37 },
   ],
   hoh: [
-    { min: 0, max: 17300, rate: 0.10 }, { min: 17300, max: 66000, rate: 0.12 },
-    { min: 66000, max: 105250, rate: 0.22 }, { min: 105250, max: 200900, rate: 0.24 },
-    { min: 200900, max: 255350, rate: 0.32 }, { min: 255350, max: 639950, rate: 0.35 },
-    { min: 639950, max: Infinity, rate: 0.37 },
+    { min: 0, max: 17700, rate: 0.10 }, { min: 17700, max: 67450, rate: 0.12 },
+    { min: 67450, max: 105700, rate: 0.22 }, { min: 105700, max: 201775, rate: 0.24 },
+    { min: 201775, max: 256225, rate: 0.32 }, { min: 256225, max: 640600, rate: 0.35 },
+    { min: 640600, max: Infinity, rate: 0.37 },
   ],
 };
 
-const STD_DED: Record<FilingStatus, number> = { single: 15300, mfj: 30600, mfs: 15300, hoh: 22950 };
+const STD_DED: Record<FilingStatus, number> = { single: 16100, mfj: 32200, mfs: 16100, hoh: 24150 };
 const QBI_DEDUCTION_RATE = 0.20;
-const SS_WAGE_BASE = 176100;
+const SS_WAGE_BASE = 184500;
 const SS_RATE = 0.124; // SECA SS portion
 const MEDICARE_RATE = 0.029; // SECA Medicare portion
 const SECA_COMBINED_RATE = SS_RATE + MEDICARE_RATE; // 15.3%
@@ -405,7 +405,7 @@ export default function Calculator1099() {
                   <div className="flex justify-between px-4 py-2"><span className="text-muted-foreground">Gross 1099 Revenue:</span><span className="font-semibold">{formatCurrency(gross)}</span></div>
                   <div className="flex justify-between px-4 py-2"><span className="text-muted-foreground">Less Deductible Business Expenses:</span><span className="font-semibold text-rose-600">-{formatCurrency(expenses)}</span></div>
                   <div className="flex justify-between px-4 py-2 bg-muted/10"><span className="font-medium">Net Schedule C Profit:</span><span className="font-bold">{formatCurrency(result.netSE)}</span></div>
-                  <div className="flex justify-between px-4 py-2"><span className="text-muted-foreground">SECA Social Security (12.4% on 92.35% up to $176,100):</span><span className="font-semibold">{formatCurrency(result.ssPortion)}</span></div>
+                  <div className="flex justify-between px-4 py-2"><span className="text-muted-foreground">SECA Social Security (12.4% on 92.35% up to $184,500):</span><span className="font-semibold">{formatCurrency(result.ssPortion)}</span></div>
                   <div className="flex justify-between px-4 py-2"><span className="text-muted-foreground">SECA Medicare (2.9% on 92.35%):</span><span className="font-semibold">{formatCurrency(result.medicarePortion)}</span></div>
                   <div className="flex justify-between px-4 py-2 text-blue-600"><span className="font-medium">Total SECA Self-Employment Tax:</span><span className="font-bold">-{formatCurrency(result.secaTax)}</span></div>
                   <div className="flex justify-between px-4 py-2 text-emerald-600"><span className="text-muted-foreground">Above-the-Line 50% SECA Deduction:</span><span>-{formatCurrency(result.secaDeduction)}</span></div>

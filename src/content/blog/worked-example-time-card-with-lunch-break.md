@@ -2,7 +2,7 @@
 title: "Worked Example: Time Card Calculation With Lunch Break and Overtime"
 date: "2026-09-08"
 excerpt: "Step-by-step weekly time card calculation with mandatory lunch deduction, daily hours, and weekly overtime. Use the QuickBizCalc time card calculator with lunch."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Time & Attendance"
 ---
 

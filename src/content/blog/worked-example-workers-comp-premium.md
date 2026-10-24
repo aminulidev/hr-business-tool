@@ -2,7 +2,7 @@
 title: "Worked Example: Workers Comp Premium Calculation for a Small Construction Business"
 date: "2026-09-03"
 excerpt: "Step-by-step workers compensation premium calculation including class codes, experience MOD, and audit adjustments. Use the QuickBizCalc workers comp calculator."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "HR Analytics"
 ---
 

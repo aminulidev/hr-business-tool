@@ -15,7 +15,7 @@ import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
 import { formatCurrency, formatPercent } from '@/lib/utils';
 
-const SS_WAGE_BASE_2025 = 176100;
+const SS_WAGE_BASE_2026 = 184500;
 const SS_RATE = 0.062;
 const MEDICARE_RATE = 0.0145;
 const ADD_MEDICARE_RATE = 0.009;
@@ -40,7 +40,7 @@ export default function FicaTaxCalculator() {
     // For self-employed, FICA is calculated on 92.35% of net earnings
     const taxableGross = isSE ? gross * 0.9235 : gross;
     
-    const ssWages = Math.min(taxableGross, SS_WAGE_BASE_2025);
+    const ssWages = Math.min(taxableGross, SS_WAGE_BASE_2026);
     const empSS = ssWages * SS_RATE;
     const empMedicare = taxableGross * MEDICARE_RATE;
     const addMedicare = taxableGross > ADD_MEDICARE_THRESHOLD ? (taxableGross - ADD_MEDICARE_THRESHOLD) * ADD_MEDICARE_RATE : 0;
@@ -111,10 +111,10 @@ export default function FicaTaxCalculator() {
           </div>
         </div>
 
-        {/* 2025 Rate Reference */}
+        {/* 2026 Rate Reference */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 rounded-xl bg-muted/30 border border-border/30 p-4">
           {[
-            { label: 'Social Security', value: '6.2%', note: 'Up to $176,100' },
+            { label: 'Social Security', value: '6.2%', note: 'Up to $184,500' },
             { label: 'Medicare', value: '1.45%', note: 'No income cap' },
             { label: 'Add. Medicare', value: '0.9%', note: 'Over $200,000' },
             { label: 'Employer Match', value: '7.65%', note: 'SS + Medicare' },
@@ -195,9 +195,9 @@ export default function FicaTaxCalculator() {
                 </div>
               )}
 
-              {gross > SS_WAGE_BASE_2025 && (
+              {gross > SS_WAGE_BASE_2026 && (
                 <div className="rounded-lg bg-amber-500/5 border border-amber-500/20 p-3 text-xs text-amber-700 dark:text-amber-300">
-                  ⚠️ Your wages exceed the 2025 Social Security wage base of <strong>{formatCurrency(SS_WAGE_BASE_2025)}</strong>. Only wages up to this limit are subject to the 6.2% SS tax. All wages remain subject to Medicare taxes.
+                  ⚠️ Your wages exceed the 2026 Social Security wage base of <strong>{formatCurrency(SS_WAGE_BASE_2026)}</strong>. Only wages up to this limit are subject to the 6.2% SS tax. All wages remain subject to Medicare taxes.
                 </div>
               )}
             </div>

@@ -587,7 +587,7 @@ export default function ShiftHoursCalculator() {
                   💡 <strong>Shift Scheduling Tip:</strong> In 24/7 continuous operations (manufacturing, public safety, hospitals), rotating shift models like the <strong>2-2-3 Pitman schedule</strong> alternate 2-on, 2-off, 3-on, giving employees every other weekend off with an average of 42.0 hours per week (2 hours built-in overtime).
                 </p>
                 <p>
-                  To design complex team rotations, see our <a href="/calculators/shift-pay-calculator" className="text-violet-600 hover:underline font-medium">Shift Pay Calculator</a> or explore our <a href="/calculators/work-hours-calculator" className="text-violet-600 hover:underline font-medium">Work Hours Calculator</a>.
+                  To design complex team rotations, see our <a href="/calculators/shift-pay-calculator" className="text-violet-600 hover:underline font-medium">Shift Pay Calculator</a> or explore our <a href="/calculators/time-card-calculator" className="text-violet-600 hover:underline font-medium">Time Card Calculator</a>.
                 </p>
               </div>
             </div>

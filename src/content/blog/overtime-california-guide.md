@@ -2,7 +2,7 @@
 title: "California Overtime Laws Explained: Daily & Weekly OT Rules for 2026"
 date: "2026-08-05"
 excerpt: "California overtime laws are the strictest in the nation. Learn the daily and weekly overtime thresholds, double-time rules, exemptions, and calculation methods every California employer and employee needs to know in 2026."
-author: "Sarah Jenkins, HR Specialist"
+author: "QuickBizCalc Team"
 category: "Legal"
 ---
 
