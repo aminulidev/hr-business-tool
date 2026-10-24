@@ -2,7 +2,7 @@
 title: "How to Calculate Your Effective Hourly Rate: True Take-Home Pay Analysis"
 date: "2026-08-20"
 excerpt: "Discover what you actually make per hour after federal taxes, FICA, commuting costs, and unpaid hours. Essential calculation guide for freelancers, contractors, and salaried employees."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Salary & Compensation"
 ---
 
@@ -66,7 +66,7 @@ $$\text{Minimum 1099 Hourly Rate} = \frac{\text{Desired W-2 Annual Equivalent} \
   * Required Gross: $\$90,000 \times 1.35 = \$121,500$
   * At 1,100 billable hours: $\$121,500 \div 1,100 = \mathbf{\$110.45/\text{hour}}$.
 
-Model your billing targets using our [Billable Hours Calculator](/calculators/billable-hours-calculator) and [After-Tax Income Calculator](/calculators/after-tax-income-calculator).
+Model your billing targets using our [Billable Hours Calculator](/calculators/billable-hours-calculator) and [Payroll & Paycheck Calculator](/calculators/payroll-calculator).
 
 ---
 

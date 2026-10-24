@@ -2,7 +2,7 @@
 title: "Cost Per Hire: SHRM Standard Formula, Benchmark Costs & Recruiting Analytics"
 date: "2026-07-10"
 excerpt: "Learn how to calculate your true Cost Per Hire using the official SHRM / ANSI standard formula. Discover internal vs. external recruiting costs and benchmarks by industry."
-author: "David Miller, SPHR"
+author: "QuickBizCalc Team"
 category: "HR Analytics"
 ---
 

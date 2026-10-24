@@ -2,7 +2,7 @@
 title: "How to Calculate Billable Hours and Employee Utilization Rate"
 date: "2026-08-05"
 excerpt: "Master billable hours tracking and employee utilization formulas for consulting, legal, accounting, and agency firms. Learn ideal utilization benchmarks and target multipliers."
-author: "David Miller, SPHR"
+author: "QuickBizCalc Team"
 category: "HR Analytics"
 ---
 

@@ -2,7 +2,7 @@
 title: "Worked Example: Cost Per Hire Calculation for a Growing Tech Startup"
 date: "2026-09-06"
 excerpt: "Step-by-step cost per hire calculation including agency fees, job boards, ATS, and background checks. Compare to SHRM benchmark of $4,700."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "HR Analytics"
 ---
 

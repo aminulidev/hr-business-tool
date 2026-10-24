@@ -2,7 +2,7 @@
 title: "Worked Example: California 7th-Day Overtime and Double-Time Calculation"
 date: "2026-09-13"
 excerpt: "Step-by-step California overtime calculation including daily OT, 7th-consecutive-day rules, and double-time. Use the overtime calculator to verify."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Salary & Compensation"
 ---
 

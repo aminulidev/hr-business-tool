@@ -2,7 +2,7 @@
 title: "Worked Example: Building a Zero-Based Budget From Net Pay"
 date: "2026-09-12"
 excerpt: "A complete zero-based budget walkthrough: calculate net monthly take-home, then allocate every dollar to a category until the budget equals $0. Step-by-step with the QuickBizCalc paycheck calculator."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Personal Finance"
 ---
 
@@ -131,8 +131,8 @@ You'll see approximately $1,213/month net, which matches our budget.
 ## Related Calculators
 
 - [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator) — start here for monthly net income
-- [After-Tax Income Calculator](/calculators/after-tax-income-calculator) — annual net by state
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator) — annual net by state
 - [Salary Converter](/calculators/salary-converter) — convert any pay period
-- [Payroll Deduction Calculator](/calculators/payroll-deduction-calculator) — detailed 401k/HSA breakdown
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator) — detailed 401k/HSA breakdown
 - [Wages Calculator](/calculators/wages-calculator) — hourly to annual
 

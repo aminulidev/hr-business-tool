@@ -84,7 +84,7 @@ const STANDARD_DEDUCTION: Record<FilingStatus, number> = {
   hoh: 22500,
 };
 
-const SS_WAGE_BASE = 176100;
+const SS_WAGE_BASE = 184500;
 const SS_RATE = 0.062;
 const MEDICARE_RATE = 0.0145;
 const ADDITIONAL_MEDICARE_RATE = 0.009;

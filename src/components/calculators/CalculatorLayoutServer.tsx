@@ -467,20 +467,15 @@ export default function CalculatorLayoutServer({
                   {description}
                 </p>
                 
-                {/* E-E-A-T Signals */}
+                {/* Source attribution */}
                 <div className="flex items-center gap-2 sm:gap-3 mt-3 text-xs sm:text-sm text-muted-foreground flex-wrap">
-                  <div className="flex items-center gap-1.5 bg-muted/60 rounded-full px-2.5 py-1 border border-border/50">
-                    <div className="size-4 sm:size-5 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-[10px] sm:text-xs border border-emerald-500/20">
-                      SJ
-                    </div>
-                    <span>
-                      Reviewed by <strong className="text-foreground font-medium">Sarah Jenkins, CPA</strong>
-                    </span>
-                  </div>
-                  <span className="hidden sm:inline text-muted-foreground/40">&bull;</span>
-                  <span className="text-xs bg-muted/30 rounded-full px-2.5 py-1 border border-border/30">
-                    Updated {new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-                  </span>
+                  <a
+                    href="#statutory-sources"
+                    className="flex items-center gap-1.5 bg-muted/60 rounded-full px-2.5 py-1 border border-border/50 hover:text-foreground transition-colors"
+                  >
+                    <Shield className="size-3.5 text-emerald-600" />
+                    <span>Sources: IRS Pub. 15-T, DOL FLSA, SSA</span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -715,7 +710,7 @@ export default function CalculatorLayoutServer({
                     Editorial Review Standards
                   </div>
                   <p className="text-muted-foreground">
-                    Peer-reviewed by credentialed CPAs and SPHR consultants. For specific advice, consult a licensed tax attorney or accountant.
+                    Formulas and worked examples are checked against the sources above before publishing. For advice on your own situation, consult a licensed tax professional or accountant.
                   </p>
                 </div>
               </div>
@@ -787,7 +782,7 @@ export default function CalculatorLayoutServer({
                     Pro Tip
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Always maintain detailed records and export your calculations for auditing. Ensure all tax brackets and overtime rates match current state guidelines.
+                    Results are estimates for planning and double-checking. For payroll you actually run, confirm rates against the current IRS Publication 15-T and your state agency before paying anyone.
                   </p>
                   <Link
                     href="/guides"
@@ -827,7 +822,7 @@ export default function CalculatorLayoutServer({
                   Trust & Accuracy
                 </div>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Our formulas are peer-reviewed by certified CPAs and HR professionals, complying with IRS and FLSA standards.
+                  Every formula is sourced from IRS Publication 15-T, Department of Labor FLSA rules, or state agency tables, and each page cites the publication it is based on.
                 </p>
                 <div className="pt-2 border-t border-border/40 flex items-center justify-between text-xs text-muted-foreground">
                   <Link href="/about" className="text-emerald-600 hover:underline">

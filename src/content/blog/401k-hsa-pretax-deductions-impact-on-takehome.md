@@ -2,7 +2,7 @@
 title: "Pre-Tax Deductions: How 401(k), HSA & FSA Contributions Impact Take-Home Pay"
 date: "2026-07-01"
 excerpt: "Discover why saving $100 in a 401(k) or HSA only reduces your take-home pay by $70 to $78. Learn the mathematical power of pre-tax deductions and how to optimize your paycheck."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Payroll & Taxes"
 ---
 
@@ -61,7 +61,7 @@ Consider an employee earning **$75,000 annually** ($6,250/month) who chooses to 
 
 > **The Mathematical Miracle:** Under Option B, the worker deposits a full **$500.00** into their retirement wealth fund, but their paycheck only decreases by **$400.00**. The remaining **$100.00 is money that otherwise would have gone directly to tax withholding!**
 
-Calculate your exact net paycheck with our [Payroll Deduction Calculator](/calculators/payroll-deduction-calculator) and [Payroll Calculator](/calculators/payroll-calculator).
+Calculate your exact net paycheck with our [Payroll & Paycheck Calculator](/calculators/payroll-calculator) and [Payroll Calculator](/calculators/payroll-calculator).
 
 ---
 
@@ -94,7 +94,5 @@ Model your overall compensation and annual salary projections with our [Salary C
 
 Apply what you've just learned with these free, instant calculators:
 
-- [Payroll Deduction Calculator](/calculators/payroll-deduction-calculator)
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator)
 - [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator)
-- [Salary Tax Calculator](/calculators/salary-tax-calculator)
-- [After-Tax Income Calculator](/calculators/after-tax-income-calculator)

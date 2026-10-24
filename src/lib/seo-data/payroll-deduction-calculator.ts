@@ -40,7 +40,7 @@ const seoData = {
     {
       question: 'What is FICA tax and how is it calculated?',
       answer:
-        'FICA (Federal Insurance Contributions Act) tax consists of two components: Social Security tax (6.2% of wages) and Medicare tax (1.45% of wages), for a total of 7.65%. For 2025, Social Security tax applies to the first $176,100 of earnings (the "wage base limit"), after which no more Social Security tax is owed for the year. Medicare tax has no wage base limit — it applies to all earnings. Additionally, high earners pay an Additional Medicare Tax of 0.9% on earnings above $200,000 (single) or $250,000 (married filing jointly). Your employer matches your FICA contributions, paying an equal 7.65% on your behalf.',
+        'FICA (Federal Insurance Contributions Act) tax consists of two components: Social Security tax (6.2% of wages) and Medicare tax (1.45% of wages), for a total of 7.65%. For 2026, Social Security tax applies to the first $184,500 of earnings (the "wage base limit"), after which no more Social Security tax is owed for the year. Medicare tax has no wage base limit — it applies to all earnings. Additionally, high earners pay an Additional Medicare Tax of 0.9% on earnings above $200,000 (single) or $250,000 (married filing jointly). Your employer matches your FICA contributions, paying an equal 7.65% on your behalf.',
     },
     {
       question: 'What are the 401(k) contribution limits?',

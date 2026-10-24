@@ -2,7 +2,7 @@
 title: "Business Days vs. Calendar Days: Rules for Contracts, Banking & SLA Deadlines"
 date: "2026-07-30"
 excerpt: "Learn how to accurately count business days, navigate US federal banking holidays, interpret legal contract clauses, and calculate turnaround times for payroll and financial settlement."
-author: "David Miller, SPHR"
+author: "QuickBizCalc Team"
 category: "Time & Attendance"
 ---
 

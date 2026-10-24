@@ -2,7 +2,7 @@
 title: "Worked Example: Sales Commission Calculation With Base Salary and Tiered Rates"
 date: "2026-09-11"
 excerpt: "Step-by-step sales commission calculation with base salary, tiered rates, and quota accelerators. Use the QuickBizCalc commission calculator to verify."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Commission & Compensation"
 ---
 

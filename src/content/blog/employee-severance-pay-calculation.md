@@ -2,7 +2,7 @@
 title: "Employee Severance Pay Calculation: Formulas, Tax Rules & Release Agreements"
 date: "2026-07-15"
 excerpt: "Learn how severance packages are calculated, typical weeks-of-pay benchmarks by tenure, IRS supplemental tax withholding rules on lump sums, and COBRA continuation requirements."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "HR Analytics"
 ---
 
@@ -82,5 +82,4 @@ Apply what you've just learned with these free, instant calculators:
 
 - [Severance Pay Calculator](/calculators/severance-pay-calculator)
 - [Bonus Tax Calculator](/calculators/bonus-tax-calculator)
-- [Payroll Deduction Calculator](/calculators/payroll-deduction-calculator)
-- [Salary Tax Calculator](/calculators/salary-tax-calculator)
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator)

@@ -2,7 +2,7 @@
 title: "Worked Example: Property Tax Calculation and Appeal Strategy"
 date: "2026-09-02"
 excerpt: "Step-by-step property tax calculation including assessment ratio, mill rate, and appeal-process guidance. Use the QuickBizCalc property tax calculator."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Business Finance"
 ---
 
@@ -220,8 +220,8 @@ Many jurisdictions allow informal negotiation before the formal hearing. The ARB
 ## Related Calculators
 
 - [Property Tax Calculator](/calculators/property-tax-calculator) — annual + monthly escrow
-- [After-Tax Income Calculator](/calculators/after-tax-income-calculator) — compare take-home across states
-- [Salary Tax Calculator](/calculators/salary-tax-calculator) — state income tax comparison
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator) — compare take-home across states
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator) — state income tax comparison
 - [ROI Calculator](/calculators/roi-calculator) — evaluate appeal ROI
-- [Mortgage / Home Affordability](/calculators/after-tax-income-calculator) — monthly housing budget
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator) — monthly housing budget
 

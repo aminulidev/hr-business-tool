@@ -2,7 +2,7 @@
 title: "The Ultimate Guide to Calculating Payroll Taxes in 2026"
 date: "2026-04-26"
 excerpt: "Understanding payroll tax calculations is critical for any business owner. Learn how to accurately calculate FICA, FUTA, and state withholdings for your employees in 2026."
-author: "Sarah Jenkins, HR Specialist"
+author: "QuickBizCalc Team"
 category: "Payroll"
 ---
 
@@ -29,9 +29,9 @@ The Federal Insurance Contributions Act (FICA) is a federal payroll tax that fun
 - **Employee rate:** 6.2%
 - **Employer rate:** 6.2%
 - **Combined total:** 12.4%
-- **2026 wage base limit:** $176,100 (subject to annual adjustment by the SSA)
+- **2026 wage base limit:** $184,500 (subject to annual adjustment by the SSA)
 
-The wage base limit means Social Security tax is only applied to an employee's first $176,100 of earned wages in a calendar year. Once an employee crosses this threshold, Social Security tax withholding stops for the remainder of that year.
+The wage base limit means Social Security tax is only applied to an employee's first $184,500 of earned wages in a calendar year. Once an employee crosses this threshold, Social Security tax withholding stops for the remainder of that year.
 
 ### Medicare Tax
 - **Employee rate:** 1.45%
@@ -195,9 +195,9 @@ This is why many independent contractors, when comparing job offers, need to acc
 
 Manually calculating these percentages, tracking wage base limits, and adjusting for W-4 inputs is prone to human error. To simplify these calculations and run estimates, use our free [payroll calculator](/calculators/payroll-calculator).
 
-Simply enter the gross pay, pay frequency, and location data, and the tool will automatically estimate the various withholdings and employer contributions. For an even deeper breakdown, try our [payroll deduction calculator](/calculators/payroll-deduction-calculator) or the [salary tax calculator](/calculators/salary-tax-calculator).
+Simply enter the gross pay, pay frequency, and location data, and the tool will automatically estimate the various withholdings and employer contributions. For an even deeper breakdown, try our [Payroll & Paycheck Calculator](/calculators/payroll-calculator) or the [Payroll & Paycheck Calculator](/calculators/payroll-calculator).
 
-To understand your total take-home pay across the full year with all federal tax brackets applied correctly, our [after-tax income calculator](/calculators/after-tax-income-calculator) provides a comprehensive progressive tax breakdown.
+To understand your total take-home pay across the full year with all federal tax brackets applied correctly, our [Payroll & Paycheck Calculator](/calculators/payroll-calculator) provides a comprehensive progressive tax breakdown.
 
 ## Key Takeaways
 
@@ -217,6 +217,4 @@ Apply what you've just learned with these free, instant calculators:
 
 - [Payroll Calculator](/calculators/payroll-calculator)
 - [FICA Tax Calculator](/calculators/fica-tax-calculator)
-- [Payroll Deduction Calculator](/calculators/payroll-deduction-calculator)
-- [Salary Tax Calculator](/calculators/salary-tax-calculator)
 - [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator)

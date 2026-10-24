@@ -2,7 +2,7 @@
 title: "How to Structure a Sales Commission Plan that Drives Revenue"
 date: "2026-04-29"
 excerpt: "A poorly designed commission structure can kill motivation or drain your profit margins. Learn the best practices for designing a sales compensation plan that aligns with your business goals."
-author: "Sarah Jenkins, HR Specialist"
+author: "QuickBizCalc Team"
 category: "Commission & Compensation"
 ---
 

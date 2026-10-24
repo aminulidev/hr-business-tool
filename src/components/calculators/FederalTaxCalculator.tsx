@@ -22,45 +22,45 @@ interface BracketDef { min: number; max: number; rate: number; }
 // 2026 Federal Tax Brackets (IRS Rev. Proc. 2025-32)
 const brackets2026: Record<FilingStatus, BracketDef[]> = {
   single: [
-    { min: 0, max: 12150, rate: 0.10 },
-    { min: 12150, max: 49350, rate: 0.12 },
-    { min: 49350, max: 105250, rate: 0.22 },
-    { min: 105250, max: 200900, rate: 0.24 },
-    { min: 200900, max: 255350, rate: 0.32 },
-    { min: 255350, max: 639950, rate: 0.35 },
-    { min: 639950, max: Infinity, rate: 0.37 },
+    { min: 0, max: 12400, rate: 0.10 },
+    { min: 12400, max: 50400, rate: 0.12 },
+    { min: 50400, max: 105700, rate: 0.22 },
+    { min: 105700, max: 201775, rate: 0.24 },
+    { min: 201775, max: 256225, rate: 0.32 },
+    { min: 256225, max: 640600, rate: 0.35 },
+    { min: 640600, max: Infinity, rate: 0.37 },
   ],
   mfj: [
-    { min: 0, max: 24300, rate: 0.10 },
-    { min: 24300, max: 98700, rate: 0.12 },
-    { min: 98700, max: 210500, rate: 0.22 },
-    { min: 210500, max: 401800, rate: 0.24 },
-    { min: 401800, max: 510700, rate: 0.32 },
-    { min: 510700, max: 766900, rate: 0.35 },
-    { min: 766900, max: Infinity, rate: 0.37 },
+    { min: 0, max: 24800, rate: 0.10 },
+    { min: 24800, max: 100800, rate: 0.12 },
+    { min: 100800, max: 211400, rate: 0.22 },
+    { min: 211400, max: 403550, rate: 0.24 },
+    { min: 403550, max: 512450, rate: 0.32 },
+    { min: 512450, max: 768700, rate: 0.35 },
+    { min: 768700, max: Infinity, rate: 0.37 },
   ],
   mfs: [
-    { min: 0, max: 12150, rate: 0.10 },
-    { min: 12150, max: 49350, rate: 0.12 },
-    { min: 49350, max: 105250, rate: 0.22 },
-    { min: 105250, max: 200900, rate: 0.24 },
-    { min: 200900, max: 255350, rate: 0.32 },
-    { min: 255350, max: 383450, rate: 0.35 },
-    { min: 383450, max: Infinity, rate: 0.37 },
+    { min: 0, max: 12400, rate: 0.10 },
+    { min: 12400, max: 50400, rate: 0.12 },
+    { min: 50400, max: 105700, rate: 0.22 },
+    { min: 105700, max: 201775, rate: 0.24 },
+    { min: 201775, max: 256225, rate: 0.32 },
+    { min: 256225, max: 384350, rate: 0.35 },
+    { min: 384350, max: Infinity, rate: 0.37 },
   ],
   hoh: [
-    { min: 0, max: 17300, rate: 0.10 },
-    { min: 17300, max: 66000, rate: 0.12 },
-    { min: 66000, max: 105250, rate: 0.22 },
-    { min: 105250, max: 200900, rate: 0.24 },
-    { min: 200900, max: 255350, rate: 0.32 },
-    { min: 255350, max: 639950, rate: 0.35 },
-    { min: 639950, max: Infinity, rate: 0.37 },
+    { min: 0, max: 17700, rate: 0.10 },
+    { min: 17700, max: 67450, rate: 0.12 },
+    { min: 67450, max: 105700, rate: 0.22 },
+    { min: 105700, max: 201775, rate: 0.24 },
+    { min: 201775, max: 256225, rate: 0.32 },
+    { min: 256225, max: 640600, rate: 0.35 },
+    { min: 640600, max: Infinity, rate: 0.37 },
   ],
 };
 
 const standardDeductions: Record<FilingStatus, number> = {
-  single: 15300, mfj: 30600, mfs: 15300, hoh: 22950,
+  single: 16100, mfj: 32200, mfs: 16100, hoh: 24150,
 };
 
 const filingStatusLabels: Record<FilingStatus, string> = {
@@ -122,8 +122,8 @@ export default function FederalTaxCalculator() {
       }
     }
 
-    // 2026 Estimated FICA (Social Security wage cap $176,100 @ 6.2%, Medicare 1.45% uncapped)
-    const ssTax = Math.min(gross, 176100) * 0.062;
+    // 2026 Estimated FICA (Social Security wage cap $184,500 @ 6.2%, Medicare 1.45% uncapped)
+    const ssTax = Math.min(gross, 184500) * 0.062;
     const medTax = gross * 0.0145;
     const estFica = ssTax + medTax;
     const effectiveRate = gross > 0 ? totalTax / gross : 0;
@@ -229,10 +229,10 @@ export default function FederalTaxCalculator() {
             <Select value={filingStatus} onValueChange={(v) => { setFilingStatus(v as FilingStatus); setCalculated(false); }}>
               <SelectTrigger id="ft-status"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="single">Single ($15,300 Std Ded)</SelectItem>
-                <SelectItem value="mfj">Married Filing Jointly ($30,600 Std Ded)</SelectItem>
-                <SelectItem value="hoh">Head of Household ($22,950 Std Ded)</SelectItem>
-                <SelectItem value="mfs">Married Filing Separately ($15,300 Std Ded)</SelectItem>
+                <SelectItem value="single">Single ($16,100 Std Ded)</SelectItem>
+                <SelectItem value="mfj">Married Filing Jointly ($32,200 Std Ded)</SelectItem>
+                <SelectItem value="hoh">Head of Household ($24,150 Std Ded)</SelectItem>
+                <SelectItem value="mfs">Married Filing Separately ($16,100 Std Ded)</SelectItem>
               </SelectContent>
             </Select>
             <p className="text-[11px] text-muted-foreground">Governs 2026 bracket thresholds &amp; standard deduction.</p>
@@ -428,14 +428,14 @@ export default function FederalTaxCalculator() {
                   Estimated FICA (Social Security &amp; Medicare) Notice
                 </div>
                 <p className="text-muted-foreground leading-relaxed">
-                  In addition to your <strong>{formatCurrency(result.totalTax)}</strong> federal income tax, employees owe mandatory FICA payroll taxes of approximately <strong>{formatCurrency(result.estFica)}</strong> (6.2% Social Security up to $176,100 + 1.45% Medicare uncapped).
+                  In addition to your <strong>{formatCurrency(result.totalTax)}</strong> federal income tax, employees owe mandatory FICA payroll taxes of approximately <strong>{formatCurrency(result.estFica)}</strong> (6.2% Social Security up to $184,500 + 1.45% Medicare uncapped).
                 </p>
                 <div className="flex flex-wrap items-center gap-4 pt-1 font-medium text-foreground">
                   <span>Total Federal + FICA: <strong>{formatCurrency(result.totalWithFica)}</strong></span>
                   <span>Estimated Net Take-Home: <strong>{formatCurrency(result.netAfterAllFederal)}</strong></span>
                 </div>
                 <p className="text-[11px] text-muted-foreground pt-1">
-                  For comprehensive multi-state income tax, city wage taxes, and 401(k) paycheck modeling, use our <a href="/calculators/w-2-calculator" className="text-blue-600 underline font-medium hover:text-blue-700">W-2 Paycheck Calculator</a> or <a href="/calculators/salary-tax-calculator" className="text-blue-600 underline font-medium hover:text-blue-700">Salary Tax Calculator</a>.
+                  For comprehensive multi-state income tax, city wage taxes, and 401(k) paycheck modeling, use our <a href="/calculators/w-2-calculator" className="text-blue-600 underline font-medium hover:text-blue-700">W-2 Paycheck Calculator</a> or <a href="/calculators/payroll-calculator" className="text-blue-600 underline font-medium hover:text-blue-700">Payroll &amp; Paycheck Calculator</a>.
                 </p>
               </div>
             </div>

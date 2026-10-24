@@ -2,7 +2,7 @@
 title: "Worked Example: Setting a Selling Price Using Target Margin"
 date: "2026-09-09"
 excerpt: "Step-by-step pricing decision using target margin methodology. Calculate the selling price needed to hit a 40% gross margin on a $60 cost product."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Business Finance"
 ---
 

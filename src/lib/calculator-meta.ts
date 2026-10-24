@@ -648,7 +648,8 @@ export const calculators: CalculatorMeta[] = [
   },
   {
     slug: 'after-tax-income-calculator',
-    status: 'published',
+    status: 'merged',
+    mergedInto: 'payroll-calculator',
     title: 'After-Tax Income Calculator',
     metaTitle: 'Free After-Tax Income Calculator 2026 — Net Take-Home Pay',
     shortDescription:
@@ -1027,7 +1028,8 @@ export const calculators: CalculatorMeta[] = [
   // ── NEW: Payroll Deduction ──
   {
     slug: 'payroll-deduction-calculator',
-    status: 'published',
+    status: 'merged',
+    mergedInto: 'payroll-calculator',
     title: 'Payroll Deduction Calculator',
     metaTitle: 'Free Payroll Deduction Calculator 2026 — 401(k), HSA, FSA, Insurance',
     shortDescription:
@@ -1057,7 +1059,8 @@ export const calculators: CalculatorMeta[] = [
   // ── NEW: Salary Tax ──
   {
     slug: 'salary-tax-calculator',
-    status: 'published',
+    status: 'merged',
+    mergedInto: 'payroll-calculator',
     title: 'Salary Tax Calculator',
     metaTitle: 'Free Salary Tax Calculator 2026 — Take-Home Pay by State',
     shortDescription:
@@ -1328,7 +1331,7 @@ export const calculators: CalculatorMeta[] = [
     shortDescription:
       'Calculate Social Security and Medicare FICA taxes for employees and self-employed individuals with a full employer/employee breakdown.',
     metaDescription:
-      'Free FICA tax calculator 2026. Calculate Social Security (6.2% up to $176,100 wage base) and Medicare (1.45%) employee withholding. Includes employer match and self-employment SECA tax.',
+      'Free FICA tax calculator 2026. Calculate Social Security (6.2% up to $184,500 wage base) and Medicare (1.45%) employee withholding. Includes employer match and self-employment SECA tax.',
     keywords: [
       'FICA tax calculator',
       'social security tax calculator',
@@ -1959,7 +1962,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'work-hours-calculator',
-    status: 'published',
+    status: 'merged',
+    mergedInto: 'time-card-calculator',
     title: 'Work Hours Calculator',
     metaTitle: 'Free Work Hours Calculator 2026 — Weekly & Monthly Hours Tracking',
     shortDescription:
@@ -1992,7 +1996,8 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'employee-hours-calculator',
-    status: 'published',
+    status: 'merged',
+    mergedInto: 'time-card-calculator',
     title: 'Employee Hours Calculator',
     metaTitle: 'Free Employee Hours Calculator 2026 — Track Multiple Employees',
     shortDescription:

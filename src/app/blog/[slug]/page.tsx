@@ -65,11 +65,10 @@ export default async function PostPage({ params }: Props) {
     headline: post.title,
     description: post.excerpt,
     datePublished: post.date,
-    dateModified: post.date,
     author: {
-      '@type': 'Person',
-      name: post.author,
-      jobTitle: 'Financial & HR Specialist',
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: `${SITE_URL}/about`,
     },
     publisher: {
       '@type': 'Organization',
@@ -108,7 +107,7 @@ export default async function PostPage({ params }: Props) {
               </Badge>
               <div className="flex items-center text-sm text-muted-foreground gap-1.5">
                 <Calendar className="h-4 w-4" />
-                {post.date}
+                {post.dateLabel}
               </div>
             </div>
 
@@ -125,7 +124,7 @@ export default async function PostPage({ params }: Props) {
                   {post.author}
                   <ShieldCheck className="h-4 w-4 text-emerald-600 inline" />
                 </p>
-                <p className="text-xs text-muted-foreground">Expert Reviewed &bull; QuickBizCalc Editorial Board</p>
+                <p className="text-xs text-muted-foreground">Published by QuickBizCalc &bull; Sources cited in the text</p>
               </div>
             </div>
           </div>
@@ -142,13 +141,15 @@ export default async function PostPage({ params }: Props) {
 
           {/* Author Box & E-E-A-T Guarantee */}
           <div className="rounded-3xl border border-border/60 bg-muted/20 p-6 sm:p-8 space-y-4 mb-8">
-            <h3 className="text-base font-bold text-foreground">About the Author &amp; Editorial Review</h3>
+            <h3 className="text-base font-bold text-foreground">About This Guide</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              This guide was researched and vetted by the QuickBizCalc editorial team in accordance with our{' '}
+              Written by the QuickBizCalc team from primary sources: IRS publications, Department of Labor guidance, and
+              state agency tables. Rates and thresholds are checked against the current year&apos;s publications whenever the
+              guide is updated. Read{' '}
               <Link href="/about" className="text-emerald-600 hover:underline">
-                5-step calculation and verification methodology
+                how we build and check our calculators
               </Link>
-              . All payroll rates and formulas are verified against current IRS and Department of Labor guidelines.
+              , and email us if you spot an error.
             </p>
           </div>
 

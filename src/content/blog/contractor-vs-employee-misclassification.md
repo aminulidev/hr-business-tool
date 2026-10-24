@@ -2,7 +2,7 @@
 title: "Managing Contractor vs. Employee Status: Avoiding Misclassification"
 date: "2026-04-22"
 excerpt: "Misclassifying workers can lead to significant penalties. Learn the key differences between W-2 employees and 1099 contractors in 2026, including the IRS 20-factor test and state-specific rules."
-author: "Sarah Jenkins, HR Specialist"
+author: "QuickBizCalc Team"
 category: "Compliance"
 ---
 
@@ -166,7 +166,7 @@ If your contract prohibits a contractor from working with any other clients, thi
 ### 5. Calculate the True Cost Comparison
 When deciding whether to engage a contractor or hire an employee, the math is more complex than the hourly rate. A contractor billing $100/hour may cost the same total as an employee at $70/hour once you account for employer payroll taxes, benefits, overhead, and administrative burden.
 
-Use our [wages calculator](/calculators/wages-calculator) and [payroll deduction calculator](/calculators/payroll-deduction-calculator) to model the total loaded cost of a W-2 employee vs. a 1099 contractor arrangement.
+Use our [wages calculator](/calculators/wages-calculator) and [Payroll & Paycheck Calculator](/calculators/payroll-calculator) to model the total loaded cost of a W-2 employee vs. a 1099 contractor arrangement.
 
 ### 6. Conduct Annual Workforce Audits
 Review every active contractor relationship annually against the IRS factors and your state's specific test. Ask: "If the Department of Labor walked in today and reviewed this relationship, would it hold up?" If the answer is uncertain, consult an employment attorney before the question gets asked by a regulator.
@@ -194,7 +194,7 @@ Worker classification is a complex and highly scrutinized area of employment law
 
 Apply what you've just learned with these free, instant calculators:
 
-- [After-Tax Income Calculator](/calculators/after-tax-income-calculator)
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator)
 - [Salary Converter](/calculators/salary-converter)
 - [Wages Calculator](/calculators/wages-calculator)
 - [FICA Tax Calculator](/calculators/fica-tax-calculator)

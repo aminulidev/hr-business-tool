@@ -2,11 +2,11 @@
 title: "Worked Example: Calculate Net Pay With 401(k), Health Insurance, and Garnishments"
 date: "2026-09-14"
 excerpt: "Step-by-step net pay calculation including 401(k), health insurance, HSA, and a wage garnishment. Real numbers using the QuickBizCalc payroll deduction calculator."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Taxes"
 ---
 
-Calculating take-home pay gets complicated once you add 401(k) contributions, health insurance, HSA, and especially a wage garnishment. This walkthrough shows every deduction step-by-step using the [payroll deduction calculator](/calculators/payroll-deduction-calculator).
+Calculating take-home pay gets complicated once you add 401(k) contributions, health insurance, HSA, and especially a wage garnishment. This walkthrough shows every deduction step-by-step using the [Payroll & Paycheck Calculator](/calculators/payroll-calculator).
 
 ## The Scenario
 
@@ -102,7 +102,7 @@ James's gross annual is $72,000 but his net is only $12,649 — that's a 82.4% r
 
 ## Try It Yourself
 
-Enter James's numbers into the [payroll deduction calculator](/calculators/payroll-deduction-calculator):
+Enter James's numbers into the [Payroll & Paycheck Calculator](/calculators/payroll-calculator):
 
 - Salary: $72,000 (or $3,000 semi-monthly)
 - 401(k) %: 6
@@ -123,9 +123,9 @@ You should see **$527.06 per paycheck** net take-home.
 
 ## Related Calculators
 
-- [Payroll Deduction Calculator](/calculators/payroll-deduction-calculator) — full deduction breakdown
-- [After-Tax Income Calculator](/calculators/after-tax-income-calculator) — state-by-state comparison
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator) — full deduction breakdown
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator) — state-by-state comparison
 - [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator) — hourly version
-- [Salary Tax Calculator](/calculators/salary-tax-calculator) — annual salary version
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator) — annual salary version
 - [FICA Tax Calculator](/calculators/fica-tax-calculator) — Social Security + Medicare breakdown
 

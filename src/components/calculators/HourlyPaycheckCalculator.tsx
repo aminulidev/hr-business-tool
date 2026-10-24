@@ -1,129 +1,313 @@
 'use client';
 
 import { useState } from 'react';
-import TryExample from './TryExample';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import {
-  BadgeDollarSign,
-  DollarSign,
-  Clock,
-  Percent,
-  Info,
-  PieChart as PieChartIcon,
-  Copy,
-  Check,
-  Printer,
-} from 'lucide-react';
-import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
+import { DollarSign, Clock, Calendar, Users, MapPin, Info, AlertCircle, Copy, Check, PiggyBank } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { useCalcHistory } from '@/hooks/useCalcHistory';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import TryExample from './TryExample';
 import CalcHistoryPanel from './CalcHistoryPanel';
-import ComparePanel, { CompareRow } from './ComparePanel';
-import { formatCurrency, formatPercent } from '@/lib/utils';
-
-import UnitToggle from './UnitToggle';
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-type PayFrequency = 'weekly' | 'bi-weekly' | 'semi-monthly' | 'monthly';
-
-interface HourlyPaycheckResult {
-  hourlyRate: number;
-  regularHours: number;
-  overtimeHours: number;
-  totalHoursPerWeek: number;
-  payFrequency: PayFrequency;
-  periodsPerYear: number;
-  grossPerPeriod: number;
-  grossPerYear: number;
-  federalTax: number;
-  stateTax: number;
-  fica: number;
-  otherDeductions: number;
-  totalDeductionsPerPeriod: number;
-  netPayPerPeriod: number;
-  netPayPerYear: number;
-  effectiveHourlyRate: number;
-  effectiveRate: number;
-}
-
-interface HourlySnapshot {
-  hourlyRate: number;
-  regularHours: number;
-  overtimeHours: number;
-  grossPeriod: number;
-  netPeriod: number;
-  netYear: number;
-  label: string;
-}
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import { formatCurrency } from '@/lib/utils';
+import {
+  calculatePaycheck,
+  PERIODS_PER_YEAR,
+  TAX_YEAR,
+  type FilingStatus,
+  type PayFrequency,
+  type PaycheckResult,
+  type PaycheckState,
+  type StateCode,
+} from '@/lib/payroll/withholding-2026';
+import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
 
 // ---------------------------------------------------------------------------
-// Helpers
+// Labels
 // ---------------------------------------------------------------------------
-
-const PERIODS_PER_YEAR: Record<PayFrequency, number> = {
-  weekly: 52,
-  'bi-weekly': 26,
-  'semi-monthly': 24,
-  monthly: 12,
-};
 
 const FREQ_LABELS: Record<PayFrequency, string> = {
-  weekly: 'Weekly',
-  'bi-weekly': 'Bi-Weekly',
-  'semi-monthly': 'Semi-Monthly',
-  monthly: 'Monthly',
+  weekly: 'Weekly (52 paychecks)',
+  'bi-weekly': 'Bi-Weekly (26 paychecks)',
+  'semi-monthly': 'Semi-Monthly (24 paychecks)',
+  monthly: 'Monthly (12 paychecks)',
 };
+
+const FILING_LABELS: Record<FilingStatus, string> = {
+  single: 'Single or Married Filing Separately',
+  married: 'Married Filing Jointly',
+  hoh: 'Head of Household',
+};
+
+// States with exact 2026 withholding tables, alphabetical
+const EXACT_STATES: StateCode[] = [...STATE_CODES].sort((a, b) =>
+  STATE_PAYCHECK_PAGES[a].name.localeCompare(STATE_PAYCHECK_PAGES[b].name)
+);
+
+const NO_TAX_STATES = 'Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas, Washington, and Wyoming';
+
+// Full-time hours used to turn an annual salary into the engine's hourly input
+const SALARY_HOURS_PER_WEEK = 40;
+const SALARY_HOURS_PER_YEAR = SALARY_HOURS_PER_WEEK * 52;
+
+function isExactState(s: PaycheckState): s is StateCode {
+  return s !== 'none' && s !== 'other';
+}
+
+function defaultAllowances(s: PaycheckState, status: FilingStatus): string {
+  if (!isExactState(s)) return '0';
+  const a = STATE_PAYCHECK_PAGES[s].allowances;
+  if (!a) return '0';
+  return String(status === 'married' ? a.defaultMarried : a.defaultSingle);
+}
+
+interface HistoryInputs {
+  hourlyRate: string;
+  regularHours: string;
+  overtimeHours: string;
+  annualSalary: string;
+  payFrequency: string;
+  filingStatus: string;
+  state: string;
+  allowances: string;
+  customStateRate: string;
+  retirementPct: string;
+  benefitsPerPeriod: string;
+  otherDeductions: string;
+  nycResident: string;
+}
+
+export type PaycheckMode = 'hourly' | 'salary';
 
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
-export default function HourlyPaycheckCalculator() {
+/**
+ * Shared paycheck calculator. `mode="hourly"` takes an hourly rate and hours;
+ * `mode="salary"` takes an annual salary. Both run the same 2026 withholding
+ * engine used by the state paycheck pages.
+ */
+export default function HourlyPaycheckCalculator({ mode = 'hourly' }: { mode?: PaycheckMode }) {
+  const isSalary = mode === 'salary';
+  const historySlug = isSalary ? 'payroll-calculator' : 'hourly-paycheck-calculator';
+
   const [hourlyRate, setHourlyRate] = useState('');
   const [regularHours, setRegularHours] = useState('40');
   const [overtimeHours, setOvertimeHours] = useState('0');
+  const [annualSalary, setAnnualSalary] = useState('');
   const [payFrequency, setPayFrequency] = useState<PayFrequency>('bi-weekly');
-  const [federalTaxPct, setFederalTaxPct] = useState('12');
-  const [stateTaxPct, setStateTaxPct] = useState('5');
-  const [includeFica, setIncludeFica] = useState(true);
+  const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
+  const [state, setState] = useState<PaycheckState>('other');
+  const [allowances, setAllowances] = useState('0');
+  const [customStateRate, setCustomStateRate] = useState('5');
+  const [nycResident, setNycResident] = useState(false);
+  const [retirementPct, setRetirementPct] = useState('');
+  const [benefitsPerPeriod, setBenefitsPerPeriod] = useState('');
   const [otherDeductions, setOtherDeductions] = useState('');
-
-  const [result, setResult] = useState<HourlyPaycheckResult | null>(null);
+  const [result, setResult] = useState<PaycheckResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  // Comparison State
-  const [compareA, setCompareA] = useState<HourlySnapshot | null>(null);
-  const [compareB, setCompareB] = useState<HourlySnapshot | null>(null);
   const [copied, setCopied] = useState(false);
+
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<HistoryInputs>(historySlug);
+
+  const page = isExactState(state) ? STATE_PAYCHECK_PAGES[state] : null;
+
+  const changeState = (v: PaycheckState) => {
+    setState(v);
+    setAllowances(defaultAllowances(v, filingStatus));
+    if (v !== 'NY') setNycResident(false);
+    setResult(null);
+  };
+
+  const changeFilingStatus = (status: FilingStatus) => {
+    // Keep the state allowance default in step with filing status until the user edits it
+    if (allowances === defaultAllowances(state, filingStatus)) {
+      setAllowances(defaultAllowances(state, status));
+    }
+    setFilingStatus(status);
+    setResult(null);
+  };
+
+  const handleCalculate = () => {
+    setError(null);
+    setResult(null);
+
+    const allow = parseInt(allowances || '0', 10);
+    const statePct = parseFloat(customStateRate || '0');
+    const retPct = parseFloat(retirementPct || '0');
+    const benefits = parseFloat(benefitsPerPeriod || '0');
+    const other = parseFloat(otherDeductions || '0');
+
+    let rate: number;
+    let reg: number;
+    let ot: number;
+    if (isSalary) {
+      const salary = parseFloat(annualSalary);
+      if (isNaN(salary) || salary <= 0) {
+        setError('Please enter your annual salary.');
+        return;
+      }
+      rate = salary / SALARY_HOURS_PER_YEAR;
+      reg = SALARY_HOURS_PER_WEEK;
+      ot = 0;
+    } else {
+      rate = parseFloat(hourlyRate);
+      reg = parseFloat(regularHours);
+      ot = parseFloat(overtimeHours || '0');
+      if (isNaN(rate) || rate <= 0) {
+        setError('Please enter your hourly wage.');
+        return;
+      }
+      if (isNaN(reg) || reg < 0 || reg > 168) {
+        setError('Please enter regular hours per week between 0 and 168.');
+        return;
+      }
+      if (isNaN(ot) || ot < 0 || reg + ot > 168) {
+        setError('Please enter valid overtime hours (total hours cannot exceed 168 per week).');
+        return;
+      }
+    }
+    if (page?.allowances && (isNaN(allow) || allow < 0 || allow > 99)) {
+      setError(`Please enter your ${page.allowances.label} as a whole number (0 or more).`);
+      return;
+    }
+    if (state === 'other' && (isNaN(statePct) || statePct < 0 || statePct > 20)) {
+      setError('Please enter a state tax rate between 0% and 20%.');
+      return;
+    }
+    if (isNaN(retPct) || retPct < 0 || retPct > 100) {
+      setError('Please enter a 401(k) contribution between 0% and 100%.');
+      return;
+    }
+    if (isNaN(benefits) || benefits < 0 || isNaN(other) || other < 0) {
+      setError('Deductions cannot be negative.');
+      return;
+    }
+
+    const grossAnnual = (rate * reg + rate * 1.5 * ot) * 52;
+    const periods = PERIODS_PER_YEAR[payFrequency];
+
+    const r = calculatePaycheck({
+      state,
+      hourlyRate: rate,
+      regularHoursPerWeek: reg,
+      overtimeHoursPerWeek: ot,
+      overtimeMultiplier: 1.5,
+      payFrequency,
+      filingStatus,
+      stateAllowances: page?.allowances ? allow : 0,
+      nycResident: state === 'NY' && nycResident,
+      customStateRate: state === 'other' ? statePct / 100 : undefined,
+      preTaxRetirementAnnual: grossAnnual * (retPct / 100),
+      preTaxBenefitsAnnual: benefits * periods,
+      otherDeductionsPerPeriod: other,
+    });
+    setResult(r);
+    saveEntry(
+      {
+        hourlyRate,
+        regularHours,
+        overtimeHours,
+        annualSalary,
+        payFrequency,
+        filingStatus,
+        state,
+        allowances,
+        customStateRate,
+        retirementPct,
+        benefitsPerPeriod,
+        otherDeductions,
+        nycResident: nycResident ? '1' : '0',
+      },
+      isSalary
+        ? `${formatCurrency(parseFloat(annualSalary))}/yr → ${formatCurrency(r.netPerPeriod)} take-home per paycheck`
+        : `${formatCurrency(rate)}/hr → ${formatCurrency(r.netPerPeriod)} take-home per paycheck`
+    );
+  };
+
+  const handleRestore = (inputs: HistoryInputs) => {
+    setHourlyRate(inputs.hourlyRate);
+    setRegularHours(inputs.regularHours);
+    setOvertimeHours(inputs.overtimeHours);
+    setAnnualSalary(inputs.annualSalary ?? '');
+    setPayFrequency(inputs.payFrequency as PayFrequency);
+    setFilingStatus(inputs.filingStatus as FilingStatus);
+    setState(inputs.state as PaycheckState);
+    setAllowances(inputs.allowances);
+    setCustomStateRate(inputs.customStateRate);
+    setRetirementPct(inputs.retirementPct ?? '');
+    setBenefitsPerPeriod(inputs.benefitsPerPeriod ?? '');
+    setOtherDeductions(inputs.otherDeductions);
+    setNycResident(inputs.nycResident === '1');
+    setResult(null);
+    setError(null);
+  };
+
+  const handleTryExample = () => {
+    if (isSalary) {
+      setAnnualSalary('65000');
+      setRetirementPct('5');
+      setBenefitsPerPeriod('150');
+    } else {
+      setHourlyRate('25');
+      setRegularHours('40');
+      setOvertimeHours('5');
+      setRetirementPct('');
+      setBenefitsPerPeriod('');
+    }
+    setPayFrequency('bi-weekly');
+    setFilingStatus('single');
+    setState('CA');
+    setAllowances(defaultAllowances('CA', 'single'));
+    setCustomStateRate('5');
+    setNycResident(false);
+    setOtherDeductions('');
+    setError(null);
+    setResult(null);
+  };
+
+  const handleReset = () => {
+    setHourlyRate('');
+    setRegularHours('40');
+    setOvertimeHours('0');
+    setAnnualSalary('');
+    setPayFrequency('bi-weekly');
+    setFilingStatus('single');
+    setState('other');
+    setAllowances('0');
+    setCustomStateRate('5');
+    setNycResident(false);
+    setRetirementPct('');
+    setBenefitsPerPeriod('');
+    setOtherDeductions('');
+    setError(null);
+    setResult(null);
+  };
 
   const handleCopySummary = () => {
     if (!result) return;
+    const stateLabel =
+      state === 'none' ? 'No state income tax' : state === 'other' ? `Flat state rate ${customStateRate}%` : page!.name;
+    const payLine = isSalary
+      ? `Annual Salary: ${formatCurrency(parseFloat(annualSalary))}`
+      : `Hourly Rate: ${formatCurrency(parseFloat(hourlyRate))}/hr (${regularHours} regular + ${overtimeHours || 0} OT hrs/week)`;
     const summary = [
-      '--- Hourly Paycheck Summary (QuickBizCalc) ---',
-      `Pay Frequency: ${FREQ_LABELS[result.payFrequency]}`,
-      `Hourly Rate: $${result.hourlyRate.toFixed(2)}/hr (${result.regularHours} reg hrs + ${result.overtimeHours} OT hrs)`,
-      `Gross Pay / Period: $${result.grossPerPeriod.toFixed(2)}`,
-      `Federal Tax: -$${result.federalTax.toFixed(2)}`,
-      `State Tax: -$${result.stateTax.toFixed(2)}`,
-      `FICA (SS + Medicare): -$${result.fica.toFixed(2)}`,
-      result.otherDeductions > 0 ? `Other Deductions: -$${result.otherDeductions.toFixed(2)}` : null,
-      `Net Take-Home Pay / Period: $${result.netPayPerPeriod.toFixed(2)}`,
-      `Annual Projected Take-Home: $${result.netPayPerYear.toFixed(2)}`,
-      `Effective Hourly Rate: $${result.effectiveHourlyRate.toFixed(2)}/hr`,
-      'Calculated at: https://www.quickbizcalc.com/calculators/hourly-paycheck-calculator',
-    ].filter(Boolean).join('\n');
+      `--- ${isSalary ? 'Payroll' : 'Hourly Paycheck'} Summary (QuickBizCalc, ${TAX_YEAR}) ---`,
+      payLine,
+      `Pay Frequency: ${FREQ_LABELS[payFrequency]}`,
+      `Filing Status: ${FILING_LABELS[filingStatus]}`,
+      `State: ${stateLabel}`,
+      `Gross Pay / Paycheck: ${formatCurrency(result.grossPerPeriod)}`,
+      ...result.deductions.map((d) => `${d.label}: -${formatCurrency(d.perPeriod)}`),
+      `Take-Home Pay / Paycheck: ${formatCurrency(result.netPerPeriod)}`,
+      `Take-Home Pay / Year: ${formatCurrency(result.netAnnual)}`,
+      ...(isSalary ? [] : [`Take-Home per Hour Worked: ${formatCurrency(result.netPerHour)}`]),
+      `Calculated at: https://www.quickbizcalc.com/calculators/${historySlug}`,
+    ].join('\n');
 
     if (navigator.clipboard) {
       navigator.clipboard.writeText(summary);
@@ -132,302 +316,271 @@ export default function HourlyPaycheckCalculator() {
     }
   };
 
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ hourlyRate: string; regularHours: string; overtimeHours: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string }>('hourly-paycheck-calculator');
-
-    const handleTryExample = () => {
-    setHourlyRate('25');
-    setRegularHours('80');
-    setPayFrequency('bi-weekly');
-    
-    setStateTaxPct('5');
-    setResult(null);
-  };
-
-  const handleCalculate = () => {
-    setError(null);
-    setResult(null);
-
-    const rate = parseFloat(hourlyRate);
-    if (isNaN(rate) || rate <= 0) {
-      setError('Please enter a valid hourly rate greater than zero.');
-      return;
-    }
-
-    const regHrs = parseFloat(regularHours);
-    const otHrs = parseFloat(overtimeHours);
-
-    if (isNaN(regHrs) || regHrs < 0) {
-      setError('Regular hours cannot be negative.');
-      return;
-    }
-    if (isNaN(otHrs) || otHrs < 0) {
-      setError('Overtime hours cannot be negative.');
-      return;
-    }
-
-    const fedPct = parseFloat(federalTaxPct);
-    const stPct = parseFloat(stateTaxPct);
-    const otherDed = parseFloat(otherDeductions) || 0;
-
-    if (isNaN(fedPct) || fedPct < 0 || isNaN(stPct) || stPct < 0) {
-      setError('Tax percentages cannot be negative.');
-      return;
-    }
-    if (otherDed < 0) {
-      setError('Other deductions cannot be negative.');
-      return;
-    }
-
-    const totalHrsPerWeek = regHrs + otHrs;
-    const grossPerWeek = regHrs * rate + otHrs * rate * 1.5; // OT at 1.5x
-    const periodsPerYear = PERIODS_PER_YEAR[payFrequency];
-    const weeksPerPeriod = 52 / periodsPerYear;
-    const grossPerPeriod = grossPerWeek * weeksPerPeriod;
-    const grossPerYear = grossPerWeek * 52;
-
-    // Taxable income per period
-    const taxablePerPeriod = grossPerPeriod;
-
-    const federalTax = taxablePerPeriod * (fedPct / 100);
-    const stateTax = taxablePerPeriod * (stPct / 100);
-    const fica = includeFica ? taxablePerPeriod * 0.0765 : 0; // SS 6.2% + Medicare 1.45%
-
-    const totalDeductionsPerPeriod =
-      federalTax + stateTax + fica + otherDed;
-
-    const netPayPerPeriod = grossPerPeriod - totalDeductionsPerPeriod;
-    const netPayPerYear = netPayPerPeriod * periodsPerYear;
-    const totalHoursPerYear = totalHrsPerWeek * 52;
-    const effectiveHourlyRate =
-      totalHoursPerYear > 0 ? netPayPerYear / totalHoursPerYear : 0;
-    const effectiveRate =
-      grossPerPeriod > 0
-        ? (totalDeductionsPerPeriod / grossPerPeriod) * 100
-        : 0;
-
-    setResult({
-      hourlyRate: rate,
-      regularHours: regHrs,
-      overtimeHours: otHrs,
-      totalHoursPerWeek: totalHrsPerWeek,
-      payFrequency,
-      periodsPerYear,
-      grossPerPeriod,
-      grossPerYear,
-      federalTax,
-      stateTax,
-      fica,
-      otherDeductions: otherDed,
-      totalDeductionsPerPeriod,
-      netPayPerPeriod,
-      netPayPerYear,
-      effectiveHourlyRate,
-      effectiveRate,
-    });
-    saveEntry(
-      { hourlyRate, regularHours, overtimeHours, payFrequency, federalTaxPct, stateTaxPct },
-      `${formatCurrency(rate)}/hr → ${formatCurrency(netPayPerPeriod)} net/${FREQ_LABELS[payFrequency].toLowerCase()}`
-    );
-  };
-
-  const handleRestore = (inputs: { hourlyRate: string; regularHours: string; overtimeHours: string; payFrequency: string; federalTaxPct: string; stateTaxPct: string }) => {
-    setHourlyRate(inputs.hourlyRate);
-    setRegularHours(inputs.regularHours);
-    setOvertimeHours(inputs.overtimeHours);
-    setPayFrequency(inputs.payFrequency as PayFrequency);
-    setFederalTaxPct(inputs.federalTaxPct);
-    setStateTaxPct(inputs.stateTaxPct);
-    setResult(null);
-  };
-
-  const handleReset = () => {
-    setHourlyRate('');
-    setRegularHours('40');
-    setOvertimeHours('0');
-    setPayFrequency('bi-weekly');
-    setFederalTaxPct('12');
-    setStateTaxPct('5');
-    setIncludeFica(true);
-    setOtherDeductions('');
-    setResult(null);
-    setError(null);
-  };
-
-  // ------ Render ------
+  const resultStateNote =
+    state === 'none'
+      ? 'no state income tax'
+      : state === 'other'
+        ? `a flat ${customStateRate}% state income tax estimate`
+        : `${page!.name} ${TAX_YEAR} withholding tables`;
 
   return (
     <div className="w-full">
       <div className="p-4 sm:p-6 space-y-6 calculator-form">
-        {/* Hourly Rate */}
-        <div className="space-y-2">
-          <Label htmlFor="hourlyRate" className="text-sm font-medium">
-            <DollarSign className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
-            Hourly Rate ($)
-          </Label>
-          <Input
-            id="hourlyRate"
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="e.g., 25.00"
-            value={hourlyRate}
-            onChange={(e) => setHourlyRate(e.target.value)}
-          />
-        </div>
-
-        {/* Hours */}
-        <div className="grid grid-cols-2 gap-4">
+        {/* Pay */}
+        {isSalary ? (
           <div className="space-y-2">
-            <Label htmlFor="regHrs" className="text-sm font-medium">
-              <Clock className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
-              Regular Hours/Week
+            <Label htmlFor="pcSalary" className="text-sm font-medium">
+              <DollarSign className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
+              Annual Salary ($)
             </Label>
             <Input
-              id="regHrs"
+              id="pcSalary"
               type="number"
               min="0"
-              step="0.5"
-              placeholder="e.g., 40"
-              value={regularHours}
-              onChange={(e) => setRegularHours(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="otHrs" className="text-sm font-medium">
-              Overtime Hours/Week
-            </Label>
-            <Input
-              id="otHrs"
-              type="number"
-              min="0"
-              step="0.5"
-              placeholder="e.g., 0"
-              value={overtimeHours}
-              onChange={(e) => setOvertimeHours(e.target.value)}
+              step="100"
+              placeholder="e.g., 65000"
+              value={annualSalary}
+              onChange={(e) => setAnnualSalary(e.target.value)}
+              className="sm:max-w-sm"
             />
             <p className="text-xs text-muted-foreground">
-              Paid at 1.5x rate
+              Your gross yearly pay before taxes. Paid hourly?{' '}
+              <Link href="/calculators/hourly-paycheck-calculator" className="text-emerald-600 hover:underline">
+                Use the hourly paycheck calculator
+              </Link>
+              .
             </p>
           </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="pcHourlyRate" className="text-sm font-medium">
+                <DollarSign className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
+                Hourly Rate ($)
+              </Label>
+              <Input
+                id="pcHourlyRate"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="e.g., 25.00"
+                value={hourlyRate}
+                onChange={(e) => setHourlyRate(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="pcRegHours" className="text-sm font-medium">
+                <Clock className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
+                Regular Hours / Week
+              </Label>
+              <Input
+                id="pcRegHours"
+                type="number"
+                min="0"
+                step="0.5"
+                value={regularHours}
+                onChange={(e) => setRegularHours(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="pcOtHours" className="text-sm font-medium">
+                Overtime Hours / Week (1.5×)
+              </Label>
+              <Input
+                id="pcOtHours"
+                type="number"
+                min="0"
+                step="0.5"
+                value={overtimeHours}
+                onChange={(e) => setOvertimeHours(e.target.value)}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Pay Frequency & Filing Status */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="pcFrequency" className="text-sm font-medium">
+              <Calendar className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
+              Pay Frequency
+            </Label>
+            <Select value={payFrequency} onValueChange={(v) => { setPayFrequency(v as PayFrequency); setResult(null); }}>
+              <SelectTrigger id="pcFrequency" className="w-full"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {(Object.keys(FREQ_LABELS) as PayFrequency[]).map((f) => (
+                  <SelectItem key={f} value={f}>{FREQ_LABELS[f]}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="pcFiling" className="text-sm font-medium">
+              <Users className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
+              Federal Filing Status (W-4 Step 1)
+            </Label>
+            <Select value={filingStatus} onValueChange={(v) => changeFilingStatus(v as FilingStatus)}>
+              <SelectTrigger id="pcFiling" className="w-full"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {(Object.keys(FILING_LABELS) as FilingStatus[]).map((s) => (
+                  <SelectItem key={s} value={s}>{FILING_LABELS[s]}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        {/* Pay Frequency */}
-        <div className="space-y-2">
-          <Label className="text-sm font-medium">
-            <Info className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
-            Pay Frequency
-          </Label>
-          <Select
-            value={payFrequency}
-            onValueChange={(v) => {
-              setPayFrequency(v as PayFrequency);
-              setResult(null);
-            }}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="weekly">Weekly (52/year)</SelectItem>
-              <SelectItem value="bi-weekly">Bi-Weekly (26/year)</SelectItem>
-              <SelectItem value="semi-monthly">
-                Semi-Monthly (24/year)
-              </SelectItem>
-              <SelectItem value="monthly">Monthly (12/year)</SelectItem>
-            </SelectContent>
-          </Select>
+        {/* State */}
+        <div className="rounded-xl border border-border/50 bg-muted/20 p-4 space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="pcState" className="text-sm font-medium">
+              <MapPin className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
+              State
+            </Label>
+            <Select value={state} onValueChange={(v) => changeState(v as PaycheckState)}>
+              <SelectTrigger id="pcState" className="w-full"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {EXACT_STATES.map((code) => (
+                  <SelectItem key={code} value={code}>
+                    {STATE_PAYCHECK_PAGES[code].name} (exact {TAX_YEAR} tables)
+                  </SelectItem>
+                ))}
+                <SelectItem value="none">No state income tax (AK, NV, NH, SD, TN, WA, WY)</SelectItem>
+                <SelectItem value="other">Other state (enter a flat rate)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {page?.allowances && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+              <div className="space-y-1.5">
+                <Label htmlFor="pcAllowances" className="text-xs text-muted-foreground">
+                  {page.allowances.label}
+                </Label>
+                <Input
+                  id="pcAllowances"
+                  type="number"
+                  min="0"
+                  step="1"
+                  value={allowances}
+                  onChange={(e) => setAllowances(e.target.value)}
+                  className="text-sm"
+                />
+                <p className="text-xs text-muted-foreground">{page.allowances.help}</p>
+              </div>
+              {state === 'NY' && (
+                <div className="flex items-center justify-between gap-3 rounded-lg border border-border/50 bg-background px-3 py-2.5 sm:mt-5">
+                  <Label htmlFor="pcNyc" className="text-sm">I live in New York City</Label>
+                  <Switch id="pcNyc" checked={nycResident} onCheckedChange={(v) => { setNycResident(v); setResult(null); }} />
+                </div>
+              )}
+            </div>
+          )}
+
+          {page && !page.allowances && (
+            <p className="flex items-start gap-2 text-xs text-muted-foreground">
+              <Info className="h-4 w-4 shrink-0 mt-0.5 text-emerald-600" />
+              {page.name} has no state income tax, so only federal income tax, Social Security, and Medicare come out of your paycheck.
+            </p>
+          )}
+
+          {state === 'none' && (
+            <p className="flex items-start gap-2 text-xs text-muted-foreground">
+              <Info className="h-4 w-4 shrink-0 mt-0.5 text-emerald-600" />
+              {NO_TAX_STATES} do not tax wages. Only federal income tax, Social Security, and Medicare are withheld.
+            </p>
+          )}
+
+          {state === 'other' && (
+            <div className="space-y-1.5">
+              <Label htmlFor="pcStateRate" className="text-xs text-muted-foreground">
+                State income tax rate (%)
+              </Label>
+              <Input
+                id="pcStateRate"
+                type="number"
+                min="0"
+                max="20"
+                step="0.1"
+                value={customStateRate}
+                onChange={(e) => setCustomStateRate(e.target.value)}
+                className="text-sm sm:max-w-xs"
+              />
+              <p className="text-xs text-muted-foreground">
+                An estimate. Use your state&apos;s flat rate, or the effective state rate from last year&apos;s return (most workers fall between 2% and 6%).
+                Exact {TAX_YEAR} tables are available for {EXACT_STATES.map((c) => STATE_PAYCHECK_PAGES[c].name).join(', ')}.
+              </p>
+            </div>
+          )}
+
+          {page && (
+            <p className="text-xs text-muted-foreground">
+              Only need {page.name}?{' '}
+              <Link href={`/calculators/${page.slug}`} className="text-emerald-600 hover:underline">
+                Use the {page.name} hourly paycheck calculator
+              </Link>{' '}
+              for state-specific minimum wage, overtime, and FAQ details.
+            </p>
+          )}
         </div>
 
-        {/* Tax Withholding */}
-        <div className="space-y-3">
-          <p className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
-            <Percent className="h-3.5 w-3.5" />
-            Tax Withholding
+        {/* Deductions */}
+        <div className="rounded-xl border border-border/50 bg-muted/20 p-4 space-y-4">
+          <p className="text-sm font-semibold flex items-center gap-1.5">
+            <PiggyBank className="h-4 w-4 text-muted-foreground" />
+            Deductions <span className="text-muted-foreground font-normal text-xs">optional</span>
           </p>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="fedTax" className="text-xs font-medium">
-                Federal Tax (%)
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="pcRetirement" className="text-xs text-muted-foreground">
+                401(k) / 403(b) contribution (% of gross)
               </Label>
               <Input
-                id="fedTax"
+                id="pcRetirement"
                 type="number"
                 min="0"
                 max="100"
                 step="0.5"
-                value={federalTaxPct}
-                onChange={(e) => setFederalTaxPct(e.target.value)}
+                placeholder="e.g., 5"
+                value={retirementPct}
+                onChange={(e) => setRetirementPct(e.target.value)}
+                className="text-sm"
               />
-              <p className="text-xs text-muted-foreground">
-                Default: 12% (approx.)
-              </p>
+              <p className="text-xs text-muted-foreground">Pre-tax: lowers income tax, not Social Security or Medicare.</p>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="stTax" className="text-xs font-medium">
-                State Tax (%)
+            <div className="space-y-1.5">
+              <Label htmlFor="pcBenefits" className="text-xs text-muted-foreground">
+                Health &amp; Section 125 benefits ($ per paycheck)
               </Label>
               <Input
-                id="stTax"
+                id="pcBenefits"
                 type="number"
                 min="0"
-                max="100"
-                step="0.5"
-                value={stateTaxPct}
-                onChange={(e) => setStateTaxPct(e.target.value)}
+                step="0.01"
+                placeholder="e.g., 150"
+                value={benefitsPerPeriod}
+                onChange={(e) => setBenefitsPerPeriod(e.target.value)}
+                className="text-sm"
               />
-              <p className="text-xs text-muted-foreground">
-                Default: 5% (approx.)
-              </p>
+              <p className="text-xs text-muted-foreground">Pre-tax: lowers income tax and FICA.</p>
             </div>
-          </div>
-
-          {/* FICA Toggle */}
-          <div className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/30 p-4">
-            <div className="space-y-0.5">
-              <Label className="text-sm font-medium cursor-pointer">
-                Include FICA (SS + Medicare)
+            <div className="space-y-1.5">
+              <Label htmlFor="pcOther" className="text-xs text-muted-foreground">
+                Other after-tax deductions ($ per paycheck)
               </Label>
-              <p className="text-xs text-muted-foreground">
-                Social Security 6.2% + Medicare 1.45% = 7.65%
-              </p>
-            </div>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={includeFica}
-              onClick={() => {
-                setIncludeFica(!includeFica);
-                setResult(null);
-              }}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
-                includeFica
-                  ? 'bg-emerald-500'
-                  : 'bg-input border border-border'
-              }`}
-            >
-              <span
-                className={`pointer-events-none block h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${
-                  includeFica ? 'translate-x-6' : 'translate-x-1'
-                }`}
+              <Input
+                id="pcOther"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="e.g., 25"
+                value={otherDeductions}
+                onChange={(e) => setOtherDeductions(e.target.value)}
+                className="text-sm"
               />
-            </button>
+              <p className="text-xs text-muted-foreground">Union dues, garnishments, Roth 401(k), post-tax insurance.</p>
+            </div>
           </div>
-        </div>
-
-        {/* Other Deductions */}
-        <div className="space-y-2">
-          <Label htmlFor="otherDed" className="text-sm font-medium">
-            Other Deductions per Period ($)
-          </Label>
-          <Input
-            id="otherDed"
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="e.g., 50.00 (union dues, parking, etc.)"
-            value={otherDeductions}
-            onChange={(e) => setOtherDeductions(e.target.value)}
-          />
         </div>
 
         {/* Error */}
@@ -435,48 +588,34 @@ export default function HourlyPaycheckCalculator() {
           <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600"
+            className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600"
           >
+            <AlertCircle className="h-4 w-4 shrink-0" />
             {error}
           </motion.div>
         )}
 
         {/* Actions */}
-        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
-          <TryExample onClick={handleTryExample} />
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <Button
-              onClick={handleCalculate}
-              className="flex-1 sm:flex-none bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
-              size="lg"
-            >
-              <BadgeDollarSign className="h-4 w-4 mr-2" />
-              Calculate Paycheck
-            </Button>
-            <Button
-              onClick={handleReset}
-              variant="outline"
-              size="lg"
-              className="shrink-0"
-            >
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="flex gap-3">
+            <TryExample onClick={handleTryExample} />
+            <Button onClick={handleReset} variant="outline" size="lg" className="shrink-0">
               Reset
             </Button>
           </div>
+          <Button
+            onClick={handleCalculate}
+            className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
+            size="lg"
+          >
+            <DollarSign className="h-4 w-4 mr-2" />
+            {isSalary ? 'Calculate Take-Home Pay' : 'Calculate Paycheck'}
+          </Button>
         </div>
       </div>
 
       {/* Results */}
-      {/* UnitToggle — show pay-period equivalents of the entered hourly rate */}
-        {(() => {
-          const _hr = parseFloat(hourlyRate) || 0;
-          if (!_hr) return null;
-          return (
-            <div className="px-4 sm:px-6 mt-3 mb-1">
-              <UnitToggle hourlyRate={_hr} hoursPerWeek={parseFloat(regularHours) || 40} />
-            </div>
-          );
-        })()}
-        {result && (
+      {result && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -485,349 +624,94 @@ export default function HourlyPaycheckCalculator() {
           aria-live="polite"
         >
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
-            {/* Main Result */}
-            <div className="text-center space-y-2">
-              <p className="text-sm text-muted-foreground font-medium">
-                Net Pay per {FREQ_LABELS[result.payFrequency]} Period
+            <div className="text-center space-y-1">
+              <p className="text-sm text-muted-foreground font-medium">Take-Home Pay per Paycheck</p>
+              <p className="text-4xl font-bold text-emerald-600">{formatCurrency(result.netPerPeriod)}</p>
+              <p className="text-xs text-muted-foreground">
+                {formatCurrency(result.netAnnual)} per year
+                {isSalary
+                  ? ` · ${formatCurrency(result.netAnnual / 12)} per month`
+                  : ` · ${formatCurrency(result.netPerHour)} per hour worked`}
               </p>
-              <p className="text-4xl font-bold text-emerald-600">
-                {formatCurrency(result.netPayPerPeriod)}
-              </p>
-              <div className="flex items-center justify-center gap-2 flex-wrap">
-                <Badge
-                  variant="outline"
-                  className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600 px-3 py-1 text-xs font-medium"
-                >
-                  {formatCurrency(result.grossPerPeriod)} gross
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600 px-3 py-1 text-xs font-medium"
-                >
-                  Effective: {formatCurrency(result.effectiveHourlyRate)}/hr
-                </Badge>
-              </div>
-
-              <div className="flex items-center justify-center gap-2 pt-2 flex-wrap">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCompareA({
-                    hourlyRate: result.hourlyRate,
-                    regularHours: result.regularHours,
-                    overtimeHours: result.overtimeHours,
-                    grossPeriod: result.grossPerPeriod,
-                    netPeriod: result.netPayPerPeriod,
-                    netYear: result.netPayPerYear,
-                    label: `${formatCurrency(result.hourlyRate)}/hr (${result.regularHours}h)`
-                  })}
-                  className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary"
-                >
-                  {compareA ? '↺ Set A' : '+ Save A'}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCompareB({
-                    hourlyRate: result.hourlyRate,
-                    regularHours: result.regularHours,
-                    overtimeHours: result.overtimeHours,
-                    grossPeriod: result.grossPerPeriod,
-                    netPeriod: result.netPayPerPeriod,
-                    netYear: result.netPayPerYear,
-                    label: `${formatCurrency(result.hourlyRate)}/hr (${result.regularHours}h)`
-                  })}
-                  className="h-7 text-[10px] px-2 border-amber-500/30 bg-amber-500/5 text-amber-600"
-                >
-                  {compareB ? '↺ Set B' : '+ Save B'}
-                </Button>
-                <span className="text-muted-foreground/40 hidden sm:inline">•</span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleCopySummary}
-                  className="h-7 text-[11px] px-2.5 border-emerald-500/30 bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="h-3 w-3 mr-1" /> Copied
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-3 w-3 mr-1" /> Copy Summary
-                    </>
-                  )}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => window.print()}
-                  className="h-7 text-[11px] px-2.5 border-border hover:bg-muted text-muted-foreground"
-                >
-                  <Printer className="h-3 w-3 mr-1" /> Print
-                </Button>
-              </div>
             </div>
 
-            {/* Key Metrics */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               {[
-                { label: 'Gross/Period', value: formatCurrency(result.grossPerPeriod), color: '' },
-                { label: 'Deductions/Period', value: formatCurrency(result.totalDeductionsPerPeriod), color: 'text-red-500' },
-                { label: 'Net/Year', value: formatCurrency(result.netPayPerYear), color: 'text-emerald-600' },
-                { label: 'Eff. Hourly Rate', value: formatCurrency(result.effectiveHourlyRate) + '/hr', color: 'text-emerald-600' },
-              ].map((item, idx) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.1 + idx * 0.05 }}
-                  className="rounded-xl bg-background border border-border/50 p-3 text-center"
-                >
-                  <p className="text-xs text-muted-foreground mb-1">
-                    {item.label}
-                  </p>
-                  <p
-                    className={`text-base sm:text-lg font-bold ${item.color}`}
-                  >
-                    {item.value}
-                  </p>
-                </motion.div>
+                { label: 'Gross Pay', value: formatCurrency(result.grossPerPeriod), color: 'text-blue-600' },
+                {
+                  label: 'Total Deductions',
+                  value: formatCurrency(result.grossPerPeriod - result.netPerPeriod),
+                  color: 'text-amber-600',
+                },
+                { label: 'Effective Rate', value: `${(result.effectiveRate * 100).toFixed(1)}%`, color: 'text-foreground' },
+              ].map((item) => (
+                <div key={item.label} className="rounded-xl bg-background border border-border/50 p-3 text-center">
+                  <p className="text-xs text-muted-foreground mb-1">{item.label}</p>
+                  <p className={`text-base sm:text-lg font-bold ${item.color}`}>{item.value}</p>
+                </div>
               ))}
             </div>
 
-            {/* Gross vs Net Pie Chart */}
-            <div className="space-y-3">
-              <p className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <PieChartIcon className="h-4.5 w-4.5 text-primary" />
-                Gross Pay Breakdown (Per Period)
-              </p>
-              <div className="h-72 w-full rounded-xl bg-muted/20 border border-border/50 p-4">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RechartsPieChart>
-                    <Pie
-                      data={[
-                        { name: 'Net Pay', value: result.netPayPerPeriod, color: '#10b981' },
-                        { name: 'Federal Tax', value: result.federalTax, color: '#ef4444' },
-                        ...(result.stateTax > 0 ? [{ name: 'State Tax', value: result.stateTax, color: '#f97316' }] : []),
-                        ...(result.fica > 0 ? [{ name: 'FICA', value: result.fica, color: '#3b82f6' }] : []),
-                        ...(result.otherDeductions > 0 ? [{ name: 'Other Deductions', value: result.otherDeductions, color: '#8b5cf6' }] : []),
-                      ]}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={65}
-                      outerRadius={85}
-                      paddingAngle={2}
-                      dataKey="value"
-                    >
-                      {[
-                        { name: 'Net Pay', value: result.netPayPerPeriod, color: '#10b981' },
-                        { name: 'Federal Tax', value: result.federalTax, color: '#ef4444' },
-                        ...(result.stateTax > 0 ? [{ name: 'State Tax', value: result.stateTax, color: '#f97316' }] : []),
-                        ...(result.fica > 0 ? [{ name: 'FICA', value: result.fica, color: '#3b82f6' }] : []),
-                        ...(result.otherDeductions > 0 ? [{ name: 'Other Deductions', value: result.otherDeductions, color: '#8b5cf6' }] : []),
-                      ].map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <RechartsTooltip
-                      formatter={(value: number) => [`${formatCurrency(value)}`, undefined]}
-                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                    />
-                    <Legend verticalAlign="bottom" height={36} iconType="circle" />
-                  </RechartsPieChart>
-                </ResponsiveContainer>
+            <div className="rounded-xl bg-background border border-border/50 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border/50 bg-muted/30">
+                      <th className="text-left px-4 py-2.5 font-medium text-muted-foreground text-xs"></th>
+                      <th className="text-right px-4 py-2.5 font-medium text-muted-foreground text-xs">Per Paycheck</th>
+                      <th className="text-right px-4 py-2.5 font-medium text-muted-foreground text-xs">Per Year</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/30">
+                    <tr className="font-medium">
+                      <td className="px-4 py-2.5">Gross pay</td>
+                      <td className="text-right px-4 py-2.5">{formatCurrency(result.grossPerPeriod)}</td>
+                      <td className="text-right px-4 py-2.5">{formatCurrency(result.grossAnnual)}</td>
+                    </tr>
+                    {result.deductions.map((d) => (
+                      <tr key={d.key}>
+                        <td className="px-4 py-2.5 text-muted-foreground">{d.label}</td>
+                        <td className="text-right px-4 py-2.5 text-red-500">−{formatCurrency(d.perPeriod)}</td>
+                        <td className="text-right px-4 py-2.5 text-red-500">−{formatCurrency(d.annual)}</td>
+                      </tr>
+                    ))}
+                    <tr className="font-semibold bg-emerald-500/5">
+                      <td className="px-4 py-2.5">Take-home pay</td>
+                      <td className="text-right px-4 py-2.5 text-emerald-600">{formatCurrency(result.netPerPeriod)}</td>
+                      <td className="text-right px-4 py-2.5 text-emerald-600">{formatCurrency(result.netAnnual)}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
 
-            {/* Deduction Breakdown */}
-            <div className="space-y-3">
-              <p className="text-sm font-medium text-muted-foreground">
-                Deduction Breakdown
-              </p>
-              <div className="rounded-xl bg-background border border-border/50 overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-border/50 bg-muted/30">
-                        <th className="text-left px-4 py-2.5 font-medium text-muted-foreground text-xs">
-                          Deduction
-                        </th>
-                        <th className="text-right px-4 py-2.5 font-medium text-muted-foreground text-xs">
-                          Per Period
-                        </th>
-                        <th className="text-right px-4 py-2.5 font-medium text-muted-foreground text-xs">
-                          Per Year
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border/30">
-                      <tr className="bg-emerald-500/5">
-                        <td className="px-4 py-2.5 font-semibold">
-                          Gross Pay
-                        </td>
-                        <td className="text-right px-4 py-2.5 font-semibold text-emerald-600">
-                          {formatCurrency(result.grossPerPeriod)}
-                        </td>
-                        <td className="text-right px-4 py-2.5 font-semibold text-emerald-600">
-                          {formatCurrency(result.grossPerYear)}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="px-4 py-2.5">Federal Tax</td>
-                        <td className="text-right px-4 py-2.5 text-red-500">
-                          −{formatCurrency(result.federalTax)}
-                        </td>
-                        <td className="text-right px-4 py-2.5 text-red-500">
-                          −{formatCurrency(result.federalTax * result.periodsPerYear)}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="px-4 py-2.5">State Tax</td>
-                        <td className="text-right px-4 py-2.5 text-red-500">
-                          −{formatCurrency(result.stateTax)}
-                        </td>
-                        <td className="text-right px-4 py-2.5 text-red-500">
-                          −{formatCurrency(result.stateTax * result.periodsPerYear)}
-                        </td>
-                      </tr>
-                      {result.fica > 0 && (
-                        <tr>
-                          <td className="px-4 py-2.5">
-                            FICA (SS 6.2% + Med 1.45%)
-                          </td>
-                          <td className="text-right px-4 py-2.5 text-red-500">
-                            −{formatCurrency(result.fica)}
-                          </td>
-                          <td className="text-right px-4 py-2.5 text-red-500">
-                            −{formatCurrency(result.fica * result.periodsPerYear)}
-                          </td>
-                        </tr>
-                      )}
-                      {result.otherDeductions > 0 && (
-                        <tr>
-                          <td className="px-4 py-2.5">Other Deductions</td>
-                          <td className="text-right px-4 py-2.5 text-red-500">
-                            −{formatCurrency(result.otherDeductions)}
-                          </td>
-                          <td className="text-right px-4 py-2.5 text-red-500">
-                            −{formatCurrency(result.otherDeductions * result.periodsPerYear)}
-                          </td>
-                        </tr>
-                      )}
-                      <tr className="bg-emerald-500/10 font-bold">
-                        <td className="px-4 py-2.5">Net Pay</td>
-                        <td className="text-right px-4 py-2.5 text-emerald-600">
-                          {formatCurrency(result.netPayPerPeriod)}
-                        </td>
-                        <td className="text-right px-4 py-2.5 text-emerald-600">
-                          {formatCurrency(result.netPayPerYear)}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                <Info className="h-4 w-4 shrink-0 mt-0.5" />
+                <p>
+                  Estimate based on the {TAX_YEAR} IRS percentage method for a standard W-4 and {resultStateNote}. Extra
+                  W-4 withholding, local taxes, and employer-specific deductions will change your actual paycheck.
+                </p>
               </div>
-            </div>
-
-            {/* Effective Rate Comparison */}
-            <div className="space-y-3">
-              <p className="text-sm font-medium text-muted-foreground">
-                Hourly Rate: Gross vs After-Tax
-              </p>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
-                  <p className="text-xs text-muted-foreground mb-1">
-                    Gross Hourly Rate
-                  </p>
-                  <p className="text-2xl font-bold">
-                    {formatCurrency(result.hourlyRate)}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {result.totalHoursPerWeek.toFixed(1)} hrs/week
-                  </p>
-                </div>
-                <div className="rounded-xl bg-background border border-emerald-500/30 p-4 text-center">
-                  <p className="text-xs text-muted-foreground mb-1">
-                    Effective Hourly Rate
-                  </p>
-                  <p className="text-2xl font-bold text-emerald-600">
-                    {formatCurrency(result.effectiveHourlyRate)}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    After all taxes & deductions
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-xs text-muted-foreground w-16 shrink-0 text-right">
-                  After Tax
-                </span>
-                <div className="flex-1 h-6 rounded-lg bg-muted/60 relative overflow-hidden">
-                  <motion.div
-                    initial={{ width: '0%' }}
-                    animate={{
-                      width: `${Math.max(
-                        (result.effectiveHourlyRate / result.hourlyRate) * 100,
-                        3
-                      )}%`,
-                    }}
-                    transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
-                    className="h-full rounded-lg bg-gradient-to-r from-emerald-400/50 to-emerald-500/50 flex items-center justify-end pr-3"
-                  >
-                    <span className="text-xs font-semibold text-emerald-700 whitespace-nowrap">
-                      {(
-                        (result.effectiveHourlyRate / result.hourlyRate) *
-                        100
-                      ).toFixed(1)}
-                      % of gross
-                    </span>
-                  </motion.div>
-                </div>
-              </div>
-            </div>
-
-            {/* Info Box */}
-            <div className="flex items-start gap-2 rounded-lg bg-muted/30 border border-border/30 p-3 text-xs text-muted-foreground">
-              <Info className="h-4 w-4 shrink-0 mt-0.5" />
-              <p>
-                <strong>Effective hourly rate</strong> is your annual net
-                take-home pay divided by total annual hours worked (
-                {result.totalHoursPerWeek.toFixed(1)} hrs/week × 52 weeks ={' '}
-                {(result.totalHoursPerWeek * 52).toFixed(0)} hrs/year). This
-                shows your true hourly earnings after all taxes and deductions.
-                Tax withholding uses flat rates for simplicity — your actual
-                withholding may vary based on progressive brackets and W-4
-                elections.
-              </p>
+              <Button onClick={handleCopySummary} variant="outline" size="sm" className="shrink-0">
+                {copied ? <Check className="h-4 w-4 mr-1.5 text-emerald-600" /> : <Copy className="h-4 w-4 mr-1.5" />}
+                {copied ? 'Copied' : 'Copy summary'}
+              </Button>
             </div>
           </div>
         </motion.div>
       )}
-      {compareA && compareB && (() => {
-        const rows: CompareRow[] = [
-          { label: 'Hourly Rate',     valueA: formatCurrency(compareA.hourlyRate),     valueB: formatCurrency(compareB.hourlyRate),     numA: compareA.hourlyRate,     numB: compareB.hourlyRate },
-          { label: 'Regular Hours',   valueA: `${compareA.regularHours}h`,             valueB: `${compareB.regularHours}h`,             numA: compareA.regularHours,   numB: compareB.regularHours },
-          { label: 'Overtime Hours',  valueA: `${compareA.overtimeHours}h`,            valueB: `${compareB.overtimeHours}h`,            numA: compareA.overtimeHours,  numB: compareB.overtimeHours },
-          { label: 'Gross Pay (Period)', valueA: formatCurrency(compareA.grossPeriod),  valueB: formatCurrency(compareB.grossPeriod),  numA: compareA.grossPeriod,    numB: compareB.grossPeriod },
-          { label: 'Net Pay (Period)',   valueA: formatCurrency(compareA.netPeriod),    valueB: formatCurrency(compareB.netPeriod),    numA: compareA.netPeriod,      numB: compareB.netPeriod },
-          { label: 'Net Pay (Year)',     valueA: formatCurrency(compareA.netYear),      valueB: formatCurrency(compareB.netYear),      numA: compareA.netYear,        numB: compareB.netYear },
-        ];
-        return (
-          <div className="px-4 pb-6 sm:px-6">
-            <ComparePanel
-              rows={rows}
-              labelA={compareA.label}
-              labelB={compareB.label}
-              onClear={() => { setCompareA(null); setCompareB(null); }}
-              onSwap={() => { const tmp = compareA; setCompareA(compareB); setCompareB(tmp); }}
-            />
-          </div>
-        );
-      })()}
 
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
-          onDelete={deleteEntry} />
+      {history.length > 0 && (
+        <div className="mt-6 px-4 sm:px-6 pb-4">
+          <CalcHistoryPanel
+            history={history}
+            onRestore={handleRestore}
+            onClear={clearHistory}
+            onDelete={deleteEntry}
+          />
+        </div>
+      )}
     </div>
   );
 }

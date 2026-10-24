@@ -2,7 +2,7 @@
 title: "How to Calculate Time Card Hours with Lunch Deductions: Complete Payroll Guide"
 date: "2026-09-02"
 excerpt: "Learn how to accurately deduct meal breaks from time cards, apply the IRS and FLSA 7-minute rounding rule, avoid wage violation penalties, and convert hours to decimals for payroll."
-author: "David Miller, SPHR"
+author: "QuickBizCalc Team"
 category: "Time & Attendance"
 ---
 

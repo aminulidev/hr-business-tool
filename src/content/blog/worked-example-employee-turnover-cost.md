@@ -2,7 +2,7 @@
 title: "Worked Example: Calculating the True Cost of Employee Turnover"
 date: "2026-09-07"
 excerpt: "Step-by-step turnover cost calculation for a small business: recruiting, onboarding, lost productivity, and overtime for covering staff. Use the employee turnover calculator."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "HR Analytics"
 ---
 

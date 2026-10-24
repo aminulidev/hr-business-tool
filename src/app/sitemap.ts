@@ -2,13 +2,12 @@ import type { MetadataRoute } from 'next';
 import { getPublishedCalculators, SITE_URL } from '@/lib/calculator-meta';
 import { getSortedPostsData } from '@/lib/blog';
 
+// lastModified is only set where a real date exists (blog frontmatter).
+// A generated "now" timestamp on every URL is ignored by Google and reads as noise.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
-
   // Hub page
   const hubEntry: MetadataRoute.Sitemap[number] = {
     url: SITE_URL,
-    lastModified: now,
     changeFrequency: 'weekly',
     priority: 1.0,
   };
@@ -16,7 +15,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Individual calculator pages
   const calculatorEntries: MetadataRoute.Sitemap = getPublishedCalculators().map((calc) => ({
     url: `${SITE_URL}${calc.path}`,
-    lastModified: now,
     changeFrequency: 'monthly' as const,
     priority: 0.9,
   }));
@@ -26,13 +24,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogEntries: MetadataRoute.Sitemap = [
     {
       url: `${SITE_URL}/blog`,
-      lastModified: now,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     ...posts.map((post) => ({
       url: `${SITE_URL}/blog/${post.slug}`,
-      lastModified: now,
+      lastModified: new Date(`${post.date}T00:00:00Z`),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
@@ -41,7 +38,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Guides entry
   const guidesEntry: MetadataRoute.Sitemap[number] = {
     url: `${SITE_URL}/guides`,
-    lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.8,
   };
@@ -49,17 +45,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Glossary entry
   const glossaryEntry: MetadataRoute.Sitemap[number] = {
     url: `${SITE_URL}/glossary`,
-    lastModified: now,
     changeFrequency: 'monthly',
     priority: 0.7,
   };
 
-  // Legal and informational pages
+  // Informational and legal pages. /newsletter and /compare/jobs are noindex
+  // and intentionally left out.
   const legalPages = [
     { path: '/about', priority: 0.6, changeFreq: 'monthly' as const },
     { path: '/contact', priority: 0.5, changeFreq: 'yearly' as const },
-    { path: '/newsletter', priority: 0.7, changeFreq: 'weekly' as const },
-    { path: '/compare/jobs', priority: 0.8, changeFreq: 'monthly' as const },
     { path: '/privacy-policy', priority: 0.4, changeFreq: 'yearly' as const },
     { path: '/terms-of-service', priority: 0.4, changeFreq: 'yearly' as const },
     { path: '/cookie-policy', priority: 0.3, changeFreq: 'yearly' as const },
@@ -68,7 +62,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const legalEntries: MetadataRoute.Sitemap = legalPages.map((page) => ({
     url: `${SITE_URL}${page.path}`,
-    lastModified: now,
     changeFrequency: page.changeFreq,
     priority: page.priority,
   }));

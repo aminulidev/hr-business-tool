@@ -657,8 +657,7 @@ export default function JobOfferComparison() {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
           <Link href="/calculators/salary-converter" className="text-emerald-600 hover:underline">Salary Converter</Link>
           <Link href="/calculators/hourly-paycheck-calculator" className="text-emerald-600 hover:underline">Hourly Paycheck Calculator</Link>
-          <Link href="/calculators/salary-tax-calculator" className="text-emerald-600 hover:underline">Salary Tax Calculator</Link>
-          <Link href="/calculators/after-tax-income-calculator" className="text-emerald-600 hover:underline">After-Tax Income Calculator</Link>
+          <Link href="/calculators/payroll-calculator" className="text-emerald-600 hover:underline">Payroll & Paycheck Calculator</Link>
           <Link href="/calculators/bonus-tax-calculator" className="text-emerald-600 hover:underline">Bonus Tax Calculator</Link>
           <Link href="/calculators/salary-increase-calculator" className="text-emerald-600 hover:underline">Salary Increase Calculator</Link>
         </div>

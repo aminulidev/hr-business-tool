@@ -2,7 +2,7 @@
 title: "Gross Margin vs. Markup: The Critical Differences Every Business Owner Must Know"
 date: "2026-08-10"
 excerpt: "Confusing margin and markup is one of the most common causes of business insolvency. Learn the formulas, conversion tables, and pricing strategies to protect your bottom line."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Business Finance"
 ---
 

@@ -22,7 +22,7 @@ const seoData = {
   ],
 
   formulaDescription:
-    'After-tax income (also called net income or take-home pay) is the amount of money you actually receive after all required taxes and deductions are subtracted from your gross earnings. Federal income tax is calculated using the 2025 progressive bracket system based on your filing status. State income tax varies by state. FICA taxes include Social Security (6.2% on earnings up to $176,100) and Medicare (1.45% on all earnings, plus an additional 0.9% on earnings above $200,000). Additional deductions reduce your taxable income further.',
+    'After-tax income (also called net income or take-home pay) is the amount of money you actually receive after all required taxes and deductions are subtracted from your gross earnings. Federal income tax is calculated using the 2025 progressive bracket system based on your filing status. State income tax varies by state. FICA taxes include Social Security (6.2% on earnings up to $184,500) and Medicare (1.45% on all earnings, plus an additional 0.9% on earnings above $200,000). Additional deductions reduce your taxable income further.',
 
   workedExamples: [
     {
@@ -51,7 +51,7 @@ const seoData = {
     {
       question: 'What is FICA and how much does it take from my paycheck?',
       answer:
-        'FICA (Federal Insurance Contributions Act) consists of two components: Social Security and Medicare. Social Security tax is 6.2% of your wages up to a wage base limit of $176,100 (for 2025). Medicare tax is 1.45% on all wages with no cap. Additionally, if your earnings exceed $200,000, an Additional Medicare Tax of 0.9% applies to the amount over $200,000. Your employer matches both the Social Security and Medicare contributions, effectively doubling the total FICA contribution.',
+        'FICA (Federal Insurance Contributions Act) consists of two components: Social Security and Medicare. Social Security tax is 6.2% of your wages up to a wage base limit of $184,500 (for 2026). Medicare tax is 1.45% on all wages with no cap. Additionally, if your earnings exceed $200,000, an Additional Medicare Tax of 0.9% applies to the amount over $200,000. Your employer matches both the Social Security and Medicare contributions, effectively doubling the total FICA contribution.',
     },
     {
       question: 'How does filing status affect my federal taxes?',

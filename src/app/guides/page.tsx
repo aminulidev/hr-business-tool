@@ -94,7 +94,6 @@ const guides = [
     color: 'emerald',
     relatedCalculators: [
       { label: 'Payroll Calculator', href: '/calculators/payroll-calculator' },
-      { label: 'After-Tax Income Calculator', href: '/calculators/after-tax-income-calculator' },
     ],
     readTime: '14 min read',
   },

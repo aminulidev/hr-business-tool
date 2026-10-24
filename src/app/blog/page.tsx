@@ -49,7 +49,7 @@ export default async function BlogPage() {
                       </Badge>
                       <div className="flex items-center text-xs text-muted-foreground gap-1.5">
                         <Calendar className="h-3 w-3" />
-                        {post.date}
+                        {post.dateLabel}
                       </div>
                     </div>
                     

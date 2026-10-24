@@ -2,7 +2,7 @@
 title: "Worked Example: Converting $25/Hour to Annual Salary (With and Without Overtime)"
 date: "2026-09-04"
 excerpt: "Step-by-step hourly-to-annual salary conversion including overtime, paid time off, and benefits. Use the QuickBizCalc salary converter to verify."
-author: "Sarah Jenkins, CPA"
+author: "QuickBizCalc Team"
 category: "Salary & Compensation"
 ---
 
@@ -194,6 +194,6 @@ Note: 2,080 hours assumes 40 hours × 52 weeks, INCLUDING paid time off. If you 
 - [Salary Converter](/calculators/salary-converter) — convert any pay period
 - [Wages Calculator](/calculators/wages-calculator) — hourly to annual with OT
 - [Hourly Paycheck Calculator](/calculators/hourly-paycheck-calculator) — full paycheck with taxes
-- [After-Tax Income Calculator](/calculators/after-tax-income-calculator) — net take-home
+- [Payroll & Paycheck Calculator](/calculators/payroll-calculator) — net take-home
 - [Overtime Calculator](/calculators/overtime-calculator) — overtime-only calculation
 

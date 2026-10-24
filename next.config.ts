@@ -1,4 +1,42 @@
 import type { NextConfig } from "next";
+import { calculators, isCalculatorPublished, resolveMergedCalculator } from './src/lib/calculator-meta';
+
+// ---------------------------------------------------------------------------
+// Redirects for calculators that were merged into another page.
+// ---------------------------------------------------------------------------
+// A merged slug follows its `mergedInto` chain. If the final target is live it
+// gets a 308 there; if the target is still a draft, it goes to the closest
+// published calculator listed here, or to the homepage as a last resort.
+// A 404 here would drop any crawled or bookmarked equity and send reviewers
+// to an error page.
+const DRAFT_TARGET_FALLBACK: Record<string, string> = {
+  'absenteeism-calculator': '/calculators/employee-hours-calculator',
+  'cost-of-turnover-calculator': '/calculators/employee-turnover-calculator',
+  'employee-cost-calculator': '/calculators/payroll-calculator',
+  'workforce-planning-calculator': '/calculators/employee-hours-calculator',
+  'net-margin-calculator': '/calculators/profit-margin-calculator',
+  'contribution-margin-calculator': '/calculators/gross-margin-calculator',
+  'commission-split-calculator': '/calculators/commission-calculator',
+  'quota-calculator': '/calculators/commission-calculator',
+  'cpl-calculator': '/calculators/roi-calculator',
+  'project-pricing-calculator': '/calculators/billable-hours-calculator',
+  'trial-conversion-calculator': '/calculators/roi-calculator',
+  'clock-out-calculator': '/calculators/time-card-calculator',
+  'profit-per-client-calculator': '/calculators/billable-hours-calculator',
+};
+
+function mergedCalculatorRedirects() {
+  return calculators
+    .filter((c) => c.status === 'merged')
+    .map((c) => {
+      const target = resolveMergedCalculator(c);
+      const destination = isCalculatorPublished(target)
+        ? target.path
+        : DRAFT_TARGET_FALLBACK[target.slug] ?? '/';
+      return { source: c.path, destination, permanent: true };
+    })
+    .filter((r) => r.source !== r.destination);
+}
 
 const nextConfig: NextConfig = {
   typescript: {
@@ -33,6 +71,8 @@ const nextConfig: NextConfig = {
         destination: '/',
         permanent: true,
       },
+      // Merged calculator slugs → the page that absorbed them
+      ...mergedCalculatorRedirects(),
     ];
   },
 

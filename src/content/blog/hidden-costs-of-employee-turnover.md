@@ -2,7 +2,7 @@
 title: "The Hidden Costs of Employee Turnover (And How to Fix It)"
 date: "2026-04-30"
 excerpt: "Employee turnover is silently eating away at your company's profitability. Discover the true cost of losing a team member and the strategies you can use to improve retention."
-author: "Sarah Jenkins, HR Specialist"
+author: "QuickBizCalc Team"
 category: "HR Analytics"
 ---
 

@@ -2,7 +2,7 @@
 title: "How to Use a Time Card Calculator: Complete Guide for Employers and Employees"
 date: "2026-08-10"
 excerpt: "Everything you need to know about time card calculators — from converting clock-in and clock-out times to decimal hours, handling lunch breaks, calculating overtime, and using automated tools to save time."
-author: "Sarah Jenkins, HR Specialist"
+author: "QuickBizCalc Team"
 category: "Time & Attendance"
 ---
 

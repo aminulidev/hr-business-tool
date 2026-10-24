@@ -15,7 +15,7 @@ import CalcHistoryPanel from './CalcHistoryPanel';
 import { formatCurrency, formatPercent } from '@/lib/utils';
 
 // 2026 SECA statutory constants
-const SS_WAGE_BASE = 176100;
+const SS_WAGE_BASE = 184500;
 const SS_RATE_SE = 0.124; // 12.4% (employer 6.2% + employee 6.2%)
 const MEDICARE_RATE_SE = 0.029; // 2.9% (employer 1.45% + employee 1.45%)
 const ADD_MEDICARE_RATE = 0.009; // 0.9% additional Medicare
@@ -324,7 +324,7 @@ export default function SelfEmploymentTaxCalculator() {
             <div className="space-y-2">
               <div className="flex items-center gap-1.5">
                 <Label htmlFor="w2-wages" className="text-xs font-semibold">W-2 Wages (Day Job, if any)</Label>
-                <div title="If you work a W-2 job concurrently, FICA taxes already paid reduce your remaining 2026 $176,100 Social Security cap on self-employment earnings.">
+                <div title="If you work a W-2 job concurrently, FICA taxes already paid reduce your remaining 2026 $184,500 Social Security cap on self-employment earnings.">
                   <HelpCircle className="w-3.5 h-3.5 text-muted-foreground cursor-help" />
                 </div>
               </div>
@@ -342,7 +342,7 @@ export default function SelfEmploymentTaxCalculator() {
                 />
               </div>
               <p className="text-[11px] text-muted-foreground">
-                Reduces the $176,100 Social Security wage cap dollar-for-dollar.
+                Reduces the $184,500 Social Security wage cap dollar-for-dollar.
               </p>
             </div>
 

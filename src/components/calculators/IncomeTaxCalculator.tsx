@@ -24,13 +24,13 @@ export default function IncomeTaxCalculator() {
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ taxableIncome: string; filingStatus: string }>('income-tax-calculator');
 
   const income = parseFloat(taxableIncome) || 0;
-  const bracket1 = Math.min(income, 12150) * 0.10;
-  const bracket2 = Math.max(0, Math.min(income, 49350) - 12150) * 0.12;
-  const bracket3 = Math.max(0, Math.min(income, 105250) - 49350) * 0.22;
-  const bracket4 = Math.max(0, Math.min(income, 200900) - 105250) * 0.24;
-  const bracket5 = Math.max(0, Math.min(income, 255350) - 200900) * 0.32;
-  const bracket6 = Math.max(0, Math.min(income, 639950) - 255350) * 0.35;
-  const bracket7 = Math.max(0, income - 639950) * 0.37;
+  const bracket1 = Math.min(income, 12400) * 0.10;
+  const bracket2 = Math.max(0, Math.min(income, 50400) - 12400) * 0.12;
+  const bracket3 = Math.max(0, Math.min(income, 105700) - 50400) * 0.22;
+  const bracket4 = Math.max(0, Math.min(income, 201775) - 105700) * 0.24;
+  const bracket5 = Math.max(0, Math.min(income, 256225) - 201775) * 0.32;
+  const bracket6 = Math.max(0, Math.min(income, 640600) - 256225) * 0.35;
+  const bracket7 = Math.max(0, income - 640600) * 0.37;
   const totalTax = bracket1 + bracket2 + bracket3 + bracket4 + bracket5 + bracket6 + bracket7;
   const afterTax = income - (bracket1 + bracket2 + bracket3 + bracket4 + bracket5 + bracket6 + bracket7);
   const effectiveRate = income > 0 ? (totalTax / income) * 100 : 0;
