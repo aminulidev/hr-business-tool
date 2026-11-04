@@ -15,13 +15,13 @@ export async function generateMetadata({ params }: Props) {
   try {
     const post = await getPostData(slug);
     return {
-      title: `${post.title} | ${SITE_NAME}`,
+      title: post.title,
       description: post.excerpt,
       alternates: {
         canonical: `${SITE_URL}/blog/${slug}`,
       },
       openGraph: {
-        title: `${post.title} | ${SITE_NAME}`,
+        title: post.title,
         description: post.excerpt,
         url: `${SITE_URL}/blog/${slug}`,
         type: 'article',
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props) {
       },
       twitter: {
         card: 'summary_large_image',
-        title: `${post.title} | ${SITE_NAME}`,
+        title: post.title,
         description: post.excerpt,
       },
     };

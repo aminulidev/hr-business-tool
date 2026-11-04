@@ -4,7 +4,9 @@ import JobOfferComparison from '@/components/calculators/JobOfferComparison';
 import { SITE_URL, SITE_NAME } from '@/lib/calculator-meta';
 
 export const metadata: Metadata = {
-  title: 'Free Job Offer Comparison Calculator 2026 — Compare Two Offers Side-by-Side',
+  title: {
+    absolute: 'Job Offer Comparison Calculator 2026 — Compare 2 Offers',
+  },
   description:
     'Free job offer comparison calculator. Compare two job offers side-by-side including salary, sign-on bonus, 401(k) match, health insurance, PTO value, and commute cost. See which offer is worth more in seconds.',
   keywords: [
@@ -19,13 +21,12 @@ export const metadata: Metadata = {
     'job offer analyzer',
     'salary vs benefits calculator',
   ],
-  // Thin utility page: kept for users, excluded from search
-  robots: { index: false, follow: true },
+  robots: { index: true, follow: true },
   alternates: {
     canonical: `${SITE_URL}/compare/jobs`,
   },
   openGraph: {
-    title: 'Free Job Offer Comparison Calculator 2026 — Compare Two Offers Side-by-Side',
+    title: 'Job Offer Comparison Calculator 2026 — Compare Two Offers Side-by-Side',
     description:
       'Compare two job offers including salary, bonuses, 401(k) match, health insurance, PTO, and commute cost. See which offer wins in seconds.',
     url: `${SITE_URL}/compare/jobs`,
@@ -36,13 +37,14 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Free Job Offer Comparison Calculator 2026',
-    description: 'Compare two job offers including salary, bonuses, 401(k) match, health insurance, PTO, and commute cost.',
+    title: 'Job Offer Comparison Calculator 2026',
+    description:
+      'Compare two job offers side-by-side including salary, bonuses, 401(k), insurance, PTO, and commute cost.',
     images: ['/og-image.png'],
   },
 };
 
-export default function CompareJobsPage() {
+export default function JobOfferComparePage() {
   return (
     <AppShell>
       <JobOfferComparison />

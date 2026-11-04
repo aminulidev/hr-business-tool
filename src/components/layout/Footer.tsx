@@ -95,6 +95,9 @@ export default function Footer() {
         {/* Legal links - 2 rows for better mobile layout */}
         <nav aria-label="Footer navigation">
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground/60 mb-6">
+            <Link href="/compare/jobs" className={linkClass('/compare/jobs')}>
+              Compare Job Offers
+            </Link>
             <Link href="/newsletter" className={linkClass('/newsletter')}>
               Newsletter
             </Link>

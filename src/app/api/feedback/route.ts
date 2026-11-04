@@ -1,6 +1,16 @@
 import { NextResponse } from 'next/server';
+import { promises as fs } from 'fs';
+import path from 'path';
 
-interface FeedbackPayload { slug: string; helpful: boolean | null; message?: string; ts: number; }
+interface FeedbackPayload {
+  slug: string;
+  helpful: boolean | null;
+  message?: string;
+  ts: number;
+}
+
+const DATA_DIR = path.join(process.cwd(), 'data');
+const FEEDBACK_FILE = path.join(DATA_DIR, 'calculator-feedback.jsonl');
 
 export async function POST(req: Request) {
   try {
@@ -11,7 +21,22 @@ export async function POST(req: Request) {
     if (body.message && body.message.length > 5000) {
       return NextResponse.json({ error: 'Message too long' }, { status: 400 });
     }
-    console.log('[feedback]', { slug: body.slug, helpful: body.helpful, message: body.message ? body.message.slice(0, 200) : undefined, ts: new Date(body.ts || Date.now()).toISOString() });
+
+    const record = {
+      slug: body.slug,
+      helpful: body.helpful,
+      message: body.message ? body.message.slice(0, 1000) : undefined,
+      ts: new Date(body.ts || Date.now()).toISOString(),
+    };
+
+    try {
+      await fs.mkdir(DATA_DIR, { recursive: true });
+      await fs.appendFile(FEEDBACK_FILE, JSON.stringify(record) + '\n', 'utf8');
+    } catch (ioErr) {
+      console.warn('[feedback] file write warning:', ioErr);
+    }
+
+    console.log('[feedback]', record);
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error('[feedback] error:', err);
