@@ -6,7 +6,7 @@ import AppShell from '@/components/layout/AppShell';
 import { SITE_URL, SITE_NAME } from '@/lib/calculator-meta';
 
 export const metadata = {
-  title: `Blog & Business Insights | ${SITE_NAME}`,
+  title: 'HR, Payroll & Business Finance Blog',
   description: 'Expert advice, guides, and insights on HR, payroll, taxation, and business management to help you grow your business.',
   alternates: {
     canonical: `${SITE_URL}/blog`,

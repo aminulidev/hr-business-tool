@@ -1,8 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { DollarSign, Clock, Calendar, Users, MapPin, Info, AlertCircle } from 'lucide-react';
+import {
+  DollarSign,
+  Clock,
+  Calendar,
+  Users,
+  MapPin,
+  Info,
+  AlertCircle,
+  Sparkles,
+  ArrowRight,
+} from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -35,57 +46,49 @@ const FILING_LABELS: Record<FilingStatus, string> = {
 
 export default function StatePaycheckCalculator({ state }: { state: StateCode }) {
   const page = STATE_PAYCHECK_PAGES[state];
+  const minWageStr = page.minimumWage.toFixed(2);
+  const presets = Array.from(new Set([minWageStr, '20', '25', '30', '40', '50']));
 
-  const [hourlyRate, setHourlyRate] = useState('');
+  // Pre-fill $25/hr for instant live calculation on load
+  const [hourlyRate, setHourlyRate] = useState('25');
   const [regularHours, setRegularHours] = useState('40');
   const [overtimeHours, setOvertimeHours] = useState('0');
   const [payFrequency, setPayFrequency] = useState<PayFrequency>('bi-weekly');
   const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
   const [allowances, setAllowances] = useState(String(page.allowances?.defaultSingle ?? 0));
   const [nycResident, setNycResident] = useState(false);
-  const [result, setResult] = useState<PaycheckResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   const changeFilingStatus = (status: FilingStatus) => {
     setFilingStatus(status);
-    // Keep the state allowance default in step with filing status until the user edits it
     if (page.allowances) {
       const defaults = [page.allowances.defaultSingle, page.allowances.defaultMarried].map(String);
       if (defaults.includes(allowances)) {
         setAllowances(String(status === 'married' ? page.allowances.defaultMarried : page.allowances.defaultSingle));
       }
     }
-    setResult(null);
   };
 
-  const handleCalculate = () => {
-    setError(null);
-    setResult(null);
-
+  const { result, error } = useMemo<{ result: PaycheckResult | null; error: string | null }>(() => {
     const rate = parseFloat(hourlyRate);
     const reg = parseFloat(regularHours);
     const ot = parseFloat(overtimeHours || '0');
     const allow = parseInt(allowances || '0', 10);
 
     if (isNaN(rate) || rate <= 0) {
-      setError('Please enter your hourly wage.');
-      return;
+      return { result: null, error: 'Please enter an hourly wage above $0.' };
     }
     if (isNaN(reg) || reg < 0 || reg > 168) {
-      setError('Please enter regular hours per week between 0 and 168.');
-      return;
+      return { result: null, error: 'Please enter regular hours per week between 0 and 168.' };
     }
     if (isNaN(ot) || ot < 0 || reg + ot > 168) {
-      setError('Please enter valid overtime hours (total hours cannot exceed 168 per week).');
-      return;
+      return { result: null, error: 'Please enter valid overtime hours (total hours cannot exceed 168 per week).' };
     }
     if (page.allowances && (isNaN(allow) || allow < 0 || allow > 99)) {
-      setError(`Please enter your ${page.allowances.label} as a whole number (0 or more).`);
-      return;
+      return { result: null, error: `Please enter your ${page.allowances.label} as a whole number (0 or more).` };
     }
 
-    setResult(
-      calculatePaycheck({
+    return {
+      result: calculatePaycheck({
         state,
         hourlyRate: rate,
         regularHoursPerWeek: reg,
@@ -95,37 +98,59 @@ export default function StatePaycheckCalculator({ state }: { state: StateCode })
         filingStatus,
         stateAllowances: page.allowances ? allow : 0,
         nycResident: state === 'NY' && nycResident,
-      })
-    );
-  };
+      }),
+      error: null,
+    };
+  }, [state, hourlyRate, regularHours, overtimeHours, payFrequency, filingStatus, allowances, nycResident, page]);
 
   const handleTryExample = () => {
-    setHourlyRate('25');
+    setHourlyRate('28');
     setRegularHours('40');
     setOvertimeHours('5');
     setPayFrequency('bi-weekly');
     setFilingStatus('single');
     setAllowances(String(page.allowances?.defaultSingle ?? 0));
     setNycResident(state === 'NY');
-    setError(null);
-    setResult(null);
   };
 
   const handleReset = () => {
-    setHourlyRate('');
+    setHourlyRate('25');
     setRegularHours('40');
     setOvertimeHours('0');
     setPayFrequency('bi-weekly');
     setFilingStatus('single');
     setAllowances(String(page.allowances?.defaultSingle ?? 0));
     setNycResident(false);
-    setError(null);
-    setResult(null);
   };
+
+  const totalWeeklyHours = Math.max(1, (parseFloat(regularHours) || 0) + (parseFloat(overtimeHours) || 0));
+  const totalAnnualHours = totalWeeklyHours * 52;
 
   return (
     <div className="w-full">
       <div className="p-4 sm:p-6 space-y-6 calculator-form">
+        {/* Quick Preset Bar */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
+            <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
+            {page.name} Presets:
+          </span>
+          {presets.map((preset) => (
+            <button
+              key={preset}
+              type="button"
+              onClick={() => setHourlyRate(preset)}
+              className={`px-2.5 py-1 rounded-full text-xs font-medium border transition-colors ${
+                hourlyRate === preset
+                  ? 'bg-emerald-600 text-white border-emerald-600'
+                  : 'bg-muted/40 hover:bg-muted text-foreground border-border/60'
+              }`}
+            >
+              ${preset}/hr{preset === minWageStr ? ' (Min Wage)' : ''}
+            </button>
+          ))}
+        </div>
+
         {/* Wage & Hours */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="space-y-2">
@@ -137,8 +162,8 @@ export default function StatePaycheckCalculator({ state }: { state: StateCode })
               id="spHourlyRate"
               type="number"
               min="0"
-              step="0.01"
-              placeholder={`e.g., ${page.minimumWage.toFixed(2)}`}
+              step="0.25"
+              placeholder={`e.g., ${minWageStr}`}
               value={hourlyRate}
               onChange={(e) => setHourlyRate(e.target.value)}
             />
@@ -179,7 +204,7 @@ export default function StatePaycheckCalculator({ state }: { state: StateCode })
               <Calendar className="inline h-3.5 w-3.5 mr-1 text-muted-foreground" />
               Pay Frequency
             </Label>
-            <Select value={payFrequency} onValueChange={(v) => { setPayFrequency(v as PayFrequency); setResult(null); }}>
+            <Select value={payFrequency} onValueChange={(v) => setPayFrequency(v as PayFrequency)}>
               <SelectTrigger id="spFrequency" className="w-full"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {(Object.keys(FREQ_LABELS) as PayFrequency[]).map((f) => (
@@ -230,7 +255,7 @@ export default function StatePaycheckCalculator({ state }: { state: StateCode })
               {state === 'NY' && (
                 <div className="flex items-center justify-between gap-3 rounded-lg border border-border/50 bg-background px-3 py-2.5 sm:mt-5">
                   <Label htmlFor="spNyc" className="text-sm">I live in New York City</Label>
-                  <Switch id="spNyc" checked={nycResident} onCheckedChange={(v) => { setNycResident(v); setResult(null); }} />
+                  <Switch id="spNyc" checked={nycResident} onCheckedChange={(v) => setNycResident(v)} />
                 </div>
               )}
             </div>
@@ -258,39 +283,45 @@ export default function StatePaycheckCalculator({ state }: { state: StateCode })
         )}
 
         {/* Actions */}
-        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-3">
           <div className="flex gap-3">
             <TryExample onClick={handleTryExample} />
             <Button onClick={handleReset} variant="outline" size="lg" className="shrink-0">
               Reset
             </Button>
           </div>
-          <Button
-            onClick={handleCalculate}
-            className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
-            size="lg"
+          <Link
+            href="/calculators/hourly-paycheck-calculator"
+            className="text-xs font-medium text-emerald-600 hover:underline inline-flex items-center gap-1"
           >
-            <DollarSign className="h-4 w-4 mr-2" />
-            Calculate Take-Home Pay
-          </Button>
+            Add 401(k) &amp; health deductions <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
       </div>
 
-      {/* Results */}
+      {/* Live Results */}
       {result && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="mt-8 px-4 sm:px-6 result-display"
+          transition={{ duration: 0.25 }}
+          className="mt-4 px-4 sm:px-6 result-display"
           aria-live="polite"
         >
-          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
+          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 sm:p-6 space-y-6">
             <div className="text-center space-y-1">
-              <p className="text-sm text-muted-foreground font-medium">Take-Home Pay per Paycheck</p>
-              <p className="text-4xl font-bold text-emerald-600">{formatCurrency(result.netPerPeriod)}</p>
-              <p className="text-xs text-muted-foreground">
-                {formatCurrency(result.netAnnual)} per year · {formatCurrency(result.netPerHour)} per hour worked
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-semibold mb-1">
+                <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Live {page.name} {TAX_YEAR} Paycheck Estimate
+              </div>
+              <p className="text-sm text-muted-foreground font-medium">Net Take-Home Pay per Paycheck</p>
+              <p className="text-4xl sm:text-5xl font-extrabold text-emerald-600" data-result-primary>
+                {formatCurrency(result.netPerPeriod)}
+              </p>
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                <strong className="text-foreground">{formatCurrency(result.netAnnual)}</strong>/year ·{' '}
+                <strong className="text-foreground">{formatCurrency(result.netAnnual / 12)}</strong>/month ·{' '}
+                <strong className="text-foreground">{formatCurrency(result.netPerHour)}</strong>/hr net after taxes
               </p>
             </div>
 
@@ -298,11 +329,11 @@ export default function StatePaycheckCalculator({ state }: { state: StateCode })
               {[
                 { label: 'Gross Pay', value: formatCurrency(result.grossPerPeriod), color: 'text-blue-600' },
                 {
-                  label: 'Total Deductions',
+                  label: 'Total Taxes',
                   value: formatCurrency(result.grossPerPeriod - result.netPerPeriod),
                   color: 'text-amber-600',
                 },
-                { label: 'Effective Rate', value: `${(result.effectiveRate * 100).toFixed(1)}%`, color: 'text-foreground' },
+                { label: 'Effective Tax Rate', value: `${(result.effectiveRate * 100).toFixed(1)}%`, color: 'text-foreground' },
               ].map((item) => (
                 <div key={item.label} className="rounded-xl bg-background border border-border/50 p-3 text-center">
                   <p className="text-xs text-muted-foreground mb-1">{item.label}</p>
@@ -311,12 +342,13 @@ export default function StatePaycheckCalculator({ state }: { state: StateCode })
               ))}
             </div>
 
+            {/* Itemized Table */}
             <div className="rounded-xl bg-background border border-border/50 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border/50 bg-muted/30">
-                      <th className="text-left px-4 py-2.5 font-medium text-muted-foreground text-xs"></th>
+                      <th className="text-left px-4 py-2.5 font-medium text-muted-foreground text-xs">Line Item</th>
                       <th className="text-right px-4 py-2.5 font-medium text-muted-foreground text-xs">Per Paycheck</th>
                       <th className="text-right px-4 py-2.5 font-medium text-muted-foreground text-xs">Per Year</th>
                     </tr>
@@ -334,11 +366,55 @@ export default function StatePaycheckCalculator({ state }: { state: StateCode })
                         <td className="text-right px-4 py-2.5 text-red-500">−{formatCurrency(d.annual)}</td>
                       </tr>
                     ))}
-                    <tr className="font-semibold bg-emerald-500/5">
+                    <tr className="font-bold bg-emerald-500/5">
                       <td className="px-4 py-2.5">Take-home pay</td>
                       <td className="text-right px-4 py-2.5 text-emerald-600">{formatCurrency(result.netPerPeriod)}</td>
                       <td className="text-right px-4 py-2.5 text-emerald-600">{formatCurrency(result.netAnnual)}</td>
                     </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Multi-Period Conversion Table */}
+            <div className="rounded-xl bg-background border border-border/50 overflow-hidden">
+              <div className="px-4 py-2.5 border-b border-border/50 bg-muted/40">
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  {page.name} Take-Home Pay Across All Pay Frequencies
+                </span>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border/50 bg-muted/20">
+                      <th className="text-left px-4 py-2 font-medium text-muted-foreground text-xs">Period</th>
+                      <th className="text-right px-4 py-2 font-medium text-muted-foreground text-xs">Gross Pay</th>
+                      <th className="text-right px-4 py-2 font-medium text-muted-foreground text-xs">Taxes</th>
+                      <th className="text-right px-4 py-2 font-medium text-muted-foreground text-xs">Net Take-Home</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/30">
+                    {[
+                      { label: 'Hourly', divisor: totalAnnualHours },
+                      { label: 'Daily (8 hrs)', divisor: totalAnnualHours / 8 },
+                      { label: 'Weekly (52/yr)', divisor: 52 },
+                      { label: 'Bi-Weekly (26/yr)', divisor: 26 },
+                      { label: 'Semi-Monthly (24/yr)', divisor: 24 },
+                      { label: 'Monthly (12/yr)', divisor: 12 },
+                      { label: 'Annual (1/yr)', divisor: 1 },
+                    ].map((row) => {
+                      const gross = result.grossAnnual / row.divisor;
+                      const net = result.netAnnual / row.divisor;
+                      const ded = gross - net;
+                      return (
+                        <tr key={row.label} className="hover:bg-muted/20">
+                          <td className="px-4 py-2 font-medium">{row.label}</td>
+                          <td className="text-right px-4 py-2">{formatCurrency(gross)}</td>
+                          <td className="text-right px-4 py-2 text-red-500">−{formatCurrency(ded)}</td>
+                          <td className="text-right px-4 py-2 font-semibold text-emerald-600">{formatCurrency(net)}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

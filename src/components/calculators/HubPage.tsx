@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
-import { Search, X } from 'lucide-react';
+import { Search, X, Flame, ArrowRight, Scale } from 'lucide-react';
 import { getPublishedCalculators, categoryOrder, categoryMeta, type CalculatorMeta } from '@/lib/calculator-meta';
 import { searchCalculators } from '@/lib/search-calculators';
 
@@ -12,13 +12,13 @@ const containerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.08,
+      staggerChildren: 0.06,
     },
   },
 };
 
 const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
@@ -26,8 +26,18 @@ const cardVariants: Variants = {
   },
 };
 
+const TOP_TOOL_SLUGS = [
+  { slug: 'hourly-paycheck-calculator', label: 'Hourly Paycheck (2026)', badge: 'Most Popular' },
+  { slug: 'wages-calculator', label: 'Wages & Salary Converter' },
+  { slug: 'business-day-calculator', label: 'Business Days & Holidays' },
+  { slug: 'profit-margin-calculator', label: 'Profit Margin & Markup' },
+  { slug: 'time-card-calculator-with-lunch', label: 'Time Card + Lunch Break' },
+  { slug: 'federal-tax-calculator', label: '2026 Federal Tax Estimator' },
+];
+
 export default function HubPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
 
   const isSearching = searchQuery.trim().length > 0;
   const searchResults = useMemo(() => {
@@ -35,13 +45,21 @@ export default function HubPage() {
     return searchCalculators(searchQuery);
   }, [searchQuery, isSearching]);
 
-  // Filter and group calculators based on search query
   const activeCalculators = useMemo(() => getPublishedCalculators(), []);
 
   const filteredCalculators = useMemo(() => {
-    if (!searchResults) return activeCalculators;
-    return searchResults.map((r) => r.calculator);
-  }, [searchResults, activeCalculators]);
+    const base = searchResults ? searchResults.map((r) => r.calculator) : activeCalculators;
+    if (selectedCategory === 'ALL') return base;
+    return base.filter((c) => c.category === selectedCategory);
+  }, [searchResults, activeCalculators, selectedCategory]);
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = { ALL: activeCalculators.length };
+    for (const c of activeCalculators) {
+      counts[c.category] = (counts[c.category] || 0) + 1;
+    }
+    return counts;
+  }, [activeCalculators]);
 
   const grouped = useMemo(() => {
     const groups: {
@@ -72,7 +90,6 @@ export default function HubPage() {
       }
     });
 
-    // Safeguard: include any categories not explicitly listed in categoryOrder
     const coveredCategories = new Set(groups.map((g) => g.category));
     const remainingItems = filteredCalculators.filter((c) => !coveredCategories.has(c.category));
     if (remainingItems.length > 0) {
@@ -108,37 +125,37 @@ export default function HubPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="py-6 sm:py-12"
+      transition={{ duration: 0.4 }}
+      className="py-6 sm:py-10"
     >
       {/* Hero Section */}
-      <div className="text-center mb-8 sm:mb-16 px-4">
+      <div className="text-center mb-8 sm:mb-10 px-4">
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.05 }}
           className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4"
         >
-          Business & HR{' '}
+          Business &amp; HR{' '}
           <span className="bg-gradient-to-r from-emerald-500 via-emerald-600 to-gold-500 bg-clip-text text-transparent">
             Calculators
           </span>
         </motion.h1>
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-muted-foreground max-w-2xl mx-auto text-base sm:text-lg mb-6 sm:mb-8"
+          transition={{ delay: 0.1 }}
+          className="text-muted-foreground max-w-2xl mx-auto text-base sm:text-lg mb-6"
         >
-          Professional-grade tools for small business owners, HR managers, and
-          financial professionals. Free, accurate, and instant results.
+          Instant, IRS &amp; FLSA-verified 2026 calculators for small business owners, HR managers, and employees.
+          No signup, 100% browser-private.
         </motion.p>
 
         {/* Search Bar */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.15 }}
           className="max-w-xl mx-auto relative group"
         >
           <div className="absolute inset-0 bg-emerald-500/15 blur-2xl group-focus-within:bg-emerald-500/25 transition-all duration-500 -z-10 rounded-full" />
@@ -146,7 +163,7 @@ export default function HubPage() {
             <Search className="absolute left-4 h-5 w-5 text-muted-foreground group-focus-within:text-emerald-600 transition-colors" />
             <input
               type="text"
-              placeholder="Search calculators (e.g. 'payroll', 'commission', 'ROI')..."
+              placeholder="Search 50+ calculators (e.g. 'hourly paycheck', 'profit margin', 'business days')..."
               className="w-full h-14 pl-12 pr-12 rounded-2xl border border-border/60 bg-background/80 backdrop-blur-xl shadow-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all text-base"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -163,21 +180,78 @@ export default function HubPage() {
           </div>
         </motion.div>
 
-        {/* Calculator count badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-8 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-sm text-emerald-600 font-medium"
-        >
-          <span>{filteredCalculators.length}</span>
-          <span className="text-muted-foreground">
-            {searchQuery ? 'matching tools found' : 'free tools available'}
-          </span>
-        </motion.div>
+        {/* Most Popular Quick-Launch Strip Above the Fold */}
+        <div className="max-w-4xl mx-auto mt-6">
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400 mr-1">
+              <Flame className="h-3.5 w-3.5" />
+              Most Popular:
+            </span>
+            {TOP_TOOL_SLUGS.map((item) => (
+              <Link
+                key={item.slug}
+                href={`/calculators/${item.slug}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-card hover:bg-emerald-500/10 hover:border-emerald-500/40 hover:text-emerald-600 border border-border/60 transition-all shadow-xs"
+              >
+                <span>{item.label}</span>
+                {item.badge && (
+                  <span className="px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 text-[10px] font-bold">
+                    {item.badge}
+                  </span>
+                )}
+              </Link>
+            ))}
+            <Link
+              href="/compare/jobs"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-all shadow-xs"
+            >
+              <Scale className="h-3 w-3" />
+              Compare 2 Job Offers
+            </Link>
+          </div>
+        </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-20 py-6 sm:py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-14">
+        {/* Interactive Category Filter Tabs */}
+        <div className="flex items-center justify-start sm:justify-center overflow-x-auto pb-2 gap-2 no-scrollbar">
+          <button
+            type="button"
+            onClick={() => setSelectedCategory('ALL')}
+            className={`shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all ${
+              selectedCategory === 'ALL'
+                ? 'bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-600/20'
+                : 'bg-card hover:bg-muted text-muted-foreground hover:text-foreground border-border/60'
+            }`}
+          >
+            All Calculators ({categoryCounts.ALL})
+          </button>
+          {categoryOrder.map((cat) => {
+            const count = categoryCounts[cat] || 0;
+            if (count === 0) return null;
+            const emoji = categoryMeta[cat]?.emoji || '📊';
+            const isSelected = selectedCategory === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setSelectedCategory(cat)}
+                className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all ${
+                  isSelected
+                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-600/20'
+                    : 'bg-card hover:bg-muted text-muted-foreground hover:text-foreground border-border/60'
+                }`}
+              >
+                <span>{emoji}</span>
+                <span>{cat}</span>
+                <span className={`text-xs ${isSelected ? 'text-emerald-100' : 'text-muted-foreground'}`}>
+                  ({count})
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
         {/* Calculator Grid */}
         <div className="space-y-12">
           {grouped.length === 0 ? (
@@ -194,7 +268,10 @@ export default function HubPage() {
                   <button
                     key={term}
                     type="button"
-                    onClick={() => setSearchQuery(term)}
+                    onClick={() => {
+                      setSelectedCategory('ALL');
+                      setSearchQuery(term);
+                    }}
                     className="text-xs font-medium px-3 py-1.5 rounded-full bg-muted hover:bg-accent text-foreground transition-colors border border-border/60"
                   >
                     {term}
@@ -214,9 +291,7 @@ export default function HubPage() {
                         ({group.items.length} tool{group.items.length > 1 ? 's' : ''})
                       </span>
                     </h2>
-                    <p className="text-sm text-muted-foreground">
-                      {group.meta.description}
-                    </p>
+                    <p className="text-sm text-muted-foreground">{group.meta.description}</p>
                   </div>
                 </div>
                 <motion.div
@@ -224,7 +299,7 @@ export default function HubPage() {
                   variants={containerVariants}
                   initial="hidden"
                   whileInView="visible"
-                  viewport={{ once: true, amount: 0.1 }}
+                  viewport={{ once: true, amount: 0.05 }}
                   className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
                 >
                   {group.items.map((calc) => (
@@ -234,6 +309,30 @@ export default function HubPage() {
               </section>
             ))
           )}
+        </div>
+
+        {/* Featured Side-by-Side Job Offer Comparison Banner */}
+        <div className="rounded-3xl border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-600 text-xs font-bold">
+              <Scale className="h-3.5 w-3.5" />
+              Interactive Compensation Analyzer
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
+              Deciding Between Two Job Offers?
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground">
+              Base salary only tells half the story. Compare two offers side-by-side including annual bonus, 401(k)
+              employer match, health insurance premiums, PTO days value, and daily commute costs.
+            </p>
+          </div>
+          <Link
+            href="/compare/jobs"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-lg shadow-emerald-600/20 shrink-0 transition-colors"
+          >
+            Compare 2 Job Offers Now
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
 
         {/* Featured Guides & Strategic Insights Section */}
@@ -310,7 +409,6 @@ export default function HubPage() {
         {/* SEO & Trust Content Section */}
         <div className="pt-8 border-t border-border/40">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-            {/* Left Column: Expert Authority */}
             <div className="lg:col-span-2 space-y-8">
               <section>
                 <h2 className="text-2xl sm:text-3xl font-bold mb-4">
@@ -354,7 +452,6 @@ export default function HubPage() {
               </div>
             </div>
 
-            {/* Right Column: Key Benefits / Sidebar */}
             <div className="space-y-6">
               <div className="p-4 sm:p-6 rounded-2xl border border-border/60 bg-card/50 backdrop-blur-sm">
                 <h3 className="font-bold mb-4 text-sm uppercase tracking-wider text-muted-foreground">
@@ -371,15 +468,15 @@ export default function HubPage() {
                   <li className="flex gap-3">
                     <div className="h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-bold">2</div>
                     <div className="text-sm">
-                      <strong className="block text-foreground">Instant Reports</strong>
-                      Download full calculation audits as structured CSV reports instantly.
+                      <strong className="block text-foreground">Instant Live Results</strong>
+                      See real-time breakdowns, interactive charts, and multi-period conversions as you type.
                     </div>
                   </li>
                   <li className="flex gap-3">
                     <div className="h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-bold">3</div>
                     <div className="text-sm">
                       <strong className="block text-foreground">Sources Cited</strong>
-                      Every calculator lists the IRS, Department of Labor, or state publication its formula comes from, and worked examples are generated by the same code the tool runs.
+                      Every calculator lists the IRS, Department of Labor, or state publication its formula comes from.
                     </div>
                   </li>
                 </ul>
@@ -400,6 +497,7 @@ export default function HubPage() {
             </div>
           </div>
         </div>
+
         {/* Long-form SEO content */}
         <section className="pt-10 border-t border-border/40">
           <div className="max-w-4xl mx-auto space-y-6 text-muted-foreground">
@@ -421,6 +519,7 @@ export default function HubPage() {
     </motion.div>
   );
 }
+
 function CalculatorCardComponent({ calc }: { calc: CalculatorMeta }) {
   const Icon = calc.icon;
 

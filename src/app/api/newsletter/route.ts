@@ -1,21 +1,27 @@
 import { NextResponse } from 'next/server';
-
-// ------------------------------------------------------------------
-// POST /api/newsletter
-// Receives newsletter signup. No DB required — logs to server console.
-// Swap to Resend / ConvertKit / Mailchimp when ready to actually send.
-// ------------------------------------------------------------------
+import { promises as fs } from 'fs';
+import path from 'path';
 
 interface NewsletterPayload {
   email: string;
   source?: string;
 }
 
-// Simple in-memory store (cleared on server restart — fine for v0)
-// For production, replace with: Resend audience, ConvertKit, Mailchimp, or DB
-const subscribers: { email: string; source?: string; ts: string }[] = [];
-
+const DATA_DIR = path.join(process.cwd(), 'data');
+const SUBSCRIBERS_FILE = path.join(DATA_DIR, 'newsletter-subscribers.jsonl');
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+async function readSubscribers(): Promise<{ email: string; source?: string; ts: string }[]> {
+  try {
+    const content = await fs.readFile(SUBSCRIBERS_FILE, 'utf8');
+    return content
+      .split('\n')
+      .filter(Boolean)
+      .map((line) => JSON.parse(line));
+  } catch {
+    return [];
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -35,10 +41,9 @@ export async function POST(req: Request) {
       );
     }
 
-    // Normalize email (lowercase, trim)
     const normalizedEmail = body.email.toLowerCase().trim();
+    const subscribers = await readSubscribers();
 
-    // Dedup check
     const existing = subscribers.find((s) => s.email === normalizedEmail);
     if (existing) {
       return NextResponse.json({
@@ -54,19 +59,19 @@ export async function POST(req: Request) {
       ts: new Date().toISOString(),
     };
 
-    subscribers.push(entry);
-    console.log('[newsletter] new subscriber:', entry);
+    try {
+      await fs.mkdir(DATA_DIR, { recursive: true });
+      await fs.appendFile(SUBSCRIBERS_FILE, JSON.stringify(entry) + '\n', 'utf8');
+    } catch (ioErr) {
+      console.warn('[newsletter] file write warning:', ioErr);
+    }
 
-    // TODO: When ready to actually send emails, integrate here:
-    // - Resend: const { Resend } = await import('resend'); const r = new Resend(process.env.RESEND_API_KEY);
-    //   await r.contacts.create({ email: normalizedEmail, audienceId: '...' });
-    // - ConvertKit: await fetch('https://api.convertkit.com/v3/forms/{form_id}/subscribe', {...})
-    // - Mailchimp: similar API call
+    console.log('[newsletter] new subscriber:', entry);
 
     return NextResponse.json({
       success: true,
       message: 'Successfully subscribed',
-      subscribersCount: subscribers.length,
+      subscribersCount: subscribers.length + 1,
     });
   } catch (err) {
     console.error('[newsletter] error:', err);
@@ -78,6 +83,7 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
+  const subscribers = await readSubscribers();
   return NextResponse.json({
     ok: true,
     service: 'newsletter',
