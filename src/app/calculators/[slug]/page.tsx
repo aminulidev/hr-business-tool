@@ -264,7 +264,7 @@ export function generateMetadata({
     const url = `${SITE_URL}${calc.path}`;
 
     return {
-      title,
+      title: title.length > 48 ? { absolute: title } : title,
       description: calc.metaDescription,
       keywords: calc.keywords,
       authors: [{ name: SITE_NAME, url: SITE_URL }],
@@ -344,7 +344,10 @@ export default async function CalculatorPage({
           title={calc.title}
           description={calc.metaDescription}
           icon={<calc.icon className="h-7 w-7 text-white" />}
-          breadcrumbs={[{ label: 'Calculators' }, { label: calc.title }]}
+          breadcrumbs={[
+            { label: 'Calculators', href: '/calculators' },
+            { label: calc.title, href: calc.path },
+          ]}
           tableOfContents={[
             ...(seoData.howToSteps?.length > 0 ? [{ id: 'how-to-calculate', label: 'How to Calculate' }] : []),
             ...(seoData.formula ? [{ id: 'formula', label: 'Formula' }] : []),

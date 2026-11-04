@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { SITE_URL, SITE_NAME } from '@/lib/calculator-meta';
 
 export const metadata = {
-  title: `Business & HR Glossary | ${SITE_NAME}`,
+  title: 'Business, Payroll & HR Glossary',
   description: 'A comprehensive dictionary of business, HR, payroll, and financial terms to help you understand the metrics behind our calculators.',
   alternates: {
     canonical: `${SITE_URL}/glossary`,

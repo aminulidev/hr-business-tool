@@ -4,11 +4,6 @@ import { calculators, isCalculatorPublished, resolveMergedCalculator } from './s
 // ---------------------------------------------------------------------------
 // Redirects for calculators that were merged into another page.
 // ---------------------------------------------------------------------------
-// A merged slug follows its `mergedInto` chain. If the final target is live it
-// gets a 308 there; if the target is still a draft, it goes to the closest
-// published calculator listed here, or to the homepage as a last resort.
-// A 404 here would drop any crawled or bookmarked equity and send reviewers
-// to an error page.
 const DRAFT_TARGET_FALLBACK: Record<string, string> = {
   'absenteeism-calculator': '/calculators/employee-hours-calculator',
   'cost-of-turnover-calculator': '/calculators/employee-turnover-calculator',
@@ -52,15 +47,11 @@ const nextConfig: NextConfig = {
   // ---------------------------------------------------------------------------
   async redirects() {
     return [
-      // /calculators (no slug) → homepage (the hub page)
-      // Caused by glossary "Browse All Tools" link pointing to /calculators
       {
         source: '/calculators',
         destination: '/',
         permanent: true,
       },
-      // /$ and /& → homepage
-      // Google crawled these malformed URLs
       {
         source: '/$',
         destination: '/',
@@ -71,7 +62,6 @@ const nextConfig: NextConfig = {
         destination: '/',
         permanent: true,
       },
-      // Merged calculator slugs → the page that absorbed them
       ...mergedCalculatorRedirects(),
     ];
   },
@@ -88,8 +78,6 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // Font and media files: noindex only (nofollow is meaningless for
-        // binary files and was causing extra GSC noise)
         source: '/_next/static/media/:path*',
         headers: [
           {
@@ -99,10 +87,6 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // Noindex any URL that has a ?q= query parameter.
-        // These appear in GSC as "Alternate page with proper canonical tag"
-        // because ?q={search_term_string} gets crawled by Googlebot but the
-        // page's canonical points to the homepage without the query string.
         source: '/',
         has: [{ type: 'query', key: 'q' }],
         headers: [
@@ -113,7 +97,29 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: '/(.*)',
+        // Allow external websites to embed /calculators/:slug/embed via iframe
+        source: '/calculators/:slug/embed',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; frame-ancestors *; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; font-src 'self' data:; connect-src 'self' https://pagead2.googlesyndication.com https://www.google-analytics.com;",
+          },
+        ],
+      },
+      {
+        source: '/((?!calculators/[^/]+/embed).*)',
         headers: [
           {
             key: 'X-Content-Type-Options',
@@ -133,7 +139,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; font-src 'self' data:; connect-src 'self' https://pagead2.googlesyndication.com https://www.google-analytics.com;",
+            value: "default-src 'self'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; font-src 'self' data:; connect-src 'self' https://pagead2.googlesyndication.com https://www.google-analytics.com;",
           },
         ],
       },

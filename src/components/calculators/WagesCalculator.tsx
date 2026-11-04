@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TryExample from './TryExample';
 import { motion } from 'framer-motion';
 import {
@@ -95,7 +95,7 @@ let nextId = 1;
 function createEntry(): WageEntry {
   return {
     id: nextId++,
-    hourlyRate: '',
+    hourlyRate: '25',
     regularHours: '40',
     overtimeHours: '0',
     doubleTimeHours: '0',
@@ -119,6 +119,43 @@ export default function WagesCalculator() {
   const [compareB, setCompareB] = useState<WageSnapshot | null>(null);
 
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ payPeriod: string; overtimeMultiplier: string; doubleTimeMultiplier: string; firstRate: string }>('wages-calculator');
+
+  useEffect(() => {
+    const otMult = parseFloat(overtimeMultiplier);
+    const dtMult = parseFloat(doubleTimeMultiplier);
+    if (isNaN(otMult) || otMult <= 0 || isNaN(dtMult) || dtMult <= 0) return;
+
+    const calcEntries: WagesResult['entries'] = [];
+    let totalPeriod = 0;
+    for (const entry of entries) {
+      const rate = parseFloat(entry.hourlyRate);
+      const regHrs = parseFloat(entry.regularHours || '0');
+      const otHrs = parseFloat(entry.overtimeHours || '0');
+      const dtHrs = parseFloat(entry.doubleTimeHours || '0');
+      if (isNaN(rate) || rate <= 0 || regHrs < 0 || otHrs < 0 || dtHrs < 0) return;
+      const regularPay = regHrs * rate;
+      const overtimePay = otHrs * rate * otMult;
+      const doubleTimePay = dtHrs * rate * dtMult;
+      const subtotal = regularPay + overtimePay + doubleTimePay;
+      calcEntries.push({ hourlyRate: rate, regularHours: regHrs, overtimeHours: otHrs, doubleTimeHours: dtHrs, regularPay, overtimePay, doubleTimePay, subtotal });
+      totalPeriod += subtotal;
+    }
+    const periodMultiplier = PERIOD_MULTIPLIERS[payPeriod];
+    const grossPerYear = totalPeriod * periodMultiplier;
+    setError(null);
+    setResult({
+      entries: calcEntries,
+      grossPerPeriod: totalPeriod,
+      grossPerWeek: grossPerYear / 52,
+      grossPerBiWeekly: grossPerYear / 26,
+      grossPerSemiMonthly: grossPerYear / 24,
+      grossPerMonth: grossPerYear / 12,
+      grossPerYear,
+      overtimeMultiplier: otMult,
+      doubleTimeMultiplier: dtMult,
+      payPeriod,
+    });
+  }, [entries, overtimeMultiplier, doubleTimeMultiplier, payPeriod]);
 
   const updateEntry = (id: number, field: keyof WageEntry, value: string) => {
     setEntries((prev) =>

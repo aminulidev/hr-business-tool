@@ -477,7 +477,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const calc = getCalculatorBySlug(slug);
   return {
-    title: calc ? `${calc.title} — Embed | QuickBizCalc` : 'Calculator Embed',
+    title: calc ? `${calc.title} — Embed` : 'Calculator Embed',
     robots: { index: false, follow: false },
   };
 }
