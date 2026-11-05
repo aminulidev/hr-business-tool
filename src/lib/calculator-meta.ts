@@ -422,7 +422,7 @@ export const calculators: CalculatorMeta[] = [
     ],
     icon: DollarSign,
     tier: 'tier1',
-    category: 'Commission & Compensation',
+    category: 'Sales & Compensation',
     path: '/calculators/commission-calculator',
   },
   {
@@ -455,7 +455,7 @@ export const calculators: CalculatorMeta[] = [
     ],
     icon: ArrowLeftRight,
     tier: 'tier1',
-    category: 'Commission & Compensation',
+    category: 'Salary & Compensation',
     path: '/calculators/salary-converter',
   },
 
@@ -3113,7 +3113,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'employee-cost-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Employee Cost Calculator',
     metaTitle: 'Free Employee Cost Calculator 2026 — True Cost Per Employee',
     shortDescription:
@@ -3690,7 +3690,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'ebitda-margin-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'EBITDA Margin Calculator',
     metaTitle: 'Free EBITDA Margin Calculator 2026 — EBITDA / Revenue',
     shortDescription:
@@ -3882,7 +3882,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'burn-rate-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Burn Rate Calculator',
     metaTitle: 'Free Burn Rate Calculator 2026 — Startup Cash Burn Rate',
     shortDescription:
@@ -4853,7 +4853,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'customer-acquisition-cost-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Customer Acquisition Cost (CAC) Calculator',
     metaTitle: 'Free CAC Calculator 2026 — Customer Acquisition Cost by Channel',
     shortDescription:
@@ -4880,7 +4880,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'customer-lifetime-value-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Customer Lifetime Value (CLV) Calculator',
     metaTitle: 'Free CLV Calculator 2026 — Customer Lifetime Value Formula',
     shortDescription:
@@ -5157,7 +5157,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'freelance-hourly-rate-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Freelance Hourly Rate Calculator',
     metaTitle: 'Free Freelance Hourly Rate Calculator 2026 — Set Your Rate',
     shortDescription:
@@ -5178,7 +5178,7 @@ export const calculators: CalculatorMeta[] = [
     ],
     icon: DollarSign,
     tier: 'tier1',
-    category: 'Freelancer & Agency',
+    category: 'Sales & Compensation',
     path: '/calculators/freelance-hourly-rate-calculator',
   },
 
@@ -5211,7 +5211,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'upwork-fee-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Upwork Fee Calculator',
     metaTitle: 'Free Upwork Fee Calculator 2026 — Sliding Scale Fees',
     shortDescription:
@@ -5232,7 +5232,7 @@ export const calculators: CalculatorMeta[] = [
     ],
     icon: DollarSign,
     tier: 'tier2',
-    category: 'Freelancer & Agency',
+    category: 'Sales & Compensation',
     path: '/calculators/upwork-fee-calculator',
   },
 
@@ -5663,13 +5663,13 @@ export const calculators: CalculatorMeta[] = [
   },
   {
     slug: 'churn-rate-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Churn Rate Calculator',
     metaTitle: 'Free Churn Rate Calculator 2026 — Logo & Revenue Churn',
     shortDescription: 'Calculate customer churn rate (logo) and revenue churn rate. Track by cohort, segment, and plan.',
     metaDescription: 'Free churn rate calculator 2026. Calculate logo churn (customers lost) and revenue churn (MRR lost). SaaS benchmarks: logo churn <5%/yr, revenue churn <3%/yr. Track gross and net churn.',
     keywords: ['churn rate calculator', 'customer churn', 'revenue churn', 'how to calculate churn', 'churn rate formula', 'saas churn', 'logo churn', 'net churn'],
-    icon: TrendingDown, tier: 'tier1', category: 'Startup & SaaS', path: '/calculators/churn-rate-calculator',
+    icon: TrendingDown, tier: 'tier1', category: 'Sales & Compensation', path: '/calculators/churn-rate-calculator',
   },
   {
     slug: 'expansion-mrr-calculator',
@@ -5857,13 +5857,13 @@ export const calculators: CalculatorMeta[] = [
   },
   {
     slug: 'sales-tax-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Sales Tax Calculator',
     metaTitle: 'Free Sales Tax Calculator 2026 — US State Sales Tax',
     shortDescription: 'Calculate US sales tax by state with combined state + local rates. Add or extract sales tax.',
     metaDescription: 'Free sales tax calculator 2026. Calculate US sales tax by state (California 7.25%, Texas 6.25%, New York 4%). Add sales tax to price or extract from total. Combined state + local rates.',
     keywords: ['sales tax calculator', 'how to calculate sales tax', 'sales tax rate', 'add sales tax', 'us sales tax', 'state sales tax', 'sales tax formula'],
-    icon: Percent, tier: 'tier1', category: 'Accounting', path: '/calculators/sales-tax-calculator',
+    icon: Percent, tier: 'tier1', category: 'Business Finance', path: '/calculators/sales-tax-calculator',
   },
   {
     slug: 'income-tax-calculator',

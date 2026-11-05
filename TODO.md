@@ -119,3 +119,107 @@ Cleaned up systematic batch-generator bugs across all calculator `.tsx` componen
   - [x] `sales-tax-calculator` (`SalesTaxCalculator.tsx` + `src/lib/seo-data/sales-tax-calculator.ts` — upgraded with Forward + Reverse Sales Tax extraction tabs, US state presets, and 2026 state rate table)
   - [x] `ebitda-margin-calculator` (`EbitdaMarginCalculator.tsx` + `src/lib/seo-data/ebitda-margin-calculator.ts` — operational EBITDA margin & 2026 EV/EBITDA buyout multiples by industry)
   - [x] `churn-rate-calculator` (`ChurnRateCalculator.tsx` + `src/lib/seo-data/churn-rate-calculator.ts` — Customer Logo Churn vs. Gross MRR Revenue Churn + compound annual churn conversion table)
+
+
+---
+
+# 🚀 Next Growth Roadmap (Phases 7–12)
+
+Now that Phases 1–6 are complete (70 published calculators live, all 183 `.tsx` components cleaned up, instant live calculation enabled, and 2026 IRS/state tax tables unified), here is the prioritized roadmap for the next stage of traffic & authority growth:
+
+## 📤 Phase 7: Deploy Phases 3–6 & Submit New URLs in Google Search Console (Immediate)
+
+- [ ] **1. Commit & Deploy to Production (`https://www.quickbizcalc.com`)**
+- [ ] **2. Resubmit `sitemap.xml` in Google Search Console** (`Indexing → Sitemaps → https://www.quickbizcalc.com/sitemap.xml`) so Google discovers all 20 newly published calculators (70 total).
+- [ ] **3. Request Priority Indexing via GSC URL Inspection** for the highest-volume new & upgraded pages:
+  - [ ] `https://www.quickbizcalc.com/calculators/sales-tax-calculator`
+  - [ ] `https://www.quickbizcalc.com/calculators/employee-cost-calculator`
+  - [ ] `https://www.quickbizcalc.com/calculators/freelance-hourly-rate-calculator`
+  - [ ] `https://www.quickbizcalc.com/calculators/upwork-fee-calculator`
+  - [ ] `https://www.quickbizcalc.com/calculators/burn-rate-calculator`
+  - [ ] `https://www.quickbizcalc.com/calculators/customer-acquisition-cost-calculator`
+  - [ ] `https://www.quickbizcalc.com/calculators/customer-lifetime-value-calculator`
+  - [ ] `https://www.quickbizcalc.com/calculators/washington-hourly-paycheck-calculator`
+  - [ ] `https://www.quickbizcalc.com/calculators/pennsylvania-hourly-paycheck-calculator`
+  - [ ] `https://www.quickbizcalc.com/calculators/georgia-hourly-paycheck-calculator`
+
+---
+
+## 🏛️ Phase 8: Topical Category Pillar Hub Pages & Breadcrumb Siloing (Desktop Ranking Boost)
+
+Currently, all 70 calculators sit in a flat structure under `/` (and the breadcrumb link `/calculators` redirects to `/`), which weakens desktop topical authority (Desktop avg position `39.12` vs. Mobile `9.66`).
+
+- [ ] **1. Create Indexable Category Hub Pages (`/category/[slug]`)**:
+  - [ ] `/category/payroll-salary` — Payroll, Salary, FICA & 15+ State Paycheck Calculators Hub
+  - [ ] `/category/time-attendance` — Time Card, Overtime, Business Days & Shift Calculators Hub
+  - [ ] `/category/hr-workforce` — Employee Cost, FTE, Turnover, Severance & Workforce Planning Hub
+  - [ ] `/category/finance-profit` — Profit Margin, Markup, EBITDA, Break-Even & Burn Rate Hub
+  - [ ] `/category/sales-saas` — Commission, CAC, CLV, Churn, ROI & Freelance/Upwork Hub
+- [ ] **2. Upgrade Breadcrumb Siloing & `CollectionPage` JSON-LD**:
+  - [ ] Update calculator breadcrumbs in `src/app/calculators/[slug]/page.tsx` from `Calculators > [Tool]` to `Home > [Category Hub] > [Tool]` so internal PageRank flows through topical silos.
+  - [ ] Add category hub URLs to `src/app/sitemap.ts`, header navigation, and footer links.
+
+---
+
+## 🗺️ Phase 9: Expand State Hourly Paycheck Calculators to 30 States (Batch C)
+
+Expand from 15 states to **30 states** by adding the next 15 high-population flat-tax and progressive-tax states in `src/lib/payroll/withholding-2026.ts` and `src/lib/payroll/state-pages.ts`:
+
+- [ ] **Flat & Newly Flat-Tax States (2026 Rules)**:
+  - [ ] **Utah (`UT`)** — `utah-hourly-paycheck-calculator` (4.55% flat tax)
+  - [ ] **Kentucky (`KY`)** — `kentucky-hourly-paycheck-calculator` (4.00% flat tax in 2026)
+  - [ ] **Louisiana (`LA`)** — `louisiana-hourly-paycheck-calculator` (3.00% flat tax reform, $12,500 Single standard deduction)
+  - [ ] **Iowa (`IA`)** — `iowa-hourly-paycheck-calculator` (3.80% flat tax in 2026)
+  - [ ] **Idaho (`ID`)** — `idaho-hourly-paycheck-calculator` (5.695% flat tax)
+- [ ] **High-Population Progressive-Tax States (2026 Brackets)**:
+  - [ ] **Ohio (`OH`)** — `ohio-hourly-paycheck-calculator`
+  - [ ] **Virginia (`VA`)** — `virginia-hourly-paycheck-calculator`
+  - [ ] **New Jersey (`NJ`)** — `new-jersey-hourly-paycheck-calculator` (includes NJ SUI/SDI/FLI employee payroll deductions)
+  - [ ] **Massachusetts (`MA`)** — `massachusetts-hourly-paycheck-calculator` (5.0% base + 4% surtax + MA PFML)
+  - [ ] **Maryland (`MD`)** — `maryland-hourly-paycheck-calculator` (state + avg county local tax)
+  - [ ] **Minnesota (`MN`)** — `minnesota-hourly-paycheck-calculator`
+  - [ ] **Missouri (`MO`)** — `missouri-hourly-paycheck-calculator`
+  - [ ] **Wisconsin (`WI`)** — `wisconsin-hourly-paycheck-calculator`
+  - [ ] **Oregon (`OR`)** — `oregon-hourly-paycheck-calculator` (includes OR Transit & Paid Leave Oregon)
+  - [ ] **South Carolina (`SC`)** — `south-carolina-hourly-paycheck-calculator`
+
+---
+
+## 📈 Phase 10: Programmatic Wage & Salary Breakdown Pages (`/salary/[slug]`)
+
+Capture high-intent long-tail search queries like *"$25 an hour is how much a year after taxes"* and *"$75,000 a year is how much biweekly"* where competition is much lower than generic head terms:
+
+- [ ] **Create `/salary/[slug]` Route (`src/app/salary/[slug]/page.tsx`)** for ~30 curated high-search wage & salary tiers:
+  - [ ] Hourly tiers: `$15`, `$16`, `$17`, `$18`, `$19`, `$20`, `$22`, `$25`, `$28`, `$30`, `$35`, `$40`, `$45`, `$50`, `$60` an hour
+  - [ ] Annual salary tiers: `$40k`, `$45k`, `$50k`, `$55k`, `$60k`, `$65k`, `$70k`, `$75k`, `$80k`, `$90k`, `$100k`, `$120k`, `$150k`, `$200k` a year
+- [ ] **Include Unique Value on Every Page**:
+  - [ ] Pre-calculated 7-period conversion table (Hourly, Daily, Weekly, Bi-Weekly, Semi-Monthly, Monthly, Annual)
+  - [ ] Side-by-side 2026 After-Tax Take-Home comparison table across all 15+ supported US states
+  - [ ] Monthly 50/30/20 budget breakdown & max recommended rent/mortgage at that income level
+
+---
+
+## 🔗 Phase 11: Shareable Pre-Filled URLs (`?rate=25&hours=40`) & Dynamic OG Images
+
+- [ ] **1. URL Query Parameter Sync & "Copy Shareable Link" Button**:
+  - [ ] Allow users to share a pre-calculated scenario via URL (e.g., `/calculators/hourly-paycheck-calculator?rate=28&hours=40&ot=5`) on the top 10 calculators.
+  - [ ] Add a 1-click **"Share Calculation Link"** button next to `Save A / Save B` in the result card.
+- [ ] **2. Dynamic OpenGraph Image Route (`/api/og`)**:
+  - [ ] Replace the static `/og-image.png` with a dynamic `next/og` `ImageResponse` endpoint that renders each calculator's exact title, category badge, and key formula on social shares (LinkedIn, Slack, Reddit, X).
+
+---
+
+## 🧮 Phase 12: Audit, Enrich & Publish Wave 2 of High-Value B2B Draft Calculators (70 → 80 Calculators)
+
+Selectively upgrade and publish the next 10 high-CPC accounting, SaaS, and freelancer calculators from the remaining 118 drafts:
+
+- [ ] `self-employment-tax-calculator` (`SelfEmploymentTaxCalculator.tsx` — 2026 Schedule SE 92.35% rule + QBI deduction)
+- [ ] `1099-calculator` (`Calculator1099.tsx` — 1099 quarterly estimated tax deadlines & expense write-offs)
+- [ ] `mrr-calculator` (`MrrCalculator.tsx` — New, Expansion, Contraction & Churned MRR)
+- [ ] `roas-calculator` (`RoasCalculator.tsx` — Break-even ROAS from gross margin + MER)
+- [ ] `cac-payback-calculator` (`CacPaybackCalculator.tsx` — Gross-margin adjusted payback period)
+- [ ] `net-revenue-retention-calculator` (`NetRevenueRetentionCalculator.tsx` — SaaS NRR & GRR cohort calculator)
+- [ ] `working-capital-calculator` (`WorkingCapitalCalculator.tsx` — Net Working Capital & liquidity analysis)
+- [ ] `depreciation-calculator` (`DepreciationCalculator.tsx` — Straight-line, double-declining, Section 179)
+- [ ] `cogs-calculator` (`CogsCalculator.tsx` — Cost of Goods Sold & inventory margin)
+- [ ] `business-valuation-calculator` (`BusinessValuationCalculator.tsx` — SDE vs. EBITDA valuation multiples)
