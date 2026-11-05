@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { ret: number; prod: number; cost: number; totalValue: number; budget: number; netValue: number; roi: number; payback: number; label: string; }
 
 export default function HrRoiCalculator() {
-  const [retentionSavings, setRetentionSavings] = useState('');
-  const [productivityGains, setProductivityGains] = useState('');
-  const [costReductions, setCostReductions] = useState('');
-  const [hrBudget, setHrBudget] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [retentionSavings, setRetentionSavings] = useState('200000');
+  const [productivityGains, setProductivityGains] = useState('150000');
+  const [costReductions, setCostReductions] = useState('50000');
+  const [hrBudget, setHrBudget] = useState('580000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ retentionSavings: string; productivityGains: string; costReductions: string; hrBudget: string }>('hr-roi-calculator');
@@ -34,7 +34,7 @@ export default function HrRoiCalculator() {
   const roi = budget > 0 ? (netValue / budget) * 100 : 0;
   const payback = totalValue > 0 ? budget / (totalValue / 12) : 0;
 
-  const handleTryExample = () => { setRetentionSavings('200000'); setProductivityGains('150000'); setCostReductions('50000'); setHrBudget('580000'); setCalculated(false); };
+  const handleTryExample = () => { setRetentionSavings('200000'); setProductivityGains('150000'); setCostReductions('50000'); setHrBudget('580000'); setCalculated(true); };
   const handleCalculate = () => {
     if (budget > 0 && totalValue > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function HrRoiCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="retentionSavings" type="number" step="any" min="0" placeholder="200000" className="pl-7"
-                value={retentionSavings} onChange={(e) => { setRetentionSavings(e.target.value); setCalculated(false); }} />
+                value={retentionSavings} onChange={(e) => { setRetentionSavings(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function HrRoiCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="productivityGains" type="number" step="any" min="0" placeholder="150000" className="pl-7"
-                value={productivityGains} onChange={(e) => { setProductivityGains(e.target.value); setCalculated(false); }} />
+                value={productivityGains} onChange={(e) => { setProductivityGains(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function HrRoiCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="costReductions" type="number" step="any" min="0" placeholder="50000" className="pl-7"
-                value={costReductions} onChange={(e) => { setCostReductions(e.target.value); setCalculated(false); }} />
+                value={costReductions} onChange={(e) => { setCostReductions(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -83,7 +83,7 @@ export default function HrRoiCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="hrBudget" type="number" step="any" min="0" placeholder="580000" className="pl-7"
-                value={hrBudget} onChange={(e) => { setHrBudget(e.target.value); setCalculated(false); }} />
+                value={hrBudget} onChange={(e) => { setHrBudget(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -104,11 +104,11 @@ export default function HrRoiCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">HR ROI</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{roi.toFixed(0)}%`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${roi.toFixed(0)}%`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Net value: ${formatCurrency(netValue)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Payback: ${payback.toFixed(1)} months`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Good HR ROI: > 50%'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Net value: ${formatCurrency(netValue)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Payback: ${payback.toFixed(1)} months`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Good HR ROI: > 50%'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -131,7 +131,7 @@ export default function HrRoiCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Payback (mo)</p>
-                    <p className={`text-lg font-bold`}>{`{payback.toFixed(1)}`}</p>
+                    <p className={`text-lg font-bold`}>{`${payback.toFixed(1)}`}</p>
                   </div>
               </div>
 

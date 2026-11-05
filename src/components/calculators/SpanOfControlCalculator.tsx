@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { emps: number; mgrs: number; icCount: number; span: number; managementRatio: number; managementPct: number; benchmark: string; label: string; }
 
 export default function SpanOfControlCalculator() {
-  const [totalEmployees, setTotalEmployees] = useState('');
-  const [numManagers, setNumManagers] = useState('Includes all levels of management');
-  const [calculated, setCalculated] = useState(false);
+  const [totalEmployees, setTotalEmployees] = useState('100');
+  const [numManagers, setNumManagers] = useState('12');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ totalEmployees: string; numManagers: string }>('span-of-control-calculator');
@@ -31,7 +31,7 @@ export default function SpanOfControlCalculator() {
   const managementPct = managementRatio * 100;
   const benchmark = span < 5 ? "Narrow (complex roles)" : span < 11 ? "Standard" : span < 31 ? "Wide (transactional)" : "Very wide";
 
-  const handleTryExample = () => { setTotalEmployees('100'); setNumManagers('12'); setCalculated(false); };
+  const handleTryExample = () => { setTotalEmployees('100'); setNumManagers('12'); setCalculated(true); };
   const handleCalculate = () => {
     if (emps > 0 && mgrs > 0) {
       setCalculated(true);
@@ -56,7 +56,7 @@ export default function SpanOfControlCalculator() {
             <div className="relative">
               
               <Input id="totalEmployees" type="number" step="any" min="0" placeholder="100"
-                value={totalEmployees} onChange={(e) => { setTotalEmployees(e.target.value); setCalculated(false); }} />
+                value={totalEmployees} onChange={(e) => { setTotalEmployees(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -64,7 +64,7 @@ export default function SpanOfControlCalculator() {
             <div className="relative">
               
               <Input id="numManagers" type="number" step="any" min="0" placeholder="12"
-                value={numManagers} onChange={(e) => { setNumManagers(e.target.value); setCalculated(false); }} />
+                value={numManagers} onChange={(e) => { setNumManagers(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Includes all levels of management</p>
           </div>
@@ -86,11 +86,11 @@ export default function SpanOfControlCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Average Span of Control</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{span.toFixed(1)} direct reports`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${span.toFixed(1)} direct reports`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`IC-to-Manager ratio: ${span.toFixed(1)}:1`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Management layer: ${managementPct.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Classification: ${benchmark}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`IC-to-Manager ratio: ${span.toFixed(1)}:1`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Management layer: ${managementPct.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Classification: ${benchmark}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -101,19 +101,19 @@ export default function SpanOfControlCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Total Employees</p>
-                    <p className={`text-lg font-bold`}>{`{emps}`}</p>
+                    <p className={`text-lg font-bold`}>{`${emps}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Managers</p>
-                    <p className={`text-lg font-bold`}>{`{mgrs}`}</p>
+                    <p className={`text-lg font-bold`}>{`${mgrs}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">IC Count</p>
-                    <p className={`text-lg font-bold`}>{`{icCount}`}</p>
+                    <p className={`text-lg font-bold`}>{`${icCount}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Span</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{span.toFixed(1)}`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${span.toFixed(1)}`}</p>
                   </div>
               </div>
 

@@ -16,13 +16,13 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { dev: number; del: number; mat: number; directCost: number; lostProductivity: number; totalCost: number; costPerEmp: number; costPerHour: number; label: string; }
 
 export default function TrainingCostCalculator() {
-  const [developmentCost, setDevelopmentCost] = useState('');
-  const [deliveryCost, setDeliveryCost] = useState('');
-  const [materialsCost, setMaterialsCost] = useState('');
-  const [numEmployees, setNumEmployees] = useState('');
-  const [trainingHours, setTrainingHours] = useState('');
-  const [avgSalary, setAvgSalary] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [developmentCost, setDevelopmentCost] = useState('15000');
+  const [deliveryCost, setDeliveryCost] = useState('8000');
+  const [materialsCost, setMaterialsCost] = useState('3000');
+  const [numEmployees, setNumEmployees] = useState('50');
+  const [trainingHours, setTrainingHours] = useState('8');
+  const [avgSalary, setAvgSalary] = useState('30');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ developmentCost: string; deliveryCost: string; materialsCost: string; numEmployees: string; trainingHours: string; avgSalary: string }>('training-cost-calculator');
@@ -39,7 +39,7 @@ export default function TrainingCostCalculator() {
   const costPerEmp = emps > 0 ? totalCost / emps : 0;
   const costPerHour = emps > 0 && hrs > 0 ? totalCost / (emps * hrs) : 0;
 
-  const handleTryExample = () => { setDevelopmentCost('15000'); setDeliveryCost('8000'); setMaterialsCost('3000'); setNumEmployees('50'); setTrainingHours('8'); setAvgSalary('30'); setCalculated(false); };
+  const handleTryExample = () => { setDevelopmentCost('15000'); setDeliveryCost('8000'); setMaterialsCost('3000'); setNumEmployees('50'); setTrainingHours('8'); setAvgSalary('30'); setCalculated(true); };
   const handleCalculate = () => {
     if (totalCost > 0) {
       setCalculated(true);
@@ -64,7 +64,7 @@ export default function TrainingCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="developmentCost" type="number" step="any" min="0" placeholder="15000" className="pl-7"
-                value={developmentCost} onChange={(e) => { setDevelopmentCost(e.target.value); setCalculated(false); }} />
+                value={developmentCost} onChange={(e) => { setDevelopmentCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function TrainingCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="deliveryCost" type="number" step="any" min="0" placeholder="8000" className="pl-7"
-                value={deliveryCost} onChange={(e) => { setDeliveryCost(e.target.value); setCalculated(false); }} />
+                value={deliveryCost} onChange={(e) => { setDeliveryCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -80,7 +80,7 @@ export default function TrainingCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="materialsCost" type="number" step="any" min="0" placeholder="3000" className="pl-7"
-                value={materialsCost} onChange={(e) => { setMaterialsCost(e.target.value); setCalculated(false); }} />
+                value={materialsCost} onChange={(e) => { setMaterialsCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -88,7 +88,7 @@ export default function TrainingCostCalculator() {
             <div className="relative">
               
               <Input id="numEmployees" type="number" step="any" min="0" placeholder="50"
-                value={numEmployees} onChange={(e) => { setNumEmployees(e.target.value); setCalculated(false); }} />
+                value={numEmployees} onChange={(e) => { setNumEmployees(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -96,7 +96,7 @@ export default function TrainingCostCalculator() {
             <div className="relative">
               
               <Input id="trainingHours" type="number" step="any" min="0" placeholder="8"
-                value={trainingHours} onChange={(e) => { setTrainingHours(e.target.value); setCalculated(false); }} />
+                value={trainingHours} onChange={(e) => { setTrainingHours(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -104,7 +104,7 @@ export default function TrainingCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="avgSalary" type="number" step="any" min="0" placeholder="30" className="pl-7"
-                value={avgSalary} onChange={(e) => { setAvgSalary(e.target.value); setCalculated(false); }} />
+                value={avgSalary} onChange={(e) => { setAvgSalary(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -127,9 +127,9 @@ export default function TrainingCostCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Total Training Cost</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalCost)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Cost per employee: ${formatCurrency(costPerEmp)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Cost per training hour: ${formatCurrency(costPerHour)}`}</Badge>
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{'Benchmark: $1,000-$2,000/emp/yr'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Cost per employee: ${formatCurrency(costPerEmp)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Cost per training hour: ${formatCurrency(costPerHour)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{'Benchmark: $1,000-$2,000/emp/yr'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

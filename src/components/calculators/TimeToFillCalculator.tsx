@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { days: number; positions: number; avgDays: number; avgWeeks: number; vacancyCost: number; label: string; }
 
 export default function TimeToFillCalculator() {
-  const [totalDays, setTotalDays] = useState('');
-  const [numPositions, setNumPositions] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [totalDays, setTotalDays] = useState('210');
+  const [numPositions, setNumPositions] = useState('5');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ totalDays: string; numPositions: string }>('time-to-fill-calculator');
@@ -29,7 +29,7 @@ export default function TimeToFillCalculator() {
   const avgWeeks = avgDays / 7;
   const vacancyCost = avgDays * 250;
 
-  const handleTryExample = () => { setTotalDays('210'); setNumPositions('5'); setCalculated(false); };
+  const handleTryExample = () => { setTotalDays('210'); setNumPositions('5'); setCalculated(true); };
   const handleCalculate = () => {
     if (days > 0 && positions > 0) {
       setCalculated(true);
@@ -54,7 +54,7 @@ export default function TimeToFillCalculator() {
             <div className="relative">
               
               <Input id="totalDays" type="number" step="any" min="0" placeholder="210"
-                value={totalDays} onChange={(e) => { setTotalDays(e.target.value); setCalculated(false); }} />
+                value={totalDays} onChange={(e) => { setTotalDays(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -62,7 +62,7 @@ export default function TimeToFillCalculator() {
             <div className="relative">
               
               <Input id="numPositions" type="number" step="any" min="0" placeholder="5"
-                value={numPositions} onChange={(e) => { setNumPositions(e.target.value); setCalculated(false); }} />
+                value={numPositions} onChange={(e) => { setNumPositions(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -83,11 +83,11 @@ export default function TimeToFillCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Average Time to Fill</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{avgDays.toFixed(1)} days`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${avgDays.toFixed(1)} days`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`{avgWeeks.toFixed(1)} weeks`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{'SHRM benchmark: 36-42 days'}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Vacancy cost: ${formatCurrency(vacancyCost)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`${avgWeeks.toFixed(1)} weeks`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{'SHRM benchmark: 36-42 days'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Vacancy cost: ${formatCurrency(vacancyCost)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -98,19 +98,19 @@ export default function TimeToFillCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Total Days</p>
-                    <p className={`text-lg font-bold`}>{`{days}`}</p>
+                    <p className={`text-lg font-bold`}>{`${days}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Positions</p>
-                    <p className={`text-lg font-bold`}>{`{positions}`}</p>
+                    <p className={`text-lg font-bold`}>{`${positions}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Avg Days</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{avgDays.toFixed(1)}`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${avgDays.toFixed(1)}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Avg Weeks</p>
-                    <p className={`text-lg font-bold`}>{`{avgWeeks.toFixed(1)}`}</p>
+                    <p className={`text-lg font-bold`}>{`${avgWeeks.toFixed(1)}`}</p>
                   </div>
               </div>
 

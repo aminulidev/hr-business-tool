@@ -25,10 +25,10 @@ function formatTime(min: number): string {
 }
 
 export default function ClockInCalculator() {
-  const [clockIn, setClockIn] = useState('9:00 AM');
+  const [clockIn, setClockIn] = useState('8:30 AM');
   const [breakMin, setBreakMin] = useState('30');
   const [shiftLen, setShiftLen] = useState('8');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<ClockInSnapshot | null>(null);
   const [compareB, setCompareB] = useState<ClockInSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ clockIn: string; breakMin: string; shiftLen: string }>('clock-in-calculator');
@@ -38,7 +38,7 @@ export default function ClockInCalculator() {
   const shift = (parseFloat(shiftLen) || 0) * 60;
   const outMin = inMin >= 0 ? inMin + shift + brk : -1;
 
-  const handleTryExample = () => { setClockIn('8:30 AM'); setBreakMin('30'); setShiftLen('8'); setCalculated(false); };
+  const handleTryExample = () => { setClockIn('8:30 AM'); setBreakMin('30'); setShiftLen('8'); setCalculated(true); };
   const handleCalculate = () => {
     if (inMin >= 0 && shift > 0) {
       setCalculated(true);
@@ -61,19 +61,19 @@ export default function ClockInCalculator() {
           <div className="space-y-2">
             <Label htmlFor="ci-in">Clock-In Time</Label>
             <Input id="ci-in" placeholder="9:00 AM" value={clockIn}
-              onChange={(e) => { setClockIn(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setClockIn(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Formats: 9:00 AM, 9am, 17:30</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="ci-shift">Shift Length (hours)</Label>
             <Input id="ci-shift" type="number" step="0.5" min="0" placeholder="8" value={shiftLen}
-              onChange={(e) => { setShiftLen(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setShiftLen(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Standard: 8h. Part-time: 4-6h.</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="ci-break">Break (minutes, unpaid)</Label>
             <Input id="ci-break" type="number" step="5" min="0" placeholder="30" value={breakMin}
-              onChange={(e) => { setBreakMin(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setBreakMin(e.target.value); setCalculated(true); }} />
           </div>
         </div>
 

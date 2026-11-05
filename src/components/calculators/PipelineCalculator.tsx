@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { q: number; p: number; wr: number; coverage: number; weightedPipeline: number; gap: number; requiredPipeline: number; label: string; }
 
 export default function PipelineCalculator() {
-  const [quota, setQuota] = useState('');
-  const [pipeline, setPipeline] = useState('');
-  const [winRate, setWinRate] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [quota, setQuota] = useState('500000');
+  const [pipeline, setPipeline] = useState('1500000');
+  const [winRate, setWinRate] = useState('25');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ quota: string; pipeline: string; winRate: string }>('pipeline-calculator');
@@ -32,7 +32,7 @@ export default function PipelineCalculator() {
   const gap = q - weightedPipeline;
   const requiredPipeline = wr > 0 ? q / (wr / 100) : 0;
 
-  const handleTryExample = () => { setQuota('500000'); setPipeline('1500000'); setWinRate('25'); setCalculated(false); };
+  const handleTryExample = () => { setQuota('500000'); setPipeline('1500000'); setWinRate('25'); setCalculated(true); };
   const handleCalculate = () => {
     if (q > 0 && p > 0) {
       setCalculated(true);
@@ -57,7 +57,7 @@ export default function PipelineCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="quota" type="number" step="any" min="0" placeholder="500000" className="pl-7"
-                value={quota} onChange={(e) => { setQuota(e.target.value); setCalculated(false); }} />
+                value={quota} onChange={(e) => { setQuota(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -65,7 +65,7 @@ export default function PipelineCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="pipeline" type="number" step="any" min="0" placeholder="1500000" className="pl-7"
-                value={pipeline} onChange={(e) => { setPipeline(e.target.value); setCalculated(false); }} />
+                value={pipeline} onChange={(e) => { setPipeline(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -73,7 +73,7 @@ export default function PipelineCalculator() {
             <div className="relative">
               
               <Input id="winRate" type="number" step="any" min="0" placeholder="25"
-                value={winRate} onChange={(e) => { setWinRate(e.target.value); setCalculated(false); }} />
+                value={winRate} onChange={(e) => { setWinRate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -94,11 +94,11 @@ export default function PipelineCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Pipeline Coverage Ratio</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{coverage.toFixed(2)}x`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${coverage.toFixed(2)}x`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Weighted pipeline: ${formatCurrency(weightedPipeline)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Gap to quota: ${formatCurrency(gap)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Required pipeline: ${formatCurrency(requiredPipeline)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Weighted pipeline: ${formatCurrency(weightedPipeline)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Gap to quota: ${formatCurrency(gap)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Required pipeline: ${formatCurrency(requiredPipeline)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -117,7 +117,7 @@ export default function PipelineCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Coverage</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{coverage.toFixed(2)}x`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${coverage.toFixed(2)}x`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Gap</p>

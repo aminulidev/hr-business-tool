@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { income: number; exp: number; hrs: number; pm: number; totalNeeded: number; hourlyRate: number; dailyRate: number; projectRate: number; retainer: number; label: string; }
 
 export default function ConsultantFeeCalculator() {
-  const [annualIncome, setAnnualIncome] = useState('');
-  const [businessExp, setBusinessExp] = useState('');
-  const [billableHrs, setBillableHrs] = useState('');
-  const [profitMargin, setProfitMargin] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [annualIncome, setAnnualIncome] = useState('150000');
+  const [businessExp, setBusinessExp] = useState('15000');
+  const [billableHrs, setBillableHrs] = useState('1500');
+  const [profitMargin, setProfitMargin] = useState('20');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualIncome: string; businessExp: string; billableHrs: string; profitMargin: string }>('consultant-fee-calculator');
@@ -35,7 +35,7 @@ export default function ConsultantFeeCalculator() {
   const projectRate = hourlyRate * 40;
   const retainer = hourlyRate * 20;
 
-  const handleTryExample = () => { setAnnualIncome('150000'); setBusinessExp('15000'); setBillableHrs('1500'); setProfitMargin('20'); setCalculated(false); };
+  const handleTryExample = () => { setAnnualIncome('150000'); setBusinessExp('15000'); setBillableHrs('1500'); setProfitMargin('20'); setCalculated(true); };
   const handleCalculate = () => {
     if (income > 0 && hrs > 0) {
       setCalculated(true);
@@ -60,7 +60,7 @@ export default function ConsultantFeeCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="annualIncome" type="number" step="any" min="0" placeholder="150000" className="pl-7"
-                value={annualIncome} onChange={(e) => { setAnnualIncome(e.target.value); setCalculated(false); }} />
+                value={annualIncome} onChange={(e) => { setAnnualIncome(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -68,7 +68,7 @@ export default function ConsultantFeeCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="businessExp" type="number" step="any" min="0" placeholder="15000" className="pl-7"
-                value={businessExp} onChange={(e) => { setBusinessExp(e.target.value); setCalculated(false); }} />
+                value={businessExp} onChange={(e) => { setBusinessExp(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -76,7 +76,7 @@ export default function ConsultantFeeCalculator() {
             <div className="relative">
               
               <Input id="billableHrs" type="number" step="any" min="0" placeholder="1500"
-                value={billableHrs} onChange={(e) => { setBillableHrs(e.target.value); setCalculated(false); }} />
+                value={billableHrs} onChange={(e) => { setBillableHrs(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -84,7 +84,7 @@ export default function ConsultantFeeCalculator() {
             <div className="relative">
               
               <Input id="profitMargin" type="number" step="any" min="0" placeholder="20"
-                value={profitMargin} onChange={(e) => { setProfitMargin(e.target.value); setCalculated(false); }} />
+                value={profitMargin} onChange={(e) => { setProfitMargin(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -107,9 +107,9 @@ export default function ConsultantFeeCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Consultant Fees</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(hourlyRate)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Daily rate: ${formatCurrency(dailyRate)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Weekly project: ${formatCurrency(projectRate)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Half-time retainer: ${formatCurrency(retainer)}/mo`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Daily rate: ${formatCurrency(dailyRate)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Weekly project: ${formatCurrency(projectRate)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Half-time retainer: ${formatCurrency(retainer)}/mo`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

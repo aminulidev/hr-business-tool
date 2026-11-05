@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { income: number; wh: number; off: number; workWeeks: number; annualHours: number; hourlyValue: number; minuteValue: number; dailyValue: number; label: string; }
 
 export default function TimeValueCalculator() {
-  const [annualIncome, setAnnualIncome] = useState('');
-  const [workHours, setWorkHours] = useState('');
-  const [weeksOff, setWeeksOff] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [annualIncome, setAnnualIncome] = useState('75000');
+  const [workHours, setWorkHours] = useState('40');
+  const [weeksOff, setWeeksOff] = useState('4');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualIncome: string; workHours: string; weeksOff: string }>('time-value-calculator');
@@ -33,7 +33,7 @@ export default function TimeValueCalculator() {
   const minuteValue = hourlyValue / 60;
   const dailyValue = hourlyValue * 8;
 
-  const handleTryExample = () => { setAnnualIncome('75000'); setWorkHours('40'); setWeeksOff('4'); setCalculated(false); };
+  const handleTryExample = () => { setAnnualIncome('75000'); setWorkHours('40'); setWeeksOff('4'); setCalculated(true); };
   const handleCalculate = () => {
     if (income > 0 && wh > 0) {
       setCalculated(true);
@@ -58,7 +58,7 @@ export default function TimeValueCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="annualIncome" type="number" step="any" min="0" placeholder="75000" className="pl-7"
-                value={annualIncome} onChange={(e) => { setAnnualIncome(e.target.value); setCalculated(false); }} />
+                value={annualIncome} onChange={(e) => { setAnnualIncome(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function TimeValueCalculator() {
             <div className="relative">
               
               <Input id="workHours" type="number" step="any" min="0" placeholder="40"
-                value={workHours} onChange={(e) => { setWorkHours(e.target.value); setCalculated(false); }} />
+                value={workHours} onChange={(e) => { setWorkHours(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function TimeValueCalculator() {
             <div className="relative">
               
               <Input id="weeksOff" type="number" step="any" min="0" placeholder="4"
-                value={weeksOff} onChange={(e) => { setWeeksOff(e.target.value); setCalculated(false); }} />
+                value={weeksOff} onChange={(e) => { setWeeksOff(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -97,9 +97,9 @@ export default function TimeValueCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Value of Your Time</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(hourlyValue) + "/hr"}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Daily value: ${formatCurrency(dailyValue)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Per minute: ${formatCurrency(minuteValue)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`${annualHours}h/year`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Daily value: ${formatCurrency(dailyValue)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Per minute: ${formatCurrency(minuteValue)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`${annualHours}h/year`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -110,7 +110,7 @@ export default function TimeValueCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Annual Hours</p>
-                    <p className={`text-lg font-bold`}>{`{annualHours}h`}</p>
+                    <p className={`text-lg font-bold`}>{`${annualHours}h`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Hourly Value</p>

@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { td: number; tc: number; difference: number; isBalanced: boolean; label: string; }
 
 export default function TrialBalanceCalculator() {
-  const [totalDebits, setTotalDebits] = useState('');
-  const [totalCredits, setTotalCredits] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [totalDebits, setTotalDebits] = useState('500000');
+  const [totalCredits, setTotalCredits] = useState('500000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ totalDebits: string; totalCredits: string }>('trial-balance-calculator');
@@ -29,7 +29,7 @@ export default function TrialBalanceCalculator() {
   const isBalanced = Math.abs(difference) < 0.01;
   const debitPct = (td + tc) > 0 ? td / (td + tc) * 100 : 0;
 
-  const handleTryExample = () => { setTotalDebits('500000'); setTotalCredits('500000'); setCalculated(false); };
+  const handleTryExample = () => { setTotalDebits('500000'); setTotalCredits('500000'); setCalculated(true); };
   const handleCalculate = () => {
     if (td > 0 || tc > 0) {
       setCalculated(true);
@@ -54,7 +54,7 @@ export default function TrialBalanceCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="totalDebits" type="number" step="any" min="0" placeholder="500000" className="pl-7"
-                value={totalDebits} onChange={(e) => { setTotalDebits(e.target.value); setCalculated(false); }} />
+                value={totalDebits} onChange={(e) => { setTotalDebits(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -62,7 +62,7 @@ export default function TrialBalanceCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="totalCredits" type="number" step="any" min="0" placeholder="500000" className="pl-7"
-                value={totalCredits} onChange={(e) => { setTotalCredits(e.target.value); setCalculated(false); }} />
+                value={totalCredits} onChange={(e) => { setTotalCredits(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -85,9 +85,9 @@ export default function TrialBalanceCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Trial Balance Status</p>
                 <p className="text-4xl font-bold text-emerald-600">{isBalanced ? 'Balanced' : 'Unbalanced'}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Debits: ${formatCurrency(td)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Credits: ${formatCurrency(tc)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{isBalanced ? "Trial balance is balanced" : "Difference: ${formatCurrency(difference)}"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Debits: ${formatCurrency(td)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Credits: ${formatCurrency(tc)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{isBalanced ? "Trial balance is balanced" : "Difference: ${formatCurrency(difference)}"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

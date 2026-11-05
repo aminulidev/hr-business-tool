@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { subs: number; avg: number; mrr: number; arr: number; dailyMRR: number; label: string; }
 
 export default function MrrCalculator() {
-  const [activeSubs, setActiveSubs] = useState('');
-  const [avgMonthly, setAvgMonthly] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [activeSubs, setActiveSubs] = useState('500');
+  const [avgMonthly, setAvgMonthly] = useState('100');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ activeSubs: string; avgMonthly: string }>('mrr-calculator');
@@ -29,7 +29,7 @@ export default function MrrCalculator() {
   const arr = mrr * 12;
   const dailyMRR = mrr / 30;
 
-  const handleTryExample = () => { setActiveSubs('500'); setAvgMonthly('100'); setCalculated(false); };
+  const handleTryExample = () => { setActiveSubs('500'); setAvgMonthly('100'); setCalculated(true); };
   const handleCalculate = () => {
     if (subs > 0 && avg > 0) {
       setCalculated(true);
@@ -54,7 +54,7 @@ export default function MrrCalculator() {
             <div className="relative">
               
               <Input id="activeSubs" type="number" step="any" min="0" placeholder="500"
-                value={activeSubs} onChange={(e) => { setActiveSubs(e.target.value); setCalculated(false); }} />
+                value={activeSubs} onChange={(e) => { setActiveSubs(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -62,7 +62,7 @@ export default function MrrCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="avgMonthly" type="number" step="any" min="0" placeholder="100" className="pl-7"
-                value={avgMonthly} onChange={(e) => { setAvgMonthly(e.target.value); setCalculated(false); }} />
+                value={avgMonthly} onChange={(e) => { setAvgMonthly(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -85,9 +85,9 @@ export default function MrrCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Monthly Recurring Revenue</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(mrr)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`ARR: ${formatCurrency(arr)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Daily MRR: ${formatCurrency(dailyMRR)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`${subs} active subscriptions`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`ARR: ${formatCurrency(arr)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Daily MRR: ${formatCurrency(dailyMRR)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`${subs} active subscriptions`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -98,7 +98,7 @@ export default function MrrCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Subscriptions</p>
-                    <p className={`text-lg font-bold`}>{`{subs}`}</p>
+                    <p className={`text-lg font-bold`}>{`${subs}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Avg Subscription</p>

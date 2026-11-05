@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { spend: number; rev: number; roas: number; roasPct: number; profit: number; label: string; }
 
 export default function RoasCalculator() {
-  const [adSpend, setAdSpend] = useState('');
-  const [adRevenue, setAdRevenue] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [adSpend, setAdSpend] = useState('5000');
+  const [adRevenue, setAdRevenue] = useState('25000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ adSpend: string; adRevenue: string }>('roas-calculator');
@@ -29,7 +29,7 @@ export default function RoasCalculator() {
   const roasPct = roas * 100;
   const profit = rev - spend;
 
-  const handleTryExample = () => { setAdSpend('5000'); setAdRevenue('25000'); setCalculated(false); };
+  const handleTryExample = () => { setAdSpend('5000'); setAdRevenue('25000'); setCalculated(true); };
   const handleCalculate = () => {
     if (spend > 0) {
       setCalculated(true);
@@ -54,7 +54,7 @@ export default function RoasCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="adSpend" type="number" step="any" min="0" placeholder="5000" className="pl-7"
-                value={adSpend} onChange={(e) => { setAdSpend(e.target.value); setCalculated(false); }} />
+                value={adSpend} onChange={(e) => { setAdSpend(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -62,7 +62,7 @@ export default function RoasCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="adRevenue" type="number" step="any" min="0" placeholder="25000" className="pl-7"
-                value={adRevenue} onChange={(e) => { setAdRevenue(e.target.value); setCalculated(false); }} />
+                value={adRevenue} onChange={(e) => { setAdRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -83,11 +83,11 @@ export default function RoasCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Return on Ad Spend (ROAS)</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{roas.toFixed(2)}x ({roasPct.toFixed(0)}%)`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${roas.toFixed(2)}x ({roasPct.toFixed(0)}%)`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Revenue: ${formatCurrency(rev)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Spend: ${formatCurrency(spend)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{roas > 4 ? "Strong" : roas > 3 ? "Healthy" : roas > 1 ? "Marginal" : "Loss"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Revenue: ${formatCurrency(rev)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Spend: ${formatCurrency(spend)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{roas > 4 ? "Strong" : roas > 3 ? "Healthy" : roas > 1 ? "Marginal" : "Loss"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -106,7 +106,7 @@ export default function RoasCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">ROAS</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{roas.toFixed(2)}x`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${roas.toFixed(2)}x`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Profit</p>

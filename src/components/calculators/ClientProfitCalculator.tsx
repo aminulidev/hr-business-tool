@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { rev: number; lh: number; lr: number; sub: number; sw: number; laborCost: number; totalCost: number; profit: number; margin: number; effectiveRate: number; label: string; }
 
 export default function ClientProfitCalculator() {
-  const [clientRevenue, setClientRevenue] = useState('');
-  const [laborHours, setLaborHours] = useState('');
-  const [laborRate, setLaborRate] = useState('');
-  const [subcontractor, setSubcontractor] = useState('');
-  const [software, setSoftware] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [clientRevenue, setClientRevenue] = useState('5000');
+  const [laborHours, setLaborHours] = useState('30');
+  const [laborRate, setLaborRate] = useState('40');
+  const [subcontractor, setSubcontractor] = useState('500');
+  const [software, setSoftware] = useState('200');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ clientRevenue: string; laborHours: string; laborRate: string; subcontractor: string; software: string }>('client-profit-calculator');
@@ -37,7 +37,7 @@ export default function ClientProfitCalculator() {
   const margin = rev > 0 ? (profit / rev) * 100 : 0;
   const effectiveRate = lh > 0 ? rev / lh : 0;
 
-  const handleTryExample = () => { setClientRevenue('5000'); setLaborHours('30'); setLaborRate('40'); setSubcontractor('500'); setSoftware('200'); setCalculated(false); };
+  const handleTryExample = () => { setClientRevenue('5000'); setLaborHours('30'); setLaborRate('40'); setSubcontractor('500'); setSoftware('200'); setCalculated(true); };
   const handleCalculate = () => {
     if (rev > 0) {
       setCalculated(true);
@@ -62,7 +62,7 @@ export default function ClientProfitCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="clientRevenue" type="number" step="any" min="0" placeholder="5000" className="pl-7"
-                value={clientRevenue} onChange={(e) => { setClientRevenue(e.target.value); setCalculated(false); }} />
+                value={clientRevenue} onChange={(e) => { setClientRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -70,7 +70,7 @@ export default function ClientProfitCalculator() {
             <div className="relative">
               
               <Input id="laborHours" type="number" step="any" min="0" placeholder="30"
-                value={laborHours} onChange={(e) => { setLaborHours(e.target.value); setCalculated(false); }} />
+                value={laborHours} onChange={(e) => { setLaborHours(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -78,7 +78,7 @@ export default function ClientProfitCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="laborRate" type="number" step="any" min="0" placeholder="40" className="pl-7"
-                value={laborRate} onChange={(e) => { setLaborRate(e.target.value); setCalculated(false); }} />
+                value={laborRate} onChange={(e) => { setLaborRate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -86,7 +86,7 @@ export default function ClientProfitCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="subcontractor" type="number" step="any" min="0" placeholder="500" className="pl-7"
-                value={subcontractor} onChange={(e) => { setSubcontractor(e.target.value); setCalculated(false); }} />
+                value={subcontractor} onChange={(e) => { setSubcontractor(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -94,7 +94,7 @@ export default function ClientProfitCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="software" type="number" step="any" min="0" placeholder="200" className="pl-7"
-                value={software} onChange={(e) => { setSoftware(e.target.value); setCalculated(false); }} />
+                value={software} onChange={(e) => { setSoftware(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -117,9 +117,9 @@ export default function ClientProfitCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Client Profit</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(profit)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Margin: ${margin.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Profit/hour: ${formatCurrency(effectiveRate)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Revenue: ${formatCurrency(rev)}/mo`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Margin: ${margin.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Profit/hour: ${formatCurrency(effectiveRate)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Revenue: ${formatCurrency(rev)}/mo`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

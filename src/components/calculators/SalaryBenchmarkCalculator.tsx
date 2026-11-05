@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { salary: number; mP25: number; mP50: number; mP75: number; mP90: number; vsP50: number; vsP75: number; percentile: number; label: string; }
 
 export default function SalaryBenchmarkCalculator() {
-  const [employeeSalary, setEmployeeSalary] = useState('');
-  const [p25, setP25] = useState('');
-  const [p50, setP50] = useState('');
-  const [p75, setP75] = useState('');
-  const [p90, setP90] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [employeeSalary, setEmployeeSalary] = useState('85000');
+  const [p25, setP25] = useState('70000');
+  const [p50, setP50] = useState('85000');
+  const [p75, setP75] = useState('100000');
+  const [p90, setP90] = useState('115000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ employeeSalary: string; p25: string; p50: string; p75: string; p90: string }>('salary-benchmark-calculator');
@@ -36,7 +36,7 @@ export default function SalaryBenchmarkCalculator() {
   const vsP75 = mP75 > 0 ? (salary / mP75) * 100 : 0;
   const percentile = salary <= mP25 ? 25 : salary <= mP50 ? 50 : salary <= mP75 ? 75 : salary <= mP90 ? 90 : 95;
 
-  const handleTryExample = () => { setEmployeeSalary('85000'); setP25('70000'); setP50('85000'); setP75('100000'); setP90('115000'); setCalculated(false); };
+  const handleTryExample = () => { setEmployeeSalary('85000'); setP25('70000'); setP50('85000'); setP75('100000'); setP90('115000'); setCalculated(true); };
   const handleCalculate = () => {
     if (salary > 0 && mP50 > 0) {
       setCalculated(true);
@@ -61,7 +61,7 @@ export default function SalaryBenchmarkCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="employeeSalary" type="number" step="any" min="0" placeholder="85000" className="pl-7"
-                value={employeeSalary} onChange={(e) => { setEmployeeSalary(e.target.value); setCalculated(false); }} />
+                value={employeeSalary} onChange={(e) => { setEmployeeSalary(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -69,7 +69,7 @@ export default function SalaryBenchmarkCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="p25" type="number" step="any" min="0" placeholder="70000" className="pl-7"
-                value={p25} onChange={(e) => { setP25(e.target.value); setCalculated(false); }} />
+                value={p25} onChange={(e) => { setP25(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -77,7 +77,7 @@ export default function SalaryBenchmarkCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="p50" type="number" step="any" min="0" placeholder="85000" className="pl-7"
-                value={p50} onChange={(e) => { setP50(e.target.value); setCalculated(false); }} />
+                value={p50} onChange={(e) => { setP50(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -85,7 +85,7 @@ export default function SalaryBenchmarkCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="p75" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={p75} onChange={(e) => { setP75(e.target.value); setCalculated(false); }} />
+                value={p75} onChange={(e) => { setP75(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -93,7 +93,7 @@ export default function SalaryBenchmarkCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="p90" type="number" step="any" min="0" placeholder="115000" className="pl-7"
-                value={p90} onChange={(e) => { setP90(e.target.value); setCalculated(false); }} />
+                value={p90} onChange={(e) => { setP90(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -114,11 +114,11 @@ export default function SalaryBenchmarkCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Salary vs Market</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{vsP50.toFixed(0)}% of median`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${vsP50.toFixed(0)}% of median`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Estimated percentile: ${percentile}th`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`vs P75: ${vsP75.toFixed(0)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Target: 90-110% of median'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Estimated percentile: ${percentile}th`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`vs P75: ${vsP75.toFixed(0)}%`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Target: 90-110% of median'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -137,11 +137,11 @@ export default function SalaryBenchmarkCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">vs Median</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{vsP50.toFixed(0)}%`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${vsP50.toFixed(0)}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Percentile</p>
-                    <p className={`text-lg font-bold`}>{`{percentile}th`}</p>
+                    <p className={`text-lg font-bold`}>{`${percentile}th`}</p>
                   </div>
               </div>
 

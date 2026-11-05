@@ -24,11 +24,11 @@ const INDUSTRY_BENCHMARKS = [
 ];
 
 export default function UtilizationRateCalculator() {
-  const [billableHours, setBillableHours] = useState('');
+  const [billableHours, setBillableHours] = useState('1500');
   const [totalAvailable, setTotalAvailable] = useState('2080');
-  const [hourlyRate, setHourlyRate] = useState('');
+  const [hourlyRate, setHourlyRate] = useState('150');
   const [industry, setIndustry] = useState('Consulting');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<UtilizationSnapshot | null>(null);
   const [compareB, setCompareB] = useState<UtilizationSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ billableHours: string; totalAvailable: string; hourlyRate: string; industry: string }>('utilization-rate-calculator');
@@ -41,7 +41,7 @@ export default function UtilizationRateCalculator() {
   const benchmark = INDUSTRY_BENCHMARKS.find((i) => i.industry === industry)?.target || 75;
   const gap = utilization - benchmark;
 
-  const handleTryExample = () => { setBillableHours('1500'); setTotalAvailable('2080'); setHourlyRate('150'); setIndustry('Consulting'); setCalculated(false); };
+  const handleTryExample = () => { setBillableHours('1500'); setTotalAvailable('2080'); setHourlyRate('150'); setIndustry('Consulting'); setCalculated(true); };
   const handleCalculate = () => {
     if (ta > 0 && bh > 0) {
       setCalculated(true);
@@ -69,13 +69,13 @@ export default function UtilizationRateCalculator() {
           <div className="space-y-2">
             <Label htmlFor="ur-billable">Billable Hours (period)</Label>
             <Input id="ur-billable" type="number" step="1" min="0" placeholder="1500" value={billableHours}
-              onChange={(e) => { setBillableHours(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setBillableHours(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Hours billed to clients in the period.</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="ur-total">Total Available Hours</Label>
             <Input id="ur-total" type="number" step="1" min="0" placeholder="2080" value={totalAvailable}
-              onChange={(e) => { setTotalAvailable(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setTotalAvailable(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Full-year = 2,080h (40h × 52w). Subtract PTO/holidays.</p>
           </div>
           <div className="space-y-2">
@@ -83,12 +83,12 @@ export default function UtilizationRateCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="ur-rate" type="number" step="5" min="0" placeholder="150" value={hourlyRate}
-                onChange={(e) => { setHourlyRate(e.target.value); setCalculated(false); }} className="pl-7" />
+                onChange={(e) => { setHourlyRate(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="ur-industry">Industry Benchmark</Label>
-            <select id="ur-industry" value={industry} onChange={(e) => { setIndustry(e.target.value); setCalculated(false); }}
+            <select id="ur-industry" value={industry} onChange={(e) => { setIndustry(e.target.value); setCalculated(true); }}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
               {INDUSTRY_BENCHMARKS.map((b) => <option key={b.industry} value={b.industry}>{b.industry} ({b.target}% target)</option>)}
             </select>

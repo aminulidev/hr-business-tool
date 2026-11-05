@@ -16,16 +16,16 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { rev: number; ni: number; currentRatio: number; quickRatio: number; debtRatio: number; interestCov: number; netMargin: number; roa: number; roe: number; assetTurn: number; label: string; }
 
 export default function FinancialRatioCalculator() {
-  const [revenue, setRevenue] = useState('');
-  const [netIncome, setNetIncome] = useState('');
-  const [currentAssets, setCurrentAssets] = useState('');
-  const [currentLiab, setCurrentLiab] = useState('');
-  const [inventory, setInventory] = useState('');
-  const [totalAssets, setTotalAssets] = useState('');
-  const [totalLiab, setTotalLiab] = useState('');
-  const [ebit, setEbit] = useState('');
-  const [interest, setInterest] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [revenue, setRevenue] = useState('1000000');
+  const [netIncome, setNetIncome] = useState('100000');
+  const [currentAssets, setCurrentAssets] = useState('400000');
+  const [currentLiab, setCurrentLiab] = useState('200000');
+  const [inventory, setInventory] = useState('100000');
+  const [totalAssets, setTotalAssets] = useState('800000');
+  const [totalLiab, setTotalLiab] = useState('400000');
+  const [ebit, setEbit] = useState('150000');
+  const [interest, setInterest] = useState('30000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ revenue: string; netIncome: string; currentAssets: string; currentLiab: string; inventory: string; totalAssets: string; totalLiab: string; ebit: string; interest: string }>('financial-ratio-calculator');
@@ -49,7 +49,7 @@ export default function FinancialRatioCalculator() {
   const roe = equity > 0 ? (ni / equity) * 100 : 0;
   const assetTurn = ta > 0 ? rev / ta : 0;
 
-  const handleTryExample = () => { setRevenue('1000000'); setNetIncome('100000'); setCurrentAssets('400000'); setCurrentLiab('200000'); setInventory('100000'); setTotalAssets('800000'); setTotalLiab('400000'); setEbit('150000'); setInterest('30000'); setCalculated(false); };
+  const handleTryExample = () => { setRevenue('1000000'); setNetIncome('100000'); setCurrentAssets('400000'); setCurrentLiab('200000'); setInventory('100000'); setTotalAssets('800000'); setTotalLiab('400000'); setEbit('150000'); setInterest('30000'); setCalculated(true); };
   const handleCalculate = () => {
     if (rev > 0) {
       setCalculated(true);
@@ -74,7 +74,7 @@ export default function FinancialRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="revenue" type="number" step="any" min="0" placeholder="1000000" className="pl-7"
-                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(false); }} />
+                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -82,7 +82,7 @@ export default function FinancialRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="netIncome" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={netIncome} onChange={(e) => { setNetIncome(e.target.value); setCalculated(false); }} />
+                value={netIncome} onChange={(e) => { setNetIncome(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -90,7 +90,7 @@ export default function FinancialRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="currentAssets" type="number" step="any" min="0" placeholder="400000" className="pl-7"
-                value={currentAssets} onChange={(e) => { setCurrentAssets(e.target.value); setCalculated(false); }} />
+                value={currentAssets} onChange={(e) => { setCurrentAssets(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -98,7 +98,7 @@ export default function FinancialRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="currentLiab" type="number" step="any" min="0" placeholder="200000" className="pl-7"
-                value={currentLiab} onChange={(e) => { setCurrentLiab(e.target.value); setCalculated(false); }} />
+                value={currentLiab} onChange={(e) => { setCurrentLiab(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -106,7 +106,7 @@ export default function FinancialRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="inventory" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={inventory} onChange={(e) => { setInventory(e.target.value); setCalculated(false); }} />
+                value={inventory} onChange={(e) => { setInventory(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -114,7 +114,7 @@ export default function FinancialRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="totalAssets" type="number" step="any" min="0" placeholder="800000" className="pl-7"
-                value={totalAssets} onChange={(e) => { setTotalAssets(e.target.value); setCalculated(false); }} />
+                value={totalAssets} onChange={(e) => { setTotalAssets(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -122,7 +122,7 @@ export default function FinancialRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="totalLiab" type="number" step="any" min="0" placeholder="400000" className="pl-7"
-                value={totalLiab} onChange={(e) => { setTotalLiab(e.target.value); setCalculated(false); }} />
+                value={totalLiab} onChange={(e) => { setTotalLiab(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -130,7 +130,7 @@ export default function FinancialRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="ebit" type="number" step="any" min="0" placeholder="150000" className="pl-7"
-                value={ebit} onChange={(e) => { setEbit(e.target.value); setCalculated(false); }} />
+                value={ebit} onChange={(e) => { setEbit(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -138,7 +138,7 @@ export default function FinancialRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="interest" type="number" step="any" min="0" placeholder="30000" className="pl-7"
-                value={interest} onChange={(e) => { setInterest(e.target.value); setCalculated(false); }} />
+                value={interest} onChange={(e) => { setInterest(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -161,9 +161,9 @@ export default function FinancialRatioCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Key Financial Ratios</p>
                 <p className="text-4xl font-bold text-emerald-600">{`${currentRatio.toFixed(2)}x CR`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Net margin: ${netMargin.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`ROE: ${roe.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Debt ratio: ${debtRatio.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Net margin: ${netMargin.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`ROE: ${roe.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Debt ratio: ${debtRatio.toFixed(1)}%`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -174,19 +174,19 @@ export default function FinancialRatioCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Current Ratio</p>
-                    <p className={`text-lg font-bold`}>{`{currentRatio.toFixed(2)}x`}</p>
+                    <p className={`text-lg font-bold`}>{`${currentRatio.toFixed(2)}x`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Quick Ratio</p>
-                    <p className={`text-lg font-bold`}>{`{quickRatio.toFixed(2)}x`}</p>
+                    <p className={`text-lg font-bold`}>{`${quickRatio.toFixed(2)}x`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Net Margin</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{netMargin.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${netMargin.toFixed(1)}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">ROE</p>
-                    <p className={`text-lg font-bold`}>{`{roe.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${roe.toFixed(1)}%`}</p>
                   </div>
               </div>
 

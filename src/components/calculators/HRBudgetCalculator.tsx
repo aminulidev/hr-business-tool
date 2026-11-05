@@ -16,13 +16,13 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { recr: number; train: number; ben: number; staff: number; tech: number; totalBudget: number; hrPctRev: number; costPerEmp: number; label: string; }
 
 export default function HRBudgetCalculator() {
-  const [recruitingCost, setRecruitingCost] = useState('');
-  const [trainingCost, setTrainingCost] = useState('');
-  const [benefitsCost, setBenefitsCost] = useState('');
-  const [hrStaffCost, setHrStaffCost] = useState('');
-  const [hrTechnology, setHrTechnology] = useState('');
-  const [totalRevenue, setTotalRevenue] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [recruitingCost, setRecruitingCost] = useState('50000');
+  const [trainingCost, setTrainingCost] = useState('75000');
+  const [benefitsCost, setBenefitsCost] = useState('30000');
+  const [hrStaffCost, setHrStaffCost] = useState('400000');
+  const [hrTechnology, setHrTechnology] = useState('25000');
+  const [totalRevenue, setTotalRevenue] = useState('10000000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ recruitingCost: string; trainingCost: string; benefitsCost: string; hrStaffCost: string; hrTechnology: string; totalRevenue: string }>('hr-budget-calculator');
@@ -38,7 +38,7 @@ export default function HRBudgetCalculator() {
   const employeeCount = 350;
   const costPerEmp = employeeCount > 0 ? totalBudget / employeeCount : 0;
 
-  const handleTryExample = () => { setRecruitingCost('50000'); setTrainingCost('75000'); setBenefitsCost('30000'); setHrStaffCost('400000'); setHrTechnology('25000'); setTotalRevenue('10000000'); setCalculated(false); };
+  const handleTryExample = () => { setRecruitingCost('50000'); setTrainingCost('75000'); setBenefitsCost('30000'); setHrStaffCost('400000'); setHrTechnology('25000'); setTotalRevenue('10000000'); setCalculated(true); };
   const handleCalculate = () => {
     if (totalBudget > 0) {
       setCalculated(true);
@@ -63,7 +63,7 @@ export default function HRBudgetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="recruitingCost" type="number" step="any" min="0" placeholder="50000" className="pl-7"
-                value={recruitingCost} onChange={(e) => { setRecruitingCost(e.target.value); setCalculated(false); }} />
+                value={recruitingCost} onChange={(e) => { setRecruitingCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -71,7 +71,7 @@ export default function HRBudgetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="trainingCost" type="number" step="any" min="0" placeholder="75000" className="pl-7"
-                value={trainingCost} onChange={(e) => { setTrainingCost(e.target.value); setCalculated(false); }} />
+                value={trainingCost} onChange={(e) => { setTrainingCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -79,7 +79,7 @@ export default function HRBudgetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="benefitsCost" type="number" step="any" min="0" placeholder="30000" className="pl-7"
-                value={benefitsCost} onChange={(e) => { setBenefitsCost(e.target.value); setCalculated(false); }} />
+                value={benefitsCost} onChange={(e) => { setBenefitsCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -87,7 +87,7 @@ export default function HRBudgetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="hrStaffCost" type="number" step="any" min="0" placeholder="400000" className="pl-7"
-                value={hrStaffCost} onChange={(e) => { setHrStaffCost(e.target.value); setCalculated(false); }} />
+                value={hrStaffCost} onChange={(e) => { setHrStaffCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -95,7 +95,7 @@ export default function HRBudgetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="hrTechnology" type="number" step="any" min="0" placeholder="25000" className="pl-7"
-                value={hrTechnology} onChange={(e) => { setHrTechnology(e.target.value); setCalculated(false); }} />
+                value={hrTechnology} onChange={(e) => { setHrTechnology(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -103,7 +103,7 @@ export default function HRBudgetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="totalRevenue" type="number" step="any" min="0" placeholder="10000000" className="pl-7"
-                value={totalRevenue} onChange={(e) => { setTotalRevenue(e.target.value); setCalculated(false); }} />
+                value={totalRevenue} onChange={(e) => { setTotalRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -126,9 +126,9 @@ export default function HRBudgetCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Total HR Budget</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalBudget)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`HR as % of revenue: ${hrPctRev.toFixed(2)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Cost per employee: ${formatCurrency(costPerEmp)}`}</Badge>
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{'Benchmark: 1-2.5% of revenue'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`HR as % of revenue: ${hrPctRev.toFixed(2)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Cost per employee: ${formatCurrency(costPerEmp)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{'Benchmark: 1-2.5% of revenue'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

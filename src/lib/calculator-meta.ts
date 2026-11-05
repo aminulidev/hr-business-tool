@@ -98,6 +98,16 @@ export type CalculatorSlug =
   | 'florida-hourly-paycheck-calculator'
   | 'new-york-hourly-paycheck-calculator'
   | 'illinois-hourly-paycheck-calculator'
+  | 'washington-hourly-paycheck-calculator'
+  | 'tennessee-hourly-paycheck-calculator'
+  | 'nevada-hourly-paycheck-calculator'
+  | 'pennsylvania-hourly-paycheck-calculator'
+  | 'north-carolina-hourly-paycheck-calculator'
+  | 'georgia-hourly-paycheck-calculator'
+  | 'michigan-hourly-paycheck-calculator'
+  | 'indiana-hourly-paycheck-calculator'
+  | 'arizona-hourly-paycheck-calculator'
+  | 'colorado-hourly-paycheck-calculator'
   | 'severance-pay-calculator'
   | 'workers-comp-calculator'
   | 'fica-tax-calculator'
@@ -389,11 +399,10 @@ export const calculators: CalculatorMeta[] = [
     slug: 'commission-calculator',
     status: 'published',
     title: 'Sales Commission Calculator',
-    metaTitle: 'Free Sales Commission Calculator 2026 — Tiered, Split & Quota Plans',
+    metaTitle: 'Churn Rate Calculator (2026) — Customer Logo & MRR Revenue Churn',
     shortDescription:
       'Calculate take-home commission from flat rates, tiered structures, and quota-based plans with deductions and visual charts.',
-    metaDescription:
-      'Free sales commission calculator 2026. Calculate earnings from flat, tiered, quota attainment, and split-commission plans. Includes deductions, accelerators, and visual earnings charts.',
+    metaDescription: 'Free SaaS & Subscription Churn Rate Calculator: calculate monthly and compound annual customer logo churn, gross MRR revenue churn, and retention rate.',
     keywords: [
       'commission calculator',
       'sales commission calculator',
@@ -1266,6 +1275,226 @@ export const calculators: CalculatorMeta[] = [
     category: 'Payroll & Taxes',
     path: '/calculators/illinois-hourly-paycheck-calculator',
   },
+  {
+    slug: 'washington-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Washington Hourly Paycheck Calculator',
+    metaTitle: 'Washington Hourly Paycheck Calculator 2026 — No State Tax + WA Cares & PFML',
+    shortDescription:
+      'Take-home pay for hourly workers in Washington using 2026 federal withholding, 0% state income tax, WA PFML, and WA Cares.',
+    metaDescription:
+      'Free Washington hourly paycheck calculator for 2026. Enter your wage ($17.13+ min wage) and hours to see take-home pay with 0% state income tax, WA Paid Family Leave (0.57%), and WA Cares (0.58%).',
+    keywords: [
+      'washington hourly paycheck calculator',
+      'washington paycheck calculator',
+      'wa hourly paycheck calculator',
+      'seattle paycheck calculator',
+      'washington take home pay calculator',
+      'washington paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/washington-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'tennessee-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Tennessee Hourly Paycheck Calculator',
+    metaTitle: 'Tennessee Hourly Paycheck Calculator 2026 — Take-Home Pay (0% State Tax)',
+    shortDescription:
+      'Take-home pay for hourly workers in Tennessee using 2026 federal tax, FICA, and 0% state income tax.',
+    metaDescription:
+      'Free Tennessee hourly paycheck calculator for 2026. Enter your hourly wage and overtime hours to see instant take-home pay with 0% Tennessee state income tax.',
+    keywords: [
+      'tennessee hourly paycheck calculator',
+      'tennessee paycheck calculator',
+      'tn hourly paycheck calculator',
+      'nashville paycheck calculator',
+      'tennessee take home pay calculator',
+      'tennessee paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/tennessee-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'nevada-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Nevada Hourly Paycheck Calculator',
+    metaTitle: 'Nevada Hourly Paycheck Calculator 2026 — Take-Home Pay (0% State Tax)',
+    shortDescription:
+      'Take-home pay for hourly workers in Nevada using 2026 federal tax, FICA, and 0% state income tax ($12.00 min wage).',
+    metaDescription:
+      'Free Nevada hourly paycheck calculator for 2026. Enter your hourly wage and hours to see take-home pay with 0% Nevada state income tax and $12.00 constitutional minimum wage rules.',
+    keywords: [
+      'nevada hourly paycheck calculator',
+      'nevada paycheck calculator',
+      'nv hourly paycheck calculator',
+      'las vegas paycheck calculator',
+      'nevada take home pay calculator',
+      'nevada paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/nevada-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'pennsylvania-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Pennsylvania Hourly Paycheck Calculator',
+    metaTitle: 'Pennsylvania Hourly Paycheck Calculator 2026 — 3.07% State Tax & PA UC',
+    shortDescription:
+      'Take-home pay for hourly workers in Pennsylvania using 2026 federal withholding, 3.07% flat PA state tax, and 0.07% PA UC.',
+    metaDescription:
+      'Free Pennsylvania hourly paycheck calculator for 2026. Calculate take-home pay after federal tax, FICA, 3.07% flat PA state income tax, and 0.07% PA employee unemployment tax.',
+    keywords: [
+      'pennsylvania hourly paycheck calculator',
+      'pennsylvania paycheck calculator',
+      'pa hourly paycheck calculator',
+      'philadelphia paycheck calculator',
+      'pennsylvania take home pay calculator',
+      'pa paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/pennsylvania-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'north-carolina-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'North Carolina Hourly Paycheck Calculator',
+    metaTitle: 'North Carolina Hourly Paycheck Calculator 2026 — 4.25% Flat State Tax',
+    shortDescription:
+      'Take-home pay for hourly workers in North Carolina using 2026 federal withholding and the 4.25% flat NC state tax rate.',
+    metaDescription:
+      'Free North Carolina hourly paycheck calculator for 2026. Enter your hourly wage and hours to see take-home pay after federal tax, FICA, and the 4.25% flat NC state tax ($12,750 standard deduction).',
+    keywords: [
+      'north carolina hourly paycheck calculator',
+      'north carolina paycheck calculator',
+      'nc hourly paycheck calculator',
+      'charlotte paycheck calculator',
+      'north carolina take home pay calculator',
+      'nc paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/north-carolina-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'georgia-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Georgia Hourly Paycheck Calculator',
+    metaTitle: 'Georgia Hourly Paycheck Calculator 2026 — 5.19% Flat State Tax',
+    shortDescription:
+      'Take-home pay for hourly workers in Georgia using 2026 federal withholding and the 5.19% flat Georgia state income tax.',
+    metaDescription:
+      'Free Georgia hourly paycheck calculator for 2026. Calculate net take-home pay after federal tax, FICA, and Georgia 5.19% flat state tax ($12,000 Single / $24,000 Married standard deduction).',
+    keywords: [
+      'georgia hourly paycheck calculator',
+      'georgia paycheck calculator',
+      'ga hourly paycheck calculator',
+      'atlanta paycheck calculator',
+      'georgia take home pay calculator',
+      'georgia paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/georgia-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'michigan-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Michigan Hourly Paycheck Calculator',
+    metaTitle: 'Michigan Hourly Paycheck Calculator 2026 — 4.25% State Tax ($13.73 Min Wage)',
+    shortDescription:
+      'Take-home pay for hourly workers in Michigan using 2026 federal withholding and the 4.25% flat MI state income tax.',
+    metaDescription:
+      'Free Michigan hourly paycheck calculator for 2026. Enter your hourly rate ($13.73+ min wage) and hours to see net take-home pay after federal tax, FICA, and 4.25% flat Michigan tax.',
+    keywords: [
+      'michigan hourly paycheck calculator',
+      'michigan paycheck calculator',
+      'mi hourly paycheck calculator',
+      'detroit paycheck calculator',
+      'michigan take home pay calculator',
+      'michigan paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/michigan-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'indiana-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Indiana Hourly Paycheck Calculator',
+    metaTitle: 'Indiana Hourly Paycheck Calculator 2026 — 2.95% Flat State Tax',
+    shortDescription:
+      'Take-home pay for hourly workers in Indiana using 2026 federal withholding and the reduced 2.95% flat IN state tax rate.',
+    metaDescription:
+      'Free Indiana hourly paycheck calculator for 2026. Calculate net take-home pay after federal tax, FICA, and the 2.95% flat Indiana state income tax.',
+    keywords: [
+      'indiana hourly paycheck calculator',
+      'indiana paycheck calculator',
+      'in hourly paycheck calculator',
+      'indianapolis paycheck calculator',
+      'indiana take home pay calculator',
+      'indiana paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/indiana-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'arizona-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Arizona Hourly Paycheck Calculator',
+    metaTitle: 'Arizona Hourly Paycheck Calculator 2026 — 2.5% Flat Tax ($15.15 Min Wage)',
+    shortDescription:
+      'Take-home pay for hourly workers in Arizona using 2026 federal withholding and the 2.50% flat AZ state income tax.',
+    metaDescription:
+      'Free Arizona hourly paycheck calculator for 2026. Enter your wage ($15.15+ min wage) and hours to see take-home pay after federal tax, FICA, and Arizona 2.5% flat state tax.',
+    keywords: [
+      'arizona hourly paycheck calculator',
+      'arizona paycheck calculator',
+      'az hourly paycheck calculator',
+      'phoenix paycheck calculator',
+      'arizona take home pay calculator',
+      'arizona paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/arizona-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'colorado-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Colorado Hourly Paycheck Calculator',
+    metaTitle: 'Colorado Hourly Paycheck Calculator 2026 — 4.40% Tax & CO FAMLI ($15.16 Min)',
+    shortDescription:
+      'Take-home pay for hourly workers in Colorado using 2026 federal withholding, 4.40% flat CO tax, and 0.45% CO FAMLI.',
+    metaDescription:
+      'Free Colorado hourly paycheck calculator for 2026. Enter your hourly rate ($15.16+ min wage) and hours to see net take-home pay after federal tax, 4.40% CO state tax, and 0.45% CO FAMLI.',
+    keywords: [
+      'colorado hourly paycheck calculator',
+      'colorado paycheck calculator',
+      'co hourly paycheck calculator',
+      'denver paycheck calculator',
+      'colorado take home pay calculator',
+      'colorado paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/colorado-hourly-paycheck-calculator',
+  },
 
   // ── HR Analytics ──
   {
@@ -2107,7 +2336,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'sick-leave-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Sick Leave Calculator',
     metaTitle: 'Free Sick Leave Calculator 2026 — Accrual, Usage & FMLA Tracking',
     shortDescription:
@@ -2134,7 +2363,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'holiday-countdown-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Holiday Countdown Calculator',
     metaTitle: 'Free Holiday Countdown Calculator 2026 — Days Until Next Holiday',
     shortDescription:
@@ -2273,7 +2502,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'clock-out-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Clock Out Calculator',
     metaTitle: 'Free Clock Out Calculator 2026 — Hit Your Target Hours',
     shortDescription:
@@ -2305,7 +2534,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'hours-between-times-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Hours Between Two Times Calculator',
     metaTitle: 'Free Hours Between Two Times Calculator 2026 — Duration Calc',
     shortDescription:
@@ -2360,7 +2589,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'employee-schedule-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Employee Schedule Calculator',
     metaTitle: 'Free Employee Schedule Calculator 2026 — Build Weekly Schedules',
     shortDescription:
@@ -2387,7 +2616,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'shift-rotation-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Shift Rotation Calculator',
     metaTitle: 'Free Shift Rotation Calculator 2026 — 2-2-3, DuPont, Pitman',
     shortDescription:
@@ -2414,7 +2643,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'time-difference-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Time Difference Calculator',
     metaTitle: 'Free Time Difference Calculator 2026 — Between Dates & Times',
     shortDescription:
@@ -2441,7 +2670,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'break-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Break Calculator',
     metaTitle: 'Free Break Calculator 2026 — Meal & Rest Break Compliance',
     shortDescription:
@@ -2554,7 +2783,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'fte-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'FTE Calculator',
     metaTitle: 'Free FTE Calculator 2026 — Full-Time Equivalent Conversion',
     shortDescription:
@@ -2581,7 +2810,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'headcount-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Headcount Calculator',
     metaTitle: 'Free Headcount Calculator 2026 — Track & Project Headcount',
     shortDescription:

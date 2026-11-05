@@ -17,10 +17,10 @@ import { formatPercent } from '@/lib/utils';
 interface AttendanceSnapshot { scheduledDays: number; attendedDays: number; absentDays: number; tardyDays: number; attendanceRate: number; absenceRate: number; label: string; }
 
 export default function AttendanceCalculator() {
-  const [scheduledDays, setScheduledDays] = useState('');
-  const [absentDays, setAbsentDays] = useState('');
-  const [tardyDays, setTardyDays] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [scheduledDays, setScheduledDays] = useState('220');
+  const [absentDays, setAbsentDays] = useState('5');
+  const [tardyDays, setTardyDays] = useState('8');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<AttendanceSnapshot | null>(null);
   const [compareB, setCompareB] = useState<AttendanceSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ scheduledDays: string; absentDays: string; tardyDays: string }>('attendance-calculator');
@@ -33,7 +33,7 @@ export default function AttendanceCalculator() {
   const absenceRate = scheduled > 0 ? (absent / scheduled) * 100 : 0;
   const tardyRate = scheduled > 0 ? (tardy / scheduled) * 100 : 0;
 
-  const handleTryExample = () => { setScheduledDays('220'); setAbsentDays('5'); setTardyDays('8'); setCalculated(false); };
+  const handleTryExample = () => { setScheduledDays('220'); setAbsentDays('5'); setTardyDays('8'); setCalculated(true); };
   const handleCalculate = () => {
     if (scheduled > 0) {
       setCalculated(true);
@@ -59,18 +59,18 @@ export default function AttendanceCalculator() {
           <div className="space-y-2">
             <Label htmlFor="at-sched">Total Scheduled Workdays</Label>
             <Input id="at-sched" type="number" step="1" min="0" placeholder="220" value={scheduledDays}
-              onChange={(e) => { setScheduledDays(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setScheduledDays(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Typical full-year: ~220 workdays after holidays/PTO.</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="at-absent">Days Absent</Label>
             <Input id="at-absent" type="number" step="0.5" min="0" placeholder="5" value={absentDays}
-              onChange={(e) => { setAbsentDays(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setAbsentDays(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="at-tardy">Days Tardy</Label>
             <Input id="at-tardy" type="number" step="0.5" min="0" placeholder="8" value={tardyDays}
-              onChange={(e) => { setTardyDays(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setTardyDays(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Late arrivals (still counts as attended).</p>
           </div>
         </div>

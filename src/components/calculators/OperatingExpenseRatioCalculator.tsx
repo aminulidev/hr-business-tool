@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { opex: number; rev: number; oer: number; operatingIncome: number; operatingMargin: number; label: string; }
 
 export default function OperatingExpenseRatioCalculator() {
-  const [operatingExpenses, setOperatingExpenses] = useState('');
-  const [revenue, setRevenue] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [operatingExpenses, setOperatingExpenses] = useState('300000');
+  const [revenue, setRevenue] = useState('1000000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ operatingExpenses: string; revenue: string }>('operating-expense-ratio-calculator');
@@ -29,7 +29,7 @@ export default function OperatingExpenseRatioCalculator() {
   const operatingIncome = rev - opex;
   const operatingMargin = rev > 0 ? (operatingIncome / rev) * 100 : 0;
 
-  const handleTryExample = () => { setOperatingExpenses('300000'); setRevenue('1000000'); setCalculated(false); };
+  const handleTryExample = () => { setOperatingExpenses('300000'); setRevenue('1000000'); setCalculated(true); };
   const handleCalculate = () => {
     if (rev > 0) {
       setCalculated(true);
@@ -54,7 +54,7 @@ export default function OperatingExpenseRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="operatingExpenses" type="number" step="any" min="0" placeholder="300000" className="pl-7"
-                value={operatingExpenses} onChange={(e) => { setOperatingExpenses(e.target.value); setCalculated(false); }} />
+                value={operatingExpenses} onChange={(e) => { setOperatingExpenses(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -62,7 +62,7 @@ export default function OperatingExpenseRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="revenue" type="number" step="any" min="0" placeholder="1000000" className="pl-7"
-                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(false); }} />
+                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -85,9 +85,9 @@ export default function OperatingExpenseRatioCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Operating Expense Ratio</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(oer)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Operating income: ${formatCurrency(operatingIncome)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Operating margin: ${operatingMargin.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'SaaS 40-60%, Retail 20-30%'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Operating income: ${formatCurrency(operatingIncome)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Operating margin: ${operatingMargin.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'SaaS 40-60%, Retail 20-30%'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -110,7 +110,7 @@ export default function OperatingExpenseRatioCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Op. Margin</p>
-                    <p className={`text-lg font-bold`}>{`{operatingMargin.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${operatingMargin.toFixed(1)}%`}</p>
                   </div>
               </div>
 

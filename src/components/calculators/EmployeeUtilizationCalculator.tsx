@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { prod: number; avail: number; train: number; admin: number; utilization: number; nonProductive: number; nonProdPct: number; idleTime: number; idlePct: number; label: string; }
 
 export default function EmployeeUtilizationCalculator() {
-  const [productiveHours, setProductiveHours] = useState('');
-  const [availableHours, setAvailableHours] = useState('Standard 2,080/yr');
-  const [trainingHours, setTrainingHours] = useState('');
-  const [adminHours, setAdminHours] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [productiveHours, setProductiveHours] = useState('1600');
+  const [availableHours, setAvailableHours] = useState('2080');
+  const [trainingHours, setTrainingHours] = useState('80');
+  const [adminHours, setAdminHours] = useState('160');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ productiveHours: string; availableHours: string; trainingHours: string; adminHours: string }>('employee-utilization-calculator');
@@ -35,7 +35,7 @@ export default function EmployeeUtilizationCalculator() {
   const idleTime = Math.max(0, avail - prod - nonProductive);
   const idlePct = avail > 0 ? (idleTime / avail) * 100 : 0;
 
-  const handleTryExample = () => { setProductiveHours('1600'); setAvailableHours('2080'); setTrainingHours('80'); setAdminHours('160'); setCalculated(false); };
+  const handleTryExample = () => { setProductiveHours('1600'); setAvailableHours('2080'); setTrainingHours('80'); setAdminHours('160'); setCalculated(true); };
   const handleCalculate = () => {
     if (avail > 0) {
       setCalculated(true);
@@ -60,7 +60,7 @@ export default function EmployeeUtilizationCalculator() {
             <div className="relative">
               
               <Input id="productiveHours" type="number" step="any" min="0" placeholder="1600"
-                value={productiveHours} onChange={(e) => { setProductiveHours(e.target.value); setCalculated(false); }} />
+                value={productiveHours} onChange={(e) => { setProductiveHours(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -68,7 +68,7 @@ export default function EmployeeUtilizationCalculator() {
             <div className="relative">
               
               <Input id="availableHours" type="number" step="any" min="0" placeholder="2080"
-                value={availableHours} onChange={(e) => { setAvailableHours(e.target.value); setCalculated(false); }} />
+                value={availableHours} onChange={(e) => { setAvailableHours(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Standard 2,080/yr</p>
           </div>
@@ -77,7 +77,7 @@ export default function EmployeeUtilizationCalculator() {
             <div className="relative">
               
               <Input id="trainingHours" type="number" step="any" min="0" placeholder="80"
-                value={trainingHours} onChange={(e) => { setTrainingHours(e.target.value); setCalculated(false); }} />
+                value={trainingHours} onChange={(e) => { setTrainingHours(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -85,7 +85,7 @@ export default function EmployeeUtilizationCalculator() {
             <div className="relative">
               
               <Input id="adminHours" type="number" step="any" min="0" placeholder="160"
-                value={adminHours} onChange={(e) => { setAdminHours(e.target.value); setCalculated(false); }} />
+                value={adminHours} onChange={(e) => { setAdminHours(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -106,11 +106,11 @@ export default function EmployeeUtilizationCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Employee Utilization Rate</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{utilization.toFixed(1)}%`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${utilization.toFixed(1)}%`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Non-productive: ${nonProdPct.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-red-500/10 border-red-500/30 text-red-600'">{`Idle/unutilized: ${idlePct.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{'Target: 75-85% productive'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Non-productive: ${nonProdPct.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-red-500/10 border-red-500/30 text-red-600">{`Idle/unutilized: ${idlePct.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{'Target: 75-85% productive'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -121,19 +121,19 @@ export default function EmployeeUtilizationCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Productive</p>
-                    <p className={`text-lg font-bold`}>{`{prod}h`}</p>
+                    <p className={`text-lg font-bold`}>{`${prod}h`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Available</p>
-                    <p className={`text-lg font-bold`}>{`{avail}h`}</p>
+                    <p className={`text-lg font-bold`}>{`${avail}h`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Utilization</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{utilization.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${utilization.toFixed(1)}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Idle Time</p>
-                    <p className={`text-lg font-bold`}>{`{idleTime}h`}</p>
+                    <p className={`text-lg font-bold`}>{`${idleTime}h`}</p>
                   </div>
               </div>
 

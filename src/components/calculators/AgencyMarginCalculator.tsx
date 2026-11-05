@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { billing: number; cost: number; marginDollars: number; marginPct: number; markupPct: number; markupMult: number; label: string; }
 
 export default function AgencyMarginCalculator() {
-  const [clientBilling, setClientBilling] = useState('');
-  const [contractorCost, setContractorCost] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [clientBilling, setClientBilling] = useState('150');
+  const [contractorCost, setContractorCost] = useState('75');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ clientBilling: string; contractorCost: string }>('agency-margin-calculator');
@@ -30,7 +30,7 @@ export default function AgencyMarginCalculator() {
   const markupPct = cost > 0 ? (marginDollars / cost) * 100 : 0;
   const markupMult = cost > 0 ? billing / cost : 0;
 
-  const handleTryExample = () => { setClientBilling('150'); setContractorCost('75'); setCalculated(false); };
+  const handleTryExample = () => { setClientBilling('150'); setContractorCost('75'); setCalculated(true); };
   const handleCalculate = () => {
     if (billing > 0 && cost > 0) {
       setCalculated(true);
@@ -55,7 +55,7 @@ export default function AgencyMarginCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="clientBilling" type="number" step="any" min="0" placeholder="150" className="pl-7"
-                value={clientBilling} onChange={(e) => { setClientBilling(e.target.value); setCalculated(false); }} />
+                value={clientBilling} onChange={(e) => { setClientBilling(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -63,7 +63,7 @@ export default function AgencyMarginCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="contractorCost" type="number" step="any" min="0" placeholder="75" className="pl-7"
-                value={contractorCost} onChange={(e) => { setContractorCost(e.target.value); setCalculated(false); }} />
+                value={contractorCost} onChange={(e) => { setContractorCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -86,9 +86,9 @@ export default function AgencyMarginCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Agency Margin</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(marginPct)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Profit: ${formatCurrency(marginDollars)}/hr`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Markup: ${markupPct.toFixed(1)}% (${markupMult.toFixed(2)}x)`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Typical agency margin: 30-50%'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Profit: ${formatCurrency(marginDollars)}/hr`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Markup: ${markupPct.toFixed(1)}% (${markupMult.toFixed(2)}x)`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Typical agency margin: 30-50%'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -111,7 +111,7 @@ export default function AgencyMarginCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Markup</p>
-                    <p className={`text-lg font-bold`}>{`{markupMult.toFixed(2)}x`}</p>
+                    <p className={`text-lg font-bold`}>{`${markupMult.toFixed(2)}x`}</p>
                   </div>
               </div>
 

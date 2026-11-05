@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Clock, Plus, Trash2, DollarSign, Timer, AlertCircle, BarChart as BarChartIcon, Copy } from 'lucide-react';
+import { Clock, Plus, Trash2, DollarSign, Timer, AlertCircle, BarChart as BarChartIcon, Copy, Check, Printer } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -60,13 +60,16 @@ const defaultDays: WorkDay[] = DAY_LABELS.slice(0, 5).map((label) => ({
   id: generateId(),
   label,
   clockIn: '09:00',
-  clockOut: '17:00',
+  clockOut: '17:30',
   lunchBreak: '30',
 }));
 
 export default function TimeCardCalculator() {
   const [days, setDays] = useState<WorkDay[]>(defaultDays);
-  const [hourlyRate, setHourlyRate] = useState('');
+  const [hourlyRate, setHourlyRate] = useState('25');
+  const [employeeName, setEmployeeName] = useState('');
+  const [payPeriodLabel, setPayPeriodLabel] = useState('');
+  const [copied, setCopied] = useState(false);
   const [overtimeThreshold, setOvertimeThreshold] = useState('40');
   const [overtimeMultiplier, setOvertimeMultiplier] = useState('1.5');
   const [rounding, setRounding] = useState('0');
@@ -82,7 +85,7 @@ export default function TimeCardCalculator() {
         id: generateId(),
         label: prev.length < 7 ? label : `Day ${prev.length + 1}`,
         clockIn: '09:00',
-        clockOut: '17:00',
+        clockOut: '17:30',
         lunchBreak: '30',
       },
     ]);
@@ -207,12 +210,70 @@ export default function TimeCardCalculator() {
     });
   };
 
+  useEffect(() => {
+    handleCalculate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [days, hourlyRate, overtimeThreshold, overtimeMultiplier, rounding]);
+
+  const handleCopySummary = () => {
+    if (!result) return;
+    const dailyLines = result.days
+      .map((d) => `  • ${d.label}: ${formatDecimalHours(d.decimalHours)} hrs (In: ${d.clockIn}, Out: ${d.clockOut}, Lunch: ${d.lunchBreak}m)`)
+      .join('\n');
+    const summary = [
+      '--- Weekly Time Card Summary (QuickBizCalc) ---',
+      employeeName ? `Employee: ${employeeName}` : null,
+      payPeriodLabel ? `Pay Period: ${payPeriodLabel}` : null,
+      `Total Hours Worked: ${formatDecimalHours(result.totalDecimalHours)} hrs (${formatHHMM(Math.round(result.totalDecimalHours * 60))})`,
+      `Regular Hours: ${formatDecimalHours(result.totalRegularHours)} hrs`,
+      result.totalOvertimeHours > 0 ? `Overtime Hours: ${formatDecimalHours(result.totalOvertimeHours)} hrs` : null,
+      result.hourlyRate > 0 ? `Gross Pay: ${formatCurrency(result.totalPay)} at ${formatCurrency(result.hourlyRate)}/hr` : null,
+      'Daily Breakdown:',
+      dailyLines,
+      'Calculated at: https://www.quickbizcalc.com/calculators/time-card-calculator',
+    ].filter(Boolean).join('\n');
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(summary);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   const formatCurrency = (value: number): string =>
     value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
   return (
     <div className="w-full">
       <div className="p-4 sm:p-6 space-y-6">
+        {/* Optional Timesheet Header (for Print / Payroll Export) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-xl border border-border/50 bg-muted/20 p-3.5">
+          <div className="space-y-1.5">
+            <Label htmlFor="empNameTimeCard" className="text-xs font-medium text-muted-foreground">
+              Employee Name (optional — for print/export)
+            </Label>
+            <Input
+              id="empNameTimeCard"
+              type="text"
+              placeholder="e.g., Jordan Taylor"
+              value={employeeName}
+              onChange={(e) => setEmployeeName(e.target.value)}
+              className="h-9 text-sm bg-background"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="payPeriodTimeCard" className="text-xs font-medium text-muted-foreground">
+              Pay Period Dates (optional)
+            </Label>
+            <Input
+              id="payPeriodTimeCard"
+              type="text"
+              placeholder="e.g., Nov 2 – Nov 8, 2026"
+              value={payPeriodLabel}
+              onChange={(e) => setPayPeriodLabel(e.target.value)}
+              className="h-9 text-sm bg-background"
+            />
+          </div>
+        </div>
         {/* Work Days */}
         <div className="space-y-3">
           <div className="flex items-center justify-between flex-wrap gap-2">
@@ -424,6 +485,41 @@ export default function TimeCardCalculator() {
               </p>
               <p className="text-xs text-muted-foreground">
                 ({formatHHMM(Math.round(result.totalDecimalHours * 60))} in hours & minutes)
+              </p>
+              {(employeeName || payPeriodLabel) && (
+                <p className="text-xs font-medium text-foreground pt-1">
+                  {employeeName && <span>Employee: {employeeName}</span>}
+                  {employeeName && payPeriodLabel && <span className="mx-2 text-muted-foreground">·</span>}
+                  {payPeriodLabel && <span>Period: {payPeriodLabel}</span>}
+                </p>
+              )}
+              <div className="flex items-center justify-center gap-2 pt-2 flex-wrap print:hidden">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCopySummary}
+                  className="h-7 text-[11px] px-2.5 border-emerald-500/30 bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="h-3 w-3 mr-1" /> Copied Timesheet
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3 w-3 mr-1" /> Copy Summary
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.print()}
+                  className="h-7 text-[11px] px-2.5 border-border hover:bg-muted text-muted-foreground"
+                >
+                  <Printer className="h-3 w-3 mr-1" /> Print Timesheet
+                </Button>
+              </div>
+              <p className="hidden">
               </p>
             </div>
 

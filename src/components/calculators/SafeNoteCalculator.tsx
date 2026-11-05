@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { inv: number; cap: number; disc: number; nrv: number; effectiveValuation: number; ownershipPct: number; label: string; }
 
 export default function SafeNoteCalculator() {
-  const [investment, setInvestment] = useState('');
-  const [valuationCap, setValuationCap] = useState('');
-  const [discountRate, setDiscountRate] = useState('');
-  const [nextRoundValuation, setNextRoundValuation] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [investment, setInvestment] = useState('100000');
+  const [valuationCap, setValuationCap] = useState('5000000');
+  const [discountRate, setDiscountRate] = useState('20');
+  const [nextRoundValuation, setNextRoundValuation] = useState('10000000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ investment: string; valuationCap: string; discountRate: string; nextRoundValuation: string }>('safe-note-calculator');
@@ -32,7 +32,7 @@ export default function SafeNoteCalculator() {
   const effectiveValuation = Math.min(cap, nrv * (1 - disc / 100));
   const ownershipPct = effectiveValuation > 0 ? (inv / effectiveValuation) * 100 : 0;
 
-  const handleTryExample = () => { setInvestment('100000'); setValuationCap('5000000'); setDiscountRate('20'); setNextRoundValuation('10000000'); setCalculated(false); };
+  const handleTryExample = () => { setInvestment('100000'); setValuationCap('5000000'); setDiscountRate('20'); setNextRoundValuation('10000000'); setCalculated(true); };
   const handleCalculate = () => {
     if (inv > 0 && cap > 0) {
       setCalculated(true);
@@ -57,7 +57,7 @@ export default function SafeNoteCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="investment" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={investment} onChange={(e) => { setInvestment(e.target.value); setCalculated(false); }} />
+                value={investment} onChange={(e) => { setInvestment(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -65,7 +65,7 @@ export default function SafeNoteCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="valuationCap" type="number" step="any" min="0" placeholder="5000000" className="pl-7"
-                value={valuationCap} onChange={(e) => { setValuationCap(e.target.value); setCalculated(false); }} />
+                value={valuationCap} onChange={(e) => { setValuationCap(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -73,7 +73,7 @@ export default function SafeNoteCalculator() {
             <div className="relative">
               
               <Input id="discountRate" type="number" step="any" min="0" placeholder="20"
-                value={discountRate} onChange={(e) => { setDiscountRate(e.target.value); setCalculated(false); }} />
+                value={discountRate} onChange={(e) => { setDiscountRate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -81,7 +81,7 @@ export default function SafeNoteCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="nextRoundValuation" type="number" step="any" min="0" placeholder="10000000" className="pl-7"
-                value={nextRoundValuation} onChange={(e) => { setNextRoundValuation(e.target.value); setCalculated(false); }} />
+                value={nextRoundValuation} onChange={(e) => { setNextRoundValuation(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -102,11 +102,11 @@ export default function SafeNoteCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">SAFE Conversion</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{ownershipPct.toFixed(2)}% ownership`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${ownershipPct.toFixed(2)}% ownership`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Effective valuation: ${formatCurrency(effectiveValuation)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Valuation cap: ${formatCurrency(cap)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Discount: ${disc}% off next round`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Effective valuation: ${formatCurrency(effectiveValuation)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Valuation cap: ${formatCurrency(cap)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Discount: ${disc}% off next round`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -125,7 +125,7 @@ export default function SafeNoteCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Ownership %</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{ownershipPct.toFixed(2)}%`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${ownershipPct.toFixed(2)}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Valuation Cap</p>

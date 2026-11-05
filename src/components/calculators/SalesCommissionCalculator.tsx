@@ -351,21 +351,21 @@ export default function SalesCommissionCalculator() {
   const [activeTab, setActiveTab] = useState<CalcMode>('simple');
 
   // ─── Simple Mode ────────────────────────────────────────────────────────
-  const [salesAmount, setSalesAmount] = useState('');
-  const [simpleRate, setSimpleRate] = useState('');
-  const [simpleBaseSalary, setSimpleBaseSalary] = useState('');
+  const [salesAmount, setSalesAmount] = useState('50000');
+  const [simpleRate, setSimpleRate] = useState('8');
+  const [simpleBaseSalary, setSimpleBaseSalary] = useState('60000');
 
   // ─── Tiered Mode ────────────────────────────────────────────────────────
   const [tiers, setTiers] = useState<Tier[]>(defaultTiers());
-  const [tieredSalesAmount, setTieredSalesAmount] = useState('');
-  const [tieredBaseSalary, setTieredBaseSalary] = useState('');
+  const [tieredSalesAmount, setTieredSalesAmount] = useState('180000');
+  const [tieredBaseSalary, setTieredBaseSalary] = useState('65000');
 
   // ─── Quota Mode ─────────────────────────────────────────────────────────
-  const [quotaBase, setQuotaBase] = useState('');
-  const [quotaRate, setQuotaRate] = useState('');
-  const [salesQuota, setSalesQuota] = useState('');
-  const [actualSales, setActualSales] = useState('');
-  const [accelerator, setAccelerator] = useState('');
+  const [quotaBase, setQuotaBase] = useState('60000');
+  const [quotaRate, setQuotaRate] = useState('8');
+  const [salesQuota, setSalesQuota] = useState('500000');
+  const [actualSales, setActualSales] = useState('550000');
+  const [accelerator, setAccelerator] = useState('150');
 
   // ─── Deductions ─────────────────────────────────────────────────────────
   const [deductions, setDeductions] = useState<Deductions>({

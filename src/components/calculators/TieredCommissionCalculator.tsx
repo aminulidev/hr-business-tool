@@ -16,13 +16,13 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { sales: number; t1Amount: number; t2Amount: number; t3Amount: number; totalCommission: number; effectiveRate: number; label: string; }
 
 export default function TieredCommissionCalculator() {
-  const [totalSales, setTotalSales] = useState('');
-  const [tier1Limit, setTier1Limit] = useState('');
-  const [tier1Rate, setTier1Rate] = useState('');
-  const [tier2Limit, setTier2Limit] = useState('');
-  const [tier2Rate, setTier2Rate] = useState('');
-  const [tier3Rate, setTier3Rate] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [totalSales, setTotalSales] = useState('120000');
+  const [tier1Limit, setTier1Limit] = useState('50000');
+  const [tier1Rate, setTier1Rate] = useState('5');
+  const [tier2Limit, setTier2Limit] = useState('100000');
+  const [tier2Rate, setTier2Rate] = useState('8');
+  const [tier3Rate, setTier3Rate] = useState('12');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ totalSales: string; tier1Limit: string; tier1Rate: string; tier2Limit: string; tier2Rate: string; tier3Rate: string }>('tiered-commission-calculator');
@@ -39,7 +39,7 @@ export default function TieredCommissionCalculator() {
   const totalCommission = t1Amount + t2Amount + t3Amount;
   const effectiveRate = sales > 0 ? (totalCommission / sales) * 100 : 0;
 
-  const handleTryExample = () => { setTotalSales('120000'); setTier1Limit('50000'); setTier1Rate('5'); setTier2Limit('100000'); setTier2Rate('8'); setTier3Rate('12'); setCalculated(false); };
+  const handleTryExample = () => { setTotalSales('120000'); setTier1Limit('50000'); setTier1Rate('5'); setTier2Limit('100000'); setTier2Rate('8'); setTier3Rate('12'); setCalculated(true); };
   const handleCalculate = () => {
     if (sales > 0) {
       setCalculated(true);
@@ -64,7 +64,7 @@ export default function TieredCommissionCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="totalSales" type="number" step="any" min="0" placeholder="120000" className="pl-7"
-                value={totalSales} onChange={(e) => { setTotalSales(e.target.value); setCalculated(false); }} />
+                value={totalSales} onChange={(e) => { setTotalSales(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function TieredCommissionCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="tier1Limit" type="number" step="any" min="0" placeholder="50000" className="pl-7"
-                value={tier1Limit} onChange={(e) => { setTier1Limit(e.target.value); setCalculated(false); }} />
+                value={tier1Limit} onChange={(e) => { setTier1Limit(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -80,7 +80,7 @@ export default function TieredCommissionCalculator() {
             <div className="relative">
               
               <Input id="tier1Rate" type="number" step="any" min="0" placeholder="5"
-                value={tier1Rate} onChange={(e) => { setTier1Rate(e.target.value); setCalculated(false); }} />
+                value={tier1Rate} onChange={(e) => { setTier1Rate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -88,7 +88,7 @@ export default function TieredCommissionCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="tier2Limit" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={tier2Limit} onChange={(e) => { setTier2Limit(e.target.value); setCalculated(false); }} />
+                value={tier2Limit} onChange={(e) => { setTier2Limit(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -96,7 +96,7 @@ export default function TieredCommissionCalculator() {
             <div className="relative">
               
               <Input id="tier2Rate" type="number" step="any" min="0" placeholder="8"
-                value={tier2Rate} onChange={(e) => { setTier2Rate(e.target.value); setCalculated(false); }} />
+                value={tier2Rate} onChange={(e) => { setTier2Rate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -104,7 +104,7 @@ export default function TieredCommissionCalculator() {
             <div className="relative">
               
               <Input id="tier3Rate" type="number" step="any" min="0" placeholder="12"
-                value={tier3Rate} onChange={(e) => { setTier3Rate(e.target.value); setCalculated(false); }} />
+                value={tier3Rate} onChange={(e) => { setTier3Rate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -127,9 +127,9 @@ export default function TieredCommissionCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Total Commission</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalCommission)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Effective rate: ${effectiveRate.toFixed(2)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Tier 1: ${formatCurrency(t1Amount)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Tier 2: ${formatCurrency(t2Amount)}, Tier 3: ${formatCurrency(t3Amount)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Effective rate: ${effectiveRate.toFixed(2)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Tier 1: ${formatCurrency(t1Amount)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Tier 2: ${formatCurrency(t2Amount)}, Tier 3: ${formatCurrency(t3Amount)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

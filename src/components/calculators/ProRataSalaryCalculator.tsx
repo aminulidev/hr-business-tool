@@ -26,7 +26,7 @@ export default function ProRataSalaryCalculator() {
   const [annualSalary, setAnnualSalary] = useState<string>('');
   const [fullWorkingDays, setFullWorkingDays] = useState<string>('260');
   const [actualDaysWorked, setActualDaysWorked] = useState<string>('');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
 
   // Comparison State
   const [compareA, setCompareA] = useState<ProRataSnapshot | null>(null);
@@ -97,9 +97,7 @@ export default function ProRataSalaryCalculator() {
               placeholder="80,000"
               value={annualSalary}
               onChange={(e) => {
-                setAnnualSalary(e.target.value);
-                setCalculated(false);
-              }}
+                setAnnualSalary(e.target.value); setCalculated(true); }}
               className="pl-7"
             />
           </div>
@@ -118,9 +116,7 @@ export default function ProRataSalaryCalculator() {
               placeholder="260"
               value={fullWorkingDays}
               onChange={(e) => {
-                setFullWorkingDays(e.target.value);
-                setCalculated(false);
-              }}
+                setFullWorkingDays(e.target.value); setCalculated(true); }}
             />
             <span className="absolute right-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">
               days
@@ -141,9 +137,7 @@ export default function ProRataSalaryCalculator() {
               placeholder="130"
               value={actualDaysWorked}
               onChange={(e) => {
-                setActualDaysWorked(e.target.value);
-                setCalculated(false);
-              }}
+                setActualDaysWorked(e.target.value); setCalculated(true); }}
             />
             <span className="absolute right-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">
               days

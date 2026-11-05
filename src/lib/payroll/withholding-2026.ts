@@ -9,16 +9,37 @@
 // - New York City: NYS-50-T-NYC (1/26), Method II exact calculation
 // - New York PFL: 0.432% up to $411.91/yr; NY DBL (SDI): 0.5% up to $0.60/week
 // - Illinois: 4.95% flat, $2,925 per IL-W-4 allowance (IL Comptroller bulletin 1-26)
-//
-// Withholding is computed with the annualized method (annual wages → annual
-// tax → divided by pay periods), which every agency above permits and which
-// matches their published per-period examples to the cent.
+// - Washington: 0% income tax; WA PFML employee share 0.5714% (up to $184,500); WA Cares 0.58%
+// - Pennsylvania: 3.07% flat state tax; PA UC employee withholding 0.07%
+// - North Carolina: 4.25% flat state tax after NC-4 standard deduction & $2,500/allowance
+// - Georgia: 5.19% flat state tax after G-4 standard deduction ($12k/$24k) & $4,000/allowance
+// - Michigan: 4.25% flat state tax after $5,800 per MI-W4 exemption
+// - Indiana: 2.95% flat state tax after $1,000 per WH-4 exemption
+// - Arizona: 2.50% flat state tax after standard deduction & $100/allowance credit
+// - Colorado: 4.40% flat state tax after standard deduction; CO FAMLI employee share 0.45% (capped at $184,500)
+// - Texas, Florida, Tennessee, Nevada: 0% state income tax, no employee payroll tax
 
 export const TAX_YEAR = 2026;
 
 export type FilingStatus = 'single' | 'married' | 'hoh';
 export type PayFrequency = 'weekly' | 'bi-weekly' | 'semi-monthly' | 'monthly';
-export type StateCode = 'CA' | 'TX' | 'FL' | 'NY' | 'IL';
+export type StateCode =
+  | 'CA'
+  | 'TX'
+  | 'FL'
+  | 'NY'
+  | 'IL'
+  | 'WA'
+  | 'TN'
+  | 'NV'
+  | 'PA'
+  | 'NC'
+  | 'GA'
+  | 'MI'
+  | 'IN'
+  | 'AZ'
+  | 'CO';
+
 /** StateCode plus the two generic options used by the national hourly paycheck calculator */
 export type PaycheckState = StateCode | 'none' | 'other';
 
@@ -136,7 +157,6 @@ const CA_SCHEDULES: Record<FilingStatus, ScheduleRow[]> = {
 const CA_EXEMPTION_CREDIT_PER_ALLOWANCE = 168.3;
 export const CA_SDI_RATE = 0.013;
 
-// Married employees with 0–1 allowances use the single low-income / standard deduction amounts
 function caUsesDoubleAmounts(status: FilingStatus, allowances: number): boolean {
   return status === 'hoh' || (status === 'married' && allowances >= 2);
 }
@@ -154,7 +174,6 @@ function californiaIncomeTax(annualWages: number, status: FilingStatus, allowanc
 // New York State and New York City — Method II exact calculation, annual
 // ---------------------------------------------------------------------------
 
-// IT-2104 has only single and married; head of household withholds as single
 const NY_SCHEDULES: Record<'single' | 'married', ScheduleRow[]> = {
   single: [
     { over: 0, base: 0, rate: 0.039 },
@@ -184,7 +203,6 @@ const NY_SCHEDULES: Record<'single' | 'married', ScheduleRow[]> = {
   ],
 };
 
-// NYC uses the same schedule for single and married
 const NYC_SCHEDULE: ScheduleRow[] = [
   { over: 0, base: 0, rate: 0.0205 },
   { over: 8000, base: 164, rate: 0.028 },
@@ -227,6 +245,80 @@ function illinoisIncomeTax(annualWages: number, allowances: number): number {
 }
 
 // ---------------------------------------------------------------------------
+// Additional Exact 2026 State Withholding Engines
+// ---------------------------------------------------------------------------
+
+// Washington: 0% income tax, WA PFML employee share ~0.5714% (71.43% of 0.80% up to SS cap), WA Cares 0.58%
+export const WA_PFML_EMPLOYEE_RATE = 0.005714;
+export const WA_CARES_RATE = 0.0058;
+
+// Pennsylvania: 3.07% flat income tax + 0.07% PA UC employee withholding
+export const PA_INCOME_TAX_RATE = 0.0307;
+export const PA_UC_EMPLOYEE_RATE = 0.0007;
+
+// North Carolina: 4.25% flat tax in 2026 after NC-4 standard deduction & $2,500 per allowance
+export const NC_RATE = 0.0425;
+export const NC_STD_DEDUCTION: Record<FilingStatus, number> = {
+  single: 12750,
+  married: 25500,
+  hoh: 19125,
+};
+export const NC_ALLOWANCE = 2500;
+
+function northCarolinaIncomeTax(annualWages: number, status: FilingStatus, allowances: number): number {
+  const deduction = NC_STD_DEDUCTION[status] + allowances * NC_ALLOWANCE;
+  return Math.max(0, annualWages - deduction) * NC_RATE;
+}
+
+// Georgia: 5.19% flat tax in 2026 after G-4 standard deduction ($12k single/hoh, $24k married) & $4,000 per allowance
+export const GA_RATE = 0.0519;
+export const GA_STD_DEDUCTION: Record<FilingStatus, number> = {
+  single: 12000,
+  married: 24000,
+  hoh: 12000,
+};
+export const GA_ALLOWANCE = 4000;
+
+function georgiaIncomeTax(annualWages: number, status: FilingStatus, allowances: number): number {
+  const deduction = GA_STD_DEDUCTION[status] + allowances * GA_ALLOWANCE;
+  return Math.max(0, annualWages - deduction) * GA_RATE;
+}
+
+// Michigan: 4.25% flat tax after $5,800 per MI-W4 exemption
+export const MI_RATE = 0.0425;
+export const MI_EXEMPTION = 5800;
+
+function michiganIncomeTax(annualWages: number, allowances: number): number {
+  return Math.max(0, annualWages - allowances * MI_EXEMPTION) * MI_RATE;
+}
+
+// Indiana: 2.95% flat state tax in 2026 after $1,000 per WH-4 exemption
+export const IN_RATE = 0.0295;
+export const IN_EXEMPTION = 1000;
+
+function indianaIncomeTax(annualWages: number, allowances: number): number {
+  return Math.max(0, annualWages - allowances * IN_EXEMPTION) * IN_RATE;
+}
+
+// Arizona: 2.50% flat state tax after standard deduction ($16,100 / $32,200 / $24,150) & $100 per dependent credit
+export const AZ_RATE = 0.025;
+export const AZ_DEPENDENT_CREDIT = 100;
+
+function arizonaIncomeTax(annualWages: number, status: FilingStatus, allowances: number): number {
+  const taxable = Math.max(0, annualWages - FEDERAL_STANDARD_DEDUCTION[status]);
+  return Math.max(0, taxable * AZ_RATE - allowances * AZ_DEPENDENT_CREDIT);
+}
+
+// Colorado: 4.40% flat state tax after federal standard deduction; CO FAMLI employee share 0.45% up to SS wage cap
+export const CO_RATE = 0.044;
+export const CO_FAMLI_RATE = 0.0045;
+
+function coloradoIncomeTax(annualWages: number, status: FilingStatus, allowances: number): number {
+  const taxable = Math.max(0, annualWages - FEDERAL_STANDARD_DEDUCTION[status] - allowances * 1000);
+  return taxable * CO_RATE;
+}
+
+// ---------------------------------------------------------------------------
 // Paycheck calculation
 // ---------------------------------------------------------------------------
 
@@ -246,7 +338,7 @@ export interface PaycheckInput {
   overtimeMultiplier: number;
   payFrequency: PayFrequency;
   filingStatus: FilingStatus;
-  /** CA DE 4 allowances, NY IT-2104 exemptions, or IL-W-4 allowances. Ignored in TX/FL. */
+  /** State withholding allowances / exemptions. Ignored in no-income-tax states. */
   stateAllowances: number;
   /** New York only: employee lives in New York City */
   nycResident?: boolean;
@@ -282,8 +374,6 @@ export function calculatePaycheck(input: PaycheckInput): PaycheckResult {
     input.hourlyRate * input.overtimeMultiplier * input.overtimeHoursPerWeek;
   const grossAnnual = weeklyGross * 52;
 
-  // Pre-tax deductions. Section 125 benefits come out before every tax;
-  // retirement contributions come out before income tax only.
   const benefits = Math.min(grossAnnual, Math.max(0, input.preTaxBenefitsAnnual ?? 0));
   const retirement = Math.min(grossAnnual - benefits, Math.max(0, input.preTaxRetirementAnnual ?? 0));
   const ficaWages = grossAnnual - benefits;
@@ -356,13 +446,91 @@ export function calculatePaycheck(input: PaycheckInput): PaycheckResult {
         annual: illinoisIncomeTax(taxableWages, input.stateAllowances),
       });
       break;
+    case 'WA':
+      lines.push(
+        {
+          key: 'pfl',
+          label: 'WA Paid Family & Medical Leave (0.57%)',
+          annual: Math.min(ficaWages, SOCIAL_SECURITY_WAGE_BASE) * WA_PFML_EMPLOYEE_RATE,
+        },
+        {
+          key: 'sdi',
+          label: 'WA Cares Fund (0.58%)',
+          annual: ficaWages * WA_CARES_RATE,
+        },
+      );
+      break;
+    case 'PA':
+      lines.push(
+        {
+          key: 'state',
+          label: 'Pennsylvania income tax (3.07%)',
+          annual: taxableWages * PA_INCOME_TAX_RATE,
+        },
+        {
+          key: 'sdi',
+          label: 'PA Unemployment Employee Tax (0.07%)',
+          annual: ficaWages * PA_UC_EMPLOYEE_RATE,
+        },
+      );
+      break;
+    case 'NC':
+      lines.push({
+        key: 'state',
+        label: 'North Carolina income tax (4.25%)',
+        annual: northCarolinaIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
+      });
+      break;
+    case 'GA':
+      lines.push({
+        key: 'state',
+        label: 'Georgia income tax (5.19%)',
+        annual: georgiaIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
+      });
+      break;
+    case 'MI':
+      lines.push({
+        key: 'state',
+        label: 'Michigan income tax (4.25%)',
+        annual: michiganIncomeTax(taxableWages, input.stateAllowances),
+      });
+      break;
+    case 'IN':
+      lines.push({
+        key: 'state',
+        label: 'Indiana state income tax (2.95%)',
+        annual: indianaIncomeTax(taxableWages, input.stateAllowances),
+      });
+      break;
+    case 'AZ':
+      lines.push({
+        key: 'state',
+        label: 'Arizona income tax (2.50%)',
+        annual: arizonaIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
+      });
+      break;
+    case 'CO':
+      lines.push(
+        {
+          key: 'state',
+          label: 'Colorado income tax (4.40%)',
+          annual: coloradoIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
+        },
+        {
+          key: 'pfl',
+          label: 'CO FAMLI Paid Leave (0.45%)',
+          annual: Math.min(ficaWages, SOCIAL_SECURITY_WAGE_BASE) * CO_FAMLI_RATE,
+        },
+      );
+      break;
     case 'TX':
     case 'FL':
+    case 'TN':
+    case 'NV':
     case 'none':
       // No state income tax and no employee-paid state payroll taxes
       break;
     case 'other': {
-      // State without exact tables: the user supplies a flat rate
       const rate = input.customStateRate ?? 0;
       if (rate > 0) {
         lines.push({
@@ -405,11 +573,16 @@ export function calculatePaycheck(input: PaycheckInput): PaycheckResult {
   };
 }
 
-// Exposed for tests against the agencies' published examples
 export const __test = {
   federalIncomeTax,
   californiaIncomeTax,
   newYorkStateIncomeTax,
   newYorkCityIncomeTax,
   illinoisIncomeTax,
+  northCarolinaIncomeTax,
+  georgiaIncomeTax,
+  michiganIncomeTax,
+  indianaIncomeTax,
+  arizonaIncomeTax,
+  coloradoIncomeTax,
 };

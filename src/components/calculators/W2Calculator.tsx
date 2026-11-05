@@ -125,16 +125,16 @@ interface W2Snapshot {
 }
 
 export default function W2Calculator() {
-  const [grossAnnual, setGrossAnnual] = useState('');
+  const [grossAnnual, setGrossAnnual] = useState('85000');
   const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
   const [selectedState, setSelectedState] = useState('CA');
-  const [stateRate, setStateRate] = useState('5.0');
+  const [stateRate, setStateRate] = useState('5');
   const [useCustomStateRate, setUseCustomStateRate] = useState(false);
-  const [pretax401k, setPretax401k] = useState('0');
-  const [pretaxHsa, setPretaxHsa] = useState('0');
-  const [pretaxOther, setPretaxOther] = useState('0');
+  const [pretax401k, setPretax401k] = useState('6000');
+  const [pretaxHsa, setPretaxHsa] = useState('2000');
+  const [pretaxOther, setPretaxOther] = useState('1500');
   const [payFreq, setPayFreq] = useState<PayFreq>('biweekly');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<W2Snapshot | null>(null);
   const [compareB, setCompareB] = useState<W2Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{
@@ -196,7 +196,7 @@ export default function W2Calculator() {
     setPretaxHsa('2000');
     setPretaxOther('1500');
     setPayFreq('biweekly');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -256,14 +256,14 @@ export default function W2Calculator() {
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-semibold">$</span>
               <Input id="w2-gross" type="number" step="1000" min="0" placeholder="85,000"
-                value={grossAnnual} onChange={(e) => { setGrossAnnual(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={grossAnnual} onChange={(e) => { setGrossAnnual(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
             <p className="text-[11px] text-muted-foreground">Total annual contractual compensation.</p>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="w2-status" className="font-medium">Federal Filing Status</Label>
-            <Select value={filingStatus} onValueChange={(v) => { setFilingStatus(v as FilingStatus); setCalculated(false); }}>
+            <Select value={filingStatus} onValueChange={(v) => { setFilingStatus(v as FilingStatus); setCalculated(true); }}>
               <SelectTrigger id="w2-status"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="single">Single</SelectItem>
@@ -313,7 +313,7 @@ export default function W2Calculator() {
 
           <div className="space-y-2">
             <Label htmlFor="w2-freq" className="font-medium">Paycheck Frequency</Label>
-            <Select value={payFreq} onValueChange={(v) => { setPayFreq(v as PayFreq); setCalculated(false); }}>
+            <Select value={payFreq} onValueChange={(v) => { setPayFreq(v as PayFreq); setCalculated(true); }}>
               <SelectTrigger id="w2-freq"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="biweekly">Bi-weekly (26 pays/yr)</SelectItem>
@@ -332,7 +332,7 @@ export default function W2Calculator() {
             <Label htmlFor="w2-custom-rate" className="text-xs font-medium">Custom State / Local Income Tax Rate (%)</Label>
             <div className="relative">
               <Input id="w2-custom-rate" type="number" step="0.1" min="0" max="20"
-                value={stateRate} onChange={(e) => { setStateRate(e.target.value); setCalculated(false); }} className="h-8 text-xs" />
+                value={stateRate} onChange={(e) => { setStateRate(e.target.value); setCalculated(true); }} className="h-8 text-xs" />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">%</span>
             </div>
           </div>
@@ -344,7 +344,7 @@ export default function W2Calculator() {
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-semibold">$</span>
               <Input id="w2-401k" type="number" step="500" min="0" placeholder="6,000"
-                value={pretax401k} onChange={(e) => { setPretax401k(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={pretax401k} onChange={(e) => { setPretax401k(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
             <p className="text-[11px] text-muted-foreground">Exempt from income tax; subject to FICA. 2026 cap: $24,500.</p>
           </div>
@@ -353,7 +353,7 @@ export default function W2Calculator() {
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-semibold">$</span>
               <Input id="w2-hsa" type="number" step="100" min="0" placeholder="2,000"
-                value={pretaxHsa} onChange={(e) => { setPretaxHsa(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={pretaxHsa} onChange={(e) => { setPretaxHsa(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
             <p className="text-[11px] text-muted-foreground">Exempt from income tax AND FICA. 2026 cap: $4,400 self / $8,750 family.</p>
           </div>
@@ -362,7 +362,7 @@ export default function W2Calculator() {
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-semibold">$</span>
               <Input id="w2-other" type="number" step="100" min="0" placeholder="1,500"
-                value={pretaxOther} onChange={(e) => { setPretaxOther(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={pretaxOther} onChange={(e) => { setPretaxOther(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
             <p className="text-[11px] text-muted-foreground">Employee-paid medical, dental, vision premiums.</p>
           </div>

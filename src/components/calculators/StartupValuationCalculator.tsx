@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { a: number; rm: number; inv: number; preMoney: number; postMoney: number; investorPct: number; label: string; }
 
 export default function StartupValuationCalculator() {
-  const [arr, setArr] = useState('');
-  const [revMultiple, setRevMultiple] = useState('');
-  const [investment, setInvestment] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [arr, setArr] = useState('2000000');
+  const [revMultiple, setRevMultiple] = useState('8');
+  const [investment, setInvestment] = useState('5000000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ arr: string; revMultiple: string; investment: string }>('startup-valuation-calculator');
@@ -31,7 +31,7 @@ export default function StartupValuationCalculator() {
   const postMoney = preMoney + inv;
   const investorPct = postMoney > 0 ? (inv / postMoney) * 100 : 0;
 
-  const handleTryExample = () => { setArr('2000000'); setRevMultiple('8'); setInvestment('5000000'); setCalculated(false); };
+  const handleTryExample = () => { setArr('2000000'); setRevMultiple('8'); setInvestment('5000000'); setCalculated(true); };
   const handleCalculate = () => {
     if (a > 0 && rm > 0) {
       setCalculated(true);
@@ -56,7 +56,7 @@ export default function StartupValuationCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="arr" type="number" step="any" min="0" placeholder="2000000" className="pl-7"
-                value={arr} onChange={(e) => { setArr(e.target.value); setCalculated(false); }} />
+                value={arr} onChange={(e) => { setArr(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -64,7 +64,7 @@ export default function StartupValuationCalculator() {
             <div className="relative">
               
               <Input id="revMultiple" type="number" step="any" min="0" placeholder="8"
-                value={revMultiple} onChange={(e) => { setRevMultiple(e.target.value); setCalculated(false); }} />
+                value={revMultiple} onChange={(e) => { setRevMultiple(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function StartupValuationCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="investment" type="number" step="any" min="0" placeholder="5000000" className="pl-7"
-                value={investment} onChange={(e) => { setInvestment(e.target.value); setCalculated(false); }} />
+                value={investment} onChange={(e) => { setInvestment(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -95,9 +95,9 @@ export default function StartupValuationCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Startup Valuation</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(preMoney)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Pre-money: ${formatCurrency(preMoney)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Post-money: ${formatCurrency(postMoney)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Investor gets: ${investorPct.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Pre-money: ${formatCurrency(preMoney)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Post-money: ${formatCurrency(postMoney)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Investor gets: ${investorPct.toFixed(1)}%`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -120,7 +120,7 @@ export default function StartupValuationCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Investor %</p>
-                    <p className={`text-lg font-bold`}>{`{investorPct.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${investorPct.toFixed(1)}%`}</p>
                   </div>
               </div>
 

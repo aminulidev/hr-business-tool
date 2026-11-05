@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { mrr: number; gr: number; mos: number; forecastMRR: number; forecastARR: number; totalRevenue: number; optimistic: number; conservative: number; label: string; }
 
 export default function RevenueForecastCalculator() {
-  const [currentMRR, setCurrentMRR] = useState('');
-  const [monthlyGrowth, setMonthlyGrowth] = useState('');
-  const [months, setMonths] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [currentMRR, setCurrentMRR] = useState('100000');
+  const [monthlyGrowth, setMonthlyGrowth] = useState('5');
+  const [months, setMonths] = useState('12');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ currentMRR: string; monthlyGrowth: string; months: string }>('revenue-forecast-calculator');
@@ -33,7 +33,7 @@ export default function RevenueForecastCalculator() {
   const optimistic = mrr * Math.pow(1 + (gr + 2) / 100, mos);
   const conservative = mrr * Math.pow(1 + Math.max(0, gr - 2) / 100, mos);
 
-  const handleTryExample = () => { setCurrentMRR('100000'); setMonthlyGrowth('5'); setMonths('12'); setCalculated(false); };
+  const handleTryExample = () => { setCurrentMRR('100000'); setMonthlyGrowth('5'); setMonths('12'); setCalculated(true); };
   const handleCalculate = () => {
     if (mrr > 0) {
       setCalculated(true);
@@ -58,7 +58,7 @@ export default function RevenueForecastCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="currentMRR" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={currentMRR} onChange={(e) => { setCurrentMRR(e.target.value); setCalculated(false); }} />
+                value={currentMRR} onChange={(e) => { setCurrentMRR(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function RevenueForecastCalculator() {
             <div className="relative">
               
               <Input id="monthlyGrowth" type="number" step="any" min="0" placeholder="5"
-                value={monthlyGrowth} onChange={(e) => { setMonthlyGrowth(e.target.value); setCalculated(false); }} />
+                value={monthlyGrowth} onChange={(e) => { setMonthlyGrowth(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function RevenueForecastCalculator() {
             <div className="relative">
               
               <Input id="months" type="number" step="any" min="0" placeholder="12"
-                value={months} onChange={(e) => { setMonths(e.target.value); setCalculated(false); }} />
+                value={months} onChange={(e) => { setMonths(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -97,9 +97,9 @@ export default function RevenueForecastCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Forecasted Annual Revenue</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(forecastARR)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`MRR in ${mos} months: ${formatCurrency(forecastMRR)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Optimistic: ${formatCurrency(optimistic * 12)} ARR`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Conservative: ${formatCurrency(conservative * 12)} ARR`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`MRR in ${mos} months: ${formatCurrency(forecastMRR)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Optimistic: ${formatCurrency(optimistic * 12)} ARR`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Conservative: ${formatCurrency(conservative * 12)} ARR`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

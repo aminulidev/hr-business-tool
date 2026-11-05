@@ -16,14 +16,14 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { lh: number; ar: number; mat: number; sub: number; oh: number; con: number; pf: number; laborCost: number; overhead: number; subtotal: number; contingency: number; totalCost: number; profit: number; price: number; label: string; }
 
 export default function ProposalPriceCalculator() {
-  const [laborHours, setLaborHours] = useState('');
-  const [avgRate, setAvgRate] = useState('');
-  const [materials, setMaterials] = useState('');
-  const [subcontractors, setSubcontractors] = useState('');
-  const [overheadPct, setOverheadPct] = useState('');
-  const [contingencyPct, setContingencyPct] = useState('');
-  const [profitPct, setProfitPct] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [laborHours, setLaborHours] = useState('200');
+  const [avgRate, setAvgRate] = useState('85');
+  const [materials, setMaterials] = useState('5000');
+  const [subcontractors, setSubcontractors] = useState('8000');
+  const [overheadPct, setOverheadPct] = useState('30');
+  const [contingencyPct, setContingencyPct] = useState('10');
+  const [profitPct, setProfitPct] = useState('20');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ laborHours: string; avgRate: string; materials: string; subcontractors: string; overheadPct: string; contingencyPct: string; profitPct: string }>('proposal-price-calculator');
@@ -43,7 +43,7 @@ export default function ProposalPriceCalculator() {
   const profit = totalCost * (pf / 100);
   const price = totalCost + profit;
 
-  const handleTryExample = () => { setLaborHours('200'); setAvgRate('85'); setMaterials('5000'); setSubcontractors('8000'); setOverheadPct('30'); setContingencyPct('10'); setProfitPct('20'); setCalculated(false); };
+  const handleTryExample = () => { setLaborHours('200'); setAvgRate('85'); setMaterials('5000'); setSubcontractors('8000'); setOverheadPct('30'); setContingencyPct('10'); setProfitPct('20'); setCalculated(true); };
   const handleCalculate = () => {
     if (lh > 0) {
       setCalculated(true);
@@ -68,7 +68,7 @@ export default function ProposalPriceCalculator() {
             <div className="relative">
               
               <Input id="laborHours" type="number" step="any" min="0" placeholder="200"
-                value={laborHours} onChange={(e) => { setLaborHours(e.target.value); setCalculated(false); }} />
+                value={laborHours} onChange={(e) => { setLaborHours(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -76,7 +76,7 @@ export default function ProposalPriceCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="avgRate" type="number" step="any" min="0" placeholder="85" className="pl-7"
-                value={avgRate} onChange={(e) => { setAvgRate(e.target.value); setCalculated(false); }} />
+                value={avgRate} onChange={(e) => { setAvgRate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -84,7 +84,7 @@ export default function ProposalPriceCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="materials" type="number" step="any" min="0" placeholder="5000" className="pl-7"
-                value={materials} onChange={(e) => { setMaterials(e.target.value); setCalculated(false); }} />
+                value={materials} onChange={(e) => { setMaterials(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -92,7 +92,7 @@ export default function ProposalPriceCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="subcontractors" type="number" step="any" min="0" placeholder="8000" className="pl-7"
-                value={subcontractors} onChange={(e) => { setSubcontractors(e.target.value); setCalculated(false); }} />
+                value={subcontractors} onChange={(e) => { setSubcontractors(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -100,7 +100,7 @@ export default function ProposalPriceCalculator() {
             <div className="relative">
               
               <Input id="overheadPct" type="number" step="any" min="0" placeholder="30"
-                value={overheadPct} onChange={(e) => { setOverheadPct(e.target.value); setCalculated(false); }} />
+                value={overheadPct} onChange={(e) => { setOverheadPct(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -108,7 +108,7 @@ export default function ProposalPriceCalculator() {
             <div className="relative">
               
               <Input id="contingencyPct" type="number" step="any" min="0" placeholder="10"
-                value={contingencyPct} onChange={(e) => { setContingencyPct(e.target.value); setCalculated(false); }} />
+                value={contingencyPct} onChange={(e) => { setContingencyPct(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -116,7 +116,7 @@ export default function ProposalPriceCalculator() {
             <div className="relative">
               
               <Input id="profitPct" type="number" step="any" min="0" placeholder="20"
-                value={profitPct} onChange={(e) => { setProfitPct(e.target.value); setCalculated(false); }} />
+                value={profitPct} onChange={(e) => { setProfitPct(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -139,9 +139,9 @@ export default function ProposalPriceCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Proposal Price</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(price)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Total cost: ${formatCurrency(totalCost)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Profit: ${formatCurrency(profit)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Contingency: ${formatCurrency(contingency)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Total cost: ${formatCurrency(totalCost)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Profit: ${formatCurrency(profit)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Contingency: ${formatCurrency(contingency)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

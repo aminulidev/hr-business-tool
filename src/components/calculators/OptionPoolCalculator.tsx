@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { ts: number; ps: number; ch: number; poolShares: number; availableShares: number; reservedShares: number; perHire: number; perHirePct: number; label: string; }
 
 export default function OptionPoolCalculator() {
-  const [totalShares, setTotalShares] = useState('');
-  const [poolSize, setPoolSize] = useState('');
-  const [currentHires, setCurrentHires] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [totalShares, setTotalShares] = useState('10000000');
+  const [poolSize, setPoolSize] = useState('15');
+  const [currentHires, setCurrentHires] = useState('10');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ totalShares: string; poolSize: string; currentHires: string }>('option-pool-calculator');
@@ -33,7 +33,7 @@ export default function OptionPoolCalculator() {
   const perHire = ch > 0 ? availableShares / ch : 0;
   const perHirePct = ts > 0 ? (perHire / ts) * 100 : 0;
 
-  const handleTryExample = () => { setTotalShares('10000000'); setPoolSize('15'); setCurrentHires('10'); setCalculated(false); };
+  const handleTryExample = () => { setTotalShares('10000000'); setPoolSize('15'); setCurrentHires('10'); setCalculated(true); };
   const handleCalculate = () => {
     if (ts > 0 && ps > 0) {
       setCalculated(true);
@@ -58,7 +58,7 @@ export default function OptionPoolCalculator() {
             <div className="relative">
               
               <Input id="totalShares" type="number" step="any" min="0" placeholder="10000000"
-                value={totalShares} onChange={(e) => { setTotalShares(e.target.value); setCalculated(false); }} />
+                value={totalShares} onChange={(e) => { setTotalShares(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function OptionPoolCalculator() {
             <div className="relative">
               
               <Input id="poolSize" type="number" step="any" min="0" placeholder="15"
-                value={poolSize} onChange={(e) => { setPoolSize(e.target.value); setCalculated(false); }} />
+                value={poolSize} onChange={(e) => { setPoolSize(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function OptionPoolCalculator() {
             <div className="relative">
               
               <Input id="currentHires" type="number" step="any" min="0" placeholder="10"
-                value={currentHires} onChange={(e) => { setCurrentHires(e.target.value); setCalculated(false); }} />
+                value={currentHires} onChange={(e) => { setCurrentHires(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -95,11 +95,11 @@ export default function OptionPoolCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Option Pool</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{poolShares.toLocaleString()} shares (${ps}%)`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${poolShares.toLocaleString()} shares (${ps}%)`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Available: ${availableShares.toLocaleString()} shares`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Reserved: ${reservedShares.toLocaleString()} shares`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Per hire: ${perHirePct.toFixed(2)}%`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Available: ${availableShares.toLocaleString()} shares`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Reserved: ${reservedShares.toLocaleString()} shares`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Per hire: ${perHirePct.toFixed(2)}%`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -110,19 +110,19 @@ export default function OptionPoolCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Pool Size</p>
-                    <p className={`text-lg font-bold`}>{`{ps}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${ps}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Pool Shares</p>
-                    <p className={`text-lg font-bold`}>{`{poolShares.toLocaleString()}`}</p>
+                    <p className={`text-lg font-bold`}>{`${poolShares.toLocaleString()}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Available</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{availableShares.toLocaleString()}`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${availableShares.toLocaleString()}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Per Hire</p>
-                    <p className={`text-lg font-bold`}>{`{perHirePct.toFixed(2)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${perHirePct.toFixed(2)}%`}</p>
                   </div>
               </div>
 

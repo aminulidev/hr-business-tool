@@ -17,14 +17,14 @@ import { formatCurrency } from '@/lib/utils';
 interface CphSnap { totalCost: number; numHires: number; cph: number; label: string; }
 
 export default function CostPerHireCalculator() {
-  const [internalRecruiting, setInternalRecruiting] = useState('');
-  const [externalAgency, setExternalAgency] = useState('');
+  const [internalRecruiting, setInternalRecruiting] = useState('5000');
+  const [externalAgency, setExternalAgency] = useState('10000');
   const [jobBoards, setJobBoards] = useState('');
   const [backgroundChecks, setBackgroundChecks] = useState('');
   const [travelRelocation, setTravelRelocation] = useState('');
   const [otherCosts, setOtherCosts] = useState('');
-  const [numHires, setNumHires] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [numHires, setNumHires] = useState('15');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<CphSnap | null>(null);
   const [compareB, setCompareB] = useState<CphSnap | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ numHires: string; internalRecruiting: string; externalAgency: string }>('cost-per-hire-calculator');
@@ -46,7 +46,7 @@ export default function CostPerHireCalculator() {
     setInternalRecruiting('5000');
     setExternalAgency('10000');
     setNumHires('15');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -90,7 +90,7 @@ export default function CostPerHireCalculator() {
               <div className="relative">
                 <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
                 <Input id={field.id} type="number" step="100" min="0" placeholder={field.placeholder}
-                  value={field.value} onChange={(e) => { field.set(e.target.value); setCalculated(false); }} className="pl-7" />
+                  value={field.value} onChange={(e) => { field.set(e.target.value); setCalculated(true); }} className="pl-7" />
               </div>
               <p className="text-xs text-muted-foreground">{field.note}</p>
             </div>
@@ -100,7 +100,7 @@ export default function CostPerHireCalculator() {
         <div className="space-y-2 pt-2 border-t border-border/50">
           <Label htmlFor="num-hires" className="font-semibold">Number of Hires</Label>
           <Input id="num-hires" type="number" step="1" min="1" placeholder="10" className="max-w-xs"
-            value={numHires} onChange={(e) => { setNumHires(e.target.value); setCalculated(false); }} />
+            value={numHires} onChange={(e) => { setNumHires(e.target.value); setCalculated(true); }} />
         </div>
 
         {totalCost > 0 && (

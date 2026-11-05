@@ -25,10 +25,10 @@ function formatTime(min: number): string {
 }
 
 export default function HoursBetweenTimesCalculator() {
-  const [startTime, setStartTime] = useState('9:00 AM');
-  const [endTime, setEndTime] = useState('5:30 PM');
+  const [startTime, setStartTime] = useState('10:00 PM');
+  const [endTime, setEndTime] = useState('6:00 AM');
   const [overnight, setOvernight] = useState(false);
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<HoursBetweenSnapshot | null>(null);
   const [compareB, setCompareB] = useState<HoursBetweenSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ startTime: string; endTime: string; overnight: string }>('hours-between-times-calculator');
@@ -39,7 +39,7 @@ export default function HoursBetweenTimesCalculator() {
   if (duration < 0 || overnight) duration += 24 * 60;
   const decimalHours = duration / 60;
 
-  const handleTryExample = () => { setStartTime('10:00 PM'); setEndTime('6:00 AM'); setOvernight(true); setCalculated(false); };
+  const handleTryExample = () => { setStartTime('10:00 PM'); setEndTime('6:00 AM'); setOvernight(true); setCalculated(true); };
   const handleCalculate = () => {
     if (sMin >= 0 && eMin >= 0) {
       setCalculated(true);
@@ -62,17 +62,17 @@ export default function HoursBetweenTimesCalculator() {
           <div className="space-y-2">
             <Label htmlFor="hb-start">Start Time</Label>
             <Input id="hb-start" placeholder="9:00 AM" value={startTime}
-              onChange={(e) => { setStartTime(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setStartTime(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Formats: 9:00 AM, 9am, 17:30</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="hb-end">End Time</Label>
             <Input id="hb-end" placeholder="5:30 PM" value={endTime}
-              onChange={(e) => { setEndTime(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setEndTime(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2 flex items-end">
             <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input type="checkbox" checked={overnight} onChange={(e) => { setOvernight(e.target.checked); setCalculated(false); }}
+              <input type="checkbox" checked={overnight} onChange={(e) => { setOvernight(e.target.checked); setCalculated(true); }}
                 className="h-4 w-4 rounded border-input" />
               Overnight shift (e.g., 10pm → 6am)
             </label>

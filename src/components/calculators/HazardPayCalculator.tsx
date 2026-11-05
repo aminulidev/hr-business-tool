@@ -28,14 +28,14 @@ interface HazardSnapshot {
 }
 
 export default function HazardPayCalculator() {
-  const [baseRate, setBaseRate] = useState('');
-  const [hazardousHours, setHazardousHours] = useState('40');
-  const [standardHours, setStandardHours] = useState('0');
+  const [baseRate, setBaseRate] = useState('26.00');
+  const [hazardousHours, setHazardousHours] = useState('32');
+  const [standardHours, setStandardHours] = useState('16');
   const [method, setMethod] = useState<'percent' | 'hourly' | 'stipend'>('percent');
   const [percent, setPercent] = useState('15');
-  const [hourlyAdd, setHourlyAdd] = useState('3.50');
+  const [hourlyAdd, setHourlyAdd] = useState('4.00');
   const [stipend, setStipend] = useState('250');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<HazardSnapshot | null>(null);
   const [compareB, setCompareB] = useState<HazardSnapshot | null>(null);
 
@@ -87,7 +87,7 @@ export default function HazardPayCalculator() {
     setStandardHours('16'); // 48h total -> triggers overtime warning
     setMethod('hourly');
     setHourlyAdd('4.00'); // $4/hr hazard premium
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -194,9 +194,7 @@ export default function HazardPayCalculator() {
                 placeholder="24.00"
                 value={baseRate}
                 onChange={(e) => {
-                  setBaseRate(e.target.value);
-                  setCalculated(false);
-                }}
+                  setBaseRate(e.target.value); setCalculated(true); }}
                 className="pl-7"
               />
             </div>
@@ -216,9 +214,7 @@ export default function HazardPayCalculator() {
               placeholder="40"
               value={hazardousHours}
               onChange={(e) => {
-                setHazardousHours(e.target.value);
-                setCalculated(false);
-              }}
+                setHazardousHours(e.target.value); setCalculated(true); }}
             />
             <p className="text-xs text-muted-foreground">Hours worked in high-risk / dangerous conditions.</p>
           </div>
@@ -236,9 +232,7 @@ export default function HazardPayCalculator() {
               placeholder="0"
               value={standardHours}
               onChange={(e) => {
-                setStandardHours(e.target.value);
-                setCalculated(false);
-              }}
+                setStandardHours(e.target.value); setCalculated(true); }}
             />
             <p className="text-xs text-muted-foreground">Optional: Standard safe hours worked in the same workweek.</p>
           </div>
@@ -275,9 +269,7 @@ export default function HazardPayCalculator() {
                   key={m.id}
                   type="button"
                   onClick={() => {
-                    setMethod(m.id as any);
-                    setCalculated(false);
-                  }}
+                    setMethod(m.id as any); setCalculated(true); }}
                   className={`p-3.5 rounded-xl border text-left transition-all ${
                     isSelected
                       ? 'border-rose-500 bg-rose-500/10 shadow-sm ring-1 ring-rose-500'
@@ -309,9 +301,7 @@ export default function HazardPayCalculator() {
                   placeholder="15"
                   value={percent}
                   onChange={(e) => {
-                    setPercent(e.target.value);
-                    setCalculated(false);
-                  }}
+                    setPercent(e.target.value); setCalculated(true); }}
                   className="pr-8"
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-medium">%</span>
@@ -333,9 +323,7 @@ export default function HazardPayCalculator() {
                   placeholder="3.50"
                   value={hourlyAdd}
                   onChange={(e) => {
-                    setHourlyAdd(e.target.value);
-                    setCalculated(false);
-                  }}
+                    setHourlyAdd(e.target.value); setCalculated(true); }}
                   className="pl-7"
                 />
               </div>
@@ -356,9 +344,7 @@ export default function HazardPayCalculator() {
                   placeholder="250"
                   value={stipend}
                   onChange={(e) => {
-                    setStipend(e.target.value);
-                    setCalculated(false);
-                  }}
+                    setStipend(e.target.value); setCalculated(true); }}
                   className="pl-7"
                 />
               </div>

@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { ni: number; dep: number; sbc: number; wc: number; cx: number; ocf: number; fcf: number; label: string; }
 
 export default function OperatingCashFlowCalculator() {
-  const [netIncome, setNetIncome] = useState('');
-  const [depreciation, setDepreciation] = useState('');
-  const [stockComp, setStockComp] = useState('');
-  const [wcChange, setWcChange] = useState('Negative if WC increased');
-  const [capex, setCapex] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [netIncome, setNetIncome] = useState('200000');
+  const [depreciation, setDepreciation] = useState('50000');
+  const [stockComp, setStockComp] = useState('30000');
+  const [wcChange, setWcChange] = useState('-20000');
+  const [capex, setCapex] = useState('80000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ netIncome: string; depreciation: string; stockComp: string; wcChange: string; capex: string }>('operating-cash-flow-calculator');
@@ -35,7 +35,7 @@ export default function OperatingCashFlowCalculator() {
   const fcf = ocf - cx;
   const ocfMargin = 0;
 
-  const handleTryExample = () => { setNetIncome('200000'); setDepreciation('50000'); setStockComp('30000'); setWcChange('-20000'); setCapex('80000'); setCalculated(false); };
+  const handleTryExample = () => { setNetIncome('200000'); setDepreciation('50000'); setStockComp('30000'); setWcChange('-20000'); setCapex('80000'); setCalculated(true); };
   const handleCalculate = () => {
     if (ni !== 0 || dep !== 0) {
       setCalculated(true);
@@ -60,7 +60,7 @@ export default function OperatingCashFlowCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="netIncome" type="number" step="any" min="0" placeholder="200000" className="pl-7"
-                value={netIncome} onChange={(e) => { setNetIncome(e.target.value); setCalculated(false); }} />
+                value={netIncome} onChange={(e) => { setNetIncome(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -68,7 +68,7 @@ export default function OperatingCashFlowCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="depreciation" type="number" step="any" min="0" placeholder="50000" className="pl-7"
-                value={depreciation} onChange={(e) => { setDepreciation(e.target.value); setCalculated(false); }} />
+                value={depreciation} onChange={(e) => { setDepreciation(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -76,7 +76,7 @@ export default function OperatingCashFlowCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="stockComp" type="number" step="any" min="0" placeholder="30000" className="pl-7"
-                value={stockComp} onChange={(e) => { setStockComp(e.target.value); setCalculated(false); }} />
+                value={stockComp} onChange={(e) => { setStockComp(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -84,7 +84,7 @@ export default function OperatingCashFlowCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="wcChange" type="number" step="any" min="0" placeholder="-20000" className="pl-7"
-                value={wcChange} onChange={(e) => { setWcChange(e.target.value); setCalculated(false); }} />
+                value={wcChange} onChange={(e) => { setWcChange(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Negative if WC increased</p>
           </div>
@@ -93,7 +93,7 @@ export default function OperatingCashFlowCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="capex" type="number" step="any" min="0" placeholder="80000" className="pl-7"
-                value={capex} onChange={(e) => { setCapex(e.target.value); setCalculated(false); }} />
+                value={capex} onChange={(e) => { setCapex(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -116,9 +116,9 @@ export default function OperatingCashFlowCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Operating Cash Flow</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(ocf)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Free cash flow: ${formatCurrency(fcf)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Capex: ${formatCurrency(cx)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{fcf > 0 ? "FCF positive" : "FCF negative"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Free cash flow: ${formatCurrency(fcf)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Capex: ${formatCurrency(cx)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{fcf > 0 ? "FCF positive" : "FCF negative"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { l: number; c: number; ratio: number; status: string; label: string; }
 
 export default function LtvCacRatioCalculator() {
-  const [ltv, setLtv] = useState('');
-  const [cac, setCac] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [ltv, setLtv] = useState('2000');
+  const [cac, setCac] = useState('500');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ ltv: string; cac: string }>('ltv-cac-ratio-calculator');
@@ -28,7 +28,7 @@ export default function LtvCacRatioCalculator() {
   const ratio = c > 0 ? l / c : 0;
   const status = ratio > 5 ? "Under-investing" : ratio > 3 ? "Healthy" : ratio > 1 ? "Marginal" : "Losing money";
 
-  const handleTryExample = () => { setLtv('2000'); setCac('500'); setCalculated(false); };
+  const handleTryExample = () => { setLtv('2000'); setCac('500'); setCalculated(true); };
   const handleCalculate = () => {
     if (l > 0 && c > 0) {
       setCalculated(true);
@@ -53,7 +53,7 @@ export default function LtvCacRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="ltv" type="number" step="any" min="0" placeholder="2000" className="pl-7"
-                value={ltv} onChange={(e) => { setLtv(e.target.value); setCalculated(false); }} />
+                value={ltv} onChange={(e) => { setLtv(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -61,7 +61,7 @@ export default function LtvCacRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="cac" type="number" step="any" min="0" placeholder="500" className="pl-7"
-                value={cac} onChange={(e) => { setCac(e.target.value); setCalculated(false); }} />
+                value={cac} onChange={(e) => { setCac(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -82,11 +82,11 @@ export default function LtvCacRatioCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">LTV:CAC Ratio</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{ratio.toFixed(1)}:1`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${ratio.toFixed(1)}:1`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`LTV: ${formatCurrency(l)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`CAC: ${formatCurrency(c)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Status: ${status}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`LTV: ${formatCurrency(l)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`CAC: ${formatCurrency(c)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Status: ${status}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -105,7 +105,7 @@ export default function LtvCacRatioCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">LTV:CAC</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{ratio.toFixed(1)}:1`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${ratio.toFixed(1)}:1`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Status</p>

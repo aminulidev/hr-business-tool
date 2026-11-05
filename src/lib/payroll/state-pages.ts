@@ -14,7 +14,6 @@ import {
 
 const usd = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
-// Single filer, 40 hours a week, paid every two weeks, default allowances
 function singleFullTime(state: StateCode, hourlyRate: number, stateAllowances = 0) {
   return calculatePaycheck({
     state,
@@ -32,7 +31,7 @@ export interface StatePaycheckPage {
   code: StateCode;
   name: string;
   slug: string;
-  /** Label and default for the state withholding form input; null if the state has no income tax */
+  /** Label and default for the state withholding form input; null if the state has no allowance input */
   allowances: { label: string; help: string; defaultSingle: number; defaultMarried: number } | null;
   minimumWage: number;
   minimumWageNote: string;
@@ -55,11 +54,11 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
     },
     minimumWage: 16.9,
     minimumWageNote:
-      'California\'s statewide minimum wage is $16.90 per hour in 2026, and fast-food workers at large chains earn at least $20.00. Many cities, including Los Angeles, San Francisco, and San Diego, set higher local minimums.',
+      "California's statewide minimum wage is $16.90 per hour in 2026, and fast-food workers at large chains earn at least $20.00. Many cities, including Los Angeles, San Francisco, and San Diego, set higher local minimums.",
     overtimeRule:
       'California has daily overtime: 1.5× pay for hours over 8 in a day or 40 in a week, and 2× pay for hours over 12 in a day. On the seventh consecutive workday, the first 8 hours are paid at 1.5× and anything beyond 8 at 2×.',
     stateTaxSummary:
-      'California taxes wages progressively, from 1% to 12.3%, plus a 1% Mental Health Services Tax on income over $1 million. Employers withhold using the EDD\'s 2026 tables, which are calibrated slightly above the tax rates themselves. Every paycheck also has State Disability Insurance (SDI) taken out at 1.3% of all wages, with no annual cap. SDI funds both disability and Paid Family Leave benefits.',
+      "California taxes wages progressively, from 1% to 12.3%, plus a 1% Mental Health Services Tax on income over $1 million. Employers withhold using the EDD's 2026 tables, which are calibrated slightly above the tax rates themselves. Every paycheck also has State Disability Insurance (SDI) taken out at 1.3% of all wages, with no annual cap. SDI funds both disability and Paid Family Leave benefits.",
     extraFaqs: [
       {
         question: 'Is there a cap on California SDI in 2026?',
@@ -116,7 +115,7 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
     allowances: null,
     minimumWage: 15,
     minimumWageNote:
-      'Florida\'s minimum wage rose to $15.00 per hour on September 30, 2026, the final step of the increases approved by voters in 2020 (it was $14.00 before that). Tipped employees must receive a cash wage of at least $11.98. Starting in 2027, the rate is adjusted for inflation each September 30.',
+      "Florida's minimum wage rose to $15.00 per hour on September 30, 2026, the final step of the increases approved by voters in 2020 (it was $14.00 before that). Tipped employees must receive a cash wage of at least $11.98. Starting in 2027, the rate is adjusted for inflation each September 30.",
     overtimeRule:
       'Florida has no state overtime law, so the federal FLSA applies: 1.5× the regular rate for hours over 40 in a workweek, with no daily overtime.',
     stateTaxSummary:
@@ -125,7 +124,7 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       {
         question: 'Do Florida cities have a local income tax?',
         answer:
-          'No. Florida\'s constitution bars a state personal income tax, and no Florida city or county withholds a local income tax from wages.',
+          "No. Florida's constitution bars a state personal income tax, and no Florida city or county withholds a local income tax from wages.",
       },
       {
         question: 'How much is $15 an hour after taxes in Florida?',
@@ -153,7 +152,7 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
     },
     minimumWage: 17,
     minimumWageNote:
-      'New York\'s minimum wage is $17.00 per hour in New York City, Long Island, and Westchester County, and $16.00 in the rest of the state for 2026. From 2027, both rates rise each year with inflation.',
+      "New York's minimum wage is $17.00 per hour in New York City, Long Island, and Westchester County, and $16.00 in the rest of the state for 2026. From 2027, both rates rise each year with inflation.",
     overtimeRule:
       'New York follows the 40-hour workweek: non-exempt employees earn 1.5× their regular rate for hours over 40. Minimum-wage workers whose workday spans more than 10 hours, including breaks, are owed one extra hour at the minimum wage ("spread of hours" pay).',
     stateTaxSummary:
@@ -162,7 +161,7 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       {
         question: 'How much is New York City income tax on my paycheck?',
         answer:
-          'NYC residents pay city income tax at rates from about 3.1% to 3.9% on their tax returns. Paycheck withholding follows the state\'s NYC withholding tables. Turn on "NYC resident" in the calculator to include it. It depends on where you live, not where you work: someone who commutes into Manhattan from New Jersey or Westchester does not pay NYC income tax.',
+          "NYC residents pay city income tax at rates from about 3.1% to 3.9% on their tax returns. Paycheck withholding follows the state's NYC withholding tables. Turn on \"NYC resident\" in the calculator to include it. It depends on where you live, not where you work: someone who commutes into Manhattan from New Jersey or Westchester does not pay NYC income tax.",
       },
       {
         question: 'What is NY PFL on my paycheck?',
@@ -194,7 +193,7 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
     },
     minimumWage: 15,
     minimumWageNote:
-      'Illinois\' minimum wage is $15.00 per hour in 2026, unchanged since it reached that level on January 1, 2025. Chicago and Cook County set higher local minimums, and tipped workers can be paid 60% of the minimum wage ($9.00) if tips make up the difference.',
+      "Illinois' minimum wage is $15.00 per hour in 2026, unchanged since it reached that level on January 1, 2025. Chicago and Cook County set higher local minimums, and tipped workers can be paid 60% of the minimum wage ($9.00) if tips make up the difference.",
     overtimeRule:
       'Illinois requires 1.5× pay for hours over 40 in a workweek, matching the federal rule. Illinois has no daily overtime requirement.',
     stateTaxSummary:
@@ -215,6 +214,324 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       'Illinois Department of Revenue, Booklet IL-700-T',
       'Illinois Comptroller, Payroll Bulletin 1-26 (2026 exemption $2,925)',
       'Illinois Department of Labor, minimum wage',
+    ],
+  },
+  WA: {
+    code: 'WA',
+    name: 'Washington',
+    slug: 'washington-hourly-paycheck-calculator',
+    allowances: null,
+    minimumWage: 17.13,
+    minimumWageNote:
+      "Washington has the highest statewide minimum wage in the nation at $17.13 per hour in 2026 (adjusted annually for CPI-W inflation), and cities like Seattle ($20.76+), SeaTac, Tukwila, and Renton mandate even higher local minimums. Employers cannot take a tip credit against the minimum wage.",
+    overtimeRule:
+      'Washington requires 1.5× pay for hours worked over 40 in a seven-day workweek for non-exempt employees. There is no general daily overtime rule.',
+    stateTaxSummary:
+      'Washington has no state personal income tax on wages. However, two mandatory employee payroll deductions apply in 2026: Washington Paid Family & Medical Leave (PFML) at roughly 0.57% of gross wages up to the $184,500 Social Security cap, and the WA Cares Fund (long-term care insurance) at 0.58% of all wages unless you hold an approved exemption.',
+    extraFaqs: [
+      {
+        question: 'Why does Washington deduct PFML and WA Cares if there is no income tax?',
+        answer:
+          'While Washington does not levy an income tax on wages, state law funds Paid Family & Medical Leave (up to 12–18 weeks of paid leave) and the WA Cares long-term care benefit through dedicated payroll premiums. Combined, those two programs deduct about 1.15% from a typical Washington paycheck.',
+      },
+      {
+        question: 'Do tipped workers in Washington get the full minimum wage?',
+        answer:
+          'Yes. Washington does not allow a tip credit. Restaurants and hospitality employers must pay the full $17.13 statewide minimum wage (or higher local city minimum) on top of any tips received.',
+      },
+    ],
+    sources: [
+      'Washington Department of Labor & Industries, 2026 Minimum Wage Announcement',
+      'Washington Employment Security Department, 2026 PFML & WA Cares Premium Rates',
+    ],
+  },
+  TN: {
+    code: 'TN',
+    name: 'Tennessee',
+    slug: 'tennessee-hourly-paycheck-calculator',
+    allowances: null,
+    minimumWage: 7.25,
+    minimumWageNote:
+      'Tennessee has no state minimum wage statute, so employers covered by the federal Fair Labor Standards Act must pay at least the federal minimum wage of $7.25 per hour ($2.13 cash wage for tipped employees if tips bring total pay to $7.25).',
+    overtimeRule:
+      'Tennessee follows federal FLSA overtime rules: non-exempt hourly workers earn 1.5× their regular hourly rate for all hours worked beyond 40 in a workweek.',
+    stateTaxSummary:
+      'Tennessee has no state income tax on wages or salaries (and repealed its Hall income tax on investment income in 2021), nor does it have any employee-paid state disability or paid family leave payroll tax. Only federal income tax, Social Security (6.2%), and Medicare (1.45%) are withheld from a Tennessee paycheck.',
+    extraFaqs: [
+      {
+        question: 'Do Nashville, Memphis, or Knoxville charge a local city income tax?',
+        answer:
+          'No. Tennessee law prohibits cities and counties from levying a local payroll or wage tax on employees. Your net paycheck is identical in Nashville, Memphis, Knoxville, Chattanooga, or anywhere else in the state.',
+      },
+      {
+        question: 'How much is $20 an hour after taxes in Tennessee?',
+        answer: (() => {
+          const r = singleFullTime('TN', 20);
+          return `At $20.00 an hour for 40 hours a week, gross pay is ${usd(r.grossAnnual)} per year (${usd(r.grossPerPeriod)} biweekly). With zero state income tax, a single filer takes home ${usd(r.netAnnual)} per year — or ${usd(r.netPerPeriod)} every two weeks — after federal income tax and FICA.`;
+        })(),
+      },
+    ],
+    sources: [
+      'Tennessee Department of Labor and Workforce Development',
+      'Tennessee Department of Revenue',
+      'U.S. DOL, Fair Labor Standards Act',
+    ],
+  },
+  NV: {
+    code: 'NV',
+    name: 'Nevada',
+    slug: 'nevada-hourly-paycheck-calculator',
+    allowances: null,
+    minimumWage: 12,
+    minimumWageNote:
+      "Nevada's minimum wage is $12.00 per hour statewide for all employees in 2026 (following the voter-approved constitutional amendment that eliminated the old two-tier health-insurance system in July 2024). Nevada does not allow a tip credit, so tipped workers must receive the full $12.00 hourly wage.",
+    overtimeRule:
+      'Nevada requires 1.5× overtime pay for hours over 40 in a workweek. In addition, employees whose regular rate is less than 1.5× the $12.00 minimum wage (under $18.00/hour) earn daily overtime (1.5×) for working more than 8 hours in any 24-hour period.',
+    stateTaxSummary:
+      'Nevada has no state personal income tax (protected by the Nevada Constitution) and no employee-paid state disability or family leave deductions. Only federal income tax, Social Security (6.2%), and Medicare (1.45%) come out of a Nevada paycheck.',
+    extraFaqs: [
+      {
+        question: 'Who qualifies for daily overtime in Nevada in 2026?',
+        answer:
+          'In Nevada, if your regular hourly wage is less than $18.00 per hour (1.5 times the $12.00 minimum wage), your employer must pay 1.5× overtime for any hours worked over 8 in a 24-hour period, unless you mutually agreed to a 4-day, 10-hour (4/10) schedule. Workers earning $18.00/hour or more receive overtime after 40 hours in a workweek.',
+      },
+      {
+        question: 'Does Las Vegas or Reno have a local payroll tax on employees?',
+        answer:
+          "No. Nevada's Modified Business Tax (MBT) is paid strictly by employers based on gross payroll and is never deducted from an employee's paycheck.",
+      },
+    ],
+    sources: [
+      'office of the Nevada Labor Commissioner, Minimum Wage & Daily Overtime Bulletins',
+      'Nevada Constitution, Article 10 §1',
+    ],
+  },
+  PA: {
+    code: 'PA',
+    name: 'Pennsylvania',
+    slug: 'pennsylvania-hourly-paycheck-calculator',
+    allowances: null,
+    minimumWage: 7.25,
+    minimumWageNote:
+      'Pennsylvania follows the federal minimum wage of $7.25 per hour ($2.83 per hour cash wage for tipped employees if tips bring total earnings to at least $7.25).',
+    overtimeRule:
+      'Pennsylvania requires 1.5× overtime pay for hours worked over 40 in a workweek under the Pennsylvania Minimum Wage Act and federal FLSA. There is no daily overtime rule.',
+    stateTaxSummary:
+      'Pennsylvania levies a flat 3.07% state personal income tax on gross taxable wages with no standard deduction and no personal exemptions. In addition, Pennsylvania employers withhold 0.07% ($0.70 per $1,000 of gross wages) for the employee share of Pennsylvania Unemployment Compensation (PA UC). Note: most Pennsylvania municipalities also withhold a local Earned Income Tax (EIT) — typically 1% to 3.75% (Philadelphia wage tax is ~3.75% for residents).',
+    extraFaqs: [
+      {
+        question: 'Why does Pennsylvania tax my first dollar of wages with no allowances?',
+        answer:
+          'Unlike federal taxes or most other states, Pennsylvania has no standard deduction or personal exemption on paycheck withholding. Every dollar of non-exempt wage income is taxed at the flat 3.07% rate (plus 0.07% for employee unemployment insurance). Low-income workers may qualify for Pennsylvania Tax Forgiveness (Schedule SP) when filing their annual PA-40 return.',
+      },
+      {
+        question: 'Does this calculator include local PA Earned Income Tax (EIT) or Philadelphia Wage Tax?',
+        answer:
+          'The main calculation includes the statewide 3.07% PA income tax and 0.07% PA UC employee tax. Because local EIT varies by township and school district (commonly 1.0% in most suburbs, ~3.75% in Philadelphia, and 3.0% in Pittsburgh), you can use our national Hourly Paycheck Calculator "Other Deductions" field to add your exact local EIT amount.',
+      },
+    ],
+    sources: [
+      'Pennsylvania Department of Revenue, REV-415 Employer Withholding Information Guide (3.07% rate)',
+      'Pennsylvania Department of Labor & Industry, Employee UC Withholding Rate (0.07%)',
+    ],
+  },
+  NC: {
+    code: 'NC',
+    name: 'North Carolina',
+    slug: 'north-carolina-hourly-paycheck-calculator',
+    allowances: {
+      label: 'NC-4 allowances',
+      help: 'Total allowances claimed on your North Carolina Form NC-4 ($2,500 deduction per allowance).',
+      defaultSingle: 0,
+      defaultMarried: 0,
+    },
+    minimumWage: 7.25,
+    minimumWageNote:
+      'North Carolina follows the federal minimum wage of $7.25 per hour ($2.13 per hour cash wage for tipped employees).',
+    overtimeRule:
+      'North Carolina follows federal FLSA overtime rules: non-exempt employees receive 1.5× their regular hourly rate for hours worked over 40 in a workweek.',
+    stateTaxSummary:
+      'North Carolina has a flat 4.25% state income tax rate for 2026 (down from 4.5% in 2025 under scheduled legislative rate reductions). Before applying the 4.25% rate, employers subtract the NC-4 standard deduction ($12,750 for Single, $25,500 for Married Filing Jointly, or $19,125 for Head of Household) plus $2,500 for each allowance claimed on Form NC-4.',
+    extraFaqs: [
+      {
+        question: 'What is the North Carolina income tax rate for 2026?',
+        answer:
+          'North Carolina uses a flat 4.25% individual income tax rate in 2026, reduced from 4.5% in 2025. For paycheck withholding purposes, North Carolina employers often withhold at 4.35% (0.1% above the statutory rate) as required by NC Department of Revenue tables to prevent under-withholding.',
+      },
+      {
+        question: 'Do Charlotte or Raleigh have a local city income tax?',
+        answer:
+          'No. North Carolina cities and counties do not levy local income or payroll taxes on employee wages.',
+      },
+    ],
+    sources: [
+      'North Carolina Department of Revenue, NC-30 Income Tax Withholding Tables and Instructions (2026)',
+      'North Carolina Department of Labor, Wage and Hour Act',
+    ],
+  },
+  GA: {
+    code: 'GA',
+    name: 'Georgia',
+    slug: 'georgia-hourly-paycheck-calculator',
+    allowances: {
+      label: 'G-4 dependent allowances',
+      help: 'Dependent allowances from your Georgia Form G-4 ($4,000 deduction per dependent allowance).',
+      defaultSingle: 0,
+      defaultMarried: 0,
+    },
+    minimumWage: 7.25,
+    minimumWageNote:
+      'Employers covered by the federal Fair Labor Standards Act — which includes virtually all Georgia businesses — must pay the federal minimum wage of $7.25 per hour.',
+    overtimeRule:
+      'Georgia follows the federal FLSA overtime standard: 1.5× regular pay for all hours worked over 40 in a workweek.',
+    stateTaxSummary:
+      'Georgia transitioned from graduated tax brackets to a flat income tax system in 2024. For 2026, Georgia applies a flat 5.19% state income tax rate after subtracting the Georgia standard deduction ($12,000 for Single or Head of Household, $24,000 for Married Filing Jointly) and $4,000 per dependent allowance claimed on Form G-4.',
+    extraFaqs: [
+      {
+        question: 'How did Georgia change its paycheck tax brackets?',
+        answer:
+          'Under HB 1437 and subsequent rate-cut legislation, Georgia replaced its old six-bracket system (1% to 5.75%) with a single flat tax rate (5.19% in 2026) paired with a larger standard deduction ($12,000 Single / $24,000 Married Filing Jointly) and a $4,000 dependent exemption.',
+      },
+      {
+        question: 'Does Atlanta have a city income tax?',
+        answer:
+          'No. Neither Atlanta nor any other Georgia municipality deducts a local city income tax from employee paychecks.',
+      },
+    ],
+    sources: [
+      'Georgia Department of Revenue, Employer Tax Guide (2026 Withholding Formulas)',
+      'U.S. DOL, Fair Labor Standards Act',
+    ],
+  },
+  MI: {
+    code: 'MI',
+    name: 'Michigan',
+    slug: 'michigan-hourly-paycheck-calculator',
+    allowances: {
+      label: 'MI-W4 exemptions',
+      help: 'Personal and dependent exemptions claimed on your Michigan Form MI-W4 ($5,800 per exemption).',
+      defaultSingle: 1,
+      defaultMarried: 2,
+    },
+    minimumWage: 12.48,
+    minimumWageNote:
+      "Michigan's minimum wage is $12.48 per hour in 2026 under the state's scheduled statutory increases.",
+    overtimeRule:
+      'Michigan requires 1.5× overtime pay for hours worked over 40 in a workweek under the Improved Workforce Opportunity Wage Act and federal FLSA.',
+    stateTaxSummary:
+      'Michigan levies a flat 4.25% state income tax on wages after subtracting $5,800 per personal or dependent exemption claimed on Form MI-W4. Michigan has no state disability or paid leave payroll deduction. Note: 24 Michigan cities (including Detroit at 2.4% resident / 1.2% nonresident, and Grand Rapids at 1.5% / 0.75%) levy a separate local city income tax.',
+    extraFaqs: [
+      {
+        question: 'How much does each MI-W4 exemption save on my Michigan paycheck?',
+        answer:
+          'Each exemption on Form MI-W4 shields $5,800 of annual wages from the 4.25% Michigan tax, reducing your annual state withholding by $246.50 (about $9.48 per biweekly paycheck).',
+      },
+      {
+        question: 'Does Detroit or Grand Rapids charge a city income tax?',
+        answer:
+          'Yes. Unlike most states, 24 Michigan cities levy a local income tax. Detroit charges 2.4% for residents and 1.2% for nonresidents working in the city; Grand Rapids charges 1.5% for residents and 0.75% for nonresidents; most other participating Michigan cities charge 1.0% for residents and 0.5% for nonresidents.',
+      },
+    ],
+    sources: [
+      'Michigan Department of Treasury, 2026 Income Tax Withholding Guide (4.25% rate)',
+      'Michigan Department of Labor and Economic Opportunity, Minimum Wage Schedule',
+    ],
+  },
+  IN: {
+    code: 'IN',
+    name: 'Indiana',
+    slug: 'indiana-hourly-paycheck-calculator',
+    allowances: {
+      label: 'WH-4 exemptions',
+      help: 'Total personal and dependent exemptions on your Indiana Form WH-4 ($1,000 per exemption).',
+      defaultSingle: 1,
+      defaultMarried: 2,
+    },
+    minimumWage: 7.25,
+    minimumWageNote:
+      'Indiana follows the federal minimum wage of $7.25 per hour ($2.13 per hour cash wage for tipped employees).',
+    overtimeRule:
+      'Indiana follows the federal FLSA overtime rule: 1.5× regular hourly pay for all hours worked over 40 in a workweek.',
+    stateTaxSummary:
+      'Indiana levies a flat 2.95% statewide income tax rate in 2026 (reduced from 3.00% in 2025 under Senate Enrolled Act 2) after subtracting $1,000 per exemption claimed on Form WH-4. Note: all 92 Indiana counties also levy a local county income tax (ranging from ~1% to 3%, averaging ~2.1% statewide) based on the county where you lived on January 1.',
+    extraFaqs: [
+      {
+        question: 'Why do Indiana paychecks have both state and county tax?',
+        answer:
+          'Indiana has one of the lowest flat state income tax rates in the country (2.95% in 2026), but every Indiana county also collects a county income tax (typically between 1.0% and 3.0%, such as 2.02% in Marion County / Indianapolis). This calculator shows your exact 2.95% state tax; you can include your county rate in the main Hourly Paycheck Calculator.',
+      },
+    ],
+    sources: [
+      'Indiana Department of Revenue, Departmental Notice #1 (2026 Withholding Instructions, 2.95% state rate)',
+      'Indiana Department of Labor',
+    ],
+  },
+  AZ: {
+    code: 'AZ',
+    name: 'Arizona',
+    slug: 'arizona-hourly-paycheck-calculator',
+    allowances: {
+      label: 'Dependent credits ($100/ea)',
+      help: 'Number of qualifying dependents ($100 annual Arizona tax credit per dependent).',
+      defaultSingle: 0,
+      defaultMarried: 0,
+    },
+    minimumWage: 15.15,
+    minimumWageNote:
+      "Arizona's statewide minimum wage is $15.15 per hour in 2026 (adjusted each January 1 for cost of living), and cities such as Flagstaff and Tucson enforce higher local minimum wages. Employers may take up to a $3.00/hour tip credit for tipped employees.",
+    overtimeRule:
+      'Arizona follows federal FLSA overtime rules: 1.5× the regular hourly rate for hours worked over 40 in a workweek.',
+    stateTaxSummary:
+      'Arizona has a flat 2.50% state income tax rate — the lowest flat income tax rate among states that levy an income tax (alongside North Dakota). After subtracting the standard deduction ($16,100 Single, $32,200 Married Filing Jointly, $24,150 Head of Household), taxable income is taxed at 2.50%. On Form A-4, employees elect a percentage of gross wages to withhold (default 2.0%).',
+    extraFaqs: [
+      {
+        question: 'How does Arizona Form A-4 work for paycheck withholding?',
+        answer:
+          'Because Arizona switched to a flat 2.5% income tax, Form A-4 lets you choose a flat withholding percentage of your gross wages (0.5%, 1.0%, 1.5%, 2.0%, 2.5%, 3.0%, or 3.5%). For most full-time workers, the 2.0% default election closely matches the 2.5% statutory tax after the standard deduction.',
+      },
+      {
+        question: 'Do Phoenix, Tucson, or Mesa have a city income tax?',
+        answer:
+          'No. Arizona cities do not levy a local income tax on employee wages.',
+      },
+    ],
+    sources: [
+      'Arizona Department of Revenue, Form A-4 & 2026 Individual Income Tax Rate (2.5% flat rate)',
+      'Industrial Commission of Arizona, 2026 Minimum Wage',
+    ],
+  },
+  CO: {
+    code: 'CO',
+    name: 'Colorado',
+    slug: 'colorado-hourly-paycheck-calculator',
+    allowances: {
+      label: 'DR 0004 dependent allowances',
+      help: 'Optional withholding allowances from Colorado Form DR 0004 (0 if using your federal W-4 default).',
+      defaultSingle: 0,
+      defaultMarried: 0,
+    },
+    minimumWage: 15.2,
+    minimumWageNote:
+      "Colorado's statewide minimum wage is $15.20 per hour in 2026 (adjusted annually for inflation), while Denver and Boulder County set higher local minimum wages (over $19.00/hour in Denver).",
+    overtimeRule:
+      'Under the Colorado Overtime and Minimum Pay Standards (COMPS) Order, non-exempt employees earn 1.5× overtime pay for hours worked over 40 in a workweek, over 12 in a workday, or over 12 consecutive hours.',
+    stateTaxSummary:
+      'Colorado levies a flat 4.40% state income tax on federal taxable income (gross wages minus the $16,100 Single / $32,200 Married standard deduction). Most Colorado employees also have 0.45% deducted for the Colorado Family and Medical Leave Insurance (FAMLI) program up to the $184,500 Social Security wage cap.',
+    extraFaqs: [
+      {
+        question: 'What is the CO FAMLI deduction on my Colorado paycheck?',
+        answer:
+          'FAMLI is Colorado’s voter-approved Paid Family and Medical Leave Insurance program, which provides up to 12 weeks of paid leave. The total premium is 0.90% of wages up to the Social Security cap ($184,500 in 2026), split 50/50 between employer and employee — so the employee payroll deduction is 0.45%.',
+      },
+      {
+        question: 'Does Denver have an occupational privilege ("head") tax?',
+        answer:
+          'Yes. Employees who earn at least $500 in a calendar month working inside the City and County of Denver have $5.75 per month withheld for the Denver Employee Occupational Privilege Tax (Aurora, Greenwood Village, Sheridan, and Glendale have similar $2–$5 monthly head taxes).',
+      },
+    ],
+    sources: [
+      'Colorado Department of Revenue, DR 1098 Colorado Income Tax Withholding Worksheet (4.40% rate)',
+      'Colorado Department of Labor and Employment, FAMLI Division (0.45% employee rate) & COMPS Order',
     ],
   },
 };
@@ -255,10 +572,12 @@ function describeScenario(page: StatePaycheckPage, s: Scenario) {
     stateAllowances: allowances,
     nycResident: s.nycResident,
   });
-  const hours = s.overtimeHours > 0
-    ? `${s.regularHours} regular hours plus ${s.overtimeHours} overtime hours a week`
-    : `${s.regularHours} hours a week`;
-  const status = s.filingStatus === 'married' ? 'married' : s.filingStatus === 'hoh' ? 'head of household' : 'single';
+  const hours =
+    s.overtimeHours > 0
+      ? `${s.regularHours} regular hours plus ${s.overtimeHours} overtime hours a week`
+      : `${s.regularHours} hours a week`;
+  const status =
+    s.filingStatus === 'married' ? 'married' : s.filingStatus === 'hoh' ? 'head of household' : 'single';
   const allowanceText = page.allowances ? ` and ${allowances} ${page.allowances.label}` : '';
   const lines = r.deductions.map((d) => `${d.label} ${usd(d.perPeriod)}`).join(', ');
   return {
@@ -273,7 +592,7 @@ function describeScenario(page: StatePaycheckPage, s: Scenario) {
 
 export function buildStatePaycheckSeo(code: StateCode) {
   const page = STATE_PAYCHECK_PAGES[code];
-  const hasIncomeTax = page.allowances !== null;
+  const hasIncomeTax = page.allowances !== null || code === 'PA' || code === 'WA';
 
   const scenarios: Scenario[] = [
     {
@@ -313,21 +632,23 @@ export function buildStatePaycheckSeo(code: StateCode) {
     });
   }
 
-  const otherStates = STATE_CODES.filter((c) => c !== code).map((c) => STATE_PAYCHECK_PAGES[c]);
+  const otherStates = STATE_CODES.filter((c) => c !== code)
+    .slice(0, 6)
+    .map((c) => STATE_PAYCHECK_PAGES[c]);
 
   return {
     howToSteps: [
       `Enter your hourly wage. The ${page.name} minimum wage for ${TAX_YEAR} is ${usd(page.minimumWage)}${code === 'NY' ? ' in New York City, Long Island, and Westchester' : ''}.`,
       'Enter your regular hours per week and any overtime hours. Overtime is paid at 1.5× your hourly rate.',
       'Choose how often you are paid (weekly, every two weeks, twice a month, or monthly) and your federal filing status from your W-4.',
-      hasIncomeTax
-        ? `Enter your ${page.allowances!.label}${code === 'NY' ? ' and whether you live in New York City' : ''}. Leave the default if you are not sure.`
-        : `${page.name} has no state income tax, so there is nothing else to enter.`,
-      'Click "Calculate" to see your take-home pay per paycheck and per year, with every federal and state deduction itemized.',
+      page.allowances
+        ? `Enter your ${page.allowances.label}${code === 'NY' ? ' and whether you live in New York City' : ''}. Leave the default if you are not sure.`
+        : `Review your instant ${page.name} and federal withholding breakdown below.`,
+      'Your take-home pay per paycheck, per month, and per year updates automatically in real time.',
     ],
 
     formula: hasIncomeTax
-      ? `Take-Home Pay = Gross Pay − Federal Income Tax − Social Security − Medicare − ${page.name} Taxes`
+      ? `Take-Home Pay = Gross Pay − Federal Income Tax − Social Security − Medicare − ${page.name} Deductions`
       : 'Take-Home Pay = Gross Pay − Federal Income Tax − Social Security − Medicare',
     formulaDescription:
       `Gross pay is your hourly rate × regular hours, plus overtime hours × rate × 1.5, converted to your pay period. ` +
@@ -343,7 +664,7 @@ export function buildStatePaycheckSeo(code: StateCode) {
         answer:
           `${page.stateTaxSummary} On top of state deductions, every worker pays federal income tax (based on your W-4), Social Security at 6.2%, and Medicare at 1.45%. ` +
           `For a single worker earning $25 an hour full time, total deductions come to about ${Math.round(
-            singleFullTime(code, 25, page.allowances?.defaultSingle ?? 0).effectiveRate * 100,
+            singleFullTime(code, 25, page.allowances?.defaultSingle ?? 0).effectiveRate * 100
           )}% of gross pay.`,
       },
       {
@@ -360,7 +681,7 @@ export function buildStatePaycheckSeo(code: StateCode) {
       {
         question: 'How accurate is this paycheck estimate?',
         answer:
-          `It uses the official ${TAX_YEAR} withholding formulas, so for a standard W-4${hasIncomeTax ? ` and ${page.allowances!.label}` : ''} with no other deductions it should be within a few dollars of your actual paycheck. ` +
+          `It uses the official ${TAX_YEAR} withholding formulas, so for a standard W-4${page.allowances ? ` and ${page.allowances.label}` : ''} with no other deductions it should be within a few dollars of your actual paycheck. ` +
           'Your real check will be lower if you have pre-tax deductions like 401(k) contributions or health insurance premiums (those also reduce your income tax), or extra withholding on your W-4. ' +
           `Sources: IRS Rev. Proc. 2025-32, Social Security Administration ${TAX_YEAR} wage base, ${page.sources.join('; ')}.`,
       },
@@ -370,7 +691,7 @@ export function buildStatePaycheckSeo(code: StateCode) {
       {
         slug: 'hourly-paycheck-calculator',
         title: 'Hourly Paycheck Calculator',
-        description: 'Quick take-home estimate for any state with custom tax rates',
+        description: 'Quick take-home estimate for any state with 401(k) & health deductions',
         icon: 'DollarSign',
       },
       ...otherStates.map((s) => ({

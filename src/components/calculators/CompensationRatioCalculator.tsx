@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { salary: number; mid: number; compaRatio: number; compaPct: number; rangePosition: number; status: string; label: string; }
 
 export default function CompensationRatioCalculator() {
-  const [employeeSalary, setEmployeeSalary] = useState('');
-  const [marketMidpoint, setMarketMidpoint] = useState('');
-  const [marketMin, setMarketMin] = useState('');
-  const [marketMax, setMarketMax] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [employeeSalary, setEmployeeSalary] = useState('75000');
+  const [marketMidpoint, setMarketMidpoint] = useState('80000');
+  const [marketMin, setMarketMin] = useState('65000');
+  const [marketMax, setMarketMax] = useState('95000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ employeeSalary: string; marketMidpoint: string; marketMin: string; marketMax: string }>('compensation-ratio-calculator');
@@ -34,7 +34,7 @@ export default function CompensationRatioCalculator() {
   const rangePosition = mMax > mMin ? ((salary - mMin) / (mMax - mMin)) * 100 : 0;
   const status = compaRatio < 0.9 ? "Underpaid" : compaRatio > 1.1 ? "Overpaid" : "At Market";
 
-  const handleTryExample = () => { setEmployeeSalary('75000'); setMarketMidpoint('80000'); setMarketMin('65000'); setMarketMax('95000'); setCalculated(false); };
+  const handleTryExample = () => { setEmployeeSalary('75000'); setMarketMidpoint('80000'); setMarketMin('65000'); setMarketMax('95000'); setCalculated(true); };
   const handleCalculate = () => {
     if (salary > 0 && mid > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function CompensationRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="employeeSalary" type="number" step="any" min="0" placeholder="75000" className="pl-7"
-                value={employeeSalary} onChange={(e) => { setEmployeeSalary(e.target.value); setCalculated(false); }} />
+                value={employeeSalary} onChange={(e) => { setEmployeeSalary(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function CompensationRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="marketMidpoint" type="number" step="any" min="0" placeholder="80000" className="pl-7"
-                value={marketMidpoint} onChange={(e) => { setMarketMidpoint(e.target.value); setCalculated(false); }} />
+                value={marketMidpoint} onChange={(e) => { setMarketMidpoint(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function CompensationRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="marketMin" type="number" step="any" min="0" placeholder="65000" className="pl-7"
-                value={marketMin} onChange={(e) => { setMarketMin(e.target.value); setCalculated(false); }} />
+                value={marketMin} onChange={(e) => { setMarketMin(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -83,7 +83,7 @@ export default function CompensationRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="marketMax" type="number" step="any" min="0" placeholder="95000" className="pl-7"
-                value={marketMax} onChange={(e) => { setMarketMax(e.target.value); setCalculated(false); }} />
+                value={marketMax} onChange={(e) => { setMarketMax(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -104,11 +104,11 @@ export default function CompensationRatioCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Compa-Ratio</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{compaPct.toFixed(1)}%`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${compaPct.toFixed(1)}%`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Status: ${status}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Range position: ${rangePosition.toFixed(0)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{'At market = 90-110%'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Status: ${status}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Range position: ${rangePosition.toFixed(0)}%`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{'At market = 90-110%'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -127,11 +127,11 @@ export default function CompensationRatioCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Compa-Ratio</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{compaPct.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${compaPct.toFixed(1)}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Range Pos</p>
-                    <p className={`text-lg font-bold`}>{`{rangePosition.toFixed(0)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${rangePosition.toFixed(0)}%`}</p>
                   </div>
               </div>
 

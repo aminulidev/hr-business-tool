@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { ft: number; ptHours: number; ptFTE: number; totalFTE: number; acaFTE: number; label: string; }
 
 export default function FTECalculator() {
-  const [fullTimeEmps, setFullTimeEmps] = useState('');
-  const [partTimeHours, setPartTimeHours] = useState('Sum of all PT employees weekly hours');
-  const [fullTimeHours, setFullTimeHours] = useState('Standard 40, ACA 30');
-  const [calculated, setCalculated] = useState(false);
+  const [fullTimeEmps, setFullTimeEmps] = useState('10');
+  const [partTimeHours, setPartTimeHours] = useState('120');
+  const [fullTimeHours, setFullTimeHours] = useState('40');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ fullTimeEmps: string; partTimeHours: string; fullTimeHours: string }>('fte-calculator');
@@ -31,7 +31,7 @@ export default function FTECalculator() {
   const totalFTE = ft + ptFTE;
   const acaFTE = ft + (ptHours / 30);
 
-  const handleTryExample = () => { setFullTimeEmps('10'); setPartTimeHours('120'); setFullTimeHours('40'); setCalculated(false); };
+  const handleTryExample = () => { setFullTimeEmps('10'); setPartTimeHours('120'); setFullTimeHours('40'); setCalculated(true); };
   const handleCalculate = () => {
     if (ft >= 0 && ptHours >= 0) {
       setCalculated(true);
@@ -56,7 +56,7 @@ export default function FTECalculator() {
             <div className="relative">
               
               <Input id="fullTimeEmps" type="number" step="any" min="0" placeholder="10"
-                value={fullTimeEmps} onChange={(e) => { setFullTimeEmps(e.target.value); setCalculated(false); }} />
+                value={fullTimeEmps} onChange={(e) => { setFullTimeEmps(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -64,7 +64,7 @@ export default function FTECalculator() {
             <div className="relative">
               
               <Input id="partTimeHours" type="number" step="any" min="0" placeholder="120"
-                value={partTimeHours} onChange={(e) => { setPartTimeHours(e.target.value); setCalculated(false); }} />
+                value={partTimeHours} onChange={(e) => { setPartTimeHours(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Sum of all PT employees weekly hours</p>
           </div>
@@ -73,7 +73,7 @@ export default function FTECalculator() {
             <div className="relative">
               
               <Input id="fullTimeHours" type="number" step="any" min="0" placeholder="40"
-                value={fullTimeHours} onChange={(e) => { setFullTimeHours(e.target.value); setCalculated(false); }} />
+                value={fullTimeHours} onChange={(e) => { setFullTimeHours(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Standard 40, ACA 30</p>
           </div>
@@ -95,11 +95,11 @@ export default function FTECalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Total FTE</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{totalFTE.toFixed(1)} FTE`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${totalFTE.toFixed(1)} FTE`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`${ft} full-time`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`${ptFTE.toFixed(1)} from part-time`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`ACA FTE: ${acaFTE.toFixed(1)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`${ft} full-time`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`${ptFTE.toFixed(1)} from part-time`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`ACA FTE: ${acaFTE.toFixed(1)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -110,19 +110,19 @@ export default function FTECalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Full-Time Emps</p>
-                    <p className={`text-lg font-bold`}>{`{ft}`}</p>
+                    <p className={`text-lg font-bold`}>{`${ft}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">PT Hours/Week</p>
-                    <p className={`text-lg font-bold`}>{`{ptHours}h`}</p>
+                    <p className={`text-lg font-bold`}>{`${ptHours}h`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">PT to FTE</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{ptFTE.toFixed(2)}`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${ptFTE.toFixed(2)}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">ACA FTE</p>
-                    <p className={`text-lg font-bold`}>{`{acaFTE.toFixed(1)}`}</p>
+                    <p className={`text-lg font-bold`}>{`${acaFTE.toFixed(1)}`}</p>
                   </div>
               </div>
 

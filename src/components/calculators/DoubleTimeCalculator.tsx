@@ -31,11 +31,11 @@ interface DoubleTimeSnapshot {
 }
 
 export default function DoubleTimeCalculator() {
-  const [regularRate, setRegularRate] = useState('');
+  const [regularRate, setRegularRate] = useState('26.00');
   const [regularHours, setRegularHours] = useState('40');
-  const [timeAndHalfHours, setTimeAndHalfHours] = useState('0');
-  const [doubleTimeHours, setDoubleTimeHours] = useState('4');
-  const [calculated, setCalculated] = useState(false);
+  const [timeAndHalfHours, setTimeAndHalfHours] = useState('4');
+  const [doubleTimeHours, setDoubleTimeHours] = useState('6');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<DoubleTimeSnapshot | null>(null);
   const [compareB, setCompareB] = useState<DoubleTimeSnapshot | null>(null);
 
@@ -70,7 +70,7 @@ export default function DoubleTimeCalculator() {
     setRegularHours('40');
     setTimeAndHalfHours('4'); // e.g. California hours 9-12 or standard OT
     setDoubleTimeHours('6'); // California hours over 12 or 7th day
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCaliforniaShiftPreset = () => {
@@ -172,9 +172,7 @@ export default function DoubleTimeCalculator() {
                 placeholder="25.00"
                 value={regularRate}
                 onChange={(e) => {
-                  setRegularRate(e.target.value);
-                  setCalculated(false);
-                }}
+                  setRegularRate(e.target.value); setCalculated(true); }}
                 className="pl-7"
               />
             </div>
@@ -194,9 +192,7 @@ export default function DoubleTimeCalculator() {
               placeholder="40"
               value={regularHours}
               onChange={(e) => {
-                setRegularHours(e.target.value);
-                setCalculated(false);
-              }}
+                setRegularHours(e.target.value); setCalculated(true); }}
             />
             <p className="text-xs text-muted-foreground">Standard 1x hours (e.g. 40h/wk or 8h/day).</p>
           </div>
@@ -214,9 +210,7 @@ export default function DoubleTimeCalculator() {
               placeholder="0"
               value={timeAndHalfHours}
               onChange={(e) => {
-                setTimeAndHalfHours(e.target.value);
-                setCalculated(false);
-              }}
+                setTimeAndHalfHours(e.target.value); setCalculated(true); }}
             />
             <p className="text-xs text-muted-foreground">Optional: Hours 9–12 or hours 41–48.</p>
           </div>
@@ -234,9 +228,7 @@ export default function DoubleTimeCalculator() {
               placeholder="4"
               value={doubleTimeHours}
               onChange={(e) => {
-                setDoubleTimeHours(e.target.value);
-                setCalculated(false);
-              }}
+                setDoubleTimeHours(e.target.value); setCalculated(true); }}
             />
             <p className="text-xs text-muted-foreground">Hours over 12/day, 7th day, or holiday.</p>
           </div>

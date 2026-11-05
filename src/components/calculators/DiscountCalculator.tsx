@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Tag, DollarSign, Percent, Info } from 'lucide-react';
 import TryExample from './TryExample';
@@ -43,11 +43,11 @@ const formatCurrency = (value: number): string =>
   value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
 export default function DiscountCalculator() {
-  const [originalPrice, setOriginalPrice] = useState('');
+  const [originalPrice, setOriginalPrice] = useState('120');
   const [discountType, setDiscountType] = useState<DiscountType>('percentage');
-  const [discountValue, setDiscountValue] = useState('');
+  const [discountValue, setDiscountValue] = useState('25');
   const [enableSecondDiscount, setEnableSecondDiscount] = useState(false);
-  const [secondDiscountValue, setSecondDiscountValue] = useState('');
+  const [secondDiscountValue, setSecondDiscountValue] = useState('10');
   const [result, setResult] = useState<DiscountResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ originalPrice: string; discountType: string; discountValue: string; enableSecondDiscount: boolean; secondDiscountValue: string }>('discount-calculator');
@@ -62,7 +62,7 @@ export default function DiscountCalculator() {
     setResult(null);
   };
 
-  const handleCalculate = () => {
+  const handleCalculate = (saveToHistory = true) => {
     setResult(null);
     setError(null);
 
@@ -157,11 +157,28 @@ export default function DiscountCalculator() {
         isChained: false,
       });
     }
+      const computedFinal = enableSecondDiscount
+        ? priceAfterFirst - priceAfterFirst * ((parseFloat(secondDiscountValue) || 0) / 100)
+        : priceAfterFirst;
+      const computedSaved = price - computedFinal;
+      if (saveToHistory) {
+        saveEntry(
+          { originalPrice, discountType, discountValue, enableSecondDiscount, secondDiscountValue },
+          `${formatCurrency(price)} → ${formatCurrency(computedFinal)} (saved ${formatCurrency(computedSaved)})`
+        );
+      }
+      return;
+    // eslint-disable-next-line no-unreachable
     saveEntry(
       { originalPrice, discountType, discountValue, enableSecondDiscount, secondDiscountValue },
-      `${formatCurrency(parseFloat(originalPrice))} → ${formatCurrency(result?.finalPrice ?? 0)} (saved ${formatCurrency(result?.totalSaved ?? 0)})`
+      `${formatCurrency(parseFloat(originalPrice))} → ${formatCurrency(computedFinal)} (saved ${formatCurrency(computedSaved)})`
     );
   };
+
+  useEffect(() => {
+    handleCalculate(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [originalPrice, discountType, discountValue, enableSecondDiscount, secondDiscountValue]);
 
   const handleRestore = (inputs: { originalPrice: string; discountType: string; discountValue: string; enableSecondDiscount: boolean; secondDiscountValue: string }) => {
     setOriginalPrice(inputs.originalPrice);
@@ -340,7 +357,7 @@ export default function DiscountCalculator() {
           <TryExample onClick={handleTryExample} />
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <Button
-              onClick={handleCalculate}
+              onClick={() => handleCalculate(true)}
               className="flex-1 sm:flex-none bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
               size="lg"
             >

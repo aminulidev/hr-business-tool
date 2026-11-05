@@ -16,13 +16,13 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { salary: number; recruiting: number; onboarding: number; training: number; vacancyCost: number; totalCost: number; pctSalary: number; label: string; }
 
 export default function ReplacementCostCalculator() {
-  const [annualSalary, setAnnualSalary] = useState('');
-  const [recruitingPct, setRecruitingPct] = useState('Job ads, agency, HR time');
-  const [onboardingPct, setOnboardingPct] = useState('Orientation, setup');
-  const [trainingPct, setTrainingPct] = useState('Time to full productivity');
-  const [vacancyWeeks, setVacancyWeeks] = useState('');
-  const [coverageOvertime, setCoverageOvertime] = useState('OT for remaining team');
-  const [calculated, setCalculated] = useState(false);
+  const [annualSalary, setAnnualSalary] = useState('75000');
+  const [recruitingPct, setRecruitingPct] = useState('20');
+  const [onboardingPct, setOnboardingPct] = useState('10');
+  const [trainingPct, setTrainingPct] = useState('30');
+  const [vacancyWeeks, setVacancyWeeks] = useState('6');
+  const [coverageOvertime, setCoverageOvertime] = useState('8000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualSalary: string; recruitingPct: string; onboardingPct: string; trainingPct: string; vacancyWeeks: string; coverageOvertime: string }>('replacement-cost-calculator');
@@ -40,7 +40,7 @@ export default function ReplacementCostCalculator() {
   const totalCost = recruiting + onboarding + training + vacancyCost + ot;
   const pctSalary = salary > 0 ? (totalCost / salary) * 100 : 0;
 
-  const handleTryExample = () => { setAnnualSalary('75000'); setRecruitingPct('20'); setOnboardingPct('10'); setTrainingPct('30'); setVacancyWeeks('6'); setCoverageOvertime('8000'); setCalculated(false); };
+  const handleTryExample = () => { setAnnualSalary('75000'); setRecruitingPct('20'); setOnboardingPct('10'); setTrainingPct('30'); setVacancyWeeks('6'); setCoverageOvertime('8000'); setCalculated(true); };
   const handleCalculate = () => {
     if (salary > 0) {
       setCalculated(true);
@@ -65,7 +65,7 @@ export default function ReplacementCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="annualSalary" type="number" step="any" min="0" placeholder="75000" className="pl-7"
-                value={annualSalary} onChange={(e) => { setAnnualSalary(e.target.value); setCalculated(false); }} />
+                value={annualSalary} onChange={(e) => { setAnnualSalary(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -73,7 +73,7 @@ export default function ReplacementCostCalculator() {
             <div className="relative">
               
               <Input id="recruitingPct" type="number" step="any" min="0" placeholder="20"
-                value={recruitingPct} onChange={(e) => { setRecruitingPct(e.target.value); setCalculated(false); }} />
+                value={recruitingPct} onChange={(e) => { setRecruitingPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Job ads, agency, HR time</p>
           </div>
@@ -82,7 +82,7 @@ export default function ReplacementCostCalculator() {
             <div className="relative">
               
               <Input id="onboardingPct" type="number" step="any" min="0" placeholder="10"
-                value={onboardingPct} onChange={(e) => { setOnboardingPct(e.target.value); setCalculated(false); }} />
+                value={onboardingPct} onChange={(e) => { setOnboardingPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Orientation, setup</p>
           </div>
@@ -91,7 +91,7 @@ export default function ReplacementCostCalculator() {
             <div className="relative">
               
               <Input id="trainingPct" type="number" step="any" min="0" placeholder="30"
-                value={trainingPct} onChange={(e) => { setTrainingPct(e.target.value); setCalculated(false); }} />
+                value={trainingPct} onChange={(e) => { setTrainingPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Time to full productivity</p>
           </div>
@@ -100,7 +100,7 @@ export default function ReplacementCostCalculator() {
             <div className="relative">
               
               <Input id="vacancyWeeks" type="number" step="any" min="0" placeholder="6"
-                value={vacancyWeeks} onChange={(e) => { setVacancyWeeks(e.target.value); setCalculated(false); }} />
+                value={vacancyWeeks} onChange={(e) => { setVacancyWeeks(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -108,7 +108,7 @@ export default function ReplacementCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="coverageOvertime" type="number" step="any" min="0" placeholder="8000" className="pl-7"
-                value={coverageOvertime} onChange={(e) => { setCoverageOvertime(e.target.value); setCalculated(false); }} />
+                value={coverageOvertime} onChange={(e) => { setCoverageOvertime(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">OT for remaining team</p>
           </div>
@@ -132,9 +132,9 @@ export default function ReplacementCostCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Total Replacement Cost</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalCost)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`${pctSalary.toFixed(0)}% of annual salary`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Vacancy cost: ${formatCurrency(vacancyCost)}`}</Badge>
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{'Typical: 50-200% of salary'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`${pctSalary.toFixed(0)}% of annual salary`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Vacancy cost: ${formatCurrency(vacancyCost)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{'Typical: 50-200% of salary'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

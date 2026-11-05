@@ -44,7 +44,7 @@ export default function HolidayCountdownCalculator() {
     return { upcoming, next: upcoming[0] };
   }, [refDate]);
 
-  const handleTryExample = () => { setRefDate(new Date().toISOString().slice(0, 10)); setCalculated(false); };
+  const handleTryExample = () => { setRefDate(new Date().toISOString().slice(0, 10)); setCalculated(true); };
   const handleCalculate = () => {
     setCalculated(true);
     const next = result.next;

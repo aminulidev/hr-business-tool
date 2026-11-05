@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { cacV: number; arpuV: number; gm: number; churn: number; ltv: number; ltvCacRatio: number; paybackMonths: number; contributionMargin: number; label: string; }
 
 export default function UnitEconomicsCalculator() {
-  const [cac, setCac] = useState('');
-  const [arpu, setArpu] = useState('Avg revenue per user/mo');
-  const [grossMarginPct, setGrossMarginPct] = useState('');
-  const [monthlyChurn, setMonthlyChurn] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [cac, setCac] = useState('500');
+  const [arpu, setArpu] = useState('100');
+  const [grossMarginPct, setGrossMarginPct] = useState('80');
+  const [monthlyChurn, setMonthlyChurn] = useState('3');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ cac: string; arpu: string; grossMarginPct: string; monthlyChurn: string }>('unit-economics-calculator');
@@ -34,7 +34,7 @@ export default function UnitEconomicsCalculator() {
   const paybackMonths = arpuV > 0 && gm > 0 ? cacV / (arpuV * (gm / 100)) : 0;
   const contributionMargin = arpuV * (gm / 100);
 
-  const handleTryExample = () => { setCac('500'); setArpu('100'); setGrossMarginPct('80'); setMonthlyChurn('3'); setCalculated(false); };
+  const handleTryExample = () => { setCac('500'); setArpu('100'); setGrossMarginPct('80'); setMonthlyChurn('3'); setCalculated(true); };
   const handleCalculate = () => {
     if (cacV > 0 && arpuV > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function UnitEconomicsCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="cac" type="number" step="any" min="0" placeholder="500" className="pl-7"
-                value={cac} onChange={(e) => { setCac(e.target.value); setCalculated(false); }} />
+                value={cac} onChange={(e) => { setCac(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function UnitEconomicsCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="arpu" type="number" step="any" min="0" placeholder="100" className="pl-7"
-                value={arpu} onChange={(e) => { setArpu(e.target.value); setCalculated(false); }} />
+                value={arpu} onChange={(e) => { setArpu(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Avg revenue per user/mo</p>
           </div>
@@ -76,7 +76,7 @@ export default function UnitEconomicsCalculator() {
             <div className="relative">
               
               <Input id="grossMarginPct" type="number" step="any" min="0" placeholder="80"
-                value={grossMarginPct} onChange={(e) => { setGrossMarginPct(e.target.value); setCalculated(false); }} />
+                value={grossMarginPct} onChange={(e) => { setGrossMarginPct(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -84,7 +84,7 @@ export default function UnitEconomicsCalculator() {
             <div className="relative">
               
               <Input id="monthlyChurn" type="number" step="any" min="0" placeholder="3"
-                value={monthlyChurn} onChange={(e) => { setMonthlyChurn(e.target.value); setCalculated(false); }} />
+                value={monthlyChurn} onChange={(e) => { setMonthlyChurn(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -105,11 +105,11 @@ export default function UnitEconomicsCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">LTV:CAC Ratio</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{ltvCacRatio.toFixed(1)}:1`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${ltvCacRatio.toFixed(1)}:1`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`LTV: ${formatCurrency(ltv)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Payback: ${paybackMonths.toFixed(1)} months`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{ltvCacRatio < 3 ? "Below target" : ltvCacRatio > 5 ? "Strong" : "Healthy"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`LTV: ${formatCurrency(ltv)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Payback: ${paybackMonths.toFixed(1)} months`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{ltvCacRatio < 3 ? "Below target" : ltvCacRatio > 5 ? "Strong" : "Healthy"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -128,11 +128,11 @@ export default function UnitEconomicsCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">LTV:CAC</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{ltvCacRatio.toFixed(1)}:1`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${ltvCacRatio.toFixed(1)}:1`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Payback</p>
-                    <p className={`text-lg font-bold`}>{`{paybackMonths.toFixed(1)}mo`}</p>
+                    <p className={`text-lg font-bold`}>{`${paybackMonths.toFixed(1)}mo`}</p>
                   </div>
               </div>
 

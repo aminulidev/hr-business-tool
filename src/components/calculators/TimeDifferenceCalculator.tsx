@@ -19,9 +19,9 @@ export default function TimeDifferenceCalculator() {
   const [endDate, setEndDate] = useState(() => {
     const d = new Date(); d.setDate(d.getDate() + 30); return d.toISOString().slice(0, 10);
   });
-  const [startTime, setStartTime] = useState('09:00');
-  const [endTime, setEndTime] = useState('17:00');
-  const [calculated, setCalculated] = useState(false);
+  const [startTime, setStartTime] = useState('00:00');
+  const [endTime, setEndTime] = useState('23:59');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<TimeDiffSnapshot | null>(null);
   const [compareB, setCompareB] = useState<TimeDiffSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ startDate: string; endDate: string; startTime: string; endTime: string }>('time-difference-calculator');
@@ -37,7 +37,7 @@ export default function TimeDifferenceCalculator() {
 
   const handleTryExample = () => {
     setStartDate('2026-01-01'); setEndDate('2026-12-31'); setStartTime('00:00'); setEndTime('23:59');
-    setCalculated(false);
+    setCalculated(true);
   };
   const handleCalculate = () => {
     if (diffMs > 0) {
@@ -66,16 +66,16 @@ export default function TimeDifferenceCalculator() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-3">
             <Label>Start Date & Time</Label>
-            <input type="date" value={startDate} onChange={(e) => { setStartDate(e.target.value); setCalculated(false); }}
+            <input type="date" value={startDate} onChange={(e) => { setStartDate(e.target.value); setCalculated(true); }}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
-            <input type="time" value={startTime} onChange={(e) => { setStartTime(e.target.value); setCalculated(false); }}
+            <input type="time" value={startTime} onChange={(e) => { setStartTime(e.target.value); setCalculated(true); }}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
           </div>
           <div className="space-y-3">
             <Label>End Date & Time</Label>
-            <input type="date" value={endDate} onChange={(e) => { setEndDate(e.target.value); setCalculated(false); }}
+            <input type="date" value={endDate} onChange={(e) => { setEndDate(e.target.value); setCalculated(true); }}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
-            <input type="time" value={endTime} onChange={(e) => { setEndTime(e.target.value); setCalculated(false); }}
+            <input type="time" value={endTime} onChange={(e) => { setEndTime(e.target.value); setCalculated(true); }}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
           </div>
         </div>

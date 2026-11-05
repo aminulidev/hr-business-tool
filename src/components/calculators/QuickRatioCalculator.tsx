@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { csh: number; ms: number; arV: number; inv: number; cl: number; quickAssets: number; currentAssets: number; quickRatio: number; currentRatio: number; label: string; }
 
 export default function QuickRatioCalculator() {
-  const [cash, setCash] = useState('');
-  const [marketableSec, setMarketableSec] = useState('');
-  const [ar, setAr] = useState('');
-  const [inventory, setInventory] = useState('');
-  const [currentLiab, setCurrentLiab] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [cash, setCash] = useState('200000');
+  const [marketableSec, setMarketableSec] = useState('50000');
+  const [ar, setAr] = useState('150000');
+  const [inventory, setInventory] = useState('100000');
+  const [currentLiab, setCurrentLiab] = useState('300000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ cash: string; marketableSec: string; ar: string; inventory: string; currentLiab: string }>('quick-ratio-calculator');
@@ -36,7 +36,7 @@ export default function QuickRatioCalculator() {
   const quickRatio = cl > 0 ? quickAssets / cl : 0;
   const currentRatio = cl > 0 ? currentAssets / cl : 0;
 
-  const handleTryExample = () => { setCash('200000'); setMarketableSec('50000'); setAr('150000'); setInventory('100000'); setCurrentLiab('300000'); setCalculated(false); };
+  const handleTryExample = () => { setCash('200000'); setMarketableSec('50000'); setAr('150000'); setInventory('100000'); setCurrentLiab('300000'); setCalculated(true); };
   const handleCalculate = () => {
     if (cl > 0) {
       setCalculated(true);
@@ -61,7 +61,7 @@ export default function QuickRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="cash" type="number" step="any" min="0" placeholder="200000" className="pl-7"
-                value={cash} onChange={(e) => { setCash(e.target.value); setCalculated(false); }} />
+                value={cash} onChange={(e) => { setCash(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -69,7 +69,7 @@ export default function QuickRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="marketableSec" type="number" step="any" min="0" placeholder="50000" className="pl-7"
-                value={marketableSec} onChange={(e) => { setMarketableSec(e.target.value); setCalculated(false); }} />
+                value={marketableSec} onChange={(e) => { setMarketableSec(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -77,7 +77,7 @@ export default function QuickRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="ar" type="number" step="any" min="0" placeholder="150000" className="pl-7"
-                value={ar} onChange={(e) => { setAr(e.target.value); setCalculated(false); }} />
+                value={ar} onChange={(e) => { setAr(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -85,7 +85,7 @@ export default function QuickRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="inventory" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={inventory} onChange={(e) => { setInventory(e.target.value); setCalculated(false); }} />
+                value={inventory} onChange={(e) => { setInventory(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -93,7 +93,7 @@ export default function QuickRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="currentLiab" type="number" step="any" min="0" placeholder="300000" className="pl-7"
-                value={currentLiab} onChange={(e) => { setCurrentLiab(e.target.value); setCalculated(false); }} />
+                value={currentLiab} onChange={(e) => { setCurrentLiab(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -114,11 +114,11 @@ export default function QuickRatioCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Quick Ratio (Acid Test)</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{quickRatio.toFixed(2)}x`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${quickRatio.toFixed(2)}x`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Quick assets: ${formatCurrency(quickAssets)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Current ratio: ${currentRatio.toFixed(2)}x`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{quickRatio < 1 ? "Liquidity risk" : quickRatio > 1.5 ? "Strong" : "Healthy"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Quick assets: ${formatCurrency(quickAssets)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Current ratio: ${currentRatio.toFixed(2)}x`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{quickRatio < 1 ? "Liquidity risk" : quickRatio > 1.5 ? "Strong" : "Healthy"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -137,11 +137,11 @@ export default function QuickRatioCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Quick Ratio</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{quickRatio.toFixed(2)}x`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${quickRatio.toFixed(2)}x`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Current Ratio</p>
-                    <p className={`text-lg font-bold`}>{`{currentRatio.toFixed(2)}x`}</p>
+                    <p className={`text-lg font-bold`}>{`${currentRatio.toFixed(2)}x`}</p>
                   </div>
               </div>
 

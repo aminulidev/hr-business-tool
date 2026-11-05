@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { hours: number; rate: number; disc: number; standardValue: number; discountDollars: number; retainerFee: number; effectiveRate: number; annualValue: number; label: string; }
 
 export default function RetainerCalculator() {
-  const [includedHours, setIncludedHours] = useState('');
-  const [hourlyRate, setHourlyRate] = useState('');
-  const [retainerDiscount, setRetainerDiscount] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [includedHours, setIncludedHours] = useState('40');
+  const [hourlyRate, setHourlyRate] = useState('100');
+  const [retainerDiscount, setRetainerDiscount] = useState('15');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ includedHours: string; hourlyRate: string; retainerDiscount: string }>('retainer-calculator');
@@ -33,7 +33,7 @@ export default function RetainerCalculator() {
   const effectiveRate = hours > 0 ? retainerFee / hours : 0;
   const annualValue = retainerFee * 12;
 
-  const handleTryExample = () => { setIncludedHours('40'); setHourlyRate('100'); setRetainerDiscount('15'); setCalculated(false); };
+  const handleTryExample = () => { setIncludedHours('40'); setHourlyRate('100'); setRetainerDiscount('15'); setCalculated(true); };
   const handleCalculate = () => {
     if (hours > 0 && rate > 0) {
       setCalculated(true);
@@ -58,7 +58,7 @@ export default function RetainerCalculator() {
             <div className="relative">
               
               <Input id="includedHours" type="number" step="any" min="0" placeholder="40"
-                value={includedHours} onChange={(e) => { setIncludedHours(e.target.value); setCalculated(false); }} />
+                value={includedHours} onChange={(e) => { setIncludedHours(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function RetainerCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="hourlyRate" type="number" step="any" min="0" placeholder="100" className="pl-7"
-                value={hourlyRate} onChange={(e) => { setHourlyRate(e.target.value); setCalculated(false); }} />
+                value={hourlyRate} onChange={(e) => { setHourlyRate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function RetainerCalculator() {
             <div className="relative">
               
               <Input id="retainerDiscount" type="number" step="any" min="0" placeholder="15"
-                value={retainerDiscount} onChange={(e) => { setRetainerDiscount(e.target.value); setCalculated(false); }} />
+                value={retainerDiscount} onChange={(e) => { setRetainerDiscount(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Discount vs ad-hoc rate</p>
           </div>
@@ -98,9 +98,9 @@ export default function RetainerCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Monthly Retainer Fee</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(retainerFee)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Effective rate: ${formatCurrency(effectiveRate)}/hr`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Client saves: ${formatCurrency(discountDollars)}/mo`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Annual contract: ${formatCurrency(annualValue)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Effective rate: ${formatCurrency(effectiveRate)}/hr`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Client saves: ${formatCurrency(discountDollars)}/mo`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Annual contract: ${formatCurrency(annualValue)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

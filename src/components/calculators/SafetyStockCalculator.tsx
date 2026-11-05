@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { avgD: number; sigma: number; lt: number; sl: number; zScore: number; safetyStock: number; avgLtDemand: number; reorderPoint: number; label: string; }
 
 export default function SafetyStockCalculator() {
-  const [avgDemand, setAvgDemand] = useState('');
-  const [demandStdDev, setDemandStdDev] = useState('');
-  const [avgLeadTime, setAvgLeadTime] = useState('');
-  const [serviceLevel, setServiceLevel] = useState('90, 95, or 99');
-  const [calculated, setCalculated] = useState(false);
+  const [avgDemand, setAvgDemand] = useState('100');
+  const [demandStdDev, setDemandStdDev] = useState('20');
+  const [avgLeadTime, setAvgLeadTime] = useState('7');
+  const [serviceLevel, setServiceLevel] = useState('95');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ avgDemand: string; demandStdDev: string; avgLeadTime: string; serviceLevel: string }>('safety-stock-calculator');
@@ -34,7 +34,7 @@ export default function SafetyStockCalculator() {
   const avgLtDemand = avgD * lt;
   const reorderPoint = avgLtDemand + safetyStock;
 
-  const handleTryExample = () => { setAvgDemand('100'); setDemandStdDev('20'); setAvgLeadTime('7'); setServiceLevel('95'); setCalculated(false); };
+  const handleTryExample = () => { setAvgDemand('100'); setDemandStdDev('20'); setAvgLeadTime('7'); setServiceLevel('95'); setCalculated(true); };
   const handleCalculate = () => {
     if (avgD > 0 && sigma > 0 && lt > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function SafetyStockCalculator() {
             <div className="relative">
               
               <Input id="avgDemand" type="number" step="any" min="0" placeholder="100"
-                value={avgDemand} onChange={(e) => { setAvgDemand(e.target.value); setCalculated(false); }} />
+                value={avgDemand} onChange={(e) => { setAvgDemand(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function SafetyStockCalculator() {
             <div className="relative">
               
               <Input id="demandStdDev" type="number" step="any" min="0" placeholder="20"
-                value={demandStdDev} onChange={(e) => { setDemandStdDev(e.target.value); setCalculated(false); }} />
+                value={demandStdDev} onChange={(e) => { setDemandStdDev(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function SafetyStockCalculator() {
             <div className="relative">
               
               <Input id="avgLeadTime" type="number" step="any" min="0" placeholder="7"
-                value={avgLeadTime} onChange={(e) => { setAvgLeadTime(e.target.value); setCalculated(false); }} />
+                value={avgLeadTime} onChange={(e) => { setAvgLeadTime(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -83,7 +83,7 @@ export default function SafetyStockCalculator() {
             <div className="relative">
               
               <Input id="serviceLevel" type="number" step="any" min="0" placeholder="95"
-                value={serviceLevel} onChange={(e) => { setServiceLevel(e.target.value); setCalculated(false); }} />
+                value={serviceLevel} onChange={(e) => { setServiceLevel(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">90, 95, or 99</p>
           </div>
@@ -105,11 +105,11 @@ export default function SafetyStockCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Safety Stock Level</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{safetyStock.toFixed(0)} units`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${safetyStock.toFixed(0)} units`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Z-score: ${zScore.toFixed(2)} (${serviceLevel}% service)`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Reorder point: ${reorderPoint.toFixed(0)} units`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Lead time demand: ${avgLtDemand.toFixed(0)} units`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Z-score: ${zScore.toFixed(2)} (${serviceLevel}% service)`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Reorder point: ${reorderPoint.toFixed(0)} units`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Lead time demand: ${avgLtDemand.toFixed(0)} units`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -120,19 +120,19 @@ export default function SafetyStockCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Avg Daily Demand</p>
-                    <p className={`text-lg font-bold`}>{`{avgD} units`}</p>
+                    <p className={`text-lg font-bold`}>{`${avgD} units`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Std Dev</p>
-                    <p className={`text-lg font-bold`}>{`{sigma} units`}</p>
+                    <p className={`text-lg font-bold`}>{`${sigma} units`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Safety Stock</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{safetyStock.toFixed(0)} units`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${safetyStock.toFixed(0)} units`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Reorder Point</p>
-                    <p className={`text-lg font-bold`}>{`{reorderPoint.toFixed(0)}`}</p>
+                    <p className={`text-lg font-bold`}>{`${reorderPoint.toFixed(0)}`}</p>
                   </div>
               </div>
 

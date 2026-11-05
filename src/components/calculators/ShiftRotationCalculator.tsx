@@ -46,13 +46,13 @@ const CREW_NAMES = ['A', 'B', 'C', 'D'];
 
 export default function ShiftRotationCalculator() {
   const [pattern, setPattern] = useState<Pattern>('2-2-3');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ pattern: string }>('shift-rotation-calculator');
 
   const info = PATTERNS[pattern];
   const schedule = SCHEDULES[pattern];
 
-  const handleTryExample = () => { setPattern('dupont'); setCalculated(false); };
+  const handleTryExample = () => { setPattern('dupont'); setCalculated(true); };
   const handleCalculate = () => { setCalculated(true); saveEntry({ pattern }, `${info.name} · ${info.crews} crews · ${info.shiftHours}h shifts`); };
   const handleReset = () => { setPattern('2-2-3'); setCalculated(false); };
   const handleRestore = (i: { pattern: string }) => { setPattern(i.pattern as Pattern); setCalculated(true); };
@@ -69,7 +69,7 @@ export default function ShiftRotationCalculator() {
 
         <div className="space-y-2 max-w-md">
           <Label>Shift Pattern</Label>
-          <Select value={pattern} onValueChange={(v) => { setPattern(v as Pattern); setCalculated(false); }}>
+          <Select value={pattern} onValueChange={(v) => { setPattern(v as Pattern); setCalculated(true); }}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
               {(Object.keys(PATTERNS) as Pattern[]).map(p => <SelectItem key={p} value={p}>{PATTERNS[p].name}</SelectItem>)}

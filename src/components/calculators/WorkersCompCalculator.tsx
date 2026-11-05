@@ -33,12 +33,12 @@ const CLASS_CODES = [
 interface WcSnap { annualPayroll: number; rate: number; emr: number; basePremium: number; modifiedPremium: number; perEmployee: number; employees: number; label: string; }
 
 export default function WorkersCompCalculator() {
-  const [annualPayroll, setAnnualPayroll] = useState('');
-  const [ratePerHundred, setRatePerHundred] = useState('');
+  const [annualPayroll, setAnnualPayroll] = useState('500000');
+  const [ratePerHundred, setRatePerHundred] = useState('2.5');
   const [emr, setEmr] = useState('1.0');
-  const [employees, setEmployees] = useState('');
+  const [employees, setEmployees] = useState('10');
   const [selectedCode, setSelectedCode] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<WcSnap | null>(null);
   const [compareB, setCompareB] = useState<WcSnap | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualPayroll: string; ratePerHundred: string; emr: string; employees: string }>('workers-comp-calculator');
@@ -64,7 +64,7 @@ export default function WorkersCompCalculator() {
     setRatePerHundred('2.5');
     setEmr('1.0');
     setEmployees('10');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -107,7 +107,7 @@ export default function WorkersCompCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="annual-payroll" type="number" step="10000" min="0" placeholder="500,000"
-                value={annualPayroll} onChange={(e) => { setAnnualPayroll(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={annualPayroll} onChange={(e) => { setAnnualPayroll(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
           </div>
           <div className="space-y-2">
@@ -115,20 +115,20 @@ export default function WorkersCompCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="rate-per-hundred" type="number" step="0.01" min="0" placeholder="1.20"
-                value={ratePerHundred} onChange={(e) => { setRatePerHundred(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={ratePerHundred} onChange={(e) => { setRatePerHundred(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
             <p className="text-xs text-muted-foreground">From your policy declarations or class code table</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="emr">Experience Modification Rate (EMR)</Label>
             <Input id="emr" type="number" step="0.01" min="0.5" max="3" placeholder="1.00"
-              value={emr} onChange={(e) => { setEmr(e.target.value); setCalculated(false); }} />
+              value={emr} onChange={(e) => { setEmr(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">1.0 = average · &lt;1.0 = discount · &gt;1.0 = surcharge</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="num-employees">Number of Employees <span className="text-muted-foreground font-normal">optional</span></Label>
             <Input id="num-employees" type="number" step="1" min="1" placeholder="25"
-              value={employees} onChange={(e) => { setEmployees(e.target.value); setCalculated(false); }} />
+              value={employees} onChange={(e) => { setEmployees(e.target.value); setCalculated(true); }} />
           </div>
         </div>
 

@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { eb: number; rev: number; ebitdaMargin: number; label: string; }
 
 export default function EbitdaMarginCalculator() {
-  const [ebitda, setEbitda] = useState('');
-  const [revenue, setRevenue] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [ebitda, setEbitda] = useState('300000');
+  const [revenue, setRevenue] = useState('1000000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ ebitda: string; revenue: string }>('ebitda-margin-calculator');
@@ -28,7 +28,7 @@ export default function EbitdaMarginCalculator() {
   const ebitdaMargin = rev > 0 ? (eb / rev) * 100 : 0;
   const ratio = rev > 0 ? eb / rev : 0;
 
-  const handleTryExample = () => { setEbitda('300000'); setRevenue('1000000'); setCalculated(false); };
+  const handleTryExample = () => { setEbitda('300000'); setRevenue('1000000'); setCalculated(true); };
   const handleCalculate = () => {
     if (rev > 0) {
       setCalculated(true);
@@ -53,7 +53,7 @@ export default function EbitdaMarginCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="ebitda" type="number" step="any" min="0" placeholder="300000" className="pl-7"
-                value={ebitda} onChange={(e) => { setEbitda(e.target.value); setCalculated(false); }} />
+                value={ebitda} onChange={(e) => { setEbitda(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -61,7 +61,7 @@ export default function EbitdaMarginCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="revenue" type="number" step="any" min="0" placeholder="1000000" className="pl-7"
-                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(false); }} />
+                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -84,9 +84,9 @@ export default function EbitdaMarginCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">EBITDA Margin</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(ebitdaMargin)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`EBITDA: ${formatCurrency(eb)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{'SaaS 30-40%, Manufacturing 15%, Retail 10%'}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{ebitdaMargin < 10 ? "Low" : ebitdaMargin > 25 ? "Strong" : "Healthy"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`EBITDA: ${formatCurrency(eb)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{'SaaS 30-40%, Manufacturing 15%, Retail 10%'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{ebitdaMargin < 10 ? "Low" : ebitdaMargin > 25 ? "Strong" : "Healthy"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -109,7 +109,7 @@ export default function EbitdaMarginCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Per $1 Rev</p>
-                    <p className={`text-lg font-bold`}>{`${ebitdaMargin.toFixed(2)}`}</p>
+                    <p className={`text-lg font-bold`}>{`$${ratio.toFixed(2)}`}</p>
                   </div>
               </div>
 

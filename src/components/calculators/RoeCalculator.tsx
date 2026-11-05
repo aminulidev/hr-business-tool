@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { ni: number; equity: number; roe: number; ratio: number; label: string; }
 
 export default function RoeCalculator() {
-  const [netIncome, setNetIncome] = useState('');
-  const [shareholdersEquity, setShareholdersEquity] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [netIncome, setNetIncome] = useState('500000');
+  const [shareholdersEquity, setShareholdersEquity] = useState('2500000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ netIncome: string; shareholdersEquity: string }>('roe-calculator');
@@ -28,7 +28,7 @@ export default function RoeCalculator() {
   const roe = equity > 0 ? (ni / equity) * 100 : 0;
   const ratio = equity > 0 ? ni / equity : 0;
 
-  const handleTryExample = () => { setNetIncome('500000'); setShareholdersEquity('2500000'); setCalculated(false); };
+  const handleTryExample = () => { setNetIncome('500000'); setShareholdersEquity('2500000'); setCalculated(true); };
   const handleCalculate = () => {
     if (ni !== 0 && equity > 0) {
       setCalculated(true);
@@ -53,7 +53,7 @@ export default function RoeCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="netIncome" type="number" step="any" min="0" placeholder="500000" className="pl-7"
-                value={netIncome} onChange={(e) => { setNetIncome(e.target.value); setCalculated(false); }} />
+                value={netIncome} onChange={(e) => { setNetIncome(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -61,7 +61,7 @@ export default function RoeCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="shareholdersEquity" type="number" step="any" min="0" placeholder="2500000" className="pl-7"
-                value={shareholdersEquity} onChange={(e) => { setShareholdersEquity(e.target.value); setCalculated(false); }} />
+                value={shareholdersEquity} onChange={(e) => { setShareholdersEquity(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -84,9 +84,9 @@ export default function RoeCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Return on Equity (ROE)</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(roe)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Ratio: ${ratio.toFixed(2)}x`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{'S&P 500 avg: 15-20%'}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{roe < 10 ? "Below benchmark" : roe > 20 ? "Excellent" : "Healthy"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Ratio: ${ratio.toFixed(2)}x`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{'S&P 500 avg: 15-20%'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{roe < 10 ? "Below benchmark" : roe > 20 ? "Excellent" : "Healthy"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -109,7 +109,7 @@ export default function RoeCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Ratio</p>
-                    <p className={`text-lg font-bold`}>{`{ratio.toFixed(2)}x`}</p>
+                    <p className={`text-lg font-bold`}>{`${ratio.toFixed(2)}x`}</p>
                   </div>
               </div>
 

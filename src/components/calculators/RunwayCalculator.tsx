@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { cash: number; burn: number; runway: number; runwayYears: number; fundraiseBy: number; label: string; }
 
 export default function RunwayCalculator() {
-  const [cashBalance, setCashBalance] = useState('');
-  const [monthlyBurn, setMonthlyBurn] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [cashBalance, setCashBalance] = useState('2000000');
+  const [monthlyBurn, setMonthlyBurn] = useState('70000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ cashBalance: string; monthlyBurn: string }>('runway-calculator');
@@ -29,7 +29,7 @@ export default function RunwayCalculator() {
   const runwayYears = runway / 12;
   const fundraiseBy = Math.max(0, runway - 6);
 
-  const handleTryExample = () => { setCashBalance('2000000'); setMonthlyBurn('70000'); setCalculated(false); };
+  const handleTryExample = () => { setCashBalance('2000000'); setMonthlyBurn('70000'); setCalculated(true); };
   const handleCalculate = () => {
     if (cash > 0 && burn > 0) {
       setCalculated(true);
@@ -54,7 +54,7 @@ export default function RunwayCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="cashBalance" type="number" step="any" min="0" placeholder="2000000" className="pl-7"
-                value={cashBalance} onChange={(e) => { setCashBalance(e.target.value); setCalculated(false); }} />
+                value={cashBalance} onChange={(e) => { setCashBalance(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -62,7 +62,7 @@ export default function RunwayCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="monthlyBurn" type="number" step="any" min="0" placeholder="70000" className="pl-7"
-                value={monthlyBurn} onChange={(e) => { setMonthlyBurn(e.target.value); setCalculated(false); }} />
+                value={monthlyBurn} onChange={(e) => { setMonthlyBurn(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -83,11 +83,11 @@ export default function RunwayCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Cash Runway</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{runway.toFixed(1)} months`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${runway.toFixed(1)} months`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`{runwayYears.toFixed(2)} years`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Start fundraising in ${fundraiseBy.toFixed(0)} months`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{runway < 6 ? "CRITICAL" : runway < 12 ? "Raise soon" : "Healthy"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`${runwayYears.toFixed(2)} years`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Start fundraising in ${fundraiseBy.toFixed(0)} months`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{runway < 6 ? "CRITICAL" : runway < 12 ? "Raise soon" : "Healthy"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -106,11 +106,11 @@ export default function RunwayCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Runway (months)</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{runway.toFixed(1)}`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${runway.toFixed(1)}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Runway (years)</p>
-                    <p className={`text-lg font-bold`}>{`{runwayYears.toFixed(2)}`}</p>
+                    <p className={`text-lg font-bold`}>{`${runwayYears.toFixed(2)}`}</p>
                   </div>
               </div>
 

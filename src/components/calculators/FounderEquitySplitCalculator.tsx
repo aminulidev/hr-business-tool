@@ -16,15 +16,15 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { f1i: number; f1c: number; f1t: number; f1p: number; f2i: number; f2c: number; f2t: number; f2p: number; f1Total: number; f2Total: number; f1Pct: number; f2Pct: number; label: string; }
 
 export default function FounderEquitySplitCalculator() {
-  const [f1Idea, setF1Idea] = useState('');
-  const [f1Capital, setF1Capital] = useState('');
-  const [f1Time, setF1Time] = useState('');
-  const [f1IP, setF1IP] = useState('');
-  const [f2Idea, setF2Idea] = useState('');
-  const [f2Capital, setF2Capital] = useState('');
-  const [f2Time, setF2Time] = useState('');
-  const [f2IP, setF2IP] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [f1Idea, setF1Idea] = useState('40');
+  const [f1Capital, setF1Capital] = useState('50');
+  const [f1Time, setF1Time] = useState('60');
+  const [f1IP, setF1IP] = useState('50');
+  const [f2Idea, setF2Idea] = useState('60');
+  const [f2Capital, setF2Capital] = useState('50');
+  const [f2Time, setF2Time] = useState('40');
+  const [f2IP, setF2IP] = useState('50');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ f1Idea: string; f1Capital: string; f1Time: string; f1IP: string; f2Idea: string; f2Capital: string; f2Time: string; f2IP: string }>('founder-equity-split-calculator');
@@ -42,7 +42,7 @@ export default function FounderEquitySplitCalculator() {
   const f1Pct = f1Total + f2Total > 0 ? (f1Total / (f1Total + f2Total)) * 100 : 0;
   const f2Pct = f1Total + f2Total > 0 ? (f2Total / (f1Total + f2Total)) * 100 : 0;
 
-  const handleTryExample = () => { setF1Idea('40'); setF1Capital('50'); setF1Time('60'); setF1IP('50'); setF2Idea('60'); setF2Capital('50'); setF2Time('40'); setF2IP('50'); setCalculated(false); };
+  const handleTryExample = () => { setF1Idea('40'); setF1Capital('50'); setF1Time('60'); setF1IP('50'); setF2Idea('60'); setF2Capital('50'); setF2Time('40'); setF2IP('50'); setCalculated(true); };
   const handleCalculate = () => {
     if (f1Total + f2Total > 0) {
       setCalculated(true);
@@ -67,7 +67,7 @@ export default function FounderEquitySplitCalculator() {
             <div className="relative">
               
               <Input id="f1Idea" type="number" step="any" min="0" placeholder="40"
-                value={f1Idea} onChange={(e) => { setF1Idea(e.target.value); setCalculated(false); }} />
+                value={f1Idea} onChange={(e) => { setF1Idea(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function FounderEquitySplitCalculator() {
             <div className="relative">
               
               <Input id="f1Capital" type="number" step="any" min="0" placeholder="50"
-                value={f1Capital} onChange={(e) => { setF1Capital(e.target.value); setCalculated(false); }} />
+                value={f1Capital} onChange={(e) => { setF1Capital(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -83,7 +83,7 @@ export default function FounderEquitySplitCalculator() {
             <div className="relative">
               
               <Input id="f1Time" type="number" step="any" min="0" placeholder="60"
-                value={f1Time} onChange={(e) => { setF1Time(e.target.value); setCalculated(false); }} />
+                value={f1Time} onChange={(e) => { setF1Time(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -91,7 +91,7 @@ export default function FounderEquitySplitCalculator() {
             <div className="relative">
               
               <Input id="f1IP" type="number" step="any" min="0" placeholder="50"
-                value={f1IP} onChange={(e) => { setF1IP(e.target.value); setCalculated(false); }} />
+                value={f1IP} onChange={(e) => { setF1IP(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -99,7 +99,7 @@ export default function FounderEquitySplitCalculator() {
             <div className="relative">
               
               <Input id="f2Idea" type="number" step="any" min="0" placeholder="60"
-                value={f2Idea} onChange={(e) => { setF2Idea(e.target.value); setCalculated(false); }} />
+                value={f2Idea} onChange={(e) => { setF2Idea(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -107,7 +107,7 @@ export default function FounderEquitySplitCalculator() {
             <div className="relative">
               
               <Input id="f2Capital" type="number" step="any" min="0" placeholder="50"
-                value={f2Capital} onChange={(e) => { setF2Capital(e.target.value); setCalculated(false); }} />
+                value={f2Capital} onChange={(e) => { setF2Capital(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -115,7 +115,7 @@ export default function FounderEquitySplitCalculator() {
             <div className="relative">
               
               <Input id="f2Time" type="number" step="any" min="0" placeholder="40"
-                value={f2Time} onChange={(e) => { setF2Time(e.target.value); setCalculated(false); }} />
+                value={f2Time} onChange={(e) => { setF2Time(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -123,7 +123,7 @@ export default function FounderEquitySplitCalculator() {
             <div className="relative">
               
               <Input id="f2IP" type="number" step="any" min="0" placeholder="50"
-                value={f2IP} onChange={(e) => { setF2IP(e.target.value); setCalculated(false); }} />
+                value={f2IP} onChange={(e) => { setF2IP(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -146,9 +146,9 @@ export default function FounderEquitySplitCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Founder Equity Split</p>
                 <p className="text-4xl font-bold text-emerald-600">{`F1: ${f1Pct.toFixed(1)}% / F2: ${f2Pct.toFixed(1)}%`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Founder 1 weighted: ${f1Total.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Founder 2 weighted: ${f2Total.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Consider 4yr vest, 1yr cliff'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Founder 1 weighted: ${f1Total.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Founder 2 weighted: ${f2Total.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Consider 4yr vest, 1yr cliff'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -159,19 +159,19 @@ export default function FounderEquitySplitCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">F1 Weighted</p>
-                    <p className={`text-lg font-bold`}>{`{f1Total.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${f1Total.toFixed(1)}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">F2 Weighted</p>
-                    <p className={`text-lg font-bold`}>{`{f2Total.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${f2Total.toFixed(1)}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">F1 Equity</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{f1Pct.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${f1Pct.toFixed(1)}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">F2 Equity</p>
-                    <p className={`text-lg font-bold`}>{`{f2Pct.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${f2Pct.toFixed(1)}%`}</p>
                   </div>
               </div>
 

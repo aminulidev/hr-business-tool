@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { prom: number; pass: number; det: number; total: number; enps: number; engagementIndex: number; participationRate: number; label: string; }
 
 export default function EmployeeEngagementScoreCalculator() {
-  const [promoters, setPromoters] = useState('');
-  const [passives, setPassives] = useState('');
-  const [detractors, setDetractors] = useState('');
-  const [avgScore, setAvgScore] = useState('For engagement index');
-  const [calculated, setCalculated] = useState(false);
+  const [promoters, setPromoters] = useState('60');
+  const [passives, setPassives] = useState('25');
+  const [detractors, setDetractors] = useState('15');
+  const [avgScore, setAvgScore] = useState('4.2');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ promoters: string; passives: string; detractors: string; avgScore: string }>('employee-engagement-score-calculator');
@@ -34,7 +34,7 @@ export default function EmployeeEngagementScoreCalculator() {
   const engagementIndex = avg / 5 * 100;
   const participationRate = 85;
 
-  const handleTryExample = () => { setPromoters('60'); setPassives('25'); setDetractors('15'); setAvgScore('4.2'); setCalculated(false); };
+  const handleTryExample = () => { setPromoters('60'); setPassives('25'); setDetractors('15'); setAvgScore('4.2'); setCalculated(true); };
   const handleCalculate = () => {
     if (total > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function EmployeeEngagementScoreCalculator() {
             <div className="relative">
               
               <Input id="promoters" type="number" step="any" min="0" placeholder="60"
-                value={promoters} onChange={(e) => { setPromoters(e.target.value); setCalculated(false); }} />
+                value={promoters} onChange={(e) => { setPromoters(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function EmployeeEngagementScoreCalculator() {
             <div className="relative">
               
               <Input id="passives" type="number" step="any" min="0" placeholder="25"
-                value={passives} onChange={(e) => { setPassives(e.target.value); setCalculated(false); }} />
+                value={passives} onChange={(e) => { setPassives(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function EmployeeEngagementScoreCalculator() {
             <div className="relative">
               
               <Input id="detractors" type="number" step="any" min="0" placeholder="15"
-                value={detractors} onChange={(e) => { setDetractors(e.target.value); setCalculated(false); }} />
+                value={detractors} onChange={(e) => { setDetractors(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -83,7 +83,7 @@ export default function EmployeeEngagementScoreCalculator() {
             <div className="relative">
               
               <Input id="avgScore" type="number" step="any" min="0" placeholder="4.2"
-                value={avgScore} onChange={(e) => { setAvgScore(e.target.value); setCalculated(false); }} />
+                value={avgScore} onChange={(e) => { setAvgScore(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">For engagement index</p>
           </div>
@@ -105,11 +105,11 @@ export default function EmployeeEngagementScoreCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Employee Engagement Score</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{engagementIndex.toFixed(1)}/100`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${engagementIndex.toFixed(1)}/100`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`eNPS: ${enps.toFixed(0)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Participation: ${participationRate}%`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Good eNPS: > 30'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`eNPS: ${enps.toFixed(0)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Participation: ${participationRate}%`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Good eNPS: > 30'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -120,19 +120,19 @@ export default function EmployeeEngagementScoreCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Total Responses</p>
-                    <p className={`text-lg font-bold`}>{`{total}`}</p>
+                    <p className={`text-lg font-bold`}>{`${total}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Promoters %</p>
-                    <p className={`text-lg font-bold`}>{`{total > 0 ? ((prom / total) * 100).toFixed(0) : 0}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${total > 0 ? ((prom / total) * 100).toFixed(0) : 0}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Engagement</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{engagementIndex.toFixed(1)}`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${engagementIndex.toFixed(1)}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">eNPS</p>
-                    <p className={`text-lg font-bold`}>{`{enps.toFixed(0)}`}</p>
+                    <p className={`text-lg font-bold`}>{`${enps.toFixed(0)}`}</p>
                   </div>
               </div>
 

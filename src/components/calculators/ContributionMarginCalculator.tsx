@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { price: number; vc: number; units: number; cmPerUnit: number; cmRatio: number; totalCM: number; label: string; }
 
 export default function ContributionMarginCalculator() {
-  const [sellingPrice, setSellingPrice] = useState('');
-  const [variableCost, setVariableCost] = useState('');
-  const [unitsSold, setUnitsSold] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [sellingPrice, setSellingPrice] = useState('50');
+  const [variableCost, setVariableCost] = useState('20');
+  const [unitsSold, setUnitsSold] = useState('1000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ sellingPrice: string; variableCost: string; unitsSold: string }>('contribution-margin-calculator');
@@ -32,7 +32,7 @@ export default function ContributionMarginCalculator() {
   const totalCM = cmPerUnit * units;
   const vcRatio = price > 0 ? (vc / price) * 100 : 0;
 
-  const handleTryExample = () => { setSellingPrice('50'); setVariableCost('20'); setUnitsSold('1000'); setCalculated(false); };
+  const handleTryExample = () => { setSellingPrice('50'); setVariableCost('20'); setUnitsSold('1000'); setCalculated(true); };
   const handleCalculate = () => {
     if (price > 0 && vc >= 0) {
       setCalculated(true);
@@ -57,7 +57,7 @@ export default function ContributionMarginCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="sellingPrice" type="number" step="any" min="0" placeholder="50" className="pl-7"
-                value={sellingPrice} onChange={(e) => { setSellingPrice(e.target.value); setCalculated(false); }} />
+                value={sellingPrice} onChange={(e) => { setSellingPrice(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -65,7 +65,7 @@ export default function ContributionMarginCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="variableCost" type="number" step="any" min="0" placeholder="20" className="pl-7"
-                value={variableCost} onChange={(e) => { setVariableCost(e.target.value); setCalculated(false); }} />
+                value={variableCost} onChange={(e) => { setVariableCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -73,7 +73,7 @@ export default function ContributionMarginCalculator() {
             <div className="relative">
               
               <Input id="unitsSold" type="number" step="any" min="0" placeholder="1000"
-                value={unitsSold} onChange={(e) => { setUnitsSold(e.target.value); setCalculated(false); }} />
+                value={unitsSold} onChange={(e) => { setUnitsSold(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -96,9 +96,9 @@ export default function ContributionMarginCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Contribution Margin</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(cmRatio)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`CM per unit: ${formatCurrency(cmPerUnit)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Total CM: ${formatCurrency(totalCM)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Variable cost ratio: ${vcRatio.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`CM per unit: ${formatCurrency(cmPerUnit)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Total CM: ${formatCurrency(totalCM)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Variable cost ratio: ${vcRatio.toFixed(1)}%`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

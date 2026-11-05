@@ -39,7 +39,7 @@ export default function SickLeaveCalculator() {
   const [hoursWorked, setHoursWorked] = useState('2080');
   const [usedHours, setUsedHours] = useState('16');
   const [manualAccrual, setManualAccrual] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<SickLeaveSnapshot | null>(null);
   const [compareB, setCompareB] = useState<SickLeaveSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ stateCode: string; hoursWorked: string; usedHours: string; manualAccrual: string }>('sick-leave-calculator');
@@ -52,7 +52,7 @@ export default function SickLeaveCalculator() {
   const accrued = manual > 0 ? manual : Math.min(hrsWorked * state.rate, state.cap);
   const remaining = Math.max(0, accrued - used);
 
-  const handleTryExample = () => { setStateCode('CA'); setHoursWorked('2080'); setUsedHours('16'); setManualAccrual(''); setCalculated(false); };
+  const handleTryExample = () => { setStateCode('CA'); setHoursWorked('2080'); setUsedHours('16'); setManualAccrual(''); setCalculated(true); };
   const handleCalculate = () => {
     if (accrued > 0 || used > 0) {
       setCalculated(true);
@@ -82,7 +82,7 @@ export default function SickLeaveCalculator() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="sl-state">State (for accrual rate)</Label>
-            <Select value={stateCode} onValueChange={(v) => { setStateCode(v); setCalculated(false); }}>
+            <Select value={stateCode} onValueChange={(v) => { setStateCode(v); setCalculated(true); }}>
               <SelectTrigger id="sl-state"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {Object.entries(STATE_MANDATES).map(([code, s]) => (
@@ -94,19 +94,19 @@ export default function SickLeaveCalculator() {
           <div className="space-y-2">
             <Label htmlFor="sl-hours">Hours Worked (Year)</Label>
             <Input id="sl-hours" type="number" step="1" min="0" placeholder="2080" value={hoursWorked}
-              onChange={(e) => { setHoursWorked(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setHoursWorked(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Full-time = ~2,080h/year. 1 FTE = 40h × 52w.</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="sl-used">Sick Hours Used</Label>
             <Input id="sl-used" type="number" step="0.5" min="0" placeholder="16" value={usedHours}
-              onChange={(e) => { setUsedHours(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setUsedHours(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="sl-manual">Manual Accrual Override (optional)</Label>
             <div className="relative">
               <Input id="sl-manual" type="number" step="1" min="0" placeholder="Leave blank to use state formula" value={manualAccrual}
-                onChange={(e) => { setManualAccrual(e.target.value); setCalculated(false); }} />
+                onChange={(e) => { setManualAccrual(e.target.value); setCalculated(true); }} />
               <span className="absolute right-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">h</span>
             </div>
           </div>

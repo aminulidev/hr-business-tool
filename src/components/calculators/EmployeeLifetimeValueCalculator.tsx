@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { rev: number; cost: number; tenure: number; annualValue: number; rampLoss: number; totalValue: number; annualROI: number; label: string; }
 
 export default function EmployeeLifetimeValueCalculator() {
-  const [annualRevenue, setAnnualRevenue] = useState('');
-  const [annualCost, setAnnualCost] = useState('Salary + benefits + taxes');
-  const [avgTenure, setAvgTenure] = useState('');
-  const [rampMonths, setRampMonths] = useState('Time to full productivity');
-  const [calculated, setCalculated] = useState(false);
+  const [annualRevenue, setAnnualRevenue] = useState('200000');
+  const [annualCost, setAnnualCost] = useState('110000');
+  const [avgTenure, setAvgTenure] = useState('4');
+  const [rampMonths, setRampMonths] = useState('6');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualRevenue: string; annualCost: string; avgTenure: string; rampMonths: string }>('employee-lifetime-value-calculator');
@@ -34,7 +34,7 @@ export default function EmployeeLifetimeValueCalculator() {
   const totalValue = annualValue * tenure - rampLoss;
   const annualROI = cost > 0 ? (annualValue / cost) * 100 : 0;
 
-  const handleTryExample = () => { setAnnualRevenue('200000'); setAnnualCost('110000'); setAvgTenure('4'); setRampMonths('6'); setCalculated(false); };
+  const handleTryExample = () => { setAnnualRevenue('200000'); setAnnualCost('110000'); setAvgTenure('4'); setRampMonths('6'); setCalculated(true); };
   const handleCalculate = () => {
     if (rev > 0 && cost > 0 && tenure > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function EmployeeLifetimeValueCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="annualRevenue" type="number" step="any" min="0" placeholder="200000" className="pl-7"
-                value={annualRevenue} onChange={(e) => { setAnnualRevenue(e.target.value); setCalculated(false); }} />
+                value={annualRevenue} onChange={(e) => { setAnnualRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function EmployeeLifetimeValueCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="annualCost" type="number" step="any" min="0" placeholder="110000" className="pl-7"
-                value={annualCost} onChange={(e) => { setAnnualCost(e.target.value); setCalculated(false); }} />
+                value={annualCost} onChange={(e) => { setAnnualCost(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Salary + benefits + taxes</p>
           </div>
@@ -76,7 +76,7 @@ export default function EmployeeLifetimeValueCalculator() {
             <div className="relative">
               
               <Input id="avgTenure" type="number" step="any" min="0" placeholder="4"
-                value={avgTenure} onChange={(e) => { setAvgTenure(e.target.value); setCalculated(false); }} />
+                value={avgTenure} onChange={(e) => { setAvgTenure(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -84,7 +84,7 @@ export default function EmployeeLifetimeValueCalculator() {
             <div className="relative">
               
               <Input id="rampMonths" type="number" step="any" min="0" placeholder="6"
-                value={rampMonths} onChange={(e) => { setRampMonths(e.target.value); setCalculated(false); }} />
+                value={rampMonths} onChange={(e) => { setRampMonths(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Time to full productivity</p>
           </div>
@@ -108,9 +108,9 @@ export default function EmployeeLifetimeValueCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Employee Lifetime Value</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalValue)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Annual value: ${formatCurrency(annualValue)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Annual ROI: ${annualROI.toFixed(0)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Ramp loss: ${formatCurrency(rampLoss)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Annual value: ${formatCurrency(annualValue)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Annual ROI: ${annualROI.toFixed(0)}%`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Ramp loss: ${formatCurrency(rampLoss)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
