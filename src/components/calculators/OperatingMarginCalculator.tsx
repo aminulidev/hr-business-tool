@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { oi: number; rev: number; opMargin: number; label: string; }
 
 export default function OperatingMarginCalculator() {
-  const [operatingIncome, setOperatingIncome] = useState('');
-  const [revenue, setRevenue] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [operatingIncome, setOperatingIncome] = useState('250000');
+  const [revenue, setRevenue] = useState('1000000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ operatingIncome: string; revenue: string }>('operating-margin-calculator');
@@ -27,7 +27,7 @@ export default function OperatingMarginCalculator() {
   const rev = parseFloat(revenue) || 0;
   const opMargin = rev > 0 ? (oi / rev) * 100 : 0;
 
-  const handleTryExample = () => { setOperatingIncome('250000'); setRevenue('1000000'); setCalculated(false); };
+  const handleTryExample = () => { setOperatingIncome('250000'); setRevenue('1000000'); setCalculated(true); };
   const handleCalculate = () => {
     if (rev > 0) {
       setCalculated(true);
@@ -52,7 +52,7 @@ export default function OperatingMarginCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="operatingIncome" type="number" step="any" min="0" placeholder="250000" className="pl-7"
-                value={operatingIncome} onChange={(e) => { setOperatingIncome(e.target.value); setCalculated(false); }} />
+                value={operatingIncome} onChange={(e) => { setOperatingIncome(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -60,7 +60,7 @@ export default function OperatingMarginCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="revenue" type="number" step="any" min="0" placeholder="1000000" className="pl-7"
-                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(false); }} />
+                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -83,9 +83,9 @@ export default function OperatingMarginCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Operating Margin</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(opMargin)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Operating income: ${formatCurrency(oi)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{'Tech 25%, Retail 5%, Manufacturing 10%'}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{opMargin < 5 ? "Low" : opMargin > 15 ? "Strong" : "Healthy"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Operating income: ${formatCurrency(oi)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{'Tech 25%, Retail 5%, Manufacturing 10%'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{opMargin < 5 ? "Low" : opMargin > 15 ? "Strong" : "Healthy"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

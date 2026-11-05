@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { sm: number; cm: number; ctm: number; grr: number; totalLost: number; lostPct: number; label: string; }
 
 export default function GrossRevenueRetentionCalculator() {
-  const [startingMrr, setStartingMrr] = useState('');
-  const [churnedMrr, setChurnedMrr] = useState('');
-  const [contractionMrr, setContractionMrr] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [startingMrr, setStartingMrr] = useState('100000');
+  const [churnedMrr, setChurnedMrr] = useState('3000');
+  const [contractionMrr, setContractionMrr] = useState('2000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ startingMrr: string; churnedMrr: string; contractionMrr: string }>('gross-revenue-retention-calculator');
@@ -31,7 +31,7 @@ export default function GrossRevenueRetentionCalculator() {
   const totalLost = cm + ctm;
   const lostPct = sm > 0 ? (totalLost / sm) * 100 : 0;
 
-  const handleTryExample = () => { setStartingMrr('100000'); setChurnedMrr('3000'); setContractionMrr('2000'); setCalculated(false); };
+  const handleTryExample = () => { setStartingMrr('100000'); setChurnedMrr('3000'); setContractionMrr('2000'); setCalculated(true); };
   const handleCalculate = () => {
     if (sm > 0) {
       setCalculated(true);
@@ -56,7 +56,7 @@ export default function GrossRevenueRetentionCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="startingMrr" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={startingMrr} onChange={(e) => { setStartingMrr(e.target.value); setCalculated(false); }} />
+                value={startingMrr} onChange={(e) => { setStartingMrr(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -64,7 +64,7 @@ export default function GrossRevenueRetentionCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="churnedMrr" type="number" step="any" min="0" placeholder="3000" className="pl-7"
-                value={churnedMrr} onChange={(e) => { setChurnedMrr(e.target.value); setCalculated(false); }} />
+                value={churnedMrr} onChange={(e) => { setChurnedMrr(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function GrossRevenueRetentionCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="contractionMrr" type="number" step="any" min="0" placeholder="2000" className="pl-7"
-                value={contractionMrr} onChange={(e) => { setContractionMrr(e.target.value); setCalculated(false); }} />
+                value={contractionMrr} onChange={(e) => { setContractionMrr(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -95,9 +95,9 @@ export default function GrossRevenueRetentionCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Gross Revenue Retention</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(grr)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-red-500/10 border-red-500/30 text-red-600'">{`Total lost: ${formatCurrency(totalLost)}/mo`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Lost %: ${lostPct.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{grr > 90 ? "Excellent" : grr > 80 ? "Good" : "Needs work"}</Badge>
+                  <Badge variant="outline" className="bg-red-500/10 border-red-500/30 text-red-600">{`Total lost: ${formatCurrency(totalLost)}/mo`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Lost %: ${lostPct.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{grr > 90 ? "Excellent" : grr > 80 ? "Good" : "Needs work"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -120,7 +120,7 @@ export default function GrossRevenueRetentionCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Lost %</p>
-                    <p className={`text-lg font-bold`}>{`{lostPct.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${lostPct.toFixed(1)}%`}</p>
                   </div>
               </div>
 

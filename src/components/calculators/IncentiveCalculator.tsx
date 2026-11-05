@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { base: number; comm: number; bonus: number; sp: number; ote: number; variableComp: number; payMix: number; label: string; }
 
 export default function IncentiveCalculator() {
-  const [baseSalary, setBaseSalary] = useState('');
-  const [commissionAtQuota, setCommissionAtQuota] = useState('');
-  const [bonusAtQuota, setBonusAtQuota] = useState('');
-  const [spiffs, setSpiffs] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [baseSalary, setBaseSalary] = useState('80000');
+  const [commissionAtQuota, setCommissionAtQuota] = useState('60000');
+  const [bonusAtQuota, setBonusAtQuota] = useState('15000');
+  const [spiffs, setSpiffs] = useState('5000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ baseSalary: string; commissionAtQuota: string; bonusAtQuota: string; spiffs: string }>('incentive-calculator');
@@ -34,7 +34,7 @@ export default function IncentiveCalculator() {
   const payMix = ote > 0 ? (variableComp / ote) * 100 : 0;
   const variableRatio = base > 0 ? variableComp / base : 0;
 
-  const handleTryExample = () => { setBaseSalary('80000'); setCommissionAtQuota('60000'); setBonusAtQuota('15000'); setSpiffs('5000'); setCalculated(false); };
+  const handleTryExample = () => { setBaseSalary('80000'); setCommissionAtQuota('60000'); setBonusAtQuota('15000'); setSpiffs('5000'); setCalculated(true); };
   const handleCalculate = () => {
     if (base > 0 || comm > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function IncentiveCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="baseSalary" type="number" step="any" min="0" placeholder="80000" className="pl-7"
-                value={baseSalary} onChange={(e) => { setBaseSalary(e.target.value); setCalculated(false); }} />
+                value={baseSalary} onChange={(e) => { setBaseSalary(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function IncentiveCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="commissionAtQuota" type="number" step="any" min="0" placeholder="60000" className="pl-7"
-                value={commissionAtQuota} onChange={(e) => { setCommissionAtQuota(e.target.value); setCalculated(false); }} />
+                value={commissionAtQuota} onChange={(e) => { setCommissionAtQuota(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function IncentiveCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="bonusAtQuota" type="number" step="any" min="0" placeholder="15000" className="pl-7"
-                value={bonusAtQuota} onChange={(e) => { setBonusAtQuota(e.target.value); setCalculated(false); }} />
+                value={bonusAtQuota} onChange={(e) => { setBonusAtQuota(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -83,7 +83,7 @@ export default function IncentiveCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="spiffs" type="number" step="any" min="0" placeholder="5000" className="pl-7"
-                value={spiffs} onChange={(e) => { setSpiffs(e.target.value); setCalculated(false); }} />
+                value={spiffs} onChange={(e) => { setSpiffs(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -106,9 +106,9 @@ export default function IncentiveCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">OTE (On-Target Earnings)</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(ote)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Variable comp: ${formatCurrency(variableComp)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Pay mix: ${payMix.toFixed(0)}% variable`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Variable/Base ratio: ${variableRatio.toFixed(2)}x`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Variable comp: ${formatCurrency(variableComp)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Pay mix: ${payMix.toFixed(0)}% variable`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Variable/Base ratio: ${variableRatio.toFixed(2)}x`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -131,7 +131,7 @@ export default function IncentiveCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Pay Mix</p>
-                    <p className={`text-lg font-bold`}>{`{payMix.toFixed(0)}% var`}</p>
+                    <p className={`text-lg font-bold`}>{`${payMix.toFixed(0)}% var`}</p>
                   </div>
               </div>
 

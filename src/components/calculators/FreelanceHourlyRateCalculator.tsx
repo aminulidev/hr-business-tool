@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { income: number; annualBillable: number; grossNeeded: number; hourlyRate: number; dailyRate: number; label: string; }
 
 export default function FreelanceHourlyRateCalculator() {
-  const [desiredIncome, setDesiredIncome] = useState('');
-  const [businessExpenses, setBusinessExpenses] = useState('');
-  const [taxRate, setTaxRate] = useState('');
-  const [billableHours, setBillableHours] = useState('');
-  const [weeksOff, setWeeksOff] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [desiredIncome, setDesiredIncome] = useState('50000');
+  const [businessExpenses, setBusinessExpenses] = useState('5000');
+  const [taxRate, setTaxRate] = useState('30');
+  const [billableHours, setBillableHours] = useState('25');
+  const [weeksOff, setWeeksOff] = useState('4');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ desiredIncome: string; businessExpenses: string; taxRate: string; billableHours: string; weeksOff: string }>('freelance-hourly-rate-calculator');
@@ -37,7 +37,7 @@ export default function FreelanceHourlyRateCalculator() {
   const hourlyRate = annualBillable > 0 ? grossNeeded / annualBillable : 0;
   const dailyRate = hourlyRate * 8;
 
-  const handleTryExample = () => { setDesiredIncome('50000'); setBusinessExpenses('5000'); setTaxRate('30'); setBillableHours('25'); setWeeksOff('4'); setCalculated(false); };
+  const handleTryExample = () => { setDesiredIncome('50000'); setBusinessExpenses('5000'); setTaxRate('30'); setBillableHours('25'); setWeeksOff('4'); setCalculated(true); };
   const handleCalculate = () => {
     if (income > 0 && bhpw > 0) {
       setCalculated(true);
@@ -62,7 +62,7 @@ export default function FreelanceHourlyRateCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="desiredIncome" type="number" step="any" min="0" placeholder="50000" className="pl-7"
-                value={desiredIncome} onChange={(e) => { setDesiredIncome(e.target.value); setCalculated(false); }} />
+                value={desiredIncome} onChange={(e) => { setDesiredIncome(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -70,7 +70,7 @@ export default function FreelanceHourlyRateCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="businessExpenses" type="number" step="any" min="0" placeholder="5000" className="pl-7"
-                value={businessExpenses} onChange={(e) => { setBusinessExpenses(e.target.value); setCalculated(false); }} />
+                value={businessExpenses} onChange={(e) => { setBusinessExpenses(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -78,7 +78,7 @@ export default function FreelanceHourlyRateCalculator() {
             <div className="relative">
               
               <Input id="taxRate" type="number" step="any" min="0" placeholder="30"
-                value={taxRate} onChange={(e) => { setTaxRate(e.target.value); setCalculated(false); }} />
+                value={taxRate} onChange={(e) => { setTaxRate(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Includes SECA + income tax</p>
           </div>
@@ -87,7 +87,7 @@ export default function FreelanceHourlyRateCalculator() {
             <div className="relative">
               
               <Input id="billableHours" type="number" step="any" min="0" placeholder="25"
-                value={billableHours} onChange={(e) => { setBillableHours(e.target.value); setCalculated(false); }} />
+                value={billableHours} onChange={(e) => { setBillableHours(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Out of 40 work hours</p>
           </div>
@@ -96,7 +96,7 @@ export default function FreelanceHourlyRateCalculator() {
             <div className="relative">
               
               <Input id="weeksOff" type="number" step="any" min="0" placeholder="4"
-                value={weeksOff} onChange={(e) => { setWeeksOff(e.target.value); setCalculated(false); }} />
+                value={weeksOff} onChange={(e) => { setWeeksOff(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Vacation, sick, holidays</p>
           </div>
@@ -120,9 +120,9 @@ export default function FreelanceHourlyRateCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Required Hourly Rate</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(hourlyRate)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`${annualBillable}h billable/year`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Gross needed: ${formatCurrency(grossNeeded)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Daily rate: ${formatCurrency(dailyRate)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`${annualBillable}h billable/year`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Gross needed: ${formatCurrency(grossNeeded)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Daily rate: ${formatCurrency(dailyRate)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -133,7 +133,7 @@ export default function FreelanceHourlyRateCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Billable Hours/Yr</p>
-                    <p className={`text-lg font-bold`}>{`{annualBillable}h`}</p>
+                    <p className={`text-lg font-bold`}>{`${annualBillable}h`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Gross Needed</p>

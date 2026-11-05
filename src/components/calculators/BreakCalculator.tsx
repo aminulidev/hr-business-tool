@@ -27,9 +27,9 @@ const STATE_RULES: Record<StateCode, { mealThreshold: number; mealMin: number; r
 };
 
 export default function BreakCalculator() {
-  const [shiftHours, setShiftHours] = useState('8');
+  const [shiftHours, setShiftHours] = useState('10');
   const [stateCode, setStateCode] = useState<StateCode>('CA');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<BreakSnapshot | null>(null);
   const [compareB, setCompareB] = useState<BreakSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ shiftHours: string; stateCode: string }>('break-calculator');
@@ -50,7 +50,7 @@ export default function BreakCalculator() {
   const unpaidBreakMin = mealBreaks * rule.mealMin;
   const netWorkHours = Math.max(0, sh - unpaidBreakMin / 60);
 
-  const handleTryExample = () => { setShiftHours('10'); setStateCode('CA'); setCalculated(false); };
+  const handleTryExample = () => { setShiftHours('10'); setStateCode('CA'); setCalculated(true); };
   const handleCalculate = () => {
     if (sh > 0) {
       setCalculated(true);
@@ -73,12 +73,12 @@ export default function BreakCalculator() {
           <div className="space-y-2">
             <Label htmlFor="bc-shift">Shift Length (hours)</Label>
             <Input id="bc-shift" type="number" step="0.5" min="0" placeholder="8" value={shiftHours}
-              onChange={(e) => { setShiftHours(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setShiftHours(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Total scheduled shift length including breaks.</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="bc-state">State</Label>
-            <Select value={stateCode} onValueChange={(v) => { setStateCode(v as StateCode); setCalculated(false); }}>
+            <Select value={stateCode} onValueChange={(v) => { setStateCode(v as StateCode); setCalculated(true); }}>
               <SelectTrigger id="bc-state"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {(Object.keys(STATE_RULES) as StateCode[]).map(s => (

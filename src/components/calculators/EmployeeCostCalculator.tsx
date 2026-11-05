@@ -16,13 +16,13 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { salary: number; benefits: number; payrollTaxes: number; totalCost: number; loadedMultiplier: number; hourlyCost: number; label: string; }
 
 export default function EmployeeCostCalculator() {
-  const [annualSalary, setAnnualSalary] = useState('');
-  const [benefitsPct, setBenefitsPct] = useState('Health, 401k, PTO');
-  const [payrollTaxesPct, setPayrollTaxesPct] = useState('FICA + FUTA + SUTA');
-  const [workersComp, setWorkersComp] = useState('');
-  const [equipment, setEquipment] = useState('');
-  const [overhead, setOverhead] = useState('Rent, utilities, admin');
-  const [calculated, setCalculated] = useState(false);
+  const [annualSalary, setAnnualSalary] = useState('75000');
+  const [benefitsPct, setBenefitsPct] = useState('30');
+  const [payrollTaxesPct, setPayrollTaxesPct] = useState('9');
+  const [workersComp, setWorkersComp] = useState('1200');
+  const [equipment, setEquipment] = useState('3500');
+  const [overhead, setOverhead] = useState('5000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualSalary: string; benefitsPct: string; payrollTaxesPct: string; workersComp: string; equipment: string; overhead: string }>('employee-cost-calculator');
@@ -39,7 +39,7 @@ export default function EmployeeCostCalculator() {
   const loadedMultiplier = salary > 0 ? totalCost / salary : 0;
   const hourlyCost = totalCost / 2080;
 
-  const handleTryExample = () => { setAnnualSalary('75000'); setBenefitsPct('30'); setPayrollTaxesPct('9'); setWorkersComp('1200'); setEquipment('3500'); setOverhead('5000'); setCalculated(false); };
+  const handleTryExample = () => { setAnnualSalary('75000'); setBenefitsPct('30'); setPayrollTaxesPct('9'); setWorkersComp('1200'); setEquipment('3500'); setOverhead('5000'); setCalculated(true); };
   const handleCalculate = () => {
     if (salary > 0) {
       setCalculated(true);
@@ -64,7 +64,7 @@ export default function EmployeeCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="annualSalary" type="number" step="any" min="0" placeholder="75000" className="pl-7"
-                value={annualSalary} onChange={(e) => { setAnnualSalary(e.target.value); setCalculated(false); }} />
+                value={annualSalary} onChange={(e) => { setAnnualSalary(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function EmployeeCostCalculator() {
             <div className="relative">
               
               <Input id="benefitsPct" type="number" step="any" min="0" placeholder="30"
-                value={benefitsPct} onChange={(e) => { setBenefitsPct(e.target.value); setCalculated(false); }} />
+                value={benefitsPct} onChange={(e) => { setBenefitsPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Health, 401k, PTO</p>
           </div>
@@ -81,7 +81,7 @@ export default function EmployeeCostCalculator() {
             <div className="relative">
               
               <Input id="payrollTaxesPct" type="number" step="any" min="0" placeholder="9"
-                value={payrollTaxesPct} onChange={(e) => { setPayrollTaxesPct(e.target.value); setCalculated(false); }} />
+                value={payrollTaxesPct} onChange={(e) => { setPayrollTaxesPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">FICA + FUTA + SUTA</p>
           </div>
@@ -90,7 +90,7 @@ export default function EmployeeCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="workersComp" type="number" step="any" min="0" placeholder="1200" className="pl-7"
-                value={workersComp} onChange={(e) => { setWorkersComp(e.target.value); setCalculated(false); }} />
+                value={workersComp} onChange={(e) => { setWorkersComp(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -98,7 +98,7 @@ export default function EmployeeCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="equipment" type="number" step="any" min="0" placeholder="3500" className="pl-7"
-                value={equipment} onChange={(e) => { setEquipment(e.target.value); setCalculated(false); }} />
+                value={equipment} onChange={(e) => { setEquipment(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -106,7 +106,7 @@ export default function EmployeeCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="overhead" type="number" step="any" min="0" placeholder="5000" className="pl-7"
-                value={overhead} onChange={(e) => { setOverhead(e.target.value); setCalculated(false); }} />
+                value={overhead} onChange={(e) => { setOverhead(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Rent, utilities, admin</p>
           </div>
@@ -130,9 +130,9 @@ export default function EmployeeCostCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Total Cost per Employee</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalCost)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Loaded ${loadedMultiplier.toFixed(2)}x salary`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Hourly cost: ${formatCurrency(hourlyCost)}`}</Badge>
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{'Typical: 1.25-1.40x salary'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Loaded ${loadedMultiplier.toFixed(2)}x salary`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Hourly cost: ${formatCurrency(hourlyCost)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{'Typical: 1.25-1.40x salary'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

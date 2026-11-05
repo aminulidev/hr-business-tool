@@ -28,12 +28,12 @@ const BENCHMARKS = [
 interface TurnoverSnap { rate: number; retentionRate: number; costEstimate: number; label: string; }
 
 export default function EmployeeTurnoverCalculator() {
-  const [beginHeadcount, setBeginHeadcount] = useState('');
-  const [endHeadcount, setEndHeadcount] = useState('');
-  const [separations, setSeparations] = useState('');
-  const [avgSalary, setAvgSalary] = useState('');
+  const [beginHeadcount, setBeginHeadcount] = useState('50');
+  const [endHeadcount, setEndHeadcount] = useState('54');
+  const [separations, setSeparations] = useState('6');
+  const [avgSalary, setAvgSalary] = useState('65000');
   const [replacementCost, setReplacementCost] = useState('50');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<TurnoverSnap | null>(null);
   const [compareB, setCompareB] = useState<TurnoverSnap | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ beginHeadcount: string; endHeadcount: string; separations: string; avgSalary: string }>('employee-turnover-calculator');
@@ -90,19 +90,19 @@ export default function EmployeeTurnoverCalculator() {
           <div className="space-y-2">
             <Label htmlFor="begin-headcount">Beginning Headcount</Label>
             <Input id="begin-headcount" type="number" step="1" min="0" placeholder="100"
-              value={beginHeadcount} onChange={(e) => { setBeginHeadcount(e.target.value); setCalculated(false); }} />
+              value={beginHeadcount} onChange={(e) => { setBeginHeadcount(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Employees at start of period</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="end-headcount">Ending Headcount</Label>
             <Input id="end-headcount" type="number" step="1" min="0" placeholder="98"
-              value={endHeadcount} onChange={(e) => { setEndHeadcount(e.target.value); setCalculated(false); }} />
+              value={endHeadcount} onChange={(e) => { setEndHeadcount(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Employees at end of period</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="separations">Number of Separations</Label>
             <Input id="separations" type="number" step="1" min="0" placeholder="15"
-              value={separations} onChange={(e) => { setSeparations(e.target.value); setCalculated(false); }} />
+              value={separations} onChange={(e) => { setSeparations(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Employees who left (voluntary + involuntary)</p>
           </div>
           <div className="space-y-2">
@@ -110,13 +110,13 @@ export default function EmployeeTurnoverCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="avg-salary" type="number" step="1000" min="0" placeholder="60,000"
-                value={avgSalary} onChange={(e) => { setAvgSalary(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={avgSalary} onChange={(e) => { setAvgSalary(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
           </div>
           {avgSalary && (
             <div className="space-y-2 sm:col-span-2">
               <Label htmlFor="replacement-cost">Replacement Cost (% of salary)</Label>
-              <Select value={replacementCost} onValueChange={(v) => { setReplacementCost(v); setCalculated(false); }}>
+              <Select value={replacementCost} onValueChange={(v) => { setReplacementCost(v); setCalculated(true); }}>
                 <SelectTrigger id="replacement-cost"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="30">30% — Entry-level roles</SelectItem>

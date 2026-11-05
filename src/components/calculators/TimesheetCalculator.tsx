@@ -17,12 +17,12 @@ interface DayRow { in1: string; out1: string; in2: string; out2: string; }
 const DAY_LABELS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 export default function TimesheetCalculator() {
-  const [employee, setEmployee] = useState('');
+  const [employee, setEmployee] = useState('John Smith');
   const [weekStart, setWeekStart] = useState(() => new Date().toISOString().slice(0, 10));
   const [days, setDays] = useState<DayRow[]>(DAY_LABELS.map(() => ({ in1: '', out1: '', in2: '', out2: '' })));
   const [lunchMin, setLunchMin] = useState('30');
   const [rate, setRate] = useState('20');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<Record<string, string>>('timesheet-calculator');
 
   const computeDay = (d: DayRow) => {
@@ -101,11 +101,11 @@ export default function TimesheetCalculator() {
           <div className="grid grid-cols-2 gap-2">
             <div className="space-y-2">
               <Label htmlFor="ts-lunch">Lunch (min)</Label>
-              <Input id="ts-lunch" type="number" min="0" step="5" value={lunchMin} onChange={(e) => { setLunchMin(e.target.value); setCalculated(false); }} />
+              <Input id="ts-lunch" type="number" min="0" step="5" value={lunchMin} onChange={(e) => { setLunchMin(e.target.value); setCalculated(true); }} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="ts-rate">Rate $/hr</Label>
-              <Input id="ts-rate" type="number" step="0.25" min="0" value={rate} onChange={(e) => { setRate(e.target.value); setCalculated(false); }} />
+              <Input id="ts-rate" type="number" step="0.25" min="0" value={rate} onChange={(e) => { setRate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>

@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { cost: number; sp: number; pp: number; ep: number; starterMargin: number; proMargin: number; enterpriseMargin: number; priceToCost: number; label: string; }
 
 export default function SaasPricingCalculator() {
-  const [costPerUser, setCostPerUser] = useState('');
-  const [starterPrice, setStarterPrice] = useState('');
-  const [proPrice, setProPrice] = useState('');
-  const [enterprisePrice, setEnterprisePrice] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [costPerUser, setCostPerUser] = useState('5');
+  const [starterPrice, setStarterPrice] = useState('15');
+  const [proPrice, setProPrice] = useState('50');
+  const [enterprisePrice, setEnterprisePrice] = useState('200');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ costPerUser: string; starterPrice: string; proPrice: string; enterprisePrice: string }>('saas-pricing-calculator');
@@ -34,7 +34,7 @@ export default function SaasPricingCalculator() {
   const enterpriseMargin = ep > 0 ? ((ep - cost) / ep) * 100 : 0;
   const priceToCost = cost > 0 ? pp / cost : 0;
 
-  const handleTryExample = () => { setCostPerUser('5'); setStarterPrice('15'); setProPrice('50'); setEnterprisePrice('200'); setCalculated(false); };
+  const handleTryExample = () => { setCostPerUser('5'); setStarterPrice('15'); setProPrice('50'); setEnterprisePrice('200'); setCalculated(true); };
   const handleCalculate = () => {
     if (sp > 0 || pp > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function SaasPricingCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="costPerUser" type="number" step="any" min="0" placeholder="5" className="pl-7"
-                value={costPerUser} onChange={(e) => { setCostPerUser(e.target.value); setCalculated(false); }} />
+                value={costPerUser} onChange={(e) => { setCostPerUser(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function SaasPricingCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="starterPrice" type="number" step="any" min="0" placeholder="15" className="pl-7"
-                value={starterPrice} onChange={(e) => { setStarterPrice(e.target.value); setCalculated(false); }} />
+                value={starterPrice} onChange={(e) => { setStarterPrice(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function SaasPricingCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="proPrice" type="number" step="any" min="0" placeholder="50" className="pl-7"
-                value={proPrice} onChange={(e) => { setProPrice(e.target.value); setCalculated(false); }} />
+                value={proPrice} onChange={(e) => { setProPrice(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -83,7 +83,7 @@ export default function SaasPricingCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="enterprisePrice" type="number" step="any" min="0" placeholder="200" className="pl-7"
-                value={enterprisePrice} onChange={(e) => { setEnterprisePrice(e.target.value); setCalculated(false); }} />
+                value={enterprisePrice} onChange={(e) => { setEnterprisePrice(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -106,9 +106,9 @@ export default function SaasPricingCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">SaaS Pricing Tiers</p>
                 <p className="text-4xl font-bold text-emerald-600">{`Starter: ${formatCurrency(sp)}/mo`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Pro: ${formatCurrency(pp)}/mo (${proMargin.toFixed(0)}% margin)`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Enterprise: ${formatCurrency(ep)}/mo (${enterpriseMargin.toFixed(0)}% margin)`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Price-to-cost: ${priceToCost.toFixed(1)}x`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Pro: ${formatCurrency(pp)}/mo (${proMargin.toFixed(0)}% margin)`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Enterprise: ${formatCurrency(ep)}/mo (${enterpriseMargin.toFixed(0)}% margin)`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Price-to-cost: ${priceToCost.toFixed(1)}x`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { cost: number; salvage: number; life: number; depreciableBase: number; straightLine: number; slRate: number; ddbRate: number; sydTotal: number; sydYear1: number; label: string; }
 
 export default function DepreciationCalculator() {
-  const [assetCost, setAssetCost] = useState('');
-  const [salvageValue, setSalvageValue] = useState('');
-  const [usefulLife, setUsefulLife] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [assetCost, setAssetCost] = useState('50000');
+  const [salvageValue, setSalvageValue] = useState('5000');
+  const [usefulLife, setUsefulLife] = useState('5');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ assetCost: string; salvageValue: string; usefulLife: string }>('depreciation-calculator');
@@ -34,7 +34,7 @@ export default function DepreciationCalculator() {
   const sydTotal = life * (life + 1) / 2;
   const sydYear1 = sydTotal > 0 ? depreciableBase * (life / sydTotal) : 0;
 
-  const handleTryExample = () => { setAssetCost('50000'); setSalvageValue('5000'); setUsefulLife('5'); setCalculated(false); };
+  const handleTryExample = () => { setAssetCost('50000'); setSalvageValue('5000'); setUsefulLife('5'); setCalculated(true); };
   const handleCalculate = () => {
     if (cost > 0 && life > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function DepreciationCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="assetCost" type="number" step="any" min="0" placeholder="50000" className="pl-7"
-                value={assetCost} onChange={(e) => { setAssetCost(e.target.value); setCalculated(false); }} />
+                value={assetCost} onChange={(e) => { setAssetCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function DepreciationCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="salvageValue" type="number" step="any" min="0" placeholder="5000" className="pl-7"
-                value={salvageValue} onChange={(e) => { setSalvageValue(e.target.value); setCalculated(false); }} />
+                value={salvageValue} onChange={(e) => { setSalvageValue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function DepreciationCalculator() {
             <div className="relative">
               
               <Input id="usefulLife" type="number" step="any" min="0" placeholder="5"
-                value={usefulLife} onChange={(e) => { setUsefulLife(e.target.value); setCalculated(false); }} />
+                value={usefulLife} onChange={(e) => { setUsefulLife(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -98,9 +98,9 @@ export default function DepreciationCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Annual Depreciation (Straight-Line)</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(straightLine)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`SL rate: ${slRate.toFixed(1)}%/yr`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`DDB rate: ${ddbRate.toFixed(1)}%/yr (year 1)`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`SYD year 1: ${formatCurrency(sydYear1)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`SL rate: ${slRate.toFixed(1)}%/yr`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`DDB rate: ${ddbRate.toFixed(1)}%/yr (year 1)`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`SYD year 1: ${formatCurrency(sydYear1)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

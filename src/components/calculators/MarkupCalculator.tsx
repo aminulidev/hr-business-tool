@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Package, DollarSign, Percent, Info, ArrowRightLeft } from 'lucide-react';
 import TryExample from './TryExample';
@@ -58,9 +58,9 @@ const referenceRates = [
 
 export default function MarkupCalculator() {
   const [mode, setMode] = useState<CalcMode>('cost-to-price');
-  const [costPrice, setCostPrice] = useState('');
-  const [markupPct, setMarkupPct] = useState('');
-  const [sellingPrice, setSellingPrice] = useState('');
+  const [costPrice, setCostPrice] = useState('50');
+  const [markupPct, setMarkupPct] = useState('40');
+  const [sellingPrice, setSellingPrice] = useState('70');
   const [result, setResult] = useState<MarkupResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; costPrice: string; markupPct: string; sellingPrice: string }>('markup-calculator');
@@ -75,7 +75,7 @@ export default function MarkupCalculator() {
     setResult(null);
   };
 
-  const handleCalculate = () => {
+  const handleCalculate = (saveToHistory = true) => {
     setResult(null);
     setError(null);
 
@@ -126,11 +126,16 @@ export default function MarkupCalculator() {
         marginPct: margin,
       });
     }
-    saveEntry(
+    if (saveToHistory) saveEntry(
       { mode, costPrice, markupPct, sellingPrice },
-      `${(result?.markupPct ?? 0).toFixed(1)}% markup: ${formatCurrency(result?.costPrice ?? 0)} cost → ${formatCurrency(result?.sellingPrice ?? 0)} price`
+      `${(parseFloat(markupPct) || 0).toFixed(1)}% markup: ${formatCurrency(mode === 'cost-to-price' ? (parseFloat(costPrice) || 0) : (parseFloat(sellingPrice) || 0) / (1 + (parseFloat(markupPct) || 0) / 100))} cost → ${formatCurrency(mode === 'cost-to-price' ? (parseFloat(costPrice) || 0) * (1 + (parseFloat(markupPct) || 0) / 100) : (parseFloat(sellingPrice) || 0))} price`
     );
   };
+
+  useEffect(() => {
+    handleCalculate(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, costPrice, markupPct, sellingPrice]);
 
   const handleRestore = (inputs: { mode: string; costPrice: string; markupPct: string; sellingPrice: string }) => {
     setMode(inputs.mode as CalcMode);
@@ -280,7 +285,7 @@ export default function MarkupCalculator() {
           <TryExample onClick={handleTryExample} />
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <Button
-              onClick={handleCalculate}
+              onClick={() => handleCalculate(true)}
               className="flex-1 sm:flex-none bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
               size="lg"
             >

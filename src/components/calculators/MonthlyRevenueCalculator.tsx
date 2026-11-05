@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { ret: number; hr: number; proj: number; one: number; totalMonthly: number; annualRevenue: number; recurringPct: number; arr: number; label: string; }
 
 export default function MonthlyRevenueCalculator() {
-  const [retainerRevenue, setRetainerRevenue] = useState('');
-  const [hourlyRevenue, setHourlyRevenue] = useState('');
-  const [projectRevenue, setProjectRevenue] = useState('');
-  const [oneTimeRevenue, setOneTimeRevenue] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [retainerRevenue, setRetainerRevenue] = useState('8000');
+  const [hourlyRevenue, setHourlyRevenue] = useState('3000');
+  const [projectRevenue, setProjectRevenue] = useState('2000');
+  const [oneTimeRevenue, setOneTimeRevenue] = useState('500');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ retainerRevenue: string; hourlyRevenue: string; projectRevenue: string; oneTimeRevenue: string }>('monthly-revenue-calculator');
@@ -34,7 +34,7 @@ export default function MonthlyRevenueCalculator() {
   const recurringPct = totalMonthly > 0 ? (ret / totalMonthly) * 100 : 0;
   const arr = ret * 12;
 
-  const handleTryExample = () => { setRetainerRevenue('8000'); setHourlyRevenue('3000'); setProjectRevenue('2000'); setOneTimeRevenue('500'); setCalculated(false); };
+  const handleTryExample = () => { setRetainerRevenue('8000'); setHourlyRevenue('3000'); setProjectRevenue('2000'); setOneTimeRevenue('500'); setCalculated(true); };
   const handleCalculate = () => {
     if (totalMonthly > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function MonthlyRevenueCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="retainerRevenue" type="number" step="any" min="0" placeholder="8000" className="pl-7"
-                value={retainerRevenue} onChange={(e) => { setRetainerRevenue(e.target.value); setCalculated(false); }} />
+                value={retainerRevenue} onChange={(e) => { setRetainerRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function MonthlyRevenueCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="hourlyRevenue" type="number" step="any" min="0" placeholder="3000" className="pl-7"
-                value={hourlyRevenue} onChange={(e) => { setHourlyRevenue(e.target.value); setCalculated(false); }} />
+                value={hourlyRevenue} onChange={(e) => { setHourlyRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function MonthlyRevenueCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="projectRevenue" type="number" step="any" min="0" placeholder="2000" className="pl-7"
-                value={projectRevenue} onChange={(e) => { setProjectRevenue(e.target.value); setCalculated(false); }} />
+                value={projectRevenue} onChange={(e) => { setProjectRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -83,7 +83,7 @@ export default function MonthlyRevenueCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="oneTimeRevenue" type="number" step="any" min="0" placeholder="500" className="pl-7"
-                value={oneTimeRevenue} onChange={(e) => { setOneTimeRevenue(e.target.value); setCalculated(false); }} />
+                value={oneTimeRevenue} onChange={(e) => { setOneTimeRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -106,9 +106,9 @@ export default function MonthlyRevenueCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Monthly Revenue</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalMonthly)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`ARR (retainers): ${formatCurrency(arr)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Recurring: ${recurringPct.toFixed(0)}% of revenue`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Annual revenue: ${formatCurrency(annualRevenue)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`ARR (retainers): ${formatCurrency(arr)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Recurring: ${recurringPct.toFixed(0)}% of revenue`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Annual revenue: ${formatCurrency(annualRevenue)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

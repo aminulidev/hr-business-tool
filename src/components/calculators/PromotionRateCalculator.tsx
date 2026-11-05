@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { prom: number; avg: number; months: number; promotionRate: number; annualized: number; avgTimeBetween: number; label: string; }
 
 export default function PromotionRateCalculator() {
-  const [promotions, setPromotions] = useState('');
-  const [avgHeadcount, setAvgHeadcount] = useState('');
-  const [periodMonths, setPeriodMonths] = useState('For annualization');
-  const [calculated, setCalculated] = useState(false);
+  const [promotions, setPromotions] = useState('12');
+  const [avgHeadcount, setAvgHeadcount] = useState('100');
+  const [periodMonths, setPeriodMonths] = useState('12');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ promotions: string; avgHeadcount: string; periodMonths: string }>('promotion-rate-calculator');
@@ -31,7 +31,7 @@ export default function PromotionRateCalculator() {
   const annualized = promotionRate / months * 12;
   const avgTimeBetween = 12 / annualized;
 
-  const handleTryExample = () => { setPromotions('12'); setAvgHeadcount('100'); setPeriodMonths('12'); setCalculated(false); };
+  const handleTryExample = () => { setPromotions('12'); setAvgHeadcount('100'); setPeriodMonths('12'); setCalculated(true); };
   const handleCalculate = () => {
     if (prom > 0 && avg > 0) {
       setCalculated(true);
@@ -56,7 +56,7 @@ export default function PromotionRateCalculator() {
             <div className="relative">
               
               <Input id="promotions" type="number" step="any" min="0" placeholder="12"
-                value={promotions} onChange={(e) => { setPromotions(e.target.value); setCalculated(false); }} />
+                value={promotions} onChange={(e) => { setPromotions(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -64,7 +64,7 @@ export default function PromotionRateCalculator() {
             <div className="relative">
               
               <Input id="avgHeadcount" type="number" step="any" min="0" placeholder="100"
-                value={avgHeadcount} onChange={(e) => { setAvgHeadcount(e.target.value); setCalculated(false); }} />
+                value={avgHeadcount} onChange={(e) => { setAvgHeadcount(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function PromotionRateCalculator() {
             <div className="relative">
               
               <Input id="periodMonths" type="number" step="any" min="0" placeholder="12"
-                value={periodMonths} onChange={(e) => { setPeriodMonths(e.target.value); setCalculated(false); }} />
+                value={periodMonths} onChange={(e) => { setPeriodMonths(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">For annualization</p>
           </div>
@@ -94,11 +94,11 @@ export default function PromotionRateCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Promotion Rate</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{promotionRate.toFixed(1)}%`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${promotionRate.toFixed(1)}%`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Annualized: ${annualized.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Avg time between promotions: ${avgTimeBetween.toFixed(1)}y`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Healthy rate: 8-15% per year'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Annualized: ${annualized.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Avg time between promotions: ${avgTimeBetween.toFixed(1)}y`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Healthy rate: 8-15% per year'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -109,19 +109,19 @@ export default function PromotionRateCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Promotions</p>
-                    <p className={`text-lg font-bold`}>{`{prom}`}</p>
+                    <p className={`text-lg font-bold`}>{`${prom}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Avg Headcount</p>
-                    <p className={`text-lg font-bold`}>{`{avg}`}</p>
+                    <p className={`text-lg font-bold`}>{`${avg}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Promotion Rate</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{promotionRate.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${promotionRate.toFixed(1)}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Annualized</p>
-                    <p className={`text-lg font-bold`}>{`{annualized.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${annualized.toFixed(1)}%`}</p>
                   </div>
               </div>
 

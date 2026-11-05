@@ -28,13 +28,13 @@ function formatTime(min: number): string {
 }
 
 export default function LunchDeductionCalculator() {
-  const [clockIn, setClockIn] = useState('9:00 AM');
-  const [clockOut, setClockOut] = useState('5:30 PM');
+  const [clockIn, setClockIn] = useState('8:00 AM');
+  const [clockOut, setClockOut] = useState('4:30 PM');
   const [deductMode, setDeductMode] = useState<'fixed' | 'auto' | 'waive'>('fixed');
   const [lunchLength, setLunchLength] = useState('30');
   const [autoTrigger, setAutoTrigger] = useState('6');
-  const [hourlyRate, setHourlyRate] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [hourlyRate, setHourlyRate] = useState('22');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<LunchSnapshot | null>(null);
   const [compareB, setCompareB] = useState<LunchSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ clockIn: string; clockOut: string; deductMode: string; lunchLength: string; autoTrigger: string; hourlyRate: string }>('lunch-deduction-calculator');
@@ -64,7 +64,7 @@ export default function LunchDeductionCalculator() {
   const regHours = netHours - otHours;
   const pay = regHours * r + otHours * r * 1.5;
 
-  const handleTryExample = () => { setClockIn('8:00 AM'); setClockOut('4:30 PM'); setDeductMode('fixed'); setLunchLength('30'); setAutoTrigger('6'); setHourlyRate('22'); setCalculated(false); };
+  const handleTryExample = () => { setClockIn('8:00 AM'); setClockOut('4:30 PM'); setDeductMode('fixed'); setLunchLength('30'); setAutoTrigger('6'); setHourlyRate('22'); setCalculated(true); };
   const handleCalculate = () => {
     if (inMin >= 0 && outMin >= 0 && grossMin > 0) {
       setCalculated(true);
@@ -94,16 +94,16 @@ export default function LunchDeductionCalculator() {
           <div className="space-y-2">
             <Label htmlFor="ld-in">Clock-In</Label>
             <Input id="ld-in" placeholder="9:00 AM" value={clockIn}
-              onChange={(e) => { setClockIn(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setClockIn(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="ld-out">Clock-Out</Label>
             <Input id="ld-out" placeholder="5:30 PM" value={clockOut}
-              onChange={(e) => { setClockOut(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setClockOut(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="ld-mode">Lunch Deduction Mode</Label>
-            <Select value={deductMode} onValueChange={(v) => { setDeductMode(v as 'fixed' | 'auto' | 'waive'); setCalculated(false); }}>
+            <Select value={deductMode} onValueChange={(v) => { setDeductMode(v as 'fixed' | 'auto' | 'waive'); setCalculated(true); }}>
               <SelectTrigger id="ld-mode"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="fixed">Fixed — always deduct lunch</SelectItem>
@@ -116,14 +116,14 @@ export default function LunchDeductionCalculator() {
             <div className="space-y-2">
               <Label htmlFor="ld-length">Lunch Length (minutes)</Label>
               <Input id="ld-length" type="number" step="5" min="0" placeholder="30" value={lunchLength}
-                onChange={(e) => { setLunchLength(e.target.value); setCalculated(false); }} />
+                onChange={(e) => { setLunchLength(e.target.value); setCalculated(true); }} />
             </div>
           )}
           {deductMode === 'auto' && (
             <div className="space-y-2">
               <Label htmlFor="ld-trigger">Auto-Deduct Trigger (hours)</Label>
               <Input id="ld-trigger" type="number" step="0.5" min="0" placeholder="6" value={autoTrigger}
-                onChange={(e) => { setAutoTrigger(e.target.value); setCalculated(false); }} />
+                onChange={(e) => { setAutoTrigger(e.target.value); setCalculated(true); }} />
               <p className="text-xs text-muted-foreground">Deduct lunch only if shift ≥ this many hours.</p>
             </div>
           )}
@@ -132,7 +132,7 @@ export default function LunchDeductionCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="ld-rate" type="number" step="0.25" min="0" placeholder="20.00" value={hourlyRate}
-                onChange={(e) => { setHourlyRate(e.target.value); setCalculated(false); }} className="pl-7" />
+                onChange={(e) => { setHourlyRate(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
           </div>
         </div>

@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { best: number; likely: number; worst: number; rate: number; con: number; pert: number; avg: number; range: number; costLow: number; costExpected: number; costHigh: number; bufferedHours: number; bufferedCost: number; label: string; }
 
 export default function EstimateCalculator() {
-  const [bestCase, setBestCase] = useState('');
-  const [likelyCase, setLikelyCase] = useState('');
-  const [worstCase, setWorstCase] = useState('');
-  const [hourlyRate, setHourlyRate] = useState('');
-  const [contingencyPct, setContingencyPct] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [bestCase, setBestCase] = useState('60');
+  const [likelyCase, setLikelyCase] = useState('80');
+  const [worstCase, setWorstCase] = useState('120');
+  const [hourlyRate, setHourlyRate] = useState('75');
+  const [contingencyPct, setContingencyPct] = useState('15');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ bestCase: string; likelyCase: string; worstCase: string; hourlyRate: string; contingencyPct: string }>('estimate-calculator');
@@ -40,7 +40,7 @@ export default function EstimateCalculator() {
   const bufferedHours = pert * (1 + con / 100);
   const bufferedCost = bufferedHours * rate;
 
-  const handleTryExample = () => { setBestCase('60'); setLikelyCase('80'); setWorstCase('120'); setHourlyRate('75'); setContingencyPct('15'); setCalculated(false); };
+  const handleTryExample = () => { setBestCase('60'); setLikelyCase('80'); setWorstCase('120'); setHourlyRate('75'); setContingencyPct('15'); setCalculated(true); };
   const handleCalculate = () => {
     if (best > 0 && likely > 0 && worst > 0) {
       setCalculated(true);
@@ -65,7 +65,7 @@ export default function EstimateCalculator() {
             <div className="relative">
               
               <Input id="bestCase" type="number" step="any" min="0" placeholder="60"
-                value={bestCase} onChange={(e) => { setBestCase(e.target.value); setCalculated(false); }} />
+                value={bestCase} onChange={(e) => { setBestCase(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -73,7 +73,7 @@ export default function EstimateCalculator() {
             <div className="relative">
               
               <Input id="likelyCase" type="number" step="any" min="0" placeholder="80"
-                value={likelyCase} onChange={(e) => { setLikelyCase(e.target.value); setCalculated(false); }} />
+                value={likelyCase} onChange={(e) => { setLikelyCase(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -81,7 +81,7 @@ export default function EstimateCalculator() {
             <div className="relative">
               
               <Input id="worstCase" type="number" step="any" min="0" placeholder="120"
-                value={worstCase} onChange={(e) => { setWorstCase(e.target.value); setCalculated(false); }} />
+                value={worstCase} onChange={(e) => { setWorstCase(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -89,7 +89,7 @@ export default function EstimateCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="hourlyRate" type="number" step="any" min="0" placeholder="75" className="pl-7"
-                value={hourlyRate} onChange={(e) => { setHourlyRate(e.target.value); setCalculated(false); }} />
+                value={hourlyRate} onChange={(e) => { setHourlyRate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -97,7 +97,7 @@ export default function EstimateCalculator() {
             <div className="relative">
               
               <Input id="contingencyPct" type="number" step="any" min="0" placeholder="15"
-                value={contingencyPct} onChange={(e) => { setContingencyPct(e.target.value); setCalculated(false); }} />
+                value={contingencyPct} onChange={(e) => { setContingencyPct(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -120,9 +120,9 @@ export default function EstimateCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Expected Hours (PERT)</p>
                 <p className="text-4xl font-bold text-emerald-600">{`${pert.toFixed(1)} hours`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Simple average: ${avg.toFixed(1)}h`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Range: ${best}h - ${worst}h (${range}h spread)`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`With buffer: ${bufferedHours.toFixed(1)}h (${formatCurrency(bufferedCost)})`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Simple average: ${avg.toFixed(1)}h`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Range: ${best}h - ${worst}h (${range}h spread)`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`With buffer: ${bufferedHours.toFixed(1)}h (${formatCurrency(bufferedCost)})`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

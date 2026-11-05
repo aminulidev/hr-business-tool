@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { c: number; ar: number; gm: number; monthlyProfit: number; payback: number; ltv: number; label: string; }
 
 export default function CacPaybackCalculator() {
-  const [cac, setCac] = useState('');
-  const [arpu, setArpu] = useState('');
-  const [grossMargin, setGrossMargin] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [cac, setCac] = useState('500');
+  const [arpu, setArpu] = useState('100');
+  const [grossMargin, setGrossMargin] = useState('80');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ cac: string; arpu: string; grossMargin: string }>('cac-payback-calculator');
@@ -31,7 +31,7 @@ export default function CacPaybackCalculator() {
   const payback = monthlyProfit > 0 ? c / monthlyProfit : 0;
   const ltv = monthlyProfit * 36;
 
-  const handleTryExample = () => { setCac('500'); setArpu('100'); setGrossMargin('80'); setCalculated(false); };
+  const handleTryExample = () => { setCac('500'); setArpu('100'); setGrossMargin('80'); setCalculated(true); };
   const handleCalculate = () => {
     if (c > 0 && ar > 0) {
       setCalculated(true);
@@ -56,7 +56,7 @@ export default function CacPaybackCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="cac" type="number" step="any" min="0" placeholder="500" className="pl-7"
-                value={cac} onChange={(e) => { setCac(e.target.value); setCalculated(false); }} />
+                value={cac} onChange={(e) => { setCac(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -64,7 +64,7 @@ export default function CacPaybackCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="arpu" type="number" step="any" min="0" placeholder="100" className="pl-7"
-                value={arpu} onChange={(e) => { setArpu(e.target.value); setCalculated(false); }} />
+                value={arpu} onChange={(e) => { setArpu(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function CacPaybackCalculator() {
             <div className="relative">
               
               <Input id="grossMargin" type="number" step="any" min="0" placeholder="80"
-                value={grossMargin} onChange={(e) => { setGrossMargin(e.target.value); setCalculated(false); }} />
+                value={grossMargin} onChange={(e) => { setGrossMargin(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -93,11 +93,11 @@ export default function CacPaybackCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">CAC Payback Period</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{payback.toFixed(1)} months`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${payback.toFixed(1)} months`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Monthly profit/customer: ${formatCurrency(monthlyProfit)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`3-year LTV: ${formatCurrency(ltv)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{payback < 12 ? "Healthy" : payback < 24 ? "Moderate" : "Too long"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Monthly profit/customer: ${formatCurrency(monthlyProfit)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`3-year LTV: ${formatCurrency(ltv)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{payback < 12 ? "Healthy" : payback < 24 ? "Moderate" : "Too long"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -116,7 +116,7 @@ export default function CacPaybackCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Payback</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{payback.toFixed(1)} mo`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${payback.toFixed(1)} mo`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">3-yr LTV</p>

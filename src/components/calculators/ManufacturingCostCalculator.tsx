@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { dm: number; dl: number; oh: number; bwip: number; ewip: number; totalMfgCost: number; cogm: number; perUnit: number; label: string; }
 
 export default function ManufacturingCostCalculator() {
-  const [directMaterials, setDirectMaterials] = useState('');
-  const [directLabor, setDirectLabor] = useState('');
-  const [mfgOverhead, setMfgOverhead] = useState('');
-  const [beginningWIP, setBeginningWIP] = useState('');
-  const [endingWIP, setEndingWIP] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [directMaterials, setDirectMaterials] = useState('150000');
+  const [directLabor, setDirectLabor] = useState('100000');
+  const [mfgOverhead, setMfgOverhead] = useState('80000');
+  const [beginningWIP, setBeginningWIP] = useState('20000');
+  const [endingWIP, setEndingWIP] = useState('15000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ directMaterials: string; directLabor: string; mfgOverhead: string; beginningWIP: string; endingWIP: string }>('manufacturing-cost-calculator');
@@ -35,7 +35,7 @@ export default function ManufacturingCostCalculator() {
   const cogm = bwip + totalMfgCost - ewip;
   const perUnit = cogm > 0 && 1000 > 0 ? cogm / 1000 : 0;
 
-  const handleTryExample = () => { setDirectMaterials('150000'); setDirectLabor('100000'); setMfgOverhead('80000'); setBeginningWIP('20000'); setEndingWIP('15000'); setCalculated(false); };
+  const handleTryExample = () => { setDirectMaterials('150000'); setDirectLabor('100000'); setMfgOverhead('80000'); setBeginningWIP('20000'); setEndingWIP('15000'); setCalculated(true); };
   const handleCalculate = () => {
     if (totalMfgCost > 0) {
       setCalculated(true);
@@ -60,7 +60,7 @@ export default function ManufacturingCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="directMaterials" type="number" step="any" min="0" placeholder="150000" className="pl-7"
-                value={directMaterials} onChange={(e) => { setDirectMaterials(e.target.value); setCalculated(false); }} />
+                value={directMaterials} onChange={(e) => { setDirectMaterials(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -68,7 +68,7 @@ export default function ManufacturingCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="directLabor" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={directLabor} onChange={(e) => { setDirectLabor(e.target.value); setCalculated(false); }} />
+                value={directLabor} onChange={(e) => { setDirectLabor(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -76,7 +76,7 @@ export default function ManufacturingCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="mfgOverhead" type="number" step="any" min="0" placeholder="80000" className="pl-7"
-                value={mfgOverhead} onChange={(e) => { setMfgOverhead(e.target.value); setCalculated(false); }} />
+                value={mfgOverhead} onChange={(e) => { setMfgOverhead(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -84,7 +84,7 @@ export default function ManufacturingCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="beginningWIP" type="number" step="any" min="0" placeholder="20000" className="pl-7"
-                value={beginningWIP} onChange={(e) => { setBeginningWIP(e.target.value); setCalculated(false); }} />
+                value={beginningWIP} onChange={(e) => { setBeginningWIP(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -92,7 +92,7 @@ export default function ManufacturingCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="endingWIP" type="number" step="any" min="0" placeholder="15000" className="pl-7"
-                value={endingWIP} onChange={(e) => { setEndingWIP(e.target.value); setCalculated(false); }} />
+                value={endingWIP} onChange={(e) => { setEndingWIP(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -115,9 +115,9 @@ export default function ManufacturingCostCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Total Manufacturing Cost</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalMfgCost)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`COGM: ${formatCurrency(cogm)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Direct materials: ${formatCurrency(dm)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Direct labor: ${formatCurrency(dl)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`COGM: ${formatCurrency(cogm)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Direct materials: ${formatCurrency(dm)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Direct labor: ${formatCurrency(dl)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

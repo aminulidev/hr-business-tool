@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { cost: number; wmu: number; rmu: number; wholesalePrice: number; wholesaleProfit: number; msrp: number; retailProfit: number; label: string; }
 
 export default function WholesalePriceCalculator() {
-  const [manufacturingCost, setManufacturingCost] = useState('');
-  const [wholesaleMargin, setWholesaleMargin] = useState('Your profit margin');
-  const [retailerMarkup, setRetailerMarkup] = useState('Keystone = 2x');
-  const [calculated, setCalculated] = useState(false);
+  const [manufacturingCost, setManufacturingCost] = useState('10');
+  const [wholesaleMargin, setWholesaleMargin] = useState('50');
+  const [retailerMarkup, setRetailerMarkup] = useState('2');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ manufacturingCost: string; wholesaleMargin: string; retailerMarkup: string }>('wholesale-price-calculator');
@@ -32,7 +32,7 @@ export default function WholesalePriceCalculator() {
   const msrp = wholesalePrice * rmu;
   const retailProfit = msrp - wholesalePrice;
 
-  const handleTryExample = () => { setManufacturingCost('10'); setWholesaleMargin('50'); setRetailerMarkup('2'); setCalculated(false); };
+  const handleTryExample = () => { setManufacturingCost('10'); setWholesaleMargin('50'); setRetailerMarkup('2'); setCalculated(true); };
   const handleCalculate = () => {
     if (cost > 0 && wmu < 100) {
       setCalculated(true);
@@ -57,7 +57,7 @@ export default function WholesalePriceCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="manufacturingCost" type="number" step="any" min="0" placeholder="10" className="pl-7"
-                value={manufacturingCost} onChange={(e) => { setManufacturingCost(e.target.value); setCalculated(false); }} />
+                value={manufacturingCost} onChange={(e) => { setManufacturingCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -65,7 +65,7 @@ export default function WholesalePriceCalculator() {
             <div className="relative">
               
               <Input id="wholesaleMargin" type="number" step="any" min="0" placeholder="50"
-                value={wholesaleMargin} onChange={(e) => { setWholesaleMargin(e.target.value); setCalculated(false); }} />
+                value={wholesaleMargin} onChange={(e) => { setWholesaleMargin(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Your profit margin</p>
           </div>
@@ -74,7 +74,7 @@ export default function WholesalePriceCalculator() {
             <div className="relative">
               
               <Input id="retailerMarkup" type="number" step="any" min="0" placeholder="2"
-                value={retailerMarkup} onChange={(e) => { setRetailerMarkup(e.target.value); setCalculated(false); }} />
+                value={retailerMarkup} onChange={(e) => { setRetailerMarkup(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Keystone = 2x</p>
           </div>
@@ -98,9 +98,9 @@ export default function WholesalePriceCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Wholesale Price</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(wholesalePrice)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Your profit: ${formatCurrency(wholesaleProfit)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Suggested MSRP: ${formatCurrency(msrp)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Retailer profit: ${formatCurrency(retailProfit)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Your profit: ${formatCurrency(wholesaleProfit)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Suggested MSRP: ${formatCurrency(msrp)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Retailer profit: ${formatCurrency(retailProfit)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

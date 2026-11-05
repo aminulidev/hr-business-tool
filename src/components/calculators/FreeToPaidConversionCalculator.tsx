@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { free: number; paid: number; conversionRate: number; benchmark: string; label: string; }
 
 export default function FreeToPaidConversionCalculator() {
-  const [freeUsers, setFreeUsers] = useState('');
-  const [paidUsers, setPaidUsers] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [freeUsers, setFreeUsers] = useState('10000');
+  const [paidUsers, setPaidUsers] = useState('350');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ freeUsers: string; paidUsers: string }>('free-to-paid-conversion-calculator');
@@ -28,7 +28,7 @@ export default function FreeToPaidConversionCalculator() {
   const conversionRate = free > 0 ? (paid / free) * 100 : 0;
   const benchmark = conversionRate > 5 ? "Excellent" : conversionRate > 2 ? "Healthy" : "Below benchmark";
 
-  const handleTryExample = () => { setFreeUsers('10000'); setPaidUsers('350'); setCalculated(false); };
+  const handleTryExample = () => { setFreeUsers('10000'); setPaidUsers('350'); setCalculated(true); };
   const handleCalculate = () => {
     if (free > 0) {
       setCalculated(true);
@@ -53,7 +53,7 @@ export default function FreeToPaidConversionCalculator() {
             <div className="relative">
               
               <Input id="freeUsers" type="number" step="any" min="0" placeholder="10000"
-                value={freeUsers} onChange={(e) => { setFreeUsers(e.target.value); setCalculated(false); }} />
+                value={freeUsers} onChange={(e) => { setFreeUsers(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -61,7 +61,7 @@ export default function FreeToPaidConversionCalculator() {
             <div className="relative">
               
               <Input id="paidUsers" type="number" step="any" min="0" placeholder="350"
-                value={paidUsers} onChange={(e) => { setPaidUsers(e.target.value); setCalculated(false); }} />
+                value={paidUsers} onChange={(e) => { setPaidUsers(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -84,9 +84,9 @@ export default function FreeToPaidConversionCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Free-to-Paid Conversion</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(conversionRate)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Paid: ${paid} out of ${free.toLocaleString()} free users`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Benchmark: ${benchmark}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Freemium benchmark: 2-5%'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Paid: ${paid} out of ${free.toLocaleString()} free users`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Benchmark: ${benchmark}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Freemium benchmark: 2-5%'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -97,11 +97,11 @@ export default function FreeToPaidConversionCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Free Users</p>
-                    <p className={`text-lg font-bold`}>{`{free.toLocaleString()}`}</p>
+                    <p className={`text-lg font-bold`}>{`${free.toLocaleString()}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Paid Users</p>
-                    <p className={`text-lg font-bold`}>{`{paid}`}</p>
+                    <p className={`text-lg font-bold`}>{`${paid}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Conversion</p>

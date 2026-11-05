@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { ar: number; rev: number; dso: number; dailyRevenue: number; label: string; }
 
 export default function AccountsReceivableDaysCalculator() {
-  const [accountsReceivable, setAccountsReceivable] = useState('');
-  const [annualRevenue, setAnnualRevenue] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [accountsReceivable, setAccountsReceivable] = useState('150000');
+  const [annualRevenue, setAnnualRevenue] = useState('1000000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ accountsReceivable: string; annualRevenue: string }>('accounts-receivable-days-calculator');
@@ -28,7 +28,7 @@ export default function AccountsReceivableDaysCalculator() {
   const dso = rev > 0 ? (ar / rev) * 365 : 0;
   const dailyRevenue = rev / 365;
 
-  const handleTryExample = () => { setAccountsReceivable('150000'); setAnnualRevenue('1000000'); setCalculated(false); };
+  const handleTryExample = () => { setAccountsReceivable('150000'); setAnnualRevenue('1000000'); setCalculated(true); };
   const handleCalculate = () => {
     if (rev > 0) {
       setCalculated(true);
@@ -53,7 +53,7 @@ export default function AccountsReceivableDaysCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="accountsReceivable" type="number" step="any" min="0" placeholder="150000" className="pl-7"
-                value={accountsReceivable} onChange={(e) => { setAccountsReceivable(e.target.value); setCalculated(false); }} />
+                value={accountsReceivable} onChange={(e) => { setAccountsReceivable(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -61,7 +61,7 @@ export default function AccountsReceivableDaysCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="annualRevenue" type="number" step="any" min="0" placeholder="1000000" className="pl-7"
-                value={annualRevenue} onChange={(e) => { setAnnualRevenue(e.target.value); setCalculated(false); }} />
+                value={annualRevenue} onChange={(e) => { setAnnualRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -84,9 +84,9 @@ export default function AccountsReceivableDaysCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Days Sales Outstanding</p>
                 <p className="text-4xl font-bold text-emerald-600">{`${dso.toFixed(0)} days`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`AR: ${formatCurrency(ar)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Daily revenue: ${formatCurrency(dailyRevenue)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Benchmark: 30-60 days'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`AR: ${formatCurrency(ar)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Daily revenue: ${formatCurrency(dailyRevenue)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Benchmark: 30-60 days'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -105,7 +105,7 @@ export default function AccountsReceivableDaysCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">DSO</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{dso.toFixed(0)} days`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${dso.toFixed(0)} days`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Daily Rev</p>

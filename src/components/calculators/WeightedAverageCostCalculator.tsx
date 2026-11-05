@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { b1u: number; b1c: number; b2u: number; b2c: number; sold: number; totalCost: number; totalUnits: number; wac: number; cogs: number; endingInventory: number; label: string; }
 
 export default function WeightedAverageCostCalculator() {
-  const [batch1Units, setBatch1Units] = useState('');
-  const [batch1Cost, setBatch1Cost] = useState('');
-  const [batch2Units, setBatch2Units] = useState('');
-  const [batch2Cost, setBatch2Cost] = useState('');
-  const [unitsSold, setUnitsSold] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [batch1Units, setBatch1Units] = useState('100');
+  const [batch1Cost, setBatch1Cost] = useState('10');
+  const [batch2Units, setBatch2Units] = useState('150');
+  const [batch2Cost, setBatch2Cost] = useState('12');
+  const [unitsSold, setUnitsSold] = useState('200');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ batch1Units: string; batch1Cost: string; batch2Units: string; batch2Cost: string; unitsSold: string }>('weighted-average-cost-calculator');
@@ -37,7 +37,7 @@ export default function WeightedAverageCostCalculator() {
   const cogs = wac * sold;
   const endingInventory = wac * (totalUnits - sold);
 
-  const handleTryExample = () => { setBatch1Units('100'); setBatch1Cost('10'); setBatch2Units('150'); setBatch2Cost('12'); setUnitsSold('200'); setCalculated(false); };
+  const handleTryExample = () => { setBatch1Units('100'); setBatch1Cost('10'); setBatch2Units('150'); setBatch2Cost('12'); setUnitsSold('200'); setCalculated(true); };
   const handleCalculate = () => {
     if (totalUnits > 0) {
       setCalculated(true);
@@ -62,7 +62,7 @@ export default function WeightedAverageCostCalculator() {
             <div className="relative">
               
               <Input id="batch1Units" type="number" step="any" min="0" placeholder="100"
-                value={batch1Units} onChange={(e) => { setBatch1Units(e.target.value); setCalculated(false); }} />
+                value={batch1Units} onChange={(e) => { setBatch1Units(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -70,7 +70,7 @@ export default function WeightedAverageCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="batch1Cost" type="number" step="any" min="0" placeholder="10" className="pl-7"
-                value={batch1Cost} onChange={(e) => { setBatch1Cost(e.target.value); setCalculated(false); }} />
+                value={batch1Cost} onChange={(e) => { setBatch1Cost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -78,7 +78,7 @@ export default function WeightedAverageCostCalculator() {
             <div className="relative">
               
               <Input id="batch2Units" type="number" step="any" min="0" placeholder="150"
-                value={batch2Units} onChange={(e) => { setBatch2Units(e.target.value); setCalculated(false); }} />
+                value={batch2Units} onChange={(e) => { setBatch2Units(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -86,7 +86,7 @@ export default function WeightedAverageCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="batch2Cost" type="number" step="any" min="0" placeholder="12" className="pl-7"
-                value={batch2Cost} onChange={(e) => { setBatch2Cost(e.target.value); setCalculated(false); }} />
+                value={batch2Cost} onChange={(e) => { setBatch2Cost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -94,7 +94,7 @@ export default function WeightedAverageCostCalculator() {
             <div className="relative">
               
               <Input id="unitsSold" type="number" step="any" min="0" placeholder="200"
-                value={unitsSold} onChange={(e) => { setUnitsSold(e.target.value); setCalculated(false); }} />
+                value={unitsSold} onChange={(e) => { setUnitsSold(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -117,9 +117,9 @@ export default function WeightedAverageCostCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Weighted Average Cost</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(wac) + "/unit"}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Total cost: ${formatCurrency(totalCost)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`COGS: ${formatCurrency(cogs)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Ending inventory: ${formatCurrency(endingInventory)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Total cost: ${formatCurrency(totalCost)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`COGS: ${formatCurrency(cogs)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Ending inventory: ${formatCurrency(endingInventory)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -134,7 +134,7 @@ export default function WeightedAverageCostCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Total Units</p>
-                    <p className={`text-lg font-bold`}>{`{totalUnits}`}</p>
+                    <p className={`text-lg font-bold`}>{`${totalUnits}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">WAC/Unit</p>

@@ -20,11 +20,11 @@ const PAY_FREQS: Record<string, number> = { weekly: 52, biweekly: 26, semimonthl
 
 export default function PayrollHoursCalculator() {
   const [regHours, setRegHours] = useState('40');
-  const [otHours, setOtHours] = useState('0');
-  const [dtHours, setDtHours] = useState('0');
-  const [regRate, setRegRate] = useState('22');
+  const [otHours, setOtHours] = useState('6');
+  const [dtHours, setDtHours] = useState('2');
+  const [regRate, setRegRate] = useState('25');
   const [payFreq, setPayFreq] = useState('biweekly');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<PayrollHoursSnapshot | null>(null);
   const [compareB, setCompareB] = useState<PayrollHoursSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ regHours: string; otHours: string; dtHours: string; regRate: string; payFreq: string }>('payroll-hours-calculator');
@@ -43,7 +43,7 @@ export default function PayrollHoursCalculator() {
   const perPay = totalPay * (PAY_FREQS[payFreq] / 52);
   const annualPay = totalPay * 52;
 
-  const handleTryExample = () => { setRegHours('40'); setOtHours('6'); setDtHours('2'); setRegRate('25'); setPayFreq('biweekly'); setCalculated(false); };
+  const handleTryExample = () => { setRegHours('40'); setOtHours('6'); setDtHours('2'); setRegRate('25'); setPayFreq('biweekly'); setCalculated(true); };
   const handleCalculate = () => {
     if (r > 0 && (rh + oh + dh) > 0) {
       setCalculated(true);
@@ -69,29 +69,29 @@ export default function PayrollHoursCalculator() {
           <div className="space-y-2">
             <Label htmlFor="ph-reg">Regular Hours</Label>
             <Input id="ph-reg" type="number" step="0.5" min="0" placeholder="40" value={regHours}
-              onChange={(e) => { setRegHours(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setRegHours(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="ph-ot">OT Hours (1.5×)</Label>
             <Input id="ph-ot" type="number" step="0.5" min="0" placeholder="0" value={otHours}
-              onChange={(e) => { setOtHours(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setOtHours(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="ph-dt">DT Hours (2×)</Label>
             <Input id="ph-dt" type="number" step="0.5" min="0" placeholder="0" value={dtHours}
-              onChange={(e) => { setDtHours(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setDtHours(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="ph-rate">Hourly Rate</Label>
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="ph-rate" type="number" step="0.25" min="0" placeholder="20.00" value={regRate}
-                onChange={(e) => { setRegRate(e.target.value); setCalculated(false); }} className="pl-7" />
+                onChange={(e) => { setRegRate(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="ph-freq">Pay Frequency</Label>
-            <Select value={payFreq} onValueChange={(v) => { setPayFreq(v); setCalculated(false); }}>
+            <Select value={payFreq} onValueChange={(v) => { setPayFreq(v); setCalculated(true); }}>
               <SelectTrigger id="ph-freq"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="weekly">Weekly (52 pays)</SelectItem>

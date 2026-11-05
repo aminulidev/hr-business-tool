@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { demand: number; lt: number; ss: number; leadTimeDemand: number; reorderPoint: number; maxInventory: number; label: string; }
 
 export default function ReorderPointCalculator() {
-  const [avgDailyDemand, setAvgDailyDemand] = useState('');
-  const [leadTimeDays, setLeadTimeDays] = useState('');
-  const [safetyStock, setSafetyStock] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [avgDailyDemand, setAvgDailyDemand] = useState('50');
+  const [leadTimeDays, setLeadTimeDays] = useState('10');
+  const [safetyStock, setSafetyStock] = useState('100');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ avgDailyDemand: string; leadTimeDays: string; safetyStock: string }>('reorder-point-calculator');
@@ -31,7 +31,7 @@ export default function ReorderPointCalculator() {
   const reorderPoint = leadTimeDemand + ss;
   const maxInventory = reorderPoint + 200;
 
-  const handleTryExample = () => { setAvgDailyDemand('50'); setLeadTimeDays('10'); setSafetyStock('100'); setCalculated(false); };
+  const handleTryExample = () => { setAvgDailyDemand('50'); setLeadTimeDays('10'); setSafetyStock('100'); setCalculated(true); };
   const handleCalculate = () => {
     if (demand > 0 && lt > 0) {
       setCalculated(true);
@@ -56,7 +56,7 @@ export default function ReorderPointCalculator() {
             <div className="relative">
               
               <Input id="avgDailyDemand" type="number" step="any" min="0" placeholder="50"
-                value={avgDailyDemand} onChange={(e) => { setAvgDailyDemand(e.target.value); setCalculated(false); }} />
+                value={avgDailyDemand} onChange={(e) => { setAvgDailyDemand(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -64,7 +64,7 @@ export default function ReorderPointCalculator() {
             <div className="relative">
               
               <Input id="leadTimeDays" type="number" step="any" min="0" placeholder="10"
-                value={leadTimeDays} onChange={(e) => { setLeadTimeDays(e.target.value); setCalculated(false); }} />
+                value={leadTimeDays} onChange={(e) => { setLeadTimeDays(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function ReorderPointCalculator() {
             <div className="relative">
               
               <Input id="safetyStock" type="number" step="any" min="0" placeholder="100"
-                value={safetyStock} onChange={(e) => { setSafetyStock(e.target.value); setCalculated(false); }} />
+                value={safetyStock} onChange={(e) => { setSafetyStock(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -93,11 +93,11 @@ export default function ReorderPointCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Reorder Point</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{reorderPoint.toFixed(0)} units`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${reorderPoint.toFixed(0)} units`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Lead time demand: ${leadTimeDemand.toFixed(0)} units`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Safety stock: ${ss} units`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Reorder when inventory drops to ROP'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Lead time demand: ${leadTimeDemand.toFixed(0)} units`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Safety stock: ${ss} units`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Reorder when inventory drops to ROP'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -108,19 +108,19 @@ export default function ReorderPointCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Daily Demand</p>
-                    <p className={`text-lg font-bold`}>{`{demand} units`}</p>
+                    <p className={`text-lg font-bold`}>{`${demand} units`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Lead Time</p>
-                    <p className={`text-lg font-bold`}>{`{lt} days`}</p>
+                    <p className={`text-lg font-bold`}>{`${lt} days`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Reorder Point</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{reorderPoint.toFixed(0)} units`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${reorderPoint.toFixed(0)} units`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Lead Time Demand</p>
-                    <p className={`text-lg font-bold`}>{`{leadTimeDemand.toFixed(0)}`}</p>
+                    <p className={`text-lg font-bold`}>{`${leadTimeDemand.toFixed(0)}`}</p>
                   </div>
               </div>
 

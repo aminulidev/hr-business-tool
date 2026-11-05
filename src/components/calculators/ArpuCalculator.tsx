@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { rev: number; users: number; arpu: number; annualArpu: number; arr: number; label: string; }
 
 export default function ArpuCalculator() {
-  const [totalRevenue, setTotalRevenue] = useState('');
-  const [totalUsers, setTotalUsers] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [totalRevenue, setTotalRevenue] = useState('100000');
+  const [totalUsers, setTotalUsers] = useState('1000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ totalRevenue: string; totalUsers: string }>('arpu-calculator');
@@ -29,7 +29,7 @@ export default function ArpuCalculator() {
   const annualArpu = arpu * 12;
   const arr = arpu * users * 12;
 
-  const handleTryExample = () => { setTotalRevenue('100000'); setTotalUsers('1000'); setCalculated(false); };
+  const handleTryExample = () => { setTotalRevenue('100000'); setTotalUsers('1000'); setCalculated(true); };
   const handleCalculate = () => {
     if (users > 0) {
       setCalculated(true);
@@ -54,7 +54,7 @@ export default function ArpuCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="totalRevenue" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={totalRevenue} onChange={(e) => { setTotalRevenue(e.target.value); setCalculated(false); }} />
+                value={totalRevenue} onChange={(e) => { setTotalRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -62,7 +62,7 @@ export default function ArpuCalculator() {
             <div className="relative">
               
               <Input id="totalUsers" type="number" step="any" min="0" placeholder="1000"
-                value={totalUsers} onChange={(e) => { setTotalUsers(e.target.value); setCalculated(false); }} />
+                value={totalUsers} onChange={(e) => { setTotalUsers(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -85,9 +85,9 @@ export default function ArpuCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Average Revenue Per User</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(arpu)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Annual ARPU: ${formatCurrency(annualArpu)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`ARR: ${formatCurrency(arr)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'SMB $50-200, Mid-market $500-2k, Enterprise $5k-50k'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Annual ARPU: ${formatCurrency(annualArpu)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`ARR: ${formatCurrency(arr)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'SMB $50-200, Mid-market $500-2k, Enterprise $5k-50k'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -102,7 +102,7 @@ export default function ArpuCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Users</p>
-                    <p className={`text-lg font-bold`}>{`{users}`}</p>
+                    <p className={`text-lg font-bold`}>{`${users}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">ARPU</p>

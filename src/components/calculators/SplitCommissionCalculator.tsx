@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { deal: number; rate: number; r1: number; r2: number; totalCommission: number; rep1Commission: number; rep2Commission: number; label: string; }
 
 export default function SplitCommissionCalculator() {
-  const [dealValue, setDealValue] = useState('');
-  const [commissionRate, setCommissionRate] = useState('');
-  const [rep1Split, setRep1Split] = useState('');
-  const [rep2Split, setRep2Split] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [dealValue, setDealValue] = useState('100000');
+  const [commissionRate, setCommissionRate] = useState('10');
+  const [rep1Split, setRep1Split] = useState('60');
+  const [rep2Split, setRep2Split] = useState('40');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ dealValue: string; commissionRate: string; rep1Split: string; rep2Split: string }>('split-commission-calculator');
@@ -33,7 +33,7 @@ export default function SplitCommissionCalculator() {
   const rep1Commission = totalCommission * (r1 / 100);
   const rep2Commission = totalCommission * (r2 / 100);
 
-  const handleTryExample = () => { setDealValue('100000'); setCommissionRate('10'); setRep1Split('60'); setRep2Split('40'); setCalculated(false); };
+  const handleTryExample = () => { setDealValue('100000'); setCommissionRate('10'); setRep1Split('60'); setRep2Split('40'); setCalculated(true); };
   const handleCalculate = () => {
     if (deal > 0 && rate > 0) {
       setCalculated(true);
@@ -58,7 +58,7 @@ export default function SplitCommissionCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="dealValue" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={dealValue} onChange={(e) => { setDealValue(e.target.value); setCalculated(false); }} />
+                value={dealValue} onChange={(e) => { setDealValue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function SplitCommissionCalculator() {
             <div className="relative">
               
               <Input id="commissionRate" type="number" step="any" min="0" placeholder="10"
-                value={commissionRate} onChange={(e) => { setCommissionRate(e.target.value); setCalculated(false); }} />
+                value={commissionRate} onChange={(e) => { setCommissionRate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function SplitCommissionCalculator() {
             <div className="relative">
               
               <Input id="rep1Split" type="number" step="any" min="0" placeholder="60"
-                value={rep1Split} onChange={(e) => { setRep1Split(e.target.value); setCalculated(false); }} />
+                value={rep1Split} onChange={(e) => { setRep1Split(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -82,7 +82,7 @@ export default function SplitCommissionCalculator() {
             <div className="relative">
               
               <Input id="rep2Split" type="number" step="any" min="0" placeholder="40"
-                value={rep2Split} onChange={(e) => { setRep2Split(e.target.value); setCalculated(false); }} />
+                value={rep2Split} onChange={(e) => { setRep2Split(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -105,9 +105,9 @@ export default function SplitCommissionCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Total Commission</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalCommission)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Rep 1: ${formatCurrency(rep1Commission)} (${r1}%)`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Rep 2: ${formatCurrency(rep2Commission)} (${r2}%)`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Commission rate: ${rate}%`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Rep 1: ${formatCurrency(rep1Commission)} (${r1}%)`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Rep 2: ${formatCurrency(rep2Commission)} (${r2}%)`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Commission rate: ${rate}%`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -122,7 +122,7 @@ export default function SplitCommissionCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Commission Rate</p>
-                    <p className={`text-lg font-bold`}>{`{rate}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${rate}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Total Commission</p>

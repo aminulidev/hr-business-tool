@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { ap: number; cogs: number; dpo: number; dailyCogs: number; label: string; }
 
 export default function AccountsPayableDaysCalculator() {
-  const [accountsPayable, setAccountsPayable] = useState('');
-  const [annualCogs, setAnnualCogs] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [accountsPayable, setAccountsPayable] = useState('120000');
+  const [annualCogs, setAnnualCogs] = useState('600000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ accountsPayable: string; annualCogs: string }>('accounts-payable-days-calculator');
@@ -28,7 +28,7 @@ export default function AccountsPayableDaysCalculator() {
   const dpo = cogs > 0 ? (ap / cogs) * 365 : 0;
   const dailyCogs = cogs / 365;
 
-  const handleTryExample = () => { setAccountsPayable('120000'); setAnnualCogs('600000'); setCalculated(false); };
+  const handleTryExample = () => { setAccountsPayable('120000'); setAnnualCogs('600000'); setCalculated(true); };
   const handleCalculate = () => {
     if (cogs > 0) {
       setCalculated(true);
@@ -53,7 +53,7 @@ export default function AccountsPayableDaysCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="accountsPayable" type="number" step="any" min="0" placeholder="120000" className="pl-7"
-                value={accountsPayable} onChange={(e) => { setAccountsPayable(e.target.value); setCalculated(false); }} />
+                value={accountsPayable} onChange={(e) => { setAccountsPayable(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -61,7 +61,7 @@ export default function AccountsPayableDaysCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="annualCogs" type="number" step="any" min="0" placeholder="600000" className="pl-7"
-                value={annualCogs} onChange={(e) => { setAnnualCogs(e.target.value); setCalculated(false); }} />
+                value={annualCogs} onChange={(e) => { setAnnualCogs(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -84,9 +84,9 @@ export default function AccountsPayableDaysCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Days Payable Outstanding</p>
                 <p className="text-4xl font-bold text-emerald-600">{`${dpo.toFixed(0)} days`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`AP: ${formatCurrency(ap)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Daily COGS: ${formatCurrency(dailyCogs)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Benchmark: 30-60 days'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`AP: ${formatCurrency(ap)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Daily COGS: ${formatCurrency(dailyCogs)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Benchmark: 30-60 days'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -105,7 +105,7 @@ export default function AccountsPayableDaysCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">DPO</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{dpo.toFixed(0)} days`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${dpo.toFixed(0)} days`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Daily COGS</p>

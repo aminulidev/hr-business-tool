@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { pipeline: number; wr: number; weightedForecast: number; coverageRatio: number; dealsClosing: number; label: string; }
 
 export default function SalesForecastCalculator() {
-  const [pipelineValue, setPipelineValue] = useState('');
-  const [avgWinRate, setAvgWinRate] = useState('');
-  const [salesCycleDays, setSalesCycleDays] = useState('');
-  const [forecastPeriod, setForecastPeriod] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [pipelineValue, setPipelineValue] = useState('2000000');
+  const [avgWinRate, setAvgWinRate] = useState('25');
+  const [salesCycleDays, setSalesCycleDays] = useState('90');
+  const [forecastPeriod, setForecastPeriod] = useState('90');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ pipelineValue: string; avgWinRate: string; salesCycleDays: string; forecastPeriod: string }>('sales-forecast-calculator');
@@ -33,7 +33,7 @@ export default function SalesForecastCalculator() {
   const coverageRatio = weightedForecast > 0 ? pipeline / weightedForecast : 0;
   const dealsClosing = cycle > 0 ? (period / cycle) * weightedForecast : weightedForecast;
 
-  const handleTryExample = () => { setPipelineValue('2000000'); setAvgWinRate('25'); setSalesCycleDays('90'); setForecastPeriod('90'); setCalculated(false); };
+  const handleTryExample = () => { setPipelineValue('2000000'); setAvgWinRate('25'); setSalesCycleDays('90'); setForecastPeriod('90'); setCalculated(true); };
   const handleCalculate = () => {
     if (pipeline > 0) {
       setCalculated(true);
@@ -58,7 +58,7 @@ export default function SalesForecastCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="pipelineValue" type="number" step="any" min="0" placeholder="2000000" className="pl-7"
-                value={pipelineValue} onChange={(e) => { setPipelineValue(e.target.value); setCalculated(false); }} />
+                value={pipelineValue} onChange={(e) => { setPipelineValue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function SalesForecastCalculator() {
             <div className="relative">
               
               <Input id="avgWinRate" type="number" step="any" min="0" placeholder="25"
-                value={avgWinRate} onChange={(e) => { setAvgWinRate(e.target.value); setCalculated(false); }} />
+                value={avgWinRate} onChange={(e) => { setAvgWinRate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function SalesForecastCalculator() {
             <div className="relative">
               
               <Input id="salesCycleDays" type="number" step="any" min="0" placeholder="90"
-                value={salesCycleDays} onChange={(e) => { setSalesCycleDays(e.target.value); setCalculated(false); }} />
+                value={salesCycleDays} onChange={(e) => { setSalesCycleDays(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -82,7 +82,7 @@ export default function SalesForecastCalculator() {
             <div className="relative">
               
               <Input id="forecastPeriod" type="number" step="any" min="0" placeholder="90"
-                value={forecastPeriod} onChange={(e) => { setForecastPeriod(e.target.value); setCalculated(false); }} />
+                value={forecastPeriod} onChange={(e) => { setForecastPeriod(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -105,9 +105,9 @@ export default function SalesForecastCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Weighted Forecast</p>
                 <p className="text-4xl font-bold text-emerald-600">{`${formatCurrency(weightedForecast)}`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Coverage: ${coverageRatio.toFixed(1)}x pipeline`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Closing in period: ${formatCurrency(dealsClosing)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Win rate: ${wr}%`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Coverage: ${coverageRatio.toFixed(1)}x pipeline`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Closing in period: ${formatCurrency(dealsClosing)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Win rate: ${wr}%`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -122,7 +122,7 @@ export default function SalesForecastCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Win Rate</p>
-                    <p className={`text-lg font-bold`}>{`{wr}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${wr}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Weighted Forecast</p>

@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { wages: number; benefits: number; payrollTaxes: number; totalLaborCost: number; laborPctRev: number; loadedMultiplier: number; label: string; }
 
 export default function LaborCostCalculator() {
-  const [totalWages, setTotalWages] = useState('');
-  const [benefitsPct, setBenefitsPct] = useState('Health, 401k, PTO');
-  const [payrollTaxesPct, setPayrollTaxesPct] = useState('FICA 7.65% + FUTA + SUTA');
-  const [workersComp, setWorkersComp] = useState('');
-  const [annualRevenue, setAnnualRevenue] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [totalWages, setTotalWages] = useState('2500000');
+  const [benefitsPct, setBenefitsPct] = useState('30');
+  const [payrollTaxesPct, setPayrollTaxesPct] = useState('9');
+  const [workersComp, setWorkersComp] = useState('25000');
+  const [annualRevenue, setAnnualRevenue] = useState('5000000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ totalWages: string; benefitsPct: string; payrollTaxesPct: string; workersComp: string; annualRevenue: string }>('labor-cost-calculator');
@@ -37,7 +37,7 @@ export default function LaborCostCalculator() {
   const laborPctRev = rev > 0 ? (totalLaborCost / rev) * 100 : 0;
   const loadedMultiplier = wages > 0 ? totalLaborCost / wages : 0;
 
-  const handleTryExample = () => { setTotalWages('2500000'); setBenefitsPct('30'); setPayrollTaxesPct('9'); setWorkersComp('25000'); setAnnualRevenue('5000000'); setCalculated(false); };
+  const handleTryExample = () => { setTotalWages('2500000'); setBenefitsPct('30'); setPayrollTaxesPct('9'); setWorkersComp('25000'); setAnnualRevenue('5000000'); setCalculated(true); };
   const handleCalculate = () => {
     if (wages > 0) {
       setCalculated(true);
@@ -62,7 +62,7 @@ export default function LaborCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="totalWages" type="number" step="any" min="0" placeholder="2500000" className="pl-7"
-                value={totalWages} onChange={(e) => { setTotalWages(e.target.value); setCalculated(false); }} />
+                value={totalWages} onChange={(e) => { setTotalWages(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -70,7 +70,7 @@ export default function LaborCostCalculator() {
             <div className="relative">
               
               <Input id="benefitsPct" type="number" step="any" min="0" placeholder="30"
-                value={benefitsPct} onChange={(e) => { setBenefitsPct(e.target.value); setCalculated(false); }} />
+                value={benefitsPct} onChange={(e) => { setBenefitsPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Health, 401k, PTO</p>
           </div>
@@ -79,7 +79,7 @@ export default function LaborCostCalculator() {
             <div className="relative">
               
               <Input id="payrollTaxesPct" type="number" step="any" min="0" placeholder="9"
-                value={payrollTaxesPct} onChange={(e) => { setPayrollTaxesPct(e.target.value); setCalculated(false); }} />
+                value={payrollTaxesPct} onChange={(e) => { setPayrollTaxesPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">FICA 7.65% + FUTA + SUTA</p>
           </div>
@@ -88,7 +88,7 @@ export default function LaborCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="workersComp" type="number" step="any" min="0" placeholder="25000" className="pl-7"
-                value={workersComp} onChange={(e) => { setWorkersComp(e.target.value); setCalculated(false); }} />
+                value={workersComp} onChange={(e) => { setWorkersComp(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -96,7 +96,7 @@ export default function LaborCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="annualRevenue" type="number" step="any" min="0" placeholder="5000000" className="pl-7"
-                value={annualRevenue} onChange={(e) => { setAnnualRevenue(e.target.value); setCalculated(false); }} />
+                value={annualRevenue} onChange={(e) => { setAnnualRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -119,9 +119,9 @@ export default function LaborCostCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Total Labor Cost</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalLaborCost)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Labor as % of revenue: ${laborPctRev.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Loaded ${loadedMultiplier.toFixed(2)}x wages`}</Badge>
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{'Benchmark: 20-50% of revenue'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Labor as % of revenue: ${laborPctRev.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Loaded ${loadedMultiplier.toFixed(2)}x wages`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{'Benchmark: 20-50% of revenue'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

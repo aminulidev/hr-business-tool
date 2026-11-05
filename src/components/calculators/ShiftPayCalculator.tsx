@@ -28,22 +28,22 @@ interface ShiftSnapshot {
 }
 
 export default function ShiftPayCalculator() {
-  const [baseRate, setBaseRate] = useState('');
+  const [baseRate, setBaseRate] = useState('24.50');
   
   // Shift inputs
   const [dayHours, setDayHours] = useState('40');
   const [dayDiffType, setDayDiffType] = useState<DiffType>('percent');
   const [dayDiffVal, setDayDiffVal] = useState('0');
 
-  const [swingHours, setSwingHours] = useState('0');
+  const [swingHours, setSwingHours] = useState('12');
   const [swingDiffType, setSwingDiffType] = useState<DiffType>('percent');
-  const [swingDiffVal, setSwingDiffVal] = useState('10');
+  const [swingDiffVal, setSwingDiffVal] = useState('2.50');
 
-  const [nightHours, setNightHours] = useState('0');
+  const [nightHours, setNightHours] = useState('8');
   const [nightDiffType, setNightDiffType] = useState<DiffType>('percent');
   const [nightDiffVal, setNightDiffVal] = useState('15');
 
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<ShiftSnapshot | null>(null);
   const [compareB, setCompareB] = useState<ShiftSnapshot | null>(null);
 
@@ -97,7 +97,7 @@ export default function ShiftPayCalculator() {
     setNightHours('8');
     setNightDiffType('percent');
     setNightDiffVal('15'); // 15% night addition
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -220,9 +220,7 @@ export default function ShiftPayCalculator() {
               placeholder="20.00"
               value={baseRate}
               onChange={(e) => {
-                setBaseRate(e.target.value);
-                setCalculated(false);
-              }}
+                setBaseRate(e.target.value); setCalculated(true); }}
               className="pl-7"
             />
           </div>
@@ -249,9 +247,7 @@ export default function ShiftPayCalculator() {
                 placeholder="40"
                 value={dayHours}
                 onChange={(e) => {
-                  setDayHours(e.target.value);
-                  setCalculated(false);
-                }}
+                  setDayHours(e.target.value); setCalculated(true); }}
               />
             </div>
             <div className="space-y-1.5">
@@ -284,9 +280,7 @@ export default function ShiftPayCalculator() {
                   placeholder="0"
                   value={dayDiffVal}
                   onChange={(e) => {
-                    setDayDiffVal(e.target.value);
-                    setCalculated(false);
-                  }}
+                    setDayDiffVal(e.target.value); setCalculated(true); }}
                   className={dayDiffType === 'fixed' ? 'pl-6' : ''}
                 />
               </div>
@@ -311,9 +305,7 @@ export default function ShiftPayCalculator() {
                 placeholder="0"
                 value={swingHours}
                 onChange={(e) => {
-                  setSwingHours(e.target.value);
-                  setCalculated(false);
-                }}
+                  setSwingHours(e.target.value); setCalculated(true); }}
               />
             </div>
             <div className="space-y-1.5">
@@ -346,9 +338,7 @@ export default function ShiftPayCalculator() {
                   placeholder="10"
                   value={swingDiffVal}
                   onChange={(e) => {
-                    setSwingDiffVal(e.target.value);
-                    setCalculated(false);
-                  }}
+                    setSwingDiffVal(e.target.value); setCalculated(true); }}
                   className={swingDiffType === 'fixed' ? 'pl-6' : ''}
                 />
               </div>
@@ -373,9 +363,7 @@ export default function ShiftPayCalculator() {
                 placeholder="0"
                 value={nightHours}
                 onChange={(e) => {
-                  setNightHours(e.target.value);
-                  setCalculated(false);
-                }}
+                  setNightHours(e.target.value); setCalculated(true); }}
               />
             </div>
             <div className="space-y-1.5">
@@ -408,9 +396,7 @@ export default function ShiftPayCalculator() {
                   placeholder="15"
                   value={nightDiffVal}
                   onChange={(e) => {
-                    setNightDiffVal(e.target.value);
-                    setCalculated(false);
-                  }}
+                    setNightDiffVal(e.target.value); setCalculated(true); }}
                   className={nightDiffType === 'fixed' ? 'pl-6' : ''}
                 />
               </div>

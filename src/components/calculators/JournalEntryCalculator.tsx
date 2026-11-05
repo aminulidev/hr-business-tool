@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { d1: number; d2: number; c1: number; c2: number; totalDebits: number; totalCredits: number; difference: number; isBalanced: boolean; label: string; }
 
 export default function JournalEntryCalculator() {
-  const [debit1, setDebit1] = useState('');
-  const [debit2, setDebit2] = useState('');
-  const [credit1, setCredit1] = useState('');
-  const [credit2, setCredit2] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [debit1, setDebit1] = useState('5000');
+  const [debit2, setDebit2] = useState('0');
+  const [credit1, setCredit1] = useState('3000');
+  const [credit2, setCredit2] = useState('2000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ debit1: string; debit2: string; credit1: string; credit2: string }>('journal-entry-calculator');
@@ -34,7 +34,7 @@ export default function JournalEntryCalculator() {
   const difference = totalDebits - totalCredits;
   const isBalanced = Math.abs(difference) < 0.01;
 
-  const handleTryExample = () => { setDebit1('5000'); setDebit2('0'); setCredit1('3000'); setCredit2('2000'); setCalculated(false); };
+  const handleTryExample = () => { setDebit1('5000'); setDebit2('0'); setCredit1('3000'); setCredit2('2000'); setCalculated(true); };
   const handleCalculate = () => {
     if (totalDebits > 0 || totalCredits > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function JournalEntryCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="debit1" type="number" step="any" min="0" placeholder="5000" className="pl-7"
-                value={debit1} onChange={(e) => { setDebit1(e.target.value); setCalculated(false); }} />
+                value={debit1} onChange={(e) => { setDebit1(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function JournalEntryCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="debit2" type="number" step="any" min="0" placeholder="0" className="pl-7"
-                value={debit2} onChange={(e) => { setDebit2(e.target.value); setCalculated(false); }} />
+                value={debit2} onChange={(e) => { setDebit2(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function JournalEntryCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="credit1" type="number" step="any" min="0" placeholder="3000" className="pl-7"
-                value={credit1} onChange={(e) => { setCredit1(e.target.value); setCalculated(false); }} />
+                value={credit1} onChange={(e) => { setCredit1(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -83,7 +83,7 @@ export default function JournalEntryCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="credit2" type="number" step="any" min="0" placeholder="2000" className="pl-7"
-                value={credit2} onChange={(e) => { setCredit2(e.target.value); setCalculated(false); }} />
+                value={credit2} onChange={(e) => { setCredit2(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -106,9 +106,9 @@ export default function JournalEntryCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Journal Entry Balance</p>
                 <p className="text-4xl font-bold text-emerald-600">{isBalanced ? "Balanced" : "Unbalanced"}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Total debits: ${formatCurrency(totalDebits)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Total credits: ${formatCurrency(totalCredits)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{isBalanced ? "Entry is balanced" : "Difference: ${formatCurrency(difference)}"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Total debits: ${formatCurrency(totalDebits)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Total credits: ${formatCurrency(totalCredits)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{isBalanced ? "Entry is balanced" : "Difference: ${formatCurrency(difference)}"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

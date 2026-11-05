@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { pv: number; apr: number; yrs: number; monthlyRate: number; numPayments: number; monthlyPayment: number; totalPaid: number; totalInterest: number; label: string; }
 
 export default function AmortizationCalculator() {
-  const [loanAmount, setLoanAmount] = useState('');
-  const [interestRate, setInterestRate] = useState('');
-  const [loanTerm, setLoanTerm] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [loanAmount, setLoanAmount] = useState('250000');
+  const [interestRate, setInterestRate] = useState('6.5');
+  const [loanTerm, setLoanTerm] = useState('30');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ loanAmount: string; interestRate: string; loanTerm: string }>('amortization-calculator');
@@ -33,7 +33,7 @@ export default function AmortizationCalculator() {
   const totalPaid = monthlyPayment * numPayments;
   const totalInterest = totalPaid - pv;
 
-  const handleTryExample = () => { setLoanAmount('250000'); setInterestRate('6.5'); setLoanTerm('30'); setCalculated(false); };
+  const handleTryExample = () => { setLoanAmount('250000'); setInterestRate('6.5'); setLoanTerm('30'); setCalculated(true); };
   const handleCalculate = () => {
     if (pv > 0 && yrs > 0) {
       setCalculated(true);
@@ -58,7 +58,7 @@ export default function AmortizationCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="loanAmount" type="number" step="any" min="0" placeholder="250000" className="pl-7"
-                value={loanAmount} onChange={(e) => { setLoanAmount(e.target.value); setCalculated(false); }} />
+                value={loanAmount} onChange={(e) => { setLoanAmount(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function AmortizationCalculator() {
             <div className="relative">
               
               <Input id="interestRate" type="number" step="any" min="0" placeholder="6.5"
-                value={interestRate} onChange={(e) => { setInterestRate(e.target.value); setCalculated(false); }} />
+                value={interestRate} onChange={(e) => { setInterestRate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function AmortizationCalculator() {
             <div className="relative">
               
               <Input id="loanTerm" type="number" step="any" min="0" placeholder="30"
-                value={loanTerm} onChange={(e) => { setLoanTerm(e.target.value); setCalculated(false); }} />
+                value={loanTerm} onChange={(e) => { setLoanTerm(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -97,9 +97,9 @@ export default function AmortizationCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Monthly Payment</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(monthlyPayment)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Total paid: ${formatCurrency(totalPaid)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Total interest: ${formatCurrency(totalInterest)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Interest as % of loan: ${pv > 0 ? (totalInterest / pv * 100).toFixed(1) : 0}%`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Total paid: ${formatCurrency(totalPaid)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Total interest: ${formatCurrency(totalInterest)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Interest as % of loan: ${pv > 0 ? (totalInterest / pv * 100).toFixed(1) : 0}%`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

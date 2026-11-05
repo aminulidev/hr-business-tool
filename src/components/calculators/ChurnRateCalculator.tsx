@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { sc: number; lc: number; sm: number; lm: number; logoChurn: number; revenueChurn: number; logoRetention: number; revenueRetention: number; label: string; }
 
 export default function ChurnRateCalculator() {
-  const [startCustomers, setStartCustomers] = useState('');
-  const [lostCustomers, setLostCustomers] = useState('');
-  const [startMrr, setStartMrr] = useState('');
-  const [lostMrr, setLostMrr] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [startCustomers, setStartCustomers] = useState('500');
+  const [lostCustomers, setLostCustomers] = useState('25');
+  const [startMrr, setStartMrr] = useState('100000');
+  const [lostMrr, setLostMrr] = useState('5000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ startCustomers: string; lostCustomers: string; startMrr: string; lostMrr: string }>('churn-rate-calculator');
@@ -34,7 +34,7 @@ export default function ChurnRateCalculator() {
   const logoRetention = 100 - logoChurn;
   const revenueRetention = 100 - revenueChurn;
 
-  const handleTryExample = () => { setStartCustomers('500'); setLostCustomers('25'); setStartMrr('100000'); setLostMrr('5000'); setCalculated(false); };
+  const handleTryExample = () => { setStartCustomers('500'); setLostCustomers('25'); setStartMrr('100000'); setLostMrr('5000'); setCalculated(true); };
   const handleCalculate = () => {
     if (sc > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function ChurnRateCalculator() {
             <div className="relative">
               
               <Input id="startCustomers" type="number" step="any" min="0" placeholder="500"
-                value={startCustomers} onChange={(e) => { setStartCustomers(e.target.value); setCalculated(false); }} />
+                value={startCustomers} onChange={(e) => { setStartCustomers(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function ChurnRateCalculator() {
             <div className="relative">
               
               <Input id="lostCustomers" type="number" step="any" min="0" placeholder="25"
-                value={lostCustomers} onChange={(e) => { setLostCustomers(e.target.value); setCalculated(false); }} />
+                value={lostCustomers} onChange={(e) => { setLostCustomers(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function ChurnRateCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="startMrr" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={startMrr} onChange={(e) => { setStartMrr(e.target.value); setCalculated(false); }} />
+                value={startMrr} onChange={(e) => { setStartMrr(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -83,7 +83,7 @@ export default function ChurnRateCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="lostMrr" type="number" step="any" min="0" placeholder="5000" className="pl-7"
-                value={lostMrr} onChange={(e) => { setLostMrr(e.target.value); setCalculated(false); }} />
+                value={lostMrr} onChange={(e) => { setLostMrr(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -106,9 +106,9 @@ export default function ChurnRateCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Churn Rate</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(logoChurn)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-red-500/10 border-red-500/30 text-red-600'">{`Revenue churn: ${formatPercent(revenueChurn)}`}</Badge>
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Logo retention: ${formatPercent(logoRetention)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{'SaaS benchmark: <5%/yr'}</Badge>
+                  <Badge variant="outline" className="bg-red-500/10 border-red-500/30 text-red-600">{`Revenue churn: ${formatPercent(revenueChurn)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Logo retention: ${formatPercent(logoRetention)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{'SaaS benchmark: <5%/yr'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

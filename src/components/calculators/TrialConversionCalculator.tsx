@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { signups: number; paid: number; conversionRate: number; lostTrials: number; benchmark: string; label: string; }
 
 export default function TrialConversionCalculator() {
-  const [trialSignups, setTrialSignups] = useState('');
-  const [paidConversions, setPaidConversions] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [trialSignups, setTrialSignups] = useState('1000');
+  const [paidConversions, setPaidConversions] = useState('200');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ trialSignups: string; paidConversions: string }>('trial-conversion-calculator');
@@ -29,7 +29,7 @@ export default function TrialConversionCalculator() {
   const lostTrials = signups - paid;
   const benchmark = conversionRate > 25 ? "Excellent" : conversionRate > 15 ? "Healthy" : "Below benchmark";
 
-  const handleTryExample = () => { setTrialSignups('1000'); setPaidConversions('200'); setCalculated(false); };
+  const handleTryExample = () => { setTrialSignups('1000'); setPaidConversions('200'); setCalculated(true); };
   const handleCalculate = () => {
     if (signups > 0) {
       setCalculated(true);
@@ -54,7 +54,7 @@ export default function TrialConversionCalculator() {
             <div className="relative">
               
               <Input id="trialSignups" type="number" step="any" min="0" placeholder="1000"
-                value={trialSignups} onChange={(e) => { setTrialSignups(e.target.value); setCalculated(false); }} />
+                value={trialSignups} onChange={(e) => { setTrialSignups(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -62,7 +62,7 @@ export default function TrialConversionCalculator() {
             <div className="relative">
               
               <Input id="paidConversions" type="number" step="any" min="0" placeholder="200"
-                value={paidConversions} onChange={(e) => { setPaidConversions(e.target.value); setCalculated(false); }} />
+                value={paidConversions} onChange={(e) => { setPaidConversions(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -85,9 +85,9 @@ export default function TrialConversionCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Trial Conversion Rate</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(conversionRate)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Paid: ${paid} out of ${signups} trials`}</Badge>
-                  <Badge variant="outline" className="'bg-red-500/10 border-red-500/30 text-red-600'">{`Lost trials: ${lostTrials}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Benchmark: ${benchmark}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Paid: ${paid} out of ${signups} trials`}</Badge>
+                  <Badge variant="outline" className="bg-red-500/10 border-red-500/30 text-red-600">{`Lost trials: ${lostTrials}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Benchmark: ${benchmark}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -98,11 +98,11 @@ export default function TrialConversionCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Trial Signups</p>
-                    <p className={`text-lg font-bold`}>{`{signups}`}</p>
+                    <p className={`text-lg font-bold`}>{`${signups}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Paid Conversions</p>
-                    <p className={`text-lg font-bold`}>{`{paid}`}</p>
+                    <p className={`text-lg font-bold`}>{`${paid}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Conversion Rate</p>
@@ -110,7 +110,7 @@ export default function TrialConversionCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Lost</p>
-                    <p className={`text-lg font-bold`}>{`{lostTrials}`}</p>
+                    <p className={`text-lg font-bold`}>{`${lostTrials}`}</p>
                   </div>
               </div>
 

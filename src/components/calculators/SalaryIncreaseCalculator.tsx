@@ -32,7 +32,7 @@ export default function SalaryIncreaseCalculator() {
   const [currentSalary, setCurrentSalary] = useState<string>('');
   const [salaryIncrease, setSalaryIncrease] = useState<string>('');
   const [inflationRate, setInflationRate] = useState<string>('3.0');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ currentSalary: string; salaryIncrease: string; inflationRate: string }>('salary-increase-calculator');
 
   const handleTryExample = () => {
@@ -102,9 +102,7 @@ export default function SalaryIncreaseCalculator() {
               placeholder="65,000"
               value={currentSalary}
               onChange={(e) => {
-                setCurrentSalary(e.target.value);
-                setCalculated(false);
-              }}
+                setCurrentSalary(e.target.value); setCalculated(true); }}
               className="pl-7"
             />
           </div>
@@ -123,9 +121,7 @@ export default function SalaryIncreaseCalculator() {
               placeholder="5.00"
               value={salaryIncrease}
               onChange={(e) => {
-                setSalaryIncrease(e.target.value);
-                setCalculated(false);
-              }}
+                setSalaryIncrease(e.target.value); setCalculated(true); }}
               className="pr-7"
             />
             <span className="absolute right-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">
@@ -148,9 +144,7 @@ export default function SalaryIncreaseCalculator() {
               placeholder="3.00"
               value={inflationRate}
               onChange={(e) => {
-                setInflationRate(e.target.value);
-                setCalculated(false);
-              }}
+                setInflationRate(e.target.value); setCalculated(true); }}
               className="pr-7"
             />
             <span className="absolute right-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">

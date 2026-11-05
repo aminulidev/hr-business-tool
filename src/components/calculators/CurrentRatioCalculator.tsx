@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { ca: number; cl: number; currentRatio: number; workingCapital: number; label: string; }
 
 export default function CurrentRatioCalculator() {
-  const [currentAssets, setCurrentAssets] = useState('');
-  const [currentLiabilities, setCurrentLiabilities] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [currentAssets, setCurrentAssets] = useState('500000');
+  const [currentLiabilities, setCurrentLiabilities] = useState('300000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ currentAssets: string; currentLiabilities: string }>('current-ratio-calculator');
@@ -28,7 +28,7 @@ export default function CurrentRatioCalculator() {
   const currentRatio = cl > 0 ? ca / cl : 0;
   const workingCapital = ca - cl;
 
-  const handleTryExample = () => { setCurrentAssets('500000'); setCurrentLiabilities('300000'); setCalculated(false); };
+  const handleTryExample = () => { setCurrentAssets('500000'); setCurrentLiabilities('300000'); setCalculated(true); };
   const handleCalculate = () => {
     if (cl > 0) {
       setCalculated(true);
@@ -53,7 +53,7 @@ export default function CurrentRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="currentAssets" type="number" step="any" min="0" placeholder="500000" className="pl-7"
-                value={currentAssets} onChange={(e) => { setCurrentAssets(e.target.value); setCalculated(false); }} />
+                value={currentAssets} onChange={(e) => { setCurrentAssets(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -61,7 +61,7 @@ export default function CurrentRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="currentLiabilities" type="number" step="any" min="0" placeholder="300000" className="pl-7"
-                value={currentLiabilities} onChange={(e) => { setCurrentLiabilities(e.target.value); setCalculated(false); }} />
+                value={currentLiabilities} onChange={(e) => { setCurrentLiabilities(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -82,11 +82,11 @@ export default function CurrentRatioCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Current Ratio</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{currentRatio.toFixed(2)}x`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${currentRatio.toFixed(2)}x`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Working capital: ${formatCurrency(workingCapital)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{'Healthy: 1.5-2.0x'}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{currentRatio < 1 ? "Liquidity risk" : currentRatio > 2 ? "Conservative" : "Healthy"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Working capital: ${formatCurrency(workingCapital)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{'Healthy: 1.5-2.0x'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{currentRatio < 1 ? "Liquidity risk" : currentRatio > 2 ? "Conservative" : "Healthy"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -105,7 +105,7 @@ export default function CurrentRatioCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Current Ratio</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{currentRatio.toFixed(2)}x`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${currentRatio.toFixed(2)}x`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Working Capital</p>

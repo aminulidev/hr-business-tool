@@ -16,13 +16,13 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { salary: number; health: number; retirement: number; ptoValue: number; lifeDis: number; other: number; totalBenefits: number; benefitsPct: number; loadedCost: number; label: string; }
 
 export default function EmployeeBenefitCostCalculator() {
-  const [annualSalary, setAnnualSalary] = useState('');
-  const [healthInsurance, setHealthInsurance] = useState('Employer-paid premium');
-  const [retirementMatch, setRetirementMatch] = useState('Typical 3-6%');
-  const [ptoDays, setPtoDays] = useState('');
-  const [lifeDisability, setLifeDisability] = useState('');
-  const [otherBenefits, setOtherBenefits] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [annualSalary, setAnnualSalary] = useState('75000');
+  const [healthInsurance, setHealthInsurance] = useState('12000');
+  const [retirementMatch, setRetirementMatch] = useState('5');
+  const [ptoDays, setPtoDays] = useState('15');
+  const [lifeDisability, setLifeDisability] = useState('600');
+  const [otherBenefits, setOtherBenefits] = useState('1500');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualSalary: string; healthInsurance: string; retirementMatch: string; ptoDays: string; lifeDisability: string; otherBenefits: string }>('employee-benefit-cost-calculator');
@@ -39,7 +39,7 @@ export default function EmployeeBenefitCostCalculator() {
   const benefitsPct = salary > 0 ? (totalBenefits / salary) * 100 : 0;
   const loadedCost = salary + totalBenefits;
 
-  const handleTryExample = () => { setAnnualSalary('75000'); setHealthInsurance('12000'); setRetirementMatch('5'); setPtoDays('15'); setLifeDisability('600'); setOtherBenefits('1500'); setCalculated(false); };
+  const handleTryExample = () => { setAnnualSalary('75000'); setHealthInsurance('12000'); setRetirementMatch('5'); setPtoDays('15'); setLifeDisability('600'); setOtherBenefits('1500'); setCalculated(true); };
   const handleCalculate = () => {
     if (salary > 0) {
       setCalculated(true);
@@ -64,7 +64,7 @@ export default function EmployeeBenefitCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="annualSalary" type="number" step="any" min="0" placeholder="75000" className="pl-7"
-                value={annualSalary} onChange={(e) => { setAnnualSalary(e.target.value); setCalculated(false); }} />
+                value={annualSalary} onChange={(e) => { setAnnualSalary(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function EmployeeBenefitCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="healthInsurance" type="number" step="any" min="0" placeholder="12000" className="pl-7"
-                value={healthInsurance} onChange={(e) => { setHealthInsurance(e.target.value); setCalculated(false); }} />
+                value={healthInsurance} onChange={(e) => { setHealthInsurance(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Employer-paid premium</p>
           </div>
@@ -81,7 +81,7 @@ export default function EmployeeBenefitCostCalculator() {
             <div className="relative">
               
               <Input id="retirementMatch" type="number" step="any" min="0" placeholder="5"
-                value={retirementMatch} onChange={(e) => { setRetirementMatch(e.target.value); setCalculated(false); }} />
+                value={retirementMatch} onChange={(e) => { setRetirementMatch(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Typical 3-6%</p>
           </div>
@@ -90,7 +90,7 @@ export default function EmployeeBenefitCostCalculator() {
             <div className="relative">
               
               <Input id="ptoDays" type="number" step="any" min="0" placeholder="15"
-                value={ptoDays} onChange={(e) => { setPtoDays(e.target.value); setCalculated(false); }} />
+                value={ptoDays} onChange={(e) => { setPtoDays(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -98,7 +98,7 @@ export default function EmployeeBenefitCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="lifeDisability" type="number" step="any" min="0" placeholder="600" className="pl-7"
-                value={lifeDisability} onChange={(e) => { setLifeDisability(e.target.value); setCalculated(false); }} />
+                value={lifeDisability} onChange={(e) => { setLifeDisability(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -106,7 +106,7 @@ export default function EmployeeBenefitCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="otherBenefits" type="number" step="any" min="0" placeholder="1500" className="pl-7"
-                value={otherBenefits} onChange={(e) => { setOtherBenefits(e.target.value); setCalculated(false); }} />
+                value={otherBenefits} onChange={(e) => { setOtherBenefits(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -129,9 +129,9 @@ export default function EmployeeBenefitCostCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Total Benefit Cost per Employee</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalBenefits)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Benefits as % of salary: ${benefitsPct.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Loaded cost: ${formatCurrency(loadedCost)}`}</Badge>
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{'BLS benchmark: 30-32%'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Benefits as % of salary: ${benefitsPct.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Loaded cost: ${formatCurrency(loadedCost)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{'BLS benchmark: 30-32%'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

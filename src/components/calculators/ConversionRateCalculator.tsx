@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { leads: number; mqls: number; sqls: number; opps: number; cust: number; leadToMQL: number; mqlToSQL: number; sqlToOpp: number; oppToCust: number; overall: number; label: string; }
 
 export default function ConversionRateCalculator() {
-  const [leadsInput, setLeadsInput] = useState('');
-  const [mqlsInput, setMqlsInput] = useState('');
-  const [sqlsInput, setSqlsInput] = useState('');
-  const [oppsInput, setOppsInput] = useState('');
-  const [customersInput, setCustomersInput] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [leadsInput, setLeadsInput] = useState('1000');
+  const [mqlsInput, setMqlsInput] = useState('300');
+  const [sqlsInput, setSqlsInput] = useState('120');
+  const [oppsInput, setOppsInput] = useState('60');
+  const [customersInput, setCustomersInput] = useState('15');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ leadsInput: string; mqlsInput: string; sqlsInput: string; oppsInput: string; customersInput: string }>('conversion-rate-calculator');
@@ -37,7 +37,7 @@ export default function ConversionRateCalculator() {
   const oppToCust = opps > 0 ? (cust / opps) * 100 : 0;
   const overall = leads > 0 ? (cust / leads) * 100 : 0;
 
-  const handleTryExample = () => { setLeadsInput('1000'); setMqlsInput('300'); setSqlsInput('120'); setOppsInput('60'); setCustomersInput('15'); setCalculated(false); };
+  const handleTryExample = () => { setLeadsInput('1000'); setMqlsInput('300'); setSqlsInput('120'); setOppsInput('60'); setCustomersInput('15'); setCalculated(true); };
   const handleCalculate = () => {
     if (leads > 0) {
       setCalculated(true);
@@ -62,7 +62,7 @@ export default function ConversionRateCalculator() {
             <div className="relative">
               
               <Input id="leadsInput" type="number" step="any" min="0" placeholder="1000"
-                value={leadsInput} onChange={(e) => { setLeadsInput(e.target.value); setCalculated(false); }} />
+                value={leadsInput} onChange={(e) => { setLeadsInput(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -70,7 +70,7 @@ export default function ConversionRateCalculator() {
             <div className="relative">
               
               <Input id="mqlsInput" type="number" step="any" min="0" placeholder="300"
-                value={mqlsInput} onChange={(e) => { setMqlsInput(e.target.value); setCalculated(false); }} />
+                value={mqlsInput} onChange={(e) => { setMqlsInput(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -78,7 +78,7 @@ export default function ConversionRateCalculator() {
             <div className="relative">
               
               <Input id="sqlsInput" type="number" step="any" min="0" placeholder="120"
-                value={sqlsInput} onChange={(e) => { setSqlsInput(e.target.value); setCalculated(false); }} />
+                value={sqlsInput} onChange={(e) => { setSqlsInput(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -86,7 +86,7 @@ export default function ConversionRateCalculator() {
             <div className="relative">
               
               <Input id="oppsInput" type="number" step="any" min="0" placeholder="60"
-                value={oppsInput} onChange={(e) => { setOppsInput(e.target.value); setCalculated(false); }} />
+                value={oppsInput} onChange={(e) => { setOppsInput(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -94,7 +94,7 @@ export default function ConversionRateCalculator() {
             <div className="relative">
               
               <Input id="customersInput" type="number" step="any" min="0" placeholder="15"
-                value={customersInput} onChange={(e) => { setCustomersInput(e.target.value); setCalculated(false); }} />
+                value={customersInput} onChange={(e) => { setCustomersInput(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -117,9 +117,9 @@ export default function ConversionRateCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Overall Conversion Rate</p>
                 <p className="text-4xl font-bold text-emerald-600">{`${formatPercent(overall)}`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Lead-to-MQL: ${leadToMQL.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`MQL-to-SQL: ${mqlToSQL.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`SQL-to-Opp: ${sqlToOpp.toFixed(1)}%, Opp-to-Cust: ${oppToCust.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Lead-to-MQL: ${leadToMQL.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`MQL-to-SQL: ${mqlToSQL.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`SQL-to-Opp: ${sqlToOpp.toFixed(1)}%, Opp-to-Cust: ${oppToCust.toFixed(1)}%`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -130,15 +130,15 @@ export default function ConversionRateCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Leads</p>
-                    <p className={`text-lg font-bold`}>{`{leads}`}</p>
+                    <p className={`text-lg font-bold`}>{`${leads}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">MQLs</p>
-                    <p className={`text-lg font-bold`}>{`{mqls}`}</p>
+                    <p className={`text-lg font-bold`}>{`${mqls}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Customers</p>
-                    <p className={`text-lg font-bold`}>{`{cust}`}</p>
+                    <p className={`text-lg font-bold`}>{`${cust}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Overall Conv</p>

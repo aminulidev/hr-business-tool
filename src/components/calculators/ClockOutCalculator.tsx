@@ -26,11 +26,11 @@ function formatTime(min: number): string {
 }
 
 export default function ClockOutCalculator() {
-  const [clockIn, setClockIn] = useState('9:00 AM');
+  const [clockIn, setClockIn] = useState('8:00 AM');
   const [targetHours, setTargetHours] = useState('8');
   const [breakMin, setBreakMin] = useState('30');
   const [avoidOT, setAvoidOT] = useState(false);
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<ClockOutSnapshot | null>(null);
   const [compareB, setCompareB] = useState<ClockOutSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ clockIn: string; targetHours: string; breakMin: string; avoidOT: string }>('clock-out-calculator');
@@ -41,7 +41,7 @@ export default function ClockOutCalculator() {
   const outMin = inMin >= 0 ? inMin + target + brk : -1;
   const willTriggerOT = avoidOT && (target / 60) > 8;
 
-  const handleTryExample = () => { setClockIn('8:00 AM'); setTargetHours('8'); setBreakMin('30'); setAvoidOT(true); setCalculated(false); };
+  const handleTryExample = () => { setClockIn('8:00 AM'); setTargetHours('8'); setBreakMin('30'); setAvoidOT(true); setCalculated(true); };
   const handleCalculate = () => {
     if (inMin >= 0 && target > 0) {
       setCalculated(true);
@@ -66,18 +66,18 @@ export default function ClockOutCalculator() {
           <div className="space-y-2">
             <Label htmlFor="co-in">Clock-In Time</Label>
             <Input id="co-in" placeholder="9:00 AM" value={clockIn}
-              onChange={(e) => { setClockIn(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setClockIn(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="co-target">Target Hours Worked</Label>
             <Input id="co-target" type="number" step="0.5" min="0" placeholder="8" value={targetHours}
-              onChange={(e) => { setTargetHours(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setTargetHours(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">8h = full time, 6h avoids daily OT in CA.</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="co-break">Unpaid Break (min)</Label>
             <Input id="co-break" type="number" step="5" min="0" placeholder="30" value={breakMin}
-              onChange={(e) => { setBreakMin(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setBreakMin(e.target.value); setCalculated(true); }} />
           </div>
         </div>
 
@@ -86,7 +86,7 @@ export default function ClockOutCalculator() {
             <Label htmlFor="co-avoid" className="text-sm font-medium">Avoid Overtime (cap at 8h)</Label>
             <p className="text-xs text-muted-foreground">Auto-reduce target if it would exceed 8 hours.</p>
           </div>
-          <Switch id="co-avoid" checked={avoidOT} onCheckedChange={(c) => { setAvoidOT(c); if (c && parseFloat(targetHours) > 8) setTargetHours('8'); setCalculated(false); }} />
+          <Switch id="co-avoid" checked={avoidOT} onCheckedChange={(c) => { setAvoidOT(c); if (c && parseFloat(targetHours) > 8) setTargetHours('8'); setCalculated(true); }} />
         </div>
 
         <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
