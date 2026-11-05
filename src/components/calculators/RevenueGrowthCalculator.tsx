@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { curr: number; prev: number; growthRate: number; annualizedRate: number; absoluteGrowth: number; label: string; }
 
 export default function RevenueGrowthCalculator() {
-  const [currentRevenue, setCurrentRevenue] = useState('');
-  const [previousRevenue, setPreviousRevenue] = useState('');
-  const [periodMonths, setPeriodMonths] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [currentRevenue, setCurrentRevenue] = useState('1200000');
+  const [previousRevenue, setPreviousRevenue] = useState('1000000');
+  const [periodMonths, setPeriodMonths] = useState('12');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ currentRevenue: string; previousRevenue: string; periodMonths: string }>('revenue-growth-calculator');
@@ -31,7 +31,7 @@ export default function RevenueGrowthCalculator() {
   const annualizedRate = mos > 0 ? (Math.pow(curr / prev, 12 / mos) - 1) * 100 : 0;
   const absoluteGrowth = curr - prev;
 
-  const handleTryExample = () => { setCurrentRevenue('1200000'); setPreviousRevenue('1000000'); setPeriodMonths('12'); setCalculated(false); };
+  const handleTryExample = () => { setCurrentRevenue('1200000'); setPreviousRevenue('1000000'); setPeriodMonths('12'); setCalculated(true); };
   const handleCalculate = () => {
     if (prev > 0) {
       setCalculated(true);
@@ -56,7 +56,7 @@ export default function RevenueGrowthCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="currentRevenue" type="number" step="any" min="0" placeholder="1200000" className="pl-7"
-                value={currentRevenue} onChange={(e) => { setCurrentRevenue(e.target.value); setCalculated(false); }} />
+                value={currentRevenue} onChange={(e) => { setCurrentRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -64,7 +64,7 @@ export default function RevenueGrowthCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="previousRevenue" type="number" step="any" min="0" placeholder="1000000" className="pl-7"
-                value={previousRevenue} onChange={(e) => { setPreviousRevenue(e.target.value); setCalculated(false); }} />
+                value={previousRevenue} onChange={(e) => { setPreviousRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function RevenueGrowthCalculator() {
             <div className="relative">
               
               <Input id="periodMonths" type="number" step="any" min="0" placeholder="12"
-                value={periodMonths} onChange={(e) => { setPeriodMonths(e.target.value); setCalculated(false); }} />
+                value={periodMonths} onChange={(e) => { setPeriodMonths(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">12=YoY, 3=QoQ, 1=MoM</p>
           </div>
@@ -96,9 +96,9 @@ export default function RevenueGrowthCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Revenue Growth Rate</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(growthRate)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Annualized: ${annualizedRate.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Absolute growth: ${formatCurrency(absoluteGrowth)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{growthRate > 20 ? "Hypergrowth" : growthRate > 10 ? "Strong" : growthRate > 0 ? "Growing" : "Declining"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Annualized: ${annualizedRate.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Absolute growth: ${formatCurrency(absoluteGrowth)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{growthRate > 20 ? "Hypergrowth" : growthRate > 10 ? "Strong" : growthRate > 0 ? "Growing" : "Declining"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -121,7 +121,7 @@ export default function RevenueGrowthCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Annualized</p>
-                    <p className={`text-lg font-bold`}>{`{annualizedRate.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${annualizedRate.toFixed(1)}%`}</p>
                   </div>
               </div>
 

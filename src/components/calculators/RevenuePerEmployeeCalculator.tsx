@@ -29,9 +29,9 @@ const BENCHMARKS = [
 interface RpeSnap { revenue: number; employees: number; rpe: number; label: string; }
 
 export default function RevenuePerEmployeeCalculator() {
-  const [annualRevenue, setAnnualRevenue] = useState('');
-  const [numEmployees, setNumEmployees] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [annualRevenue, setAnnualRevenue] = useState('5000000');
+  const [numEmployees, setNumEmployees] = useState('25');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<RpeSnap | null>(null);
   const [compareB, setCompareB] = useState<RpeSnap | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualRevenue: string; numEmployees: string }>('revenue-per-employee-calculator');
@@ -52,7 +52,7 @@ export default function RevenuePerEmployeeCalculator() {
     const handleTryExample = () => {
     setAnnualRevenue('5000000');
     setNumEmployees('25');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -81,13 +81,13 @@ export default function RevenuePerEmployeeCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="annual-revenue" type="number" step="100000" min="0" placeholder="5,000,000"
-                value={annualRevenue} onChange={(e) => { setAnnualRevenue(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={annualRevenue} onChange={(e) => { setAnnualRevenue(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="num-employees">Number of FTE Employees</Label>
             <Input id="num-employees" type="number" step="1" min="1" placeholder="50"
-              value={numEmployees} onChange={(e) => { setNumEmployees(e.target.value); setCalculated(false); }} />
+              value={numEmployees} onChange={(e) => { setNumEmployees(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Full-time equivalents (part-time = 0.5 FTE)</p>
           </div>
         </div>

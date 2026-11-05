@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { ni: number; dep: number; wc: number; cx: number; fin: number; operatingCF: number; investingCF: number; financingCF: number; netCF: number; label: string; }
 
 export default function CashFlowStatementCalculator() {
-  const [netIncome, setNetIncome] = useState('');
-  const [depreciation, setDepreciation] = useState('');
-  const [wcChanges, setWcChanges] = useState('');
-  const [capex, setCapex] = useState('');
-  const [financing, setFinancing] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [netIncome, setNetIncome] = useState('100000');
+  const [depreciation, setDepreciation] = useState('30000');
+  const [wcChanges, setWcChanges] = useState('-10000');
+  const [capex, setCapex] = useState('-50000');
+  const [financing, setFinancing] = useState('20000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ netIncome: string; depreciation: string; wcChanges: string; capex: string; financing: string }>('cash-flow-statement-calculator');
@@ -36,7 +36,7 @@ export default function CashFlowStatementCalculator() {
   const financingCF = fin;
   const netCF = operatingCF + investingCF + financingCF;
 
-  const handleTryExample = () => { setNetIncome('100000'); setDepreciation('30000'); setWcChanges('-10000'); setCapex('-50000'); setFinancing('20000'); setCalculated(false); };
+  const handleTryExample = () => { setNetIncome('100000'); setDepreciation('30000'); setWcChanges('-10000'); setCapex('-50000'); setFinancing('20000'); setCalculated(true); };
   const handleCalculate = () => {
     if (ni !== 0 || operatingCF !== 0) {
       setCalculated(true);
@@ -61,7 +61,7 @@ export default function CashFlowStatementCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="netIncome" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={netIncome} onChange={(e) => { setNetIncome(e.target.value); setCalculated(false); }} />
+                value={netIncome} onChange={(e) => { setNetIncome(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -69,7 +69,7 @@ export default function CashFlowStatementCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="depreciation" type="number" step="any" min="0" placeholder="30000" className="pl-7"
-                value={depreciation} onChange={(e) => { setDepreciation(e.target.value); setCalculated(false); }} />
+                value={depreciation} onChange={(e) => { setDepreciation(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -77,7 +77,7 @@ export default function CashFlowStatementCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="wcChanges" type="number" step="any" min="0" placeholder="-10000" className="pl-7"
-                value={wcChanges} onChange={(e) => { setWcChanges(e.target.value); setCalculated(false); }} />
+                value={wcChanges} onChange={(e) => { setWcChanges(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -85,7 +85,7 @@ export default function CashFlowStatementCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="capex" type="number" step="any" min="0" placeholder="-50000" className="pl-7"
-                value={capex} onChange={(e) => { setCapex(e.target.value); setCalculated(false); }} />
+                value={capex} onChange={(e) => { setCapex(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -93,7 +93,7 @@ export default function CashFlowStatementCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="financing" type="number" step="any" min="0" placeholder="20000" className="pl-7"
-                value={financing} onChange={(e) => { setFinancing(e.target.value); setCalculated(false); }} />
+                value={financing} onChange={(e) => { setFinancing(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -116,9 +116,9 @@ export default function CashFlowStatementCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Net Cash Flow</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(netCF)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Operating: ${formatCurrency(operatingCF)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Investing: ${formatCurrency(investingCF)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Financing: ${formatCurrency(financingCF)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Operating: ${formatCurrency(operatingCF)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Investing: ${formatCurrency(investingCF)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Financing: ${formatCurrency(financingCF)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { sal: number; ben: number; oh: number; util: number; pf: number; loadedCost: number; annualHours: number; billableHours: number; breakEvenRate: number; targetRate: number; label: string; }
 
 export default function BillableRateCalculator() {
-  const [targetSalary, setTargetSalary] = useState('');
-  const [benefitsPct, setBenefitsPct] = useState('');
-  const [overheadPct, setOverheadPct] = useState('');
-  const [utilization, setUtilization] = useState('');
-  const [profitPct, setProfitPct] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [targetSalary, setTargetSalary] = useState('100000');
+  const [benefitsPct, setBenefitsPct] = useState('30');
+  const [overheadPct, setOverheadPct] = useState('50');
+  const [utilization, setUtilization] = useState('65');
+  const [profitPct, setProfitPct] = useState('20');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ targetSalary: string; benefitsPct: string; overheadPct: string; utilization: string; profitPct: string }>('billable-rate-calculator');
@@ -37,7 +37,7 @@ export default function BillableRateCalculator() {
   const breakEvenRate = billableHours > 0 ? loadedCost / billableHours : 0;
   const targetRate = breakEvenRate / (1 - pf / 100);
 
-  const handleTryExample = () => { setTargetSalary('100000'); setBenefitsPct('30'); setOverheadPct('50'); setUtilization('65'); setProfitPct('20'); setCalculated(false); };
+  const handleTryExample = () => { setTargetSalary('100000'); setBenefitsPct('30'); setOverheadPct('50'); setUtilization('65'); setProfitPct('20'); setCalculated(true); };
   const handleCalculate = () => {
     if (sal > 0 && util > 0) {
       setCalculated(true);
@@ -62,7 +62,7 @@ export default function BillableRateCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="targetSalary" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={targetSalary} onChange={(e) => { setTargetSalary(e.target.value); setCalculated(false); }} />
+                value={targetSalary} onChange={(e) => { setTargetSalary(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -70,7 +70,7 @@ export default function BillableRateCalculator() {
             <div className="relative">
               
               <Input id="benefitsPct" type="number" step="any" min="0" placeholder="30"
-                value={benefitsPct} onChange={(e) => { setBenefitsPct(e.target.value); setCalculated(false); }} />
+                value={benefitsPct} onChange={(e) => { setBenefitsPct(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -78,7 +78,7 @@ export default function BillableRateCalculator() {
             <div className="relative">
               
               <Input id="overheadPct" type="number" step="any" min="0" placeholder="50"
-                value={overheadPct} onChange={(e) => { setOverheadPct(e.target.value); setCalculated(false); }} />
+                value={overheadPct} onChange={(e) => { setOverheadPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Rent, admin, tools</p>
           </div>
@@ -87,7 +87,7 @@ export default function BillableRateCalculator() {
             <div className="relative">
               
               <Input id="utilization" type="number" step="any" min="0" placeholder="65"
-                value={utilization} onChange={(e) => { setUtilization(e.target.value); setCalculated(false); }} />
+                value={utilization} onChange={(e) => { setUtilization(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Billable / total hours</p>
           </div>
@@ -96,7 +96,7 @@ export default function BillableRateCalculator() {
             <div className="relative">
               
               <Input id="profitPct" type="number" step="any" min="0" placeholder="20"
-                value={profitPct} onChange={(e) => { setProfitPct(e.target.value); setCalculated(false); }} />
+                value={profitPct} onChange={(e) => { setProfitPct(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -119,9 +119,9 @@ export default function BillableRateCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Required Billable Rate</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(targetRate)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Break-even rate: ${formatCurrency(breakEvenRate)}/hr`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Loaded cost: ${formatCurrency(loadedCost)}/yr`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Billable hours: ${billableHours.toFixed(0)}/yr`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Break-even rate: ${formatCurrency(breakEvenRate)}/hr`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Loaded cost: ${formatCurrency(loadedCost)}/yr`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Billable hours: ${billableHours.toFixed(0)}/yr`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -136,7 +136,7 @@ export default function BillableRateCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Billable Hours</p>
-                    <p className={`text-lg font-bold`}>{`{billableHours.toFixed(0)}h`}</p>
+                    <p className={`text-lg font-bold`}>{`${billableHours.toFixed(0)}h`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Break-Even Rate</p>

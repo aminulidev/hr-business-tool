@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { start: number; end: number; newC: number; retained: number; retentionRate: number; churnRate: number; churned: number; label: string; }
 
 export default function CustomerRetentionCalculator() {
-  const [startCustomers, setStartCustomers] = useState('');
-  const [endCustomers, setEndCustomers] = useState('');
-  const [newCustomers, setNewCustomers] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [startCustomers, setStartCustomers] = useState('500');
+  const [endCustomers, setEndCustomers] = useState('480');
+  const [newCustomers, setNewCustomers] = useState('50');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ startCustomers: string; endCustomers: string; newCustomers: string }>('customer-retention-calculator');
@@ -32,7 +32,7 @@ export default function CustomerRetentionCalculator() {
   const churnRate = start > 0 ? ((start - retained) / start) * 100 : 0;
   const churned = start - retained;
 
-  const handleTryExample = () => { setStartCustomers('500'); setEndCustomers('480'); setNewCustomers('50'); setCalculated(false); };
+  const handleTryExample = () => { setStartCustomers('500'); setEndCustomers('480'); setNewCustomers('50'); setCalculated(true); };
   const handleCalculate = () => {
     if (start > 0) {
       setCalculated(true);
@@ -57,7 +57,7 @@ export default function CustomerRetentionCalculator() {
             <div className="relative">
               
               <Input id="startCustomers" type="number" step="any" min="0" placeholder="500"
-                value={startCustomers} onChange={(e) => { setStartCustomers(e.target.value); setCalculated(false); }} />
+                value={startCustomers} onChange={(e) => { setStartCustomers(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -65,7 +65,7 @@ export default function CustomerRetentionCalculator() {
             <div className="relative">
               
               <Input id="endCustomers" type="number" step="any" min="0" placeholder="480"
-                value={endCustomers} onChange={(e) => { setEndCustomers(e.target.value); setCalculated(false); }} />
+                value={endCustomers} onChange={(e) => { setEndCustomers(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -73,7 +73,7 @@ export default function CustomerRetentionCalculator() {
             <div className="relative">
               
               <Input id="newCustomers" type="number" step="any" min="0" placeholder="50"
-                value={newCustomers} onChange={(e) => { setNewCustomers(e.target.value); setCalculated(false); }} />
+                value={newCustomers} onChange={(e) => { setNewCustomers(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -96,9 +96,9 @@ export default function CustomerRetentionCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Customer Retention Rate</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(retentionRate)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-red-500/10 border-red-500/30 text-red-600'">{`Churn rate: ${formatPercent(churnRate)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Retained: ${retained}, Churned: ${churned}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'SaaS: NRR >110%, logo >90%'}</Badge>
+                  <Badge variant="outline" className="bg-red-500/10 border-red-500/30 text-red-600">{`Churn rate: ${formatPercent(churnRate)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Retained: ${retained}, Churned: ${churned}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'SaaS: NRR >110%, logo >90%'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -109,11 +109,11 @@ export default function CustomerRetentionCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Start</p>
-                    <p className={`text-lg font-bold`}>{`{start}`}</p>
+                    <p className={`text-lg font-bold`}>{`${start}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">End</p>
-                    <p className={`text-lg font-bold`}>{`{end}`}</p>
+                    <p className={`text-lg font-bold`}>{`${end}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Retention</p>

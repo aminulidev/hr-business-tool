@@ -31,12 +31,12 @@ interface NightShiftSnapshot {
 }
 
 export default function NightShiftDifferentialCalculator() {
-  const [baseRate, setBaseRate] = useState('');
+  const [baseRate, setBaseRate] = useState('32.00');
   const [diffType, setDiffType] = useState<DiffType>('percent');
-  const [differential, setDifferential] = useState('15');
+  const [differential, setDifferential] = useState('4.50');
   const [nightHours, setNightHours] = useState('36');
-  const [regularHours, setRegularHours] = useState('0');
-  const [calculated, setCalculated] = useState(false);
+  const [regularHours, setRegularHours] = useState('12');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<NightShiftSnapshot | null>(null);
   const [compareB, setCompareB] = useState<NightShiftSnapshot | null>(null);
 
@@ -71,7 +71,7 @@ export default function NightShiftDifferentialCalculator() {
     setDifferential('4.50'); // $4.50/hr night differential
     setNightHours('36');
     setRegularHours('12');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -163,9 +163,7 @@ export default function NightShiftDifferentialCalculator() {
                 placeholder="25.00"
                 value={baseRate}
                 onChange={(e) => {
-                  setBaseRate(e.target.value);
-                  setCalculated(false);
-                }}
+                  setBaseRate(e.target.value); setCalculated(true); }}
                 className="pl-7"
               />
             </div>
@@ -207,9 +205,7 @@ export default function NightShiftDifferentialCalculator() {
                 placeholder={diffType === 'percent' ? '15' : '3.50'}
                 value={differential}
                 onChange={(e) => {
-                  setDifferential(e.target.value);
-                  setCalculated(false);
-                }}
+                  setDifferential(e.target.value); setCalculated(true); }}
                 className={diffType === 'fixed' ? 'pl-7' : 'pr-8'}
               />
               {diffType === 'percent' && (
@@ -234,9 +230,7 @@ export default function NightShiftDifferentialCalculator() {
               placeholder="36"
               value={nightHours}
               onChange={(e) => {
-                setNightHours(e.target.value);
-                setCalculated(false);
-              }}
+                setNightHours(e.target.value); setCalculated(true); }}
             />
             <p className="text-xs text-muted-foreground">Hours worked during night shift (e.g. 7pm–7am or 11pm–7am).</p>
           </div>
@@ -254,9 +248,7 @@ export default function NightShiftDifferentialCalculator() {
               placeholder="0"
               value={regularHours}
               onChange={(e) => {
-                setRegularHours(e.target.value);
-                setCalculated(false);
-              }}
+                setRegularHours(e.target.value); setCalculated(true); }}
             />
             <p className="text-xs text-muted-foreground">Optional: Standard daytime hours worked in the same workweek.</p>
           </div>

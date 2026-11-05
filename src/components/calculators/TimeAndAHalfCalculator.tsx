@@ -17,10 +17,10 @@ import { formatCurrency } from '@/lib/utils';
 interface OTSnapshot { regularRate: number; overtimeRate: number; regularPay: number; overtimePay: number; totalPay: number; label: string; }
 
 export default function TimeAndAHalfCalculator() {
-  const [regularRate, setRegularRate] = useState('');
+  const [regularRate, setRegularRate] = useState('25');
   const [regularHours, setRegularHours] = useState('40');
-  const [overtimeHours, setOvertimeHours] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [overtimeHours, setOvertimeHours] = useState('8');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<OTSnapshot | null>(null);
   const [compareB, setCompareB] = useState<OTSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ regularRate: string; regularHours: string; overtimeHours: string }>('time-and-a-half-calculator');
@@ -37,7 +37,7 @@ export default function TimeAndAHalfCalculator() {
     setRegularRate('25');
     setRegularHours('40');
     setOvertimeHours('8');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -72,19 +72,19 @@ export default function TimeAndAHalfCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="reg-rate" type="number" step="0.01" min="0" placeholder="20.00"
-                value={regularRate} onChange={(e) => { setRegularRate(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={regularRate} onChange={(e) => { setRegularRate(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="reg-hours">Regular Hours</Label>
             <Input id="reg-hours" type="number" step="0.5" min="0" placeholder="40"
-              value={regularHours} onChange={(e) => { setRegularHours(e.target.value); setCalculated(false); }} />
+              value={regularHours} onChange={(e) => { setRegularHours(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Standard full-time week = 40h</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="ot-hours">Overtime Hours</Label>
             <Input id="ot-hours" type="number" step="0.5" min="0" placeholder="5"
-              value={overtimeHours} onChange={(e) => { setOvertimeHours(e.target.value); setCalculated(false); }} />
+              value={overtimeHours} onChange={(e) => { setOvertimeHours(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Hours worked over 40</p>
           </div>
         </div>

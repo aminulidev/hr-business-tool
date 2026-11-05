@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { dioV: number; dsoV: number; dpoV: number; ccc: number; operatingCycle: number; label: string; }
 
 export default function CashConversionCycleCalculator() {
-  const [dio, setDio] = useState('');
-  const [dso, setDso] = useState('');
-  const [dpo, setDpo] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [dio, setDio] = useState('60');
+  const [dso, setDso] = useState('45');
+  const [dpo, setDpo] = useState('30');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ dio: string; dso: string; dpo: string }>('cash-conversion-cycle-calculator');
@@ -30,7 +30,7 @@ export default function CashConversionCycleCalculator() {
   const ccc = dioV + dsoV - dpoV;
   const operatingCycle = dioV + dsoV;
 
-  const handleTryExample = () => { setDio('60'); setDso('45'); setDpo('30'); setCalculated(false); };
+  const handleTryExample = () => { setDio('60'); setDso('45'); setDpo('30'); setCalculated(true); };
   const handleCalculate = () => {
     if (true) {
       setCalculated(true);
@@ -55,7 +55,7 @@ export default function CashConversionCycleCalculator() {
             <div className="relative">
               
               <Input id="dio" type="number" step="any" min="0" placeholder="60"
-                value={dio} onChange={(e) => { setDio(e.target.value); setCalculated(false); }} />
+                value={dio} onChange={(e) => { setDio(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -63,7 +63,7 @@ export default function CashConversionCycleCalculator() {
             <div className="relative">
               
               <Input id="dso" type="number" step="any" min="0" placeholder="45"
-                value={dso} onChange={(e) => { setDso(e.target.value); setCalculated(false); }} />
+                value={dso} onChange={(e) => { setDso(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -71,7 +71,7 @@ export default function CashConversionCycleCalculator() {
             <div className="relative">
               
               <Input id="dpo" type="number" step="any" min="0" placeholder="30"
-                value={dpo} onChange={(e) => { setDpo(e.target.value); setCalculated(false); }} />
+                value={dpo} onChange={(e) => { setDpo(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -92,11 +92,11 @@ export default function CashConversionCycleCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Cash Conversion Cycle</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{ccc.toFixed(0)} days`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${ccc.toFixed(0)} days`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Operating cycle: ${operatingCycle.toFixed(0)} days`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{'Typical: 30-90 days'}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{ccc < 30 ? "Excellent" : ccc < 60 ? "Healthy" : "Long cycle"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Operating cycle: ${operatingCycle.toFixed(0)} days`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{'Typical: 30-90 days'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{ccc < 30 ? "Excellent" : ccc < 60 ? "Healthy" : "Long cycle"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -107,19 +107,19 @@ export default function CashConversionCycleCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">DIO</p>
-                    <p className={`text-lg font-bold`}>{`{dioV} days`}</p>
+                    <p className={`text-lg font-bold`}>{`${dioV} days`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">DSO</p>
-                    <p className={`text-lg font-bold`}>{`{dsoV} days`}</p>
+                    <p className={`text-lg font-bold`}>{`${dsoV} days`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">DPO</p>
-                    <p className={`text-lg font-bold`}>{`{dpoV} days`}</p>
+                    <p className={`text-lg font-bold`}>{`${dpoV} days`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">CCC</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{ccc.toFixed(0)} days`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${ccc.toFixed(0)} days`}</p>
                   </div>
               </div>
 

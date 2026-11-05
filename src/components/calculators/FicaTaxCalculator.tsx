@@ -24,9 +24,9 @@ const ADD_MEDICARE_THRESHOLD = 200000;
 interface FicaSnapshot { gross: number; employeeSS: number; employeeMedicare: number; additionalMedicare: number; totalEmployee: number; selfEmployed: boolean; label: string; }
 
 export default function FicaTaxCalculator() {
-  const [grossWages, setGrossWages] = useState('');
+  const [grossWages, setGrossWages] = useState('85000');
   const [selfEmployed, setSelfEmployed] = useState('employee');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<FicaSnapshot | null>(null);
   const [compareB, setCompareB] = useState<FicaSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ grossWages: string; selfEmployed: string }>('fica-tax-calculator');
@@ -95,12 +95,12 @@ export default function FicaTaxCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="gross-wages" type="number" step="1000" min="0" placeholder="75,000"
-                value={grossWages} onChange={(e) => { setGrossWages(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={grossWages} onChange={(e) => { setGrossWages(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="employment-type">Employment Type</Label>
-            <Select value={selfEmployed} onValueChange={(v) => { setSelfEmployed(v); setCalculated(false); }}>
+            <Select value={selfEmployed} onValueChange={(v) => { setSelfEmployed(v); setCalculated(true); }}>
               <SelectTrigger id="employment-type"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="employee">W-2 Employee</SelectItem>

@@ -31,13 +31,13 @@ interface HolidaySnapshot {
 }
 
 export default function HolidayPayCalculator() {
-  const [baseRate, setBaseRate] = useState('');
+  const [baseRate, setBaseRate] = useState('28.00');
   const [holidayHours, setHolidayHours] = useState('8');
   const [multiplier, setMultiplier] = useState('2');
   const [customMultiplier, setCustomMultiplier] = useState('');
-  const [regularHours, setRegularHours] = useState('32');
-  const [holidayName, setHolidayName] = useState('Christmas / Thanksgiving');
-  const [calculated, setCalculated] = useState(false);
+  const [regularHours, setRegularHours] = useState('36');
+  const [holidayName, setHolidayName] = useState('Thanksgiving Day');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<HolidaySnapshot | null>(null);
   const [compareB, setCompareB] = useState<HolidaySnapshot | null>(null);
 
@@ -74,7 +74,7 @@ export default function HolidayPayCalculator() {
     setCustomMultiplier('');
     setRegularHours('36'); // Total 44 hours -> FLSA OT trigger
     setHolidayName('Thanksgiving Day');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -168,9 +168,7 @@ export default function HolidayPayCalculator() {
                 placeholder="25.00"
                 value={baseRate}
                 onChange={(e) => {
-                  setBaseRate(e.target.value);
-                  setCalculated(false);
-                }}
+                  setBaseRate(e.target.value); setCalculated(true); }}
                 className="pl-7"
               />
             </div>
@@ -186,9 +184,7 @@ export default function HolidayPayCalculator() {
               <Select
                 value={multiplier}
                 onValueChange={(v) => {
-                  setMultiplier(v);
-                  setCalculated(false);
-                }}
+                  setMultiplier(v); setCalculated(true); }}
               >
                 <SelectTrigger id="hp-mult" className="flex-1">
                   <SelectValue placeholder="2×" />
@@ -211,9 +207,7 @@ export default function HolidayPayCalculator() {
                     placeholder="1.75"
                     value={customMultiplier}
                     onChange={(e) => {
-                      setCustomMultiplier(e.target.value);
-                      setCalculated(false);
-                    }}
+                      setCustomMultiplier(e.target.value); setCalculated(true); }}
                     className="pr-6"
                   />
                   <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">×</span>
@@ -238,9 +232,7 @@ export default function HolidayPayCalculator() {
               placeholder="8"
               value={holidayHours}
               onChange={(e) => {
-                setHolidayHours(e.target.value);
-                setCalculated(false);
-              }}
+                setHolidayHours(e.target.value); setCalculated(true); }}
             />
             <p className="text-xs text-muted-foreground">Actual hours worked during the recognized holiday calendar day.</p>
           </div>
@@ -258,9 +250,7 @@ export default function HolidayPayCalculator() {
               placeholder="32"
               value={regularHours}
               onChange={(e) => {
-                setRegularHours(e.target.value);
-                setCalculated(false);
-              }}
+                setRegularHours(e.target.value); setCalculated(true); }}
             />
             <p className="text-xs text-muted-foreground">Standard non-holiday hours worked in the remainder of the week.</p>
           </div>

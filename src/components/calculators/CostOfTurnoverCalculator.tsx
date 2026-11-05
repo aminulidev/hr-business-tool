@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { dep: number; salary: number; totalPct: number; costPerDeparture: number; totalCost: number; label: string; }
 
 export default function CostOfTurnoverCalculator() {
-  const [departures, setDepartures] = useState('');
-  const [avgSalary, setAvgSalary] = useState('');
-  const [replacementPct, setReplacementPct] = useState('Recruiting + agency fees');
-  const [productivityPct, setProductivityPct] = useState('Ramp-up + vacancy');
-  const [onboardingPct, setOnboardingPct] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [departures, setDepartures] = useState('10');
+  const [avgSalary, setAvgSalary] = useState('75000');
+  const [replacementPct, setReplacementPct] = useState('50');
+  const [productivityPct, setProductivityPct] = useState('75');
+  const [onboardingPct, setOnboardingPct] = useState('15');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ departures: string; avgSalary: string; replacementPct: string; productivityPct: string; onboardingPct: string }>('cost-of-turnover-calculator');
@@ -35,7 +35,7 @@ export default function CostOfTurnoverCalculator() {
   const costPerDeparture = salary * (totalPct / 100);
   const totalCost = dep * costPerDeparture;
 
-  const handleTryExample = () => { setDepartures('10'); setAvgSalary('75000'); setReplacementPct('50'); setProductivityPct('75'); setOnboardingPct('15'); setCalculated(false); };
+  const handleTryExample = () => { setDepartures('10'); setAvgSalary('75000'); setReplacementPct('50'); setProductivityPct('75'); setOnboardingPct('15'); setCalculated(true); };
   const handleCalculate = () => {
     if (dep > 0 && salary > 0) {
       setCalculated(true);
@@ -60,7 +60,7 @@ export default function CostOfTurnoverCalculator() {
             <div className="relative">
               
               <Input id="departures" type="number" step="any" min="0" placeholder="10"
-                value={departures} onChange={(e) => { setDepartures(e.target.value); setCalculated(false); }} />
+                value={departures} onChange={(e) => { setDepartures(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -68,7 +68,7 @@ export default function CostOfTurnoverCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="avgSalary" type="number" step="any" min="0" placeholder="75000" className="pl-7"
-                value={avgSalary} onChange={(e) => { setAvgSalary(e.target.value); setCalculated(false); }} />
+                value={avgSalary} onChange={(e) => { setAvgSalary(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -76,7 +76,7 @@ export default function CostOfTurnoverCalculator() {
             <div className="relative">
               
               <Input id="replacementPct" type="number" step="any" min="0" placeholder="50"
-                value={replacementPct} onChange={(e) => { setReplacementPct(e.target.value); setCalculated(false); }} />
+                value={replacementPct} onChange={(e) => { setReplacementPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Recruiting + agency fees</p>
           </div>
@@ -85,7 +85,7 @@ export default function CostOfTurnoverCalculator() {
             <div className="relative">
               
               <Input id="productivityPct" type="number" step="any" min="0" placeholder="75"
-                value={productivityPct} onChange={(e) => { setProductivityPct(e.target.value); setCalculated(false); }} />
+                value={productivityPct} onChange={(e) => { setProductivityPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Ramp-up + vacancy</p>
           </div>
@@ -94,7 +94,7 @@ export default function CostOfTurnoverCalculator() {
             <div className="relative">
               
               <Input id="onboardingPct" type="number" step="any" min="0" placeholder="15"
-                value={onboardingPct} onChange={(e) => { setOnboardingPct(e.target.value); setCalculated(false); }} />
+                value={onboardingPct} onChange={(e) => { setOnboardingPct(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -117,9 +117,9 @@ export default function CostOfTurnoverCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Total Turnover Cost</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalCost)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Per departure: ${formatCurrency(costPerDeparture)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`${totalPct}% of annual salary`}</Badge>
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{'Benchmark: 50-200% of salary'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Per departure: ${formatCurrency(costPerDeparture)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`${totalPct}% of annual salary`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{'Benchmark: 50-200% of salary'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -130,7 +130,7 @@ export default function CostOfTurnoverCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Departures</p>
-                    <p className={`text-lg font-bold`}>{`{dep}`}</p>
+                    <p className={`text-lg font-bold`}>{`${dep}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Avg Salary</p>
@@ -142,7 +142,7 @@ export default function CostOfTurnoverCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Total % of Salary</p>
-                    <p className={`text-lg font-bold`}>{`{totalPct}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${totalPct}%`}</p>
                   </div>
               </div>
 

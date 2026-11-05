@@ -18,11 +18,11 @@ import { formatCurrency } from '@/lib/utils';
 interface SevSnap { salary: number; years: number; totalWeeks: number; totalPay: number; label: string; }
 
 export default function SeverancePayCalculator() {
-  const [annualSalary, setAnnualSalary] = useState('');
-  const [yearsService, setYearsService] = useState('');
+  const [annualSalary, setAnnualSalary] = useState('80000');
+  const [yearsService, setYearsService] = useState('5');
   const [weeksPerYear, setWeeksPerYear] = useState('2');
   const [capWeeks, setCapWeeks] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<SevSnap | null>(null);
   const [compareB, setCompareB] = useState<SevSnap | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualSalary: string; yearsService: string; weeksPerYear: string; capWeeks: string }>('severance-pay-calculator');
@@ -42,7 +42,7 @@ export default function SeverancePayCalculator() {
     setAnnualSalary('80000');
     setYearsService('5');
     setWeeksPerYear('2');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -72,17 +72,17 @@ export default function SeverancePayCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="annual-salary" type="number" step="1000" min="0" placeholder="75,000"
-                value={annualSalary} onChange={(e) => { setAnnualSalary(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={annualSalary} onChange={(e) => { setAnnualSalary(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="years-service">Years of Service</Label>
             <Input id="years-service" type="number" step="0.5" min="0" placeholder="5"
-              value={yearsService} onChange={(e) => { setYearsService(e.target.value); setCalculated(false); }} />
+              value={yearsService} onChange={(e) => { setYearsService(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="weeks-per-year">Severance Multiplier</Label>
-            <Select value={weeksPerYear} onValueChange={(v) => { setWeeksPerYear(v); setCalculated(false); }}>
+            <Select value={weeksPerYear} onValueChange={(v) => { setWeeksPerYear(v); setCalculated(true); }}>
               <SelectTrigger id="weeks-per-year"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="1">1 week per year of service</SelectItem>
@@ -96,7 +96,7 @@ export default function SeverancePayCalculator() {
           <div className="space-y-2">
             <Label htmlFor="cap-weeks">Severance Cap (weeks) <span className="text-muted-foreground font-normal">optional</span></Label>
             <Input id="cap-weeks" type="number" step="1" min="1" placeholder="e.g. 26"
-              value={capWeeks} onChange={(e) => { setCapWeeks(e.target.value); setCalculated(false); }} />
+              value={capWeeks} onChange={(e) => { setCapWeeks(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Leave blank if no cap applies</p>
           </div>
         </div>

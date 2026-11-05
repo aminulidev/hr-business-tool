@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { prom: number; lateral: number; avg: number; totalMoves: number; mobilityRate: number; promotionShare: number; lateralShare: number; label: string; }
 
 export default function InternalMobilityCalculator() {
-  const [promotions, setPromotions] = useState('');
-  const [lateralMoves, setLateralMoves] = useState('');
-  const [avgHeadcount, setAvgHeadcount] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [promotions, setPromotions] = useState('12');
+  const [lateralMoves, setLateralMoves] = useState('8');
+  const [avgHeadcount, setAvgHeadcount] = useState('100');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ promotions: string; lateralMoves: string; avgHeadcount: string }>('internal-mobility-calculator');
@@ -32,7 +32,7 @@ export default function InternalMobilityCalculator() {
   const promotionShare = totalMoves > 0 ? (prom / totalMoves) * 100 : 0;
   const lateralShare = totalMoves > 0 ? (lateral / totalMoves) * 100 : 0;
 
-  const handleTryExample = () => { setPromotions('12'); setLateralMoves('8'); setAvgHeadcount('100'); setCalculated(false); };
+  const handleTryExample = () => { setPromotions('12'); setLateralMoves('8'); setAvgHeadcount('100'); setCalculated(true); };
   const handleCalculate = () => {
     if (totalMoves > 0 && avg > 0) {
       setCalculated(true);
@@ -57,7 +57,7 @@ export default function InternalMobilityCalculator() {
             <div className="relative">
               
               <Input id="promotions" type="number" step="any" min="0" placeholder="12"
-                value={promotions} onChange={(e) => { setPromotions(e.target.value); setCalculated(false); }} />
+                value={promotions} onChange={(e) => { setPromotions(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -65,7 +65,7 @@ export default function InternalMobilityCalculator() {
             <div className="relative">
               
               <Input id="lateralMoves" type="number" step="any" min="0" placeholder="8"
-                value={lateralMoves} onChange={(e) => { setLateralMoves(e.target.value); setCalculated(false); }} />
+                value={lateralMoves} onChange={(e) => { setLateralMoves(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -73,7 +73,7 @@ export default function InternalMobilityCalculator() {
             <div className="relative">
               
               <Input id="avgHeadcount" type="number" step="any" min="0" placeholder="100"
-                value={avgHeadcount} onChange={(e) => { setAvgHeadcount(e.target.value); setCalculated(false); }} />
+                value={avgHeadcount} onChange={(e) => { setAvgHeadcount(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -94,11 +94,11 @@ export default function InternalMobilityCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Internal Mobility Rate</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{mobilityRate.toFixed(1)}%`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${mobilityRate.toFixed(1)}%`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`${totalMoves} total moves`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Promotions: ${promotionShare.toFixed(0)}%, Lateral: ${lateralShare.toFixed(0)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'High mobility = 2x retention'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`${totalMoves} total moves`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Promotions: ${promotionShare.toFixed(0)}%, Lateral: ${lateralShare.toFixed(0)}%`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'High mobility = 2x retention'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -109,19 +109,19 @@ export default function InternalMobilityCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Promotions</p>
-                    <p className={`text-lg font-bold`}>{`{prom}`}</p>
+                    <p className={`text-lg font-bold`}>{`${prom}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Lateral Moves</p>
-                    <p className={`text-lg font-bold`}>{`{lateral}`}</p>
+                    <p className={`text-lg font-bold`}>{`${lateral}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Total Moves</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{totalMoves}`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${totalMoves}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Mobility Rate</p>
-                    <p className={`text-lg font-bold`}>{`{mobilityRate.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${mobilityRate.toFixed(1)}%`}</p>
                   </div>
               </div>
 

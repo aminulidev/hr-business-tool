@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { ca: number; fa: number; cl: number; ltl: number; eq: number; totalAssets: number; totalLiabilities: number; totalLE: number; isBalanced: boolean; difference: number; label: string; }
 
 export default function BalanceSheetCalculator() {
-  const [currentAssets, setCurrentAssets] = useState('');
-  const [fixedAssets, setFixedAssets] = useState('');
-  const [currentLiab, setCurrentLiab] = useState('');
-  const [longTermLiab, setLongTermLiab] = useState('');
-  const [equity, setEquity] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [currentAssets, setCurrentAssets] = useState('400000');
+  const [fixedAssets, setFixedAssets] = useState('600000');
+  const [currentLiab, setCurrentLiab] = useState('200000');
+  const [longTermLiab, setLongTermLiab] = useState('300000');
+  const [equity, setEquity] = useState('500000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ currentAssets: string; fixedAssets: string; currentLiab: string; longTermLiab: string; equity: string }>('balance-sheet-calculator');
@@ -37,7 +37,7 @@ export default function BalanceSheetCalculator() {
   const isBalanced = Math.abs(totalAssets - totalLE) < 0.01;
   const difference = totalAssets - totalLE;
 
-  const handleTryExample = () => { setCurrentAssets('400000'); setFixedAssets('600000'); setCurrentLiab('200000'); setLongTermLiab('300000'); setEquity('500000'); setCalculated(false); };
+  const handleTryExample = () => { setCurrentAssets('400000'); setFixedAssets('600000'); setCurrentLiab('200000'); setLongTermLiab('300000'); setEquity('500000'); setCalculated(true); };
   const handleCalculate = () => {
     if (totalAssets > 0) {
       setCalculated(true);
@@ -62,7 +62,7 @@ export default function BalanceSheetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="currentAssets" type="number" step="any" min="0" placeholder="400000" className="pl-7"
-                value={currentAssets} onChange={(e) => { setCurrentAssets(e.target.value); setCalculated(false); }} />
+                value={currentAssets} onChange={(e) => { setCurrentAssets(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -70,7 +70,7 @@ export default function BalanceSheetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="fixedAssets" type="number" step="any" min="0" placeholder="600000" className="pl-7"
-                value={fixedAssets} onChange={(e) => { setFixedAssets(e.target.value); setCalculated(false); }} />
+                value={fixedAssets} onChange={(e) => { setFixedAssets(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -78,7 +78,7 @@ export default function BalanceSheetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="currentLiab" type="number" step="any" min="0" placeholder="200000" className="pl-7"
-                value={currentLiab} onChange={(e) => { setCurrentLiab(e.target.value); setCalculated(false); }} />
+                value={currentLiab} onChange={(e) => { setCurrentLiab(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -86,7 +86,7 @@ export default function BalanceSheetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="longTermLiab" type="number" step="any" min="0" placeholder="300000" className="pl-7"
-                value={longTermLiab} onChange={(e) => { setLongTermLiab(e.target.value); setCalculated(false); }} />
+                value={longTermLiab} onChange={(e) => { setLongTermLiab(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -94,7 +94,7 @@ export default function BalanceSheetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="equity" type="number" step="any" min="0" placeholder="500000" className="pl-7"
-                value={equity} onChange={(e) => { setEquity(e.target.value); setCalculated(false); }} />
+                value={equity} onChange={(e) => { setEquity(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -117,9 +117,9 @@ export default function BalanceSheetCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Balance Sheet</p>
                 <p className="text-4xl font-bold text-emerald-600">{isBalanced ? 'Balanced' : 'Unbalanced'}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Total assets: ${formatCurrency(totalAssets)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Liab + Equity: ${formatCurrency(totalLE)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{isBalanced ? "Assets = Liabilities + Equity" : "Difference: ${formatCurrency(difference)}"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Total assets: ${formatCurrency(totalAssets)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Liab + Equity: ${formatCurrency(totalLE)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{isBalanced ? "Assets = Liabilities + Equity" : "Difference: ${formatCurrency(difference)}"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

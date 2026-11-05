@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { cost: number; accDep: number; bookValue: number; depreciationPct: number; remainingValuePct: number; label: string; }
 
 export default function BookValueCalculator() {
-  const [originalCost, setOriginalCost] = useState('');
-  const [accumulatedDepreciation, setAccumulatedDepreciation] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [originalCost, setOriginalCost] = useState('50000');
+  const [accumulatedDepreciation, setAccumulatedDepreciation] = useState('30000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ originalCost: string; accumulatedDepreciation: string }>('book-value-calculator');
@@ -29,7 +29,7 @@ export default function BookValueCalculator() {
   const depreciationPct = cost > 0 ? (accDep / cost) * 100 : 0;
   const remainingValuePct = cost > 0 ? (bookValue / cost) * 100 : 0;
 
-  const handleTryExample = () => { setOriginalCost('50000'); setAccumulatedDepreciation('30000'); setCalculated(false); };
+  const handleTryExample = () => { setOriginalCost('50000'); setAccumulatedDepreciation('30000'); setCalculated(true); };
   const handleCalculate = () => {
     if (cost > 0) {
       setCalculated(true);
@@ -54,7 +54,7 @@ export default function BookValueCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="originalCost" type="number" step="any" min="0" placeholder="50000" className="pl-7"
-                value={originalCost} onChange={(e) => { setOriginalCost(e.target.value); setCalculated(false); }} />
+                value={originalCost} onChange={(e) => { setOriginalCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -62,7 +62,7 @@ export default function BookValueCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="accumulatedDepreciation" type="number" step="any" min="0" placeholder="30000" className="pl-7"
-                value={accumulatedDepreciation} onChange={(e) => { setAccumulatedDepreciation(e.target.value); setCalculated(false); }} />
+                value={accumulatedDepreciation} onChange={(e) => { setAccumulatedDepreciation(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -85,9 +85,9 @@ export default function BookValueCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Book Value</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(bookValue)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Depreciated: ${depreciationPct.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Remaining: ${remainingValuePct.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Original cost: ${formatCurrency(cost)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Depreciated: ${depreciationPct.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Remaining: ${remainingValuePct.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Original cost: ${formatCurrency(cost)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -110,7 +110,7 @@ export default function BookValueCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Depr. %</p>
-                    <p className={`text-lg font-bold`}>{`{depreciationPct.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${depreciationPct.toFixed(1)}%`}</p>
                   </div>
               </div>
 

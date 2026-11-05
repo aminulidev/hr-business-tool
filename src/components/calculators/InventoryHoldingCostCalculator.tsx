@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { inv: number; cap: number; stg: number; svc: number; rsk: number; totalPct: number; holdingCost: number; capitalCost: number; storageCost: number; label: string; }
 
 export default function InventoryHoldingCostCalculator() {
-  const [avgInventoryValue, setAvgInventoryValue] = useState('');
-  const [capitalCostPct, setCapitalCostPct] = useState('Cost of capital/opportunity');
-  const [storageCostPct, setStorageCostPct] = useState('Warehouse, utilities');
-  const [serviceCostPct, setServiceCostPct] = useState('Insurance, tax, IT');
-  const [riskCostPct, setRiskCostPct] = useState('Obsolescence, shrinkage');
-  const [calculated, setCalculated] = useState(false);
+  const [avgInventoryValue, setAvgInventoryValue] = useState('200000');
+  const [capitalCostPct, setCapitalCostPct] = useState('12');
+  const [storageCostPct, setStorageCostPct] = useState('5');
+  const [serviceCostPct, setServiceCostPct] = useState('3');
+  const [riskCostPct, setRiskCostPct] = useState('5');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ avgInventoryValue: string; capitalCostPct: string; storageCostPct: string; serviceCostPct: string; riskCostPct: string }>('inventory-holding-cost-calculator');
@@ -36,7 +36,7 @@ export default function InventoryHoldingCostCalculator() {
   const capitalCost = inv * (cap / 100);
   const storageCost = inv * (stg / 100);
 
-  const handleTryExample = () => { setAvgInventoryValue('200000'); setCapitalCostPct('12'); setStorageCostPct('5'); setServiceCostPct('3'); setRiskCostPct('5'); setCalculated(false); };
+  const handleTryExample = () => { setAvgInventoryValue('200000'); setCapitalCostPct('12'); setStorageCostPct('5'); setServiceCostPct('3'); setRiskCostPct('5'); setCalculated(true); };
   const handleCalculate = () => {
     if (inv > 0) {
       setCalculated(true);
@@ -61,7 +61,7 @@ export default function InventoryHoldingCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="avgInventoryValue" type="number" step="any" min="0" placeholder="200000" className="pl-7"
-                value={avgInventoryValue} onChange={(e) => { setAvgInventoryValue(e.target.value); setCalculated(false); }} />
+                value={avgInventoryValue} onChange={(e) => { setAvgInventoryValue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -69,7 +69,7 @@ export default function InventoryHoldingCostCalculator() {
             <div className="relative">
               
               <Input id="capitalCostPct" type="number" step="any" min="0" placeholder="12"
-                value={capitalCostPct} onChange={(e) => { setCapitalCostPct(e.target.value); setCalculated(false); }} />
+                value={capitalCostPct} onChange={(e) => { setCapitalCostPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Cost of capital/opportunity</p>
           </div>
@@ -78,7 +78,7 @@ export default function InventoryHoldingCostCalculator() {
             <div className="relative">
               
               <Input id="storageCostPct" type="number" step="any" min="0" placeholder="5"
-                value={storageCostPct} onChange={(e) => { setStorageCostPct(e.target.value); setCalculated(false); }} />
+                value={storageCostPct} onChange={(e) => { setStorageCostPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Warehouse, utilities</p>
           </div>
@@ -87,7 +87,7 @@ export default function InventoryHoldingCostCalculator() {
             <div className="relative">
               
               <Input id="serviceCostPct" type="number" step="any" min="0" placeholder="3"
-                value={serviceCostPct} onChange={(e) => { setServiceCostPct(e.target.value); setCalculated(false); }} />
+                value={serviceCostPct} onChange={(e) => { setServiceCostPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Insurance, tax, IT</p>
           </div>
@@ -96,7 +96,7 @@ export default function InventoryHoldingCostCalculator() {
             <div className="relative">
               
               <Input id="riskCostPct" type="number" step="any" min="0" placeholder="5"
-                value={riskCostPct} onChange={(e) => { setRiskCostPct(e.target.value); setCalculated(false); }} />
+                value={riskCostPct} onChange={(e) => { setRiskCostPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Obsolescence, shrinkage</p>
           </div>
@@ -120,9 +120,9 @@ export default function InventoryHoldingCostCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Annual Holding Cost</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(holdingCost)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Holding cost: ${totalPct.toFixed(1)}% of inventory`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Capital cost: ${formatCurrency(capitalCost)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Benchmark: 20-30% of inventory value'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Holding cost: ${totalPct.toFixed(1)}% of inventory`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Capital cost: ${formatCurrency(capitalCost)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Benchmark: 20-30% of inventory value'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -137,7 +137,7 @@ export default function InventoryHoldingCostCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Total %</p>
-                    <p className={`text-lg font-bold`}>{`{totalPct.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${totalPct.toFixed(1)}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Holding Cost</p>

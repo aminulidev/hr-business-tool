@@ -24,7 +24,7 @@ export default function WorkingHoursCalculator() {
   const [holidays, setHolidays] = useState('11');
   const [country, setCountry] = useState('US');
   const [ptoDays, setPtoDays] = useState('15');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<WorkingHoursSnapshot | null>(null);
   const [compareB, setCompareB] = useState<WorkingHoursSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ weeklyHours: string; weeksPerYear: string; holidays: string; country: string; ptoDays: string }>('working-hours-calculator');
@@ -41,7 +41,7 @@ export default function WorkingHoursCalculator() {
   const netMonthly = netAnnual / 12;
   const netWeekly = netAnnual / 52;
 
-  const handleTryExample = () => { setWeeklyHours('40'); setWeeksPerYear('52'); setHolidays('11'); setCountry('US'); setPtoDays('15'); setCalculated(false); };
+  const handleTryExample = () => { setWeeklyHours('40'); setWeeksPerYear('52'); setHolidays('11'); setCountry('US'); setPtoDays('15'); setCalculated(true); };
   const handleCalculate = () => {
     if (wph > 0) {
       setCalculated(true);
@@ -68,16 +68,16 @@ export default function WorkingHoursCalculator() {
           <div className="space-y-2">
             <Label htmlFor="wh-weekly">Hours per Week</Label>
             <Input id="wh-weekly" type="number" step="0.5" min="0" placeholder="40" value={weeklyHours}
-              onChange={(e) => { setWeeklyHours(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setWeeklyHours(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="wh-weeks">Weeks per Year</Label>
             <Input id="wh-weeks" type="number" step="1" min="1" max="52" placeholder="52" value={weeksPerYear}
-              onChange={(e) => { setWeeksPerYear(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setWeeksPerYear(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="wh-country">Country (auto-fill holidays)</Label>
-            <Select value={country} onValueChange={(v) => { setCountry(v); setHolidays(String(COUNTRY_HOLIDAYS[v] || 10)); setCalculated(false); }}>
+            <Select value={country} onValueChange={(v) => { setCountry(v); setHolidays(String(COUNTRY_HOLIDAYS[v] || 10)); setCalculated(true); }}>
               <SelectTrigger id="wh-country"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {Object.entries(COUNTRY_HOLIDAYS).map(([code, n]) => (
@@ -89,12 +89,12 @@ export default function WorkingHoursCalculator() {
           <div className="space-y-2">
             <Label htmlFor="wh-holidays">Public Holidays (days)</Label>
             <Input id="wh-holidays" type="number" step="1" min="0" placeholder="11" value={holidays}
-              onChange={(e) => { setHolidays(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setHolidays(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="wh-pto">PTO / Vacation Days</Label>
             <Input id="wh-pto" type="number" step="0.5" min="0" placeholder="15" value={ptoDays}
-              onChange={(e) => { setPtoDays(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setPtoDays(e.target.value); setCalculated(true); }} />
           </div>
         </div>
 

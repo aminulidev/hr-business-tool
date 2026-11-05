@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { fs: number; is: number; os: number; totalShares: number; founderPct: number; investorPct: number; optionPct: number; label: string; }
 
 export default function CapTableCalculator() {
-  const [founderShares, setFounderShares] = useState('');
-  const [investorShares, setInvestorShares] = useState('');
-  const [optionShares, setOptionShares] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [founderShares, setFounderShares] = useState('8000000');
+  const [investorShares, setInvestorShares] = useState('4000000');
+  const [optionShares, setOptionShares] = useState('1000000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ founderShares: string; investorShares: string; optionShares: string }>('cap-table-calculator');
@@ -32,7 +32,7 @@ export default function CapTableCalculator() {
   const investorPct = totalShares > 0 ? (is / totalShares) * 100 : 0;
   const optionPct = totalShares > 0 ? (os / totalShares) * 100 : 0;
 
-  const handleTryExample = () => { setFounderShares('8000000'); setInvestorShares('4000000'); setOptionShares('1000000'); setCalculated(false); };
+  const handleTryExample = () => { setFounderShares('8000000'); setInvestorShares('4000000'); setOptionShares('1000000'); setCalculated(true); };
   const handleCalculate = () => {
     if (totalShares > 0) {
       setCalculated(true);
@@ -57,7 +57,7 @@ export default function CapTableCalculator() {
             <div className="relative">
               
               <Input id="founderShares" type="number" step="any" min="0" placeholder="8000000"
-                value={founderShares} onChange={(e) => { setFounderShares(e.target.value); setCalculated(false); }} />
+                value={founderShares} onChange={(e) => { setFounderShares(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -65,7 +65,7 @@ export default function CapTableCalculator() {
             <div className="relative">
               
               <Input id="investorShares" type="number" step="any" min="0" placeholder="4000000"
-                value={investorShares} onChange={(e) => { setInvestorShares(e.target.value); setCalculated(false); }} />
+                value={investorShares} onChange={(e) => { setInvestorShares(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -73,7 +73,7 @@ export default function CapTableCalculator() {
             <div className="relative">
               
               <Input id="optionShares" type="number" step="any" min="0" placeholder="1000000"
-                value={optionShares} onChange={(e) => { setOptionShares(e.target.value); setCalculated(false); }} />
+                value={optionShares} onChange={(e) => { setOptionShares(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -94,11 +94,11 @@ export default function CapTableCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Cap Table</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{totalShares.toLocaleString()} total shares`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${totalShares.toLocaleString()} total shares`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Founders: ${founderPct.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Investors: ${investorPct.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Options: ${optionPct.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Founders: ${founderPct.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Investors: ${investorPct.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Options: ${optionPct.toFixed(1)}%`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -109,19 +109,19 @@ export default function CapTableCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Founder Shares</p>
-                    <p className={`text-lg font-bold`}>{`{fs.toLocaleString()}`}</p>
+                    <p className={`text-lg font-bold`}>{`${fs.toLocaleString()}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Investor Shares</p>
-                    <p className={`text-lg font-bold`}>{`{is.toLocaleString()}`}</p>
+                    <p className={`text-lg font-bold`}>{`${is.toLocaleString()}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Option Pool</p>
-                    <p className={`text-lg font-bold`}>{`{os.toLocaleString()}`}</p>
+                    <p className={`text-lg font-bold`}>{`${os.toLocaleString()}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Total Shares</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{totalShares.toLocaleString()}`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${totalShares.toLocaleString()}`}</p>
                   </div>
               </div>
 

@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { mkt: number; sales: number; totalSpend: number; cust: number; cac: number; label: string; }
 
 export default function CustomerAcquisitionCostCalculator() {
-  const [marketingSpend, setMarketingSpend] = useState('');
-  const [salesSpend, setSalesSpend] = useState('');
-  const [newCustomers, setNewCustomers] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [marketingSpend, setMarketingSpend] = useState('50000');
+  const [salesSpend, setSalesSpend] = useState('40000');
+  const [newCustomers, setNewCustomers] = useState('100');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ marketingSpend: string; salesSpend: string; newCustomers: string }>('customer-acquisition-cost-calculator');
@@ -30,7 +30,7 @@ export default function CustomerAcquisitionCostCalculator() {
   const totalSpend = mkt + sales;
   const cac = cust > 0 ? totalSpend / cust : 0;
 
-  const handleTryExample = () => { setMarketingSpend('50000'); setSalesSpend('40000'); setNewCustomers('100'); setCalculated(false); };
+  const handleTryExample = () => { setMarketingSpend('50000'); setSalesSpend('40000'); setNewCustomers('100'); setCalculated(true); };
   const handleCalculate = () => {
     if (cust > 0) {
       setCalculated(true);
@@ -55,7 +55,7 @@ export default function CustomerAcquisitionCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="marketingSpend" type="number" step="any" min="0" placeholder="50000" className="pl-7"
-                value={marketingSpend} onChange={(e) => { setMarketingSpend(e.target.value); setCalculated(false); }} />
+                value={marketingSpend} onChange={(e) => { setMarketingSpend(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -63,7 +63,7 @@ export default function CustomerAcquisitionCostCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="salesSpend" type="number" step="any" min="0" placeholder="40000" className="pl-7"
-                value={salesSpend} onChange={(e) => { setSalesSpend(e.target.value); setCalculated(false); }} />
+                value={salesSpend} onChange={(e) => { setSalesSpend(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -71,7 +71,7 @@ export default function CustomerAcquisitionCostCalculator() {
             <div className="relative">
               
               <Input id="newCustomers" type="number" step="any" min="0" placeholder="100"
-                value={newCustomers} onChange={(e) => { setNewCustomers(e.target.value); setCalculated(false); }} />
+                value={newCustomers} onChange={(e) => { setNewCustomers(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -94,9 +94,9 @@ export default function CustomerAcquisitionCostCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Customer Acquisition Cost (CAC)</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(cac)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Total spend: ${formatCurrency(totalSpend)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`New customers: ${cust}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Target LTV:CAC > 3:1'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Total spend: ${formatCurrency(totalSpend)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`New customers: ${cust}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Target LTV:CAC > 3:1'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

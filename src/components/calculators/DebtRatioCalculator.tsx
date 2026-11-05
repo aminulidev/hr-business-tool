@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { liab: number; assets: number; debtRatio: number; equity: number; debtToEquity: number; label: string; }
 
 export default function DebtRatioCalculator() {
-  const [totalLiabilities, setTotalLiabilities] = useState('');
-  const [totalAssets, setTotalAssets] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [totalLiabilities, setTotalLiabilities] = useState('400000');
+  const [totalAssets, setTotalAssets] = useState('1000000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ totalLiabilities: string; totalAssets: string }>('debt-ratio-calculator');
@@ -29,7 +29,7 @@ export default function DebtRatioCalculator() {
   const equity = assets - liab;
   const debtToEquity = equity > 0 ? liab / equity : 0;
 
-  const handleTryExample = () => { setTotalLiabilities('400000'); setTotalAssets('1000000'); setCalculated(false); };
+  const handleTryExample = () => { setTotalLiabilities('400000'); setTotalAssets('1000000'); setCalculated(true); };
   const handleCalculate = () => {
     if (assets > 0) {
       setCalculated(true);
@@ -54,7 +54,7 @@ export default function DebtRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="totalLiabilities" type="number" step="any" min="0" placeholder="400000" className="pl-7"
-                value={totalLiabilities} onChange={(e) => { setTotalLiabilities(e.target.value); setCalculated(false); }} />
+                value={totalLiabilities} onChange={(e) => { setTotalLiabilities(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -62,7 +62,7 @@ export default function DebtRatioCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="totalAssets" type="number" step="any" min="0" placeholder="1000000" className="pl-7"
-                value={totalAssets} onChange={(e) => { setTotalAssets(e.target.value); setCalculated(false); }} />
+                value={totalAssets} onChange={(e) => { setTotalAssets(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -85,9 +85,9 @@ export default function DebtRatioCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Debt Ratio</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(debtRatio)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Equity: ${formatCurrency(equity)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Debt/Equity: ${debtToEquity.toFixed(2)}x`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{debtRatio < 50 ? "Healthy" : debtRatio < 60 ? "Moderate" : "High leverage"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Equity: ${formatCurrency(equity)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Debt/Equity: ${debtToEquity.toFixed(2)}x`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{debtRatio < 50 ? "Healthy" : debtRatio < 60 ? "Moderate" : "High leverage"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -110,7 +110,7 @@ export default function DebtRatioCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Debt/Equity</p>
-                    <p className={`text-lg font-bold`}>{`{debtToEquity.toFixed(2)}x`}</p>
+                    <p className={`text-lg font-bold`}>{`${debtToEquity.toFixed(2)}x`}</p>
                   </div>
               </div>
 

@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { totalRev: number; totalCost: number; netValue: number; roi: number; payback: number; label: string; }
 
 export default function RecruitingRoiCalculator() {
-  const [recruitingCost, setRecruitingCost] = useState('');
-  const [newHireSalary, setNewHireSalary] = useState('');
-  const [newHireRevenue, setNewHireRevenue] = useState('');
-  const [numHires, setNumHires] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [recruitingCost, setRecruitingCost] = useState('25000');
+  const [newHireSalary, setNewHireSalary] = useState('80000');
+  const [newHireRevenue, setNewHireRevenue] = useState('150000');
+  const [numHires, setNumHires] = useState('3');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ recruitingCost: string; newHireSalary: string; newHireRevenue: string; numHires: string }>('recruiting-roi-calculator');
@@ -35,7 +35,7 @@ export default function RecruitingRoiCalculator() {
   const roi = cost > 0 ? (netValue / cost) * 100 : 0;
   const payback = rev > 0 ? (cost / hires) / (rev / 12) : 0;
 
-  const handleTryExample = () => { setRecruitingCost('25000'); setNewHireSalary('80000'); setNewHireRevenue('150000'); setNumHires('3'); setCalculated(false); };
+  const handleTryExample = () => { setRecruitingCost('25000'); setNewHireSalary('80000'); setNewHireRevenue('150000'); setNumHires('3'); setCalculated(true); };
   const handleCalculate = () => {
     if (cost > 0 && rev > 0) {
       setCalculated(true);
@@ -60,7 +60,7 @@ export default function RecruitingRoiCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="recruitingCost" type="number" step="any" min="0" placeholder="25000" className="pl-7"
-                value={recruitingCost} onChange={(e) => { setRecruitingCost(e.target.value); setCalculated(false); }} />
+                value={recruitingCost} onChange={(e) => { setRecruitingCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -68,7 +68,7 @@ export default function RecruitingRoiCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="newHireSalary" type="number" step="any" min="0" placeholder="80000" className="pl-7"
-                value={newHireSalary} onChange={(e) => { setNewHireSalary(e.target.value); setCalculated(false); }} />
+                value={newHireSalary} onChange={(e) => { setNewHireSalary(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -76,7 +76,7 @@ export default function RecruitingRoiCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="newHireRevenue" type="number" step="any" min="0" placeholder="150000" className="pl-7"
-                value={newHireRevenue} onChange={(e) => { setNewHireRevenue(e.target.value); setCalculated(false); }} />
+                value={newHireRevenue} onChange={(e) => { setNewHireRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -84,7 +84,7 @@ export default function RecruitingRoiCalculator() {
             <div className="relative">
               
               <Input id="numHires" type="number" step="any" min="0" placeholder="3"
-                value={numHires} onChange={(e) => { setNumHires(e.target.value); setCalculated(false); }} />
+                value={numHires} onChange={(e) => { setNumHires(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -105,11 +105,11 @@ export default function RecruitingRoiCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Recruiting ROI</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{roi.toFixed(0)}%`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${roi.toFixed(0)}%`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Net value: ${formatCurrency(netValue)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Payback: ${payback.toFixed(1)} months`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Good ROI: > 200%'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Net value: ${formatCurrency(netValue)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Payback: ${payback.toFixed(1)} months`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Good ROI: > 200%'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -132,7 +132,7 @@ export default function RecruitingRoiCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Payback (mo)</p>
-                    <p className={`text-lg font-bold`}>{`{payback.toFixed(1)}`}</p>
+                    <p className={`text-lg font-bold`}>{`${payback.toFixed(1)}`}</p>
                   </div>
               </div>
 

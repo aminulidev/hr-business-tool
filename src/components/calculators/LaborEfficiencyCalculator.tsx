@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { std: number; actual: number; rate: number; efficiency: number; variance: number; varianceCost: number; status: string; label: string; }
 
 export default function LaborEfficiencyCalculator() {
-  const [standardHours, setStandardHours] = useState('Expected hours for actual output');
-  const [actualHours, setActualHours] = useState('');
-  const [hourlyRate, setHourlyRate] = useState('For efficiency variance $');
-  const [calculated, setCalculated] = useState(false);
+  const [standardHours, setStandardHours] = useState('1600');
+  const [actualHours, setActualHours] = useState('1800');
+  const [hourlyRate, setHourlyRate] = useState('25');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ standardHours: string; actualHours: string; hourlyRate: string }>('labor-efficiency-calculator');
@@ -32,7 +32,7 @@ export default function LaborEfficiencyCalculator() {
   const varianceCost = variance * rate;
   const status = efficiency >= 100 ? "Above standard" : efficiency >= 90 ? "At standard" : "Below standard";
 
-  const handleTryExample = () => { setStandardHours('1600'); setActualHours('1800'); setHourlyRate('25'); setCalculated(false); };
+  const handleTryExample = () => { setStandardHours('1600'); setActualHours('1800'); setHourlyRate('25'); setCalculated(true); };
   const handleCalculate = () => {
     if (std > 0 && actual > 0) {
       setCalculated(true);
@@ -57,7 +57,7 @@ export default function LaborEfficiencyCalculator() {
             <div className="relative">
               
               <Input id="standardHours" type="number" step="any" min="0" placeholder="1600"
-                value={standardHours} onChange={(e) => { setStandardHours(e.target.value); setCalculated(false); }} />
+                value={standardHours} onChange={(e) => { setStandardHours(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Expected hours for actual output</p>
           </div>
@@ -66,7 +66,7 @@ export default function LaborEfficiencyCalculator() {
             <div className="relative">
               
               <Input id="actualHours" type="number" step="any" min="0" placeholder="1800"
-                value={actualHours} onChange={(e) => { setActualHours(e.target.value); setCalculated(false); }} />
+                value={actualHours} onChange={(e) => { setActualHours(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function LaborEfficiencyCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="hourlyRate" type="number" step="any" min="0" placeholder="25" className="pl-7"
-                value={hourlyRate} onChange={(e) => { setHourlyRate(e.target.value); setCalculated(false); }} />
+                value={hourlyRate} onChange={(e) => { setHourlyRate(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">For efficiency variance $</p>
           </div>
@@ -96,11 +96,11 @@ export default function LaborEfficiencyCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Labor Efficiency Rate</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{efficiency.toFixed(1)}%`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${efficiency.toFixed(1)}%`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Status: ${status}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Variance: ${variance} hours`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Variance cost: ${formatCurrency(varianceCost)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Status: ${status}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Variance: ${variance} hours`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Variance cost: ${formatCurrency(varianceCost)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -111,19 +111,19 @@ export default function LaborEfficiencyCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Standard Hours</p>
-                    <p className={`text-lg font-bold`}>{`{std}h`}</p>
+                    <p className={`text-lg font-bold`}>{`${std}h`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Actual Hours</p>
-                    <p className={`text-lg font-bold`}>{`{actual}h`}</p>
+                    <p className={`text-lg font-bold`}>{`${actual}h`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Efficiency</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{efficiency.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${efficiency.toFixed(1)}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Variance</p>
-                    <p className={`text-lg font-bold`}>{`{variance}h`}</p>
+                    <p className={`text-lg font-bold`}>{`${variance}h`}</p>
                   </div>
               </div>
 

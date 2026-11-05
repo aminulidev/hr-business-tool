@@ -342,11 +342,11 @@ function calculateStateTax(info: StateTaxInfo, gross: number): { tax: number; ta
 }
 
 export default function StateTaxCalculator() {
-  const [grossIncome, setGrossIncome] = useState('');
+  const [grossIncome, setGrossIncome] = useState('120000');
   const [stateCode, setStateCode] = useState('CA');
   const [compareStateCode, setCompareStateCode] = useState('TX');
   const [payPeriod, setPayPeriod] = useState<'annual' | 'monthly' | 'biweekly'>('annual');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<StateTaxSnapshot | null>(null);
   const [compareB, setCompareB] = useState<StateTaxSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{
@@ -378,7 +378,7 @@ export default function StateTaxCalculator() {
     setGrossIncome('120000');
     setStateCode('CA');
     setCompareStateCode('TX');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -433,14 +433,14 @@ export default function StateTaxCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-semibold">$</span>
               <Input id="st-gross" type="number" step="1000" min="0" placeholder="95,000"
-                value={grossIncome} onChange={(e) => { setGrossIncome(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={grossIncome} onChange={(e) => { setGrossIncome(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
             <p className="text-[11px] text-muted-foreground">Total annual wages or taxable compensation.</p>
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="st-state" className="font-medium">Primary State (Residence/Work)</Label>
-            <Select value={stateCode} onValueChange={(v) => { setStateCode(v); setCalculated(false); }}>
+            <Select value={stateCode} onValueChange={(v) => { setStateCode(v); setCalculated(true); }}>
               <SelectTrigger id="st-state"><SelectValue /></SelectTrigger>
               <SelectContent className="max-h-80">
                 {Object.entries(STATES).map(([code, s]) => (
@@ -455,7 +455,7 @@ export default function StateTaxCalculator() {
 
           <div className="space-y-2 sm:col-span-2 lg:col-span-1">
             <Label htmlFor="st-compare-state" className="font-medium">Relocation / Comparison State</Label>
-            <Select value={compareStateCode} onValueChange={(v) => { setCompareStateCode(v); setCalculated(false); }}>
+            <Select value={compareStateCode} onValueChange={(v) => { setCompareStateCode(v); setCalculated(true); }}>
               <SelectTrigger id="st-compare-state"><SelectValue /></SelectTrigger>
               <SelectContent className="max-h-80">
                 {Object.entries(STATES).map(([code, s]) => (

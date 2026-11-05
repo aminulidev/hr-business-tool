@@ -16,14 +16,14 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { lh: number; lr: number; mat: number; sub: number; oh: number; pf: number; tx: number; laborCost: number; overhead: number; subtotal: number; profit: number; beforeTax: number; tax: number; total: number; label: string; }
 
 export default function QuoteCalculator() {
-  const [laborHours, setLaborHours] = useState('');
-  const [laborRate, setLaborRate] = useState('');
-  const [materials, setMaterials] = useState('');
-  const [subcontractors, setSubcontractors] = useState('');
-  const [overheadPct, setOverheadPct] = useState('');
-  const [profitPct, setProfitPct] = useState('');
-  const [taxPct, setTaxPct] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [laborHours, setLaborHours] = useState('50');
+  const [laborRate, setLaborRate] = useState('85');
+  const [materials, setMaterials] = useState('1500');
+  const [subcontractors, setSubcontractors] = useState('2000');
+  const [overheadPct, setOverheadPct] = useState('25');
+  const [profitPct, setProfitPct] = useState('20');
+  const [taxPct, setTaxPct] = useState('0');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ laborHours: string; laborRate: string; materials: string; subcontractors: string; overheadPct: string; profitPct: string; taxPct: string }>('quote-calculator');
@@ -43,7 +43,7 @@ export default function QuoteCalculator() {
   const tax = beforeTax * (tx / 100);
   const total = beforeTax + tax;
 
-  const handleTryExample = () => { setLaborHours('50'); setLaborRate('85'); setMaterials('1500'); setSubcontractors('2000'); setOverheadPct('25'); setProfitPct('20'); setTaxPct('0'); setCalculated(false); };
+  const handleTryExample = () => { setLaborHours('50'); setLaborRate('85'); setMaterials('1500'); setSubcontractors('2000'); setOverheadPct('25'); setProfitPct('20'); setTaxPct('0'); setCalculated(true); };
   const handleCalculate = () => {
     if (lh > 0) {
       setCalculated(true);
@@ -68,7 +68,7 @@ export default function QuoteCalculator() {
             <div className="relative">
               
               <Input id="laborHours" type="number" step="any" min="0" placeholder="50"
-                value={laborHours} onChange={(e) => { setLaborHours(e.target.value); setCalculated(false); }} />
+                value={laborHours} onChange={(e) => { setLaborHours(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -76,7 +76,7 @@ export default function QuoteCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="laborRate" type="number" step="any" min="0" placeholder="85" className="pl-7"
-                value={laborRate} onChange={(e) => { setLaborRate(e.target.value); setCalculated(false); }} />
+                value={laborRate} onChange={(e) => { setLaborRate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -84,7 +84,7 @@ export default function QuoteCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="materials" type="number" step="any" min="0" placeholder="1500" className="pl-7"
-                value={materials} onChange={(e) => { setMaterials(e.target.value); setCalculated(false); }} />
+                value={materials} onChange={(e) => { setMaterials(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -92,7 +92,7 @@ export default function QuoteCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="subcontractors" type="number" step="any" min="0" placeholder="2000" className="pl-7"
-                value={subcontractors} onChange={(e) => { setSubcontractors(e.target.value); setCalculated(false); }} />
+                value={subcontractors} onChange={(e) => { setSubcontractors(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -100,7 +100,7 @@ export default function QuoteCalculator() {
             <div className="relative">
               
               <Input id="overheadPct" type="number" step="any" min="0" placeholder="25"
-                value={overheadPct} onChange={(e) => { setOverheadPct(e.target.value); setCalculated(false); }} />
+                value={overheadPct} onChange={(e) => { setOverheadPct(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -108,7 +108,7 @@ export default function QuoteCalculator() {
             <div className="relative">
               
               <Input id="profitPct" type="number" step="any" min="0" placeholder="20"
-                value={profitPct} onChange={(e) => { setProfitPct(e.target.value); setCalculated(false); }} />
+                value={profitPct} onChange={(e) => { setProfitPct(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -116,7 +116,7 @@ export default function QuoteCalculator() {
             <div className="relative">
               
               <Input id="taxPct" type="number" step="any" min="0" placeholder="0"
-                value={taxPct} onChange={(e) => { setTaxPct(e.target.value); setCalculated(false); }} />
+                value={taxPct} onChange={(e) => { setTaxPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">0 for B2B services</p>
           </div>
@@ -140,9 +140,9 @@ export default function QuoteCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Quote Total</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(total)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Subtotal: ${formatCurrency(subtotal)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Profit: ${formatCurrency(profit)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Before tax: ${formatCurrency(beforeTax)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Subtotal: ${formatCurrency(subtotal)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Profit: ${formatCurrency(profit)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Before tax: ${formatCurrency(beforeTax)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

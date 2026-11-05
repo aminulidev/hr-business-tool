@@ -18,12 +18,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface BhSnap { totalHours: number; billableHours: number; utilizationRate: number; billableRevenue: number; label: string; }
 
 export default function BillableHoursCalculator() {
-  const [totalHours, setTotalHours] = useState('');
-  const [nonBillableHours, setNonBillableHours] = useState('');
-  const [billingRate, setBillingRate] = useState('');
+  const [totalHours, setTotalHours] = useState('40');
+  const [nonBillableHours, setNonBillableHours] = useState('0');
+  const [billingRate, setBillingRate] = useState('150');
   const [period, setPeriod] = useState('week');
   const [targetUtilization, setTargetUtilization] = useState('75');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<BhSnap | null>(null);
   const [compareB, setCompareB] = useState<BhSnap | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ totalHours: string; nonBillableHours: string; billingRate: string; period: string }>('billable-hours-calculator');
@@ -50,7 +50,7 @@ export default function BillableHoursCalculator() {
     setBillingRate('150');
     setTotalHours('40');
     setNonBillableHours('0');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -79,7 +79,7 @@ export default function BillableHoursCalculator() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="period-select">Time Period</Label>
-            <Select value={period} onValueChange={(v) => { setPeriod(v); setCalculated(false); }}>
+            <Select value={period} onValueChange={(v) => { setPeriod(v); setCalculated(true); }}>
               <SelectTrigger id="period-select"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="week">Weekly (per week)</SelectItem>
@@ -91,7 +91,7 @@ export default function BillableHoursCalculator() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="target-util">Target Utilization Rate</Label>
-            <Select value={targetUtilization} onValueChange={(v) => { setTargetUtilization(v); setCalculated(false); }}>
+            <Select value={targetUtilization} onValueChange={(v) => { setTargetUtilization(v); setCalculated(true); }}>
               <SelectTrigger id="target-util"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="60">60% — Freelancer / Solo</SelectItem>
@@ -106,12 +106,12 @@ export default function BillableHoursCalculator() {
           <div className="space-y-2">
             <Label htmlFor="total-hours">Total Working Hours ({PERIOD_LABELS[period]})</Label>
             <Input id="total-hours" type="number" step="0.5" min="0" placeholder="40"
-              value={totalHours} onChange={(e) => { setTotalHours(e.target.value); setCalculated(false); }} />
+              value={totalHours} onChange={(e) => { setTotalHours(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="non-billable-hours">Non-Billable Hours</Label>
             <Input id="non-billable-hours" type="number" step="0.5" min="0" placeholder="10"
-              value={nonBillableHours} onChange={(e) => { setNonBillableHours(e.target.value); setCalculated(false); }} />
+              value={nonBillableHours} onChange={(e) => { setNonBillableHours(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">Admin, meetings, training, proposals</p>
           </div>
           <div className="space-y-2 sm:col-span-2">
@@ -119,7 +119,7 @@ export default function BillableHoursCalculator() {
             <div className="relative max-w-xs">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="billing-rate" type="number" step="5" min="0" placeholder="150"
-                value={billingRate} onChange={(e) => { setBillingRate(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={billingRate} onChange={(e) => { setBillingRate(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
             <p className="text-xs text-muted-foreground">Leave blank to calculate hours and utilization only</p>
           </div>

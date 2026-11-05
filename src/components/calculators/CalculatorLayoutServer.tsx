@@ -122,6 +122,8 @@ interface CalculatorLayoutProps {
   formulaDescription?: string;
   workedExamples?: WorkedExample[];
   commissionStructures?: CommissionStructure[];
+  benchmarkTables?: { title: string; subtitle?: string; headers: string[]; rows: string[][] }[];
+  deepDiveSections?: { title: string; paragraphs: string[] }[];
   faqs?: FAQItem[];
   relatedTools?: RelatedTool[];
   adContent?: React.ReactNode;
@@ -351,6 +353,8 @@ export default function CalculatorLayoutServer({
   formulaDescription,
   workedExamples,
   commissionStructures,
+  benchmarkTables,
+  deepDiveSections,
   faqs,
   relatedTools,
   adContent,
@@ -362,6 +366,8 @@ export default function CalculatorLayoutServer({
   const hasCommissionStructures =
     commissionStructures && commissionStructures.length > 0;
   const hasFaqs = faqs && faqs.length > 0;
+  const hasBenchmarkTables = benchmarkTables && benchmarkTables.length > 0;
+  const hasDeepDiveSections = deepDiveSections && deepDiveSections.length > 0;
   const hasRelatedTools = relatedTools && relatedTools.length > 0;
 
   // Derive current URL from breadcrumbs (last item's href) or use title slug
@@ -626,6 +632,70 @@ export default function CalculatorLayoutServer({
             {/* ============================================================= */}
             {/* FAQ section                                                    */}
             {/* ============================================================= */}
+            {hasBenchmarkTables && (
+              <section id="benchmarks-reference" className="scroll-mt-24 space-y-6">
+                {benchmarkTables!.map((tbl, idx) => (
+                  <div key={idx} className="glass rounded-2xl p-5 sm:p-6 space-y-3">
+                    <div>
+                      <h2 className="text-lg sm:text-xl font-bold">{tbl.title}</h2>
+                      {tbl.subtitle && (
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                          {tbl.subtitle}
+                        </p>
+                      )}
+                    </div>
+                    <div className="overflow-x-auto rounded-xl border border-border/50 bg-background">
+                      <table className="w-full text-xs sm:text-sm">
+                        <thead>
+                          <tr className="border-b border-border/50 bg-muted/40">
+                            {tbl.headers.map((h, hIdx) => (
+                              <th
+                                key={hIdx}
+                                className="px-3.5 py-2.5 text-left font-semibold text-foreground whitespace-nowrap"
+                              >
+                                {h}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-border/30">
+                          {tbl.rows.map((row, rIdx) => (
+                            <tr key={rIdx} className="hover:bg-muted/20 transition-colors">
+                              {row.map((cell, cIdx) => (
+                                <td
+                                  key={cIdx}
+                                  className={`px-3.5 py-2.5 ${
+                                    cIdx === 0 ? 'font-medium text-foreground' : 'text-muted-foreground'
+                                  }`}
+                                >
+                                  {cell}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                ))}
+              </section>
+            )}
+
+            {hasDeepDiveSections && (
+              <section id="in-depth-guide" className="scroll-mt-24 space-y-6">
+                {deepDiveSections!.map((sec, idx) => (
+                  <div key={idx} className="glass rounded-2xl p-5 sm:p-6 space-y-3">
+                    <h2 className="text-lg sm:text-xl font-bold">{sec.title}</h2>
+                    {sec.paragraphs.map((p, pIdx) => (
+                      <p key={pIdx} className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                        {p}
+                      </p>
+                    ))}
+                  </div>
+                ))}
+              </section>
+            )}
+
             {hasFaqs && (
               <section
                 id="frequently-asked-questions"

@@ -120,13 +120,13 @@ interface Snapshot1099 {
 }
 
 export default function Calculator1099() {
-  const [grossIncome, setGrossIncome] = useState('');
-  const [businessExpenses, setBusinessExpenses] = useState('');
+  const [grossIncome, setGrossIncome] = useState('95000');
+  const [businessExpenses, setBusinessExpenses] = useState('12000');
   const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
   const [selectedState, setSelectedState] = useState('CA');
-  const [stateRate, setStateRate] = useState('6.5');
+  const [stateRate, setStateRate] = useState('5');
   const [useCustomStateRate, setUseCustomStateRate] = useState(false);
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot1099 | null>(null);
   const [compareB, setCompareB] = useState<Snapshot1099 | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{
@@ -187,7 +187,7 @@ export default function Calculator1099() {
     setBusinessExpenses('12000');
     setFilingStatus('single');
     setStateRate('5');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -240,7 +240,7 @@ export default function Calculator1099() {
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-semibold">$</span>
               <Input id="i9-gross" type="number" step="1000" min="0" placeholder="95,000"
-                value={grossIncome} onChange={(e) => { setGrossIncome(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={grossIncome} onChange={(e) => { setGrossIncome(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
             <p className="text-[11px] text-muted-foreground">Total payments received (1099-NEC / 1099-K / invoices).</p>
           </div>
@@ -250,14 +250,14 @@ export default function Calculator1099() {
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-semibold">$</span>
               <Input id="i9-exp" type="number" step="500" min="0" placeholder="12,000"
-                value={businessExpenses} onChange={(e) => { setBusinessExpenses(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={businessExpenses} onChange={(e) => { setBusinessExpenses(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
             <p className="text-[11px] text-muted-foreground">Mileage, equipment, software, home office, subcontractor pay.</p>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="i9-status" className="font-medium">Federal Filing Status</Label>
-            <Select value={filingStatus} onValueChange={(v) => { setFilingStatus(v as FilingStatus); setCalculated(false); }}>
+            <Select value={filingStatus} onValueChange={(v) => { setFilingStatus(v as FilingStatus); setCalculated(true); }}>
               <SelectTrigger id="i9-status"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="single">Single</SelectItem>
@@ -311,7 +311,7 @@ export default function Calculator1099() {
             <Label htmlFor="i9-custom-rate" className="text-xs font-medium">Custom State / Local Income Tax Rate (%)</Label>
             <div className="relative">
               <Input id="i9-custom-rate" type="number" step="0.1" min="0" max="20"
-                value={stateRate} onChange={(e) => { setStateRate(e.target.value); setCalculated(false); }} className="h-8 text-xs" />
+                value={stateRate} onChange={(e) => { setStateRate(e.target.value); setCalculated(true); }} className="h-8 text-xs" />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">%</span>
             </div>
           </div>

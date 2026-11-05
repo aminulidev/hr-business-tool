@@ -81,13 +81,13 @@ interface FederalTaxSnapshot {
 }
 
 export default function FederalTaxCalculator() {
-  const [grossIncome, setGrossIncome] = useState('');
+  const [grossIncome, setGrossIncome] = useState('95000');
   const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
   const [deductionMode, setDeductionMode] = useState<'standard' | 'itemized'>('standard');
-  const [aboveTheLine, setAboveTheLine] = useState('');
+  const [aboveTheLine, setAboveTheLine] = useState('4500');
   const [itemizedAmount, setItemizedAmount] = useState('');
   const [payPeriod, setPayPeriod] = useState<'annual' | 'monthly' | 'biweekly'>('annual');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<FederalTaxSnapshot | null>(null);
   const [compareB, setCompareB] = useState<FederalTaxSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{
@@ -150,7 +150,7 @@ export default function FederalTaxCalculator() {
     setDeductionMode('standard');
     setAboveTheLine('4500');
     setItemizedAmount('');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -219,14 +219,14 @@ export default function FederalTaxCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-semibold">$</span>
               <Input id="ft-gross" type="number" step="1000" min="0" placeholder="85,000"
-                value={grossIncome} onChange={(e) => { setGrossIncome(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={grossIncome} onChange={(e) => { setGrossIncome(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
             <p className="text-[11px] text-muted-foreground">Total annual wages, tips, and taxable salaries.</p>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="ft-status" className="font-medium">IRS Filing Status</Label>
-            <Select value={filingStatus} onValueChange={(v) => { setFilingStatus(v as FilingStatus); setCalculated(false); }}>
+            <Select value={filingStatus} onValueChange={(v) => { setFilingStatus(v as FilingStatus); setCalculated(true); }}>
               <SelectTrigger id="ft-status"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="single">Single ($16,100 Std Ded)</SelectItem>
@@ -243,7 +243,7 @@ export default function FederalTaxCalculator() {
             <div className="grid grid-cols-2 gap-1 p-1 bg-muted/50 rounded-lg border border-border/40 text-xs">
               <button
                 type="button"
-                onClick={() => { setDeductionMode('standard'); setCalculated(false); }}
+                onClick={() => { setDeductionMode('standard'); setCalculated(true); }}
                 className={`py-1.5 px-2 rounded-md font-medium transition ${
                   deductionMode === 'standard' 
                     ? 'bg-background shadow-sm text-foreground' 
@@ -254,7 +254,7 @@ export default function FederalTaxCalculator() {
               </button>
               <button
                 type="button"
-                onClick={() => { setDeductionMode('itemized'); setCalculated(false); }}
+                onClick={() => { setDeductionMode('itemized'); setCalculated(true); }}
                 className={`py-1.5 px-2 rounded-md font-medium transition ${
                   deductionMode === 'itemized' 
                     ? 'bg-background shadow-sm text-foreground' 
@@ -280,7 +280,7 @@ export default function FederalTaxCalculator() {
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-semibold">$</span>
                 <Input id="ft-itemized" type="number" step="500" min="0" placeholder="e.g. 18,500"
-                  value={itemizedAmount} onChange={(e) => { setItemizedAmount(e.target.value); setCalculated(false); }} className="pl-7" />
+                  value={itemizedAmount} onChange={(e) => { setItemizedAmount(e.target.value); setCalculated(true); }} className="pl-7" />
               </div>
               <p className="text-[11px] text-muted-foreground">Mortgage interest, state/local taxes (SALT max $10k), charitable donations.</p>
             </div>
@@ -301,7 +301,7 @@ export default function FederalTaxCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-semibold">$</span>
               <Input id="ft-above" type="number" step="500" min="0" placeholder="e.g. 4,500"
-                value={aboveTheLine} onChange={(e) => { setAboveTheLine(e.target.value); setCalculated(false); }} className="pl-7" />
+                value={aboveTheLine} onChange={(e) => { setAboveTheLine(e.target.value); setCalculated(true); }} className="pl-7" />
             </div>
             <p className="text-[11px] text-muted-foreground">Pre-tax 401(k), traditional IRA, HSA, or student loan interest (Form 1040 Sch 1).</p>
           </div>

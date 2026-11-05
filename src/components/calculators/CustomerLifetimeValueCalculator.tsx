@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { ar: number; gm: number; ch: number; clv: number; ltvCacRatio: number; avgLifetime: number; label: string; }
 
 export default function CustomerLifetimeValueCalculator() {
-  const [arpu, setArpu] = useState('');
-  const [grossMargin, setGrossMargin] = useState('');
-  const [monthlyChurn, setMonthlyChurn] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [arpu, setArpu] = useState('100');
+  const [grossMargin, setGrossMargin] = useState('80');
+  const [monthlyChurn, setMonthlyChurn] = useState('3');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ arpu: string; grossMargin: string; monthlyChurn: string }>('customer-lifetime-value-calculator');
@@ -31,7 +31,7 @@ export default function CustomerLifetimeValueCalculator() {
   const ltvCacRatio = clv > 0 && 500 > 0 ? clv / 500 : 0;
   const avgLifetime = ch > 0 ? 1 / (ch / 100) : 60;
 
-  const handleTryExample = () => { setArpu('100'); setGrossMargin('80'); setMonthlyChurn('3'); setCalculated(false); };
+  const handleTryExample = () => { setArpu('100'); setGrossMargin('80'); setMonthlyChurn('3'); setCalculated(true); };
   const handleCalculate = () => {
     if (ar > 0) {
       setCalculated(true);
@@ -56,7 +56,7 @@ export default function CustomerLifetimeValueCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="arpu" type="number" step="any" min="0" placeholder="100" className="pl-7"
-                value={arpu} onChange={(e) => { setArpu(e.target.value); setCalculated(false); }} />
+                value={arpu} onChange={(e) => { setArpu(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -64,7 +64,7 @@ export default function CustomerLifetimeValueCalculator() {
             <div className="relative">
               
               <Input id="grossMargin" type="number" step="any" min="0" placeholder="80"
-                value={grossMargin} onChange={(e) => { setGrossMargin(e.target.value); setCalculated(false); }} />
+                value={grossMargin} onChange={(e) => { setGrossMargin(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function CustomerLifetimeValueCalculator() {
             <div className="relative">
               
               <Input id="monthlyChurn" type="number" step="any" min="0" placeholder="3"
-                value={monthlyChurn} onChange={(e) => { setMonthlyChurn(e.target.value); setCalculated(false); }} />
+                value={monthlyChurn} onChange={(e) => { setMonthlyChurn(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -95,9 +95,9 @@ export default function CustomerLifetimeValueCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Customer Lifetime Value (CLV)</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(clv)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Avg customer lifetime: ${avgLifetime.toFixed(1)} months`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`LTV:CAC (at $500 CAC): ${ltvCacRatio.toFixed(1)}:1`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Target LTV:CAC > 3:1'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Avg customer lifetime: ${avgLifetime.toFixed(1)} months`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`LTV:CAC (at $500 CAC): ${ltvCacRatio.toFixed(1)}:1`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Target LTV:CAC > 3:1'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -112,7 +112,7 @@ export default function CustomerLifetimeValueCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Gross Margin</p>
-                    <p className={`text-lg font-bold`}>{`{gm}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${gm}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">CLV</p>
@@ -120,7 +120,7 @@ export default function CustomerLifetimeValueCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Avg Lifetime</p>
-                    <p className={`text-lg font-bold`}>{`{avgLifetime.toFixed(1)} mo`}</p>
+                    <p className={`text-lg font-bold`}>{`${avgLifetime.toFixed(1)} mo`}</p>
                   </div>
               </div>
 

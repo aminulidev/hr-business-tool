@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { order: number; tip: number; sellerFee: number; sellerTakeHome: number; buyerFee: number; buyerTotal: number; label: string; }
 
 export default function FiverrFeeCalculator() {
-  const [orderAmount, setOrderAmount] = useState('');
-  const [tipAmount, setTipAmount] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [orderAmount, setOrderAmount] = useState('100');
+  const [tipAmount, setTipAmount] = useState('10');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ orderAmount: string; tipAmount: string }>('fiverr-fee-calculator');
@@ -30,7 +30,7 @@ export default function FiverrFeeCalculator() {
   const buyerFee = order * 0.05 + 2.50;
   const buyerTotal = order + buyerFee + tip;
 
-  const handleTryExample = () => { setOrderAmount('100'); setTipAmount('10'); setCalculated(false); };
+  const handleTryExample = () => { setOrderAmount('100'); setTipAmount('10'); setCalculated(true); };
   const handleCalculate = () => {
     if (order > 0) {
       setCalculated(true);
@@ -55,7 +55,7 @@ export default function FiverrFeeCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="orderAmount" type="number" step="any" min="0" placeholder="100" className="pl-7"
-                value={orderAmount} onChange={(e) => { setOrderAmount(e.target.value); setCalculated(false); }} />
+                value={orderAmount} onChange={(e) => { setOrderAmount(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -63,7 +63,7 @@ export default function FiverrFeeCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="tipAmount" type="number" step="any" min="0" placeholder="10" className="pl-7"
-                value={tipAmount} onChange={(e) => { setTipAmount(e.target.value); setCalculated(false); }} />
+                value={tipAmount} onChange={(e) => { setTipAmount(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -86,9 +86,9 @@ export default function FiverrFeeCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Seller Take-Home</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(sellerTakeHome)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-red-500/10 border-red-500/30 text-red-600'">{`Seller fee (20%): ${formatCurrency(sellerFee)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Buyer pays: ${formatCurrency(buyerTotal)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Buyer fee: ${formatCurrency(buyerFee)}`}</Badge>
+                  <Badge variant="outline" className="bg-red-500/10 border-red-500/30 text-red-600">{`Seller fee (20%): ${formatCurrency(sellerFee)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Buyer pays: ${formatCurrency(buyerTotal)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Buyer fee: ${formatCurrency(buyerFee)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

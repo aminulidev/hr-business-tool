@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { price: number; vc: number; units: number; fc: number; cmPerUnit: number; totalCM: number; cmRatio: number; netProfit: number; breakEvenUnits: number; label: string; }
 
 export default function ContributionCalculator() {
-  const [sellingPrice, setSellingPrice] = useState('');
-  const [variableCost, setVariableCost] = useState('');
-  const [unitsSold, setUnitsSold] = useState('');
-  const [fixedCosts, setFixedCosts] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [sellingPrice, setSellingPrice] = useState('50');
+  const [variableCost, setVariableCost] = useState('20');
+  const [unitsSold, setUnitsSold] = useState('2000');
+  const [fixedCosts, setFixedCosts] = useState('45000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ sellingPrice: string; variableCost: string; unitsSold: string; fixedCosts: string }>('contribution-calculator');
@@ -35,7 +35,7 @@ export default function ContributionCalculator() {
   const netProfit = totalCM - fc;
   const breakEvenUnits = cmPerUnit > 0 ? fc / cmPerUnit : 0;
 
-  const handleTryExample = () => { setSellingPrice('50'); setVariableCost('20'); setUnitsSold('2000'); setFixedCosts('45000'); setCalculated(false); };
+  const handleTryExample = () => { setSellingPrice('50'); setVariableCost('20'); setUnitsSold('2000'); setFixedCosts('45000'); setCalculated(true); };
   const handleCalculate = () => {
     if (price > 0 && units > 0) {
       setCalculated(true);
@@ -60,7 +60,7 @@ export default function ContributionCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="sellingPrice" type="number" step="any" min="0" placeholder="50" className="pl-7"
-                value={sellingPrice} onChange={(e) => { setSellingPrice(e.target.value); setCalculated(false); }} />
+                value={sellingPrice} onChange={(e) => { setSellingPrice(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -68,7 +68,7 @@ export default function ContributionCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="variableCost" type="number" step="any" min="0" placeholder="20" className="pl-7"
-                value={variableCost} onChange={(e) => { setVariableCost(e.target.value); setCalculated(false); }} />
+                value={variableCost} onChange={(e) => { setVariableCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -76,7 +76,7 @@ export default function ContributionCalculator() {
             <div className="relative">
               
               <Input id="unitsSold" type="number" step="any" min="0" placeholder="2000"
-                value={unitsSold} onChange={(e) => { setUnitsSold(e.target.value); setCalculated(false); }} />
+                value={unitsSold} onChange={(e) => { setUnitsSold(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -84,7 +84,7 @@ export default function ContributionCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="fixedCosts" type="number" step="any" min="0" placeholder="45000" className="pl-7"
-                value={fixedCosts} onChange={(e) => { setFixedCosts(e.target.value); setCalculated(false); }} />
+                value={fixedCosts} onChange={(e) => { setFixedCosts(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -107,9 +107,9 @@ export default function ContributionCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Total Contribution Margin</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalCM)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`CM per unit: ${formatCurrency(cmPerUnit)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Net profit: ${formatCurrency(netProfit)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Break-even: ${breakEvenUnits.toFixed(0)} units`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`CM per unit: ${formatCurrency(cmPerUnit)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Net profit: ${formatCurrency(netProfit)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Break-even: ${breakEvenUnits.toFixed(0)} units`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

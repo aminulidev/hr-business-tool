@@ -22,7 +22,7 @@ export default function LeaveCalculator() {
   const [sickUsed, setSickUsed] = useState('8');
   const [personalEntitled, setPersonalEntitled] = useState('24');
   const [personalUsed, setPersonalUsed] = useState('8');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<LeaveSnapshot | null>(null);
   const [compareB, setCompareB] = useState<LeaveSnapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ ptoEntitled: string; ptoUsed: string; sickEntitled: string; sickUsed: string; personalEntitled: string; personalUsed: string }>('leave-calculator');
@@ -39,7 +39,7 @@ export default function LeaveCalculator() {
   const remaining = totalEntitled - totalUsed;
   const usedPct = totalEntitled > 0 ? (totalUsed / totalEntitled) * 100 : 0;
 
-  const handleTryExample = () => { setPtoEntitled('120'); setPtoUsed('40'); setSickEntitled('40'); setSickUsed('8'); setPersonalEntitled('24'); setPersonalUsed('8'); setCalculated(false); };
+  const handleTryExample = () => { setPtoEntitled('120'); setPtoUsed('40'); setSickEntitled('40'); setSickUsed('8'); setPersonalEntitled('24'); setPersonalUsed('8'); setCalculated(true); };
   const handleCalculate = () => {
     if (totalEntitled > 0) {
       setCalculated(true);
@@ -75,12 +75,12 @@ export default function LeaveCalculator() {
               <div className="space-y-2">
                 <Label className="text-xs">Entitled (hours)</Label>
                 <Input type="number" step="1" min="0" placeholder="120" value={row.ent}
-                  onChange={(e) => { row.setEnt(e.target.value); setCalculated(false); }} />
+                  onChange={(e) => { row.setEnt(e.target.value); setCalculated(true); }} />
               </div>
               <div className="space-y-2">
                 <Label className="text-xs">Used (hours)</Label>
                 <Input type="number" step="1" min="0" placeholder="40" value={row.used}
-                  onChange={(e) => { row.setUsed(e.target.value); setCalculated(false); }} />
+                  onChange={(e) => { row.setUsed(e.target.value); setCalculated(true); }} />
               </div>
               <div className="text-xs text-muted-foreground">Remaining: <span className="font-semibold">{parseFloat(row.ent) - parseFloat(row.used) || 0}h</span></div>
             </div>

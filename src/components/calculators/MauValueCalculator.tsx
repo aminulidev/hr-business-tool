@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { rev: number; mau: number; valuePerMau: number; annualValue: number; annualRevenue: number; label: string; }
 
 export default function MauValueCalculator() {
-  const [monthlyRevenue, setMonthlyRevenue] = useState('');
-  const [totalMau, setTotalMau] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [monthlyRevenue, setMonthlyRevenue] = useState('50000');
+  const [totalMau, setTotalMau] = useState('50000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ monthlyRevenue: string; totalMau: string }>('mau-value-calculator');
@@ -29,7 +29,7 @@ export default function MauValueCalculator() {
   const annualValue = valuePerMau * 12;
   const annualRevenue = rev * 12;
 
-  const handleTryExample = () => { setMonthlyRevenue('50000'); setTotalMau('50000'); setCalculated(false); };
+  const handleTryExample = () => { setMonthlyRevenue('50000'); setTotalMau('50000'); setCalculated(true); };
   const handleCalculate = () => {
     if (mau > 0) {
       setCalculated(true);
@@ -54,7 +54,7 @@ export default function MauValueCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="monthlyRevenue" type="number" step="any" min="0" placeholder="50000" className="pl-7"
-                value={monthlyRevenue} onChange={(e) => { setMonthlyRevenue(e.target.value); setCalculated(false); }} />
+                value={monthlyRevenue} onChange={(e) => { setMonthlyRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -62,7 +62,7 @@ export default function MauValueCalculator() {
             <div className="relative">
               
               <Input id="totalMau" type="number" step="any" min="0" placeholder="50000"
-                value={totalMau} onChange={(e) => { setTotalMau(e.target.value); setCalculated(false); }} />
+                value={totalMau} onChange={(e) => { setTotalMau(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -85,9 +85,9 @@ export default function MauValueCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Value Per MAU</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(valuePerMau)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Annual value/MAU: ${formatCurrency(annualValue)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Annual revenue: ${formatCurrency(annualRevenue)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Social $1-10, Gaming $0.50-5, SaaS $50-500'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Annual value/MAU: ${formatCurrency(annualValue)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Annual revenue: ${formatCurrency(annualRevenue)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Social $1-10, Gaming $0.50-5, SaaS $50-500'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -102,7 +102,7 @@ export default function MauValueCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">MAU</p>
-                    <p className={`text-lg font-bold`}>{`{mau.toLocaleString()}`}</p>
+                    <p className={`text-lg font-bold`}>{`${mau.toLocaleString()}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Value/MAU</p>

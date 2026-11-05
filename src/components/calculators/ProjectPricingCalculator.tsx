@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { hours: number; rate: number; laborCost: number; loadedCost: number; profit: number; totalPrice: number; effectiveRate: number; label: string; }
 
 export default function ProjectPricingCalculator() {
-  const [estimatedHours, setEstimatedHours] = useState('');
-  const [baseRate, setBaseRate] = useState('');
-  const [overheadMult, setOverheadMult] = useState('');
-  const [profitMargin, setProfitMargin] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [estimatedHours, setEstimatedHours] = useState('80');
+  const [baseRate, setBaseRate] = useState('75');
+  const [overheadMult, setOverheadMult] = useState('1.3');
+  const [profitMargin, setProfitMargin] = useState('20');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ estimatedHours: string; baseRate: string; overheadMult: string; profitMargin: string }>('project-pricing-calculator');
@@ -35,7 +35,7 @@ export default function ProjectPricingCalculator() {
   const totalPrice = loadedCost + profit;
   const effectiveRate = hours > 0 ? totalPrice / hours : 0;
 
-  const handleTryExample = () => { setEstimatedHours('80'); setBaseRate('75'); setOverheadMult('1.3'); setProfitMargin('20'); setCalculated(false); };
+  const handleTryExample = () => { setEstimatedHours('80'); setBaseRate('75'); setOverheadMult('1.3'); setProfitMargin('20'); setCalculated(true); };
   const handleCalculate = () => {
     if (hours > 0 && rate > 0) {
       setCalculated(true);
@@ -60,7 +60,7 @@ export default function ProjectPricingCalculator() {
             <div className="relative">
               
               <Input id="estimatedHours" type="number" step="any" min="0" placeholder="80"
-                value={estimatedHours} onChange={(e) => { setEstimatedHours(e.target.value); setCalculated(false); }} />
+                value={estimatedHours} onChange={(e) => { setEstimatedHours(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -68,7 +68,7 @@ export default function ProjectPricingCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="baseRate" type="number" step="any" min="0" placeholder="75" className="pl-7"
-                value={baseRate} onChange={(e) => { setBaseRate(e.target.value); setCalculated(false); }} />
+                value={baseRate} onChange={(e) => { setBaseRate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -76,7 +76,7 @@ export default function ProjectPricingCalculator() {
             <div className="relative">
               
               <Input id="overheadMult" type="number" step="any" min="0" placeholder="1.3"
-                value={overheadMult} onChange={(e) => { setOverheadMult(e.target.value); setCalculated(false); }} />
+                value={overheadMult} onChange={(e) => { setOverheadMult(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">1.3 = 30% overhead</p>
           </div>
@@ -85,7 +85,7 @@ export default function ProjectPricingCalculator() {
             <div className="relative">
               
               <Input id="profitMargin" type="number" step="any" min="0" placeholder="20"
-                value={profitMargin} onChange={(e) => { setProfitMargin(e.target.value); setCalculated(false); }} />
+                value={profitMargin} onChange={(e) => { setProfitMargin(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -108,9 +108,9 @@ export default function ProjectPricingCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Project Price</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalPrice)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Loaded cost: ${formatCurrency(loadedCost)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Profit: ${formatCurrency(profit)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Effective rate: ${formatCurrency(effectiveRate)}/hr`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Loaded cost: ${formatCurrency(loadedCost)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Profit: ${formatCurrency(profit)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Effective rate: ${formatCurrency(effectiveRate)}/hr`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

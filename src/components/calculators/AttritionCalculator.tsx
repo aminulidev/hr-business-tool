@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { dep: number; avg: number; attritionRate: number; annualized: number; label: string; }
 
 export default function AttritionCalculator() {
-  const [departures, setDepartures] = useState('');
-  const [avgHeadcount, setAvgHeadcount] = useState('(start + end) / 2');
-  const [periodMonths, setPeriodMonths] = useState('For annualization');
-  const [calculated, setCalculated] = useState(false);
+  const [departures, setDepartures] = useState('12');
+  const [avgHeadcount, setAvgHeadcount] = useState('100');
+  const [periodMonths, setPeriodMonths] = useState('12');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ departures: string; avgHeadcount: string; periodMonths: string }>('attrition-calculator');
@@ -31,7 +31,7 @@ export default function AttritionCalculator() {
   const monthlyRate = attritionRate / months;
   const annualized = monthlyRate * 12;
 
-  const handleTryExample = () => { setDepartures('12'); setAvgHeadcount('100'); setPeriodMonths('12'); setCalculated(false); };
+  const handleTryExample = () => { setDepartures('12'); setAvgHeadcount('100'); setPeriodMonths('12'); setCalculated(true); };
   const handleCalculate = () => {
     if (dep > 0 && avg > 0) {
       setCalculated(true);
@@ -56,7 +56,7 @@ export default function AttritionCalculator() {
             <div className="relative">
               
               <Input id="departures" type="number" step="any" min="0" placeholder="12"
-                value={departures} onChange={(e) => { setDepartures(e.target.value); setCalculated(false); }} />
+                value={departures} onChange={(e) => { setDepartures(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -64,7 +64,7 @@ export default function AttritionCalculator() {
             <div className="relative">
               
               <Input id="avgHeadcount" type="number" step="any" min="0" placeholder="100"
-                value={avgHeadcount} onChange={(e) => { setAvgHeadcount(e.target.value); setCalculated(false); }} />
+                value={avgHeadcount} onChange={(e) => { setAvgHeadcount(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">(start + end) / 2</p>
           </div>
@@ -73,7 +73,7 @@ export default function AttritionCalculator() {
             <div className="relative">
               
               <Input id="periodMonths" type="number" step="any" min="0" placeholder="12"
-                value={periodMonths} onChange={(e) => { setPeriodMonths(e.target.value); setCalculated(false); }} />
+                value={periodMonths} onChange={(e) => { setPeriodMonths(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">For annualization</p>
           </div>
@@ -97,9 +97,9 @@ export default function AttritionCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Attrition Rate</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(attritionRate)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-red-500/10 border-red-500/30 text-red-600'">{`${dep} departures`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Annualized: ${annualized.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{'Benchmark: 13% US avg'}</Badge>
+                  <Badge variant="outline" className="bg-red-500/10 border-red-500/30 text-red-600">{`${dep} departures`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Annualized: ${annualized.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{'Benchmark: 13% US avg'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -110,19 +110,19 @@ export default function AttritionCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Departures</p>
-                    <p className={`text-lg font-bold`}>{`{dep}`}</p>
+                    <p className={`text-lg font-bold`}>{`${dep}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Avg Headcount</p>
-                    <p className={`text-lg font-bold`}>{`{avg}`}</p>
+                    <p className={`text-lg font-bold`}>{`${avg}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Period Rate</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{attritionRate.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${attritionRate.toFixed(1)}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Annualized</p>
-                    <p className={`text-lg font-bold`}>{`{annualized.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${annualized.toFixed(1)}%`}</p>
                   </div>
               </div>
 

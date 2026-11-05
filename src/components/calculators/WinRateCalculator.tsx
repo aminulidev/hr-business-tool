@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { won: number; lost: number; closed: number; winRate: number; lossRate: number; label: string; }
 
 export default function WinRateCalculator() {
-  const [wonDeals, setWonDeals] = useState('');
-  const [lostDeals, setLostDeals] = useState('');
-  const [openDeals, setOpenDeals] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [wonDeals, setWonDeals] = useState('25');
+  const [lostDeals, setLostDeals] = useState('60');
+  const [openDeals, setOpenDeals] = useState('15');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ wonDeals: string; lostDeals: string; openDeals: string }>('win-rate-calculator');
@@ -31,7 +31,7 @@ export default function WinRateCalculator() {
   const winRate = closed > 0 ? (won / closed) * 100 : 0;
   const lossRate = closed > 0 ? (lost / closed) * 100 : 0;
 
-  const handleTryExample = () => { setWonDeals('25'); setLostDeals('60'); setOpenDeals('15'); setCalculated(false); };
+  const handleTryExample = () => { setWonDeals('25'); setLostDeals('60'); setOpenDeals('15'); setCalculated(true); };
   const handleCalculate = () => {
     if (closed > 0) {
       setCalculated(true);
@@ -56,7 +56,7 @@ export default function WinRateCalculator() {
             <div className="relative">
               
               <Input id="wonDeals" type="number" step="any" min="0" placeholder="25"
-                value={wonDeals} onChange={(e) => { setWonDeals(e.target.value); setCalculated(false); }} />
+                value={wonDeals} onChange={(e) => { setWonDeals(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -64,7 +64,7 @@ export default function WinRateCalculator() {
             <div className="relative">
               
               <Input id="lostDeals" type="number" step="any" min="0" placeholder="60"
-                value={lostDeals} onChange={(e) => { setLostDeals(e.target.value); setCalculated(false); }} />
+                value={lostDeals} onChange={(e) => { setLostDeals(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function WinRateCalculator() {
             <div className="relative">
               
               <Input id="openDeals" type="number" step="any" min="0" placeholder="15"
-                value={openDeals} onChange={(e) => { setOpenDeals(e.target.value); setCalculated(false); }} />
+                value={openDeals} onChange={(e) => { setOpenDeals(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -95,9 +95,9 @@ export default function WinRateCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Win Rate</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(winRate)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-red-500/10 border-red-500/30 text-red-600'">{`Loss rate: ${formatPercent(lossRate)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`${closed} closed deals`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'SaaS 25-35%, Enterprise 20-30%'}</Badge>
+                  <Badge variant="outline" className="bg-red-500/10 border-red-500/30 text-red-600">{`Loss rate: ${formatPercent(lossRate)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`${closed} closed deals`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'SaaS 25-35%, Enterprise 20-30%'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -108,11 +108,11 @@ export default function WinRateCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Won</p>
-                    <p className={`text-lg font-bold`}>{`{won}`}</p>
+                    <p className={`text-lg font-bold`}>{`${won}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Lost</p>
-                    <p className={`text-lg font-bold`}>{`{lost}`}</p>
+                    <p className={`text-lg font-bold`}>{`${lost}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Win Rate</p>
@@ -120,7 +120,7 @@ export default function WinRateCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Closed</p>
-                    <p className={`text-lg font-bold`}>{`{closed}`}</p>
+                    <p className={`text-lg font-bold`}>{`${closed}`}</p>
                   </div>
               </div>
 

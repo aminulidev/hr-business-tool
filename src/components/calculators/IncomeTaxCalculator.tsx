@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { income: number; totalTax: number; afterTax: number; effectiveRate: number; label: string; }
 
 export default function IncomeTaxCalculator() {
-  const [taxableIncome, setTaxableIncome] = useState('');
-  const [filingStatus, setFilingStatus] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [taxableIncome, setTaxableIncome] = useState('85000');
+  const [filingStatus, setFilingStatus] = useState('single');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ taxableIncome: string; filingStatus: string }>('income-tax-calculator');
@@ -35,7 +35,7 @@ export default function IncomeTaxCalculator() {
   const afterTax = income - (bracket1 + bracket2 + bracket3 + bracket4 + bracket5 + bracket6 + bracket7);
   const effectiveRate = income > 0 ? (totalTax / income) * 100 : 0;
 
-  const handleTryExample = () => { setTaxableIncome('85000'); setFilingStatus('single'); setCalculated(false); };
+  const handleTryExample = () => { setTaxableIncome('85000'); setFilingStatus('single'); setCalculated(true); };
   const handleCalculate = () => {
     if (income > 0) {
       setCalculated(true);
@@ -60,7 +60,7 @@ export default function IncomeTaxCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="taxableIncome" type="number" step="any" min="0" placeholder="85000" className="pl-7"
-                value={taxableIncome} onChange={(e) => { setTaxableIncome(e.target.value); setCalculated(false); }} />
+                value={taxableIncome} onChange={(e) => { setTaxableIncome(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -68,7 +68,7 @@ export default function IncomeTaxCalculator() {
             <div className="relative">
               
               <Input id="filingStatus" type="text" step="any" min="0" placeholder="single"
-                value={filingStatus} onChange={(e) => { setFilingStatus(e.target.value); setCalculated(false); }} />
+                value={filingStatus} onChange={(e) => { setFilingStatus(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -91,9 +91,9 @@ export default function IncomeTaxCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Federal Income Tax</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalTax)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`After tax: ${formatCurrency(afterTax)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Effective rate: ${effectiveRate.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'2026 brackets (single)'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`After tax: ${formatCurrency(afterTax)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Effective rate: ${effectiveRate.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'2026 brackets (single)'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -116,7 +116,7 @@ export default function IncomeTaxCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Effective Rate</p>
-                    <p className={`text-lg font-bold`}>{`{effectiveRate.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${effectiveRate.toFixed(1)}%`}</p>
                   </div>
               </div>
 

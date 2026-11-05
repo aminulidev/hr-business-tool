@@ -38,10 +38,10 @@ export default function WorkHoursCalculator() {
   const [days, setDays] = useState<DayEntry[]>(
     DAY_LABELS.map(() => ({ clockIn: '', clockOut: '', breakMin: '30' })),
   );
-  const [hourlyRate, setHourlyRate] = useState('25.00');
+  const [hourlyRate, setHourlyRate] = useState('28.50');
   const [rounding, setRounding] = useState<RoundingOption>('exact');
   const [overtimeRule, setOvertimeRule] = useState<'weekly' | 'california'>('weekly');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [copied, setCopied] = useState(false);
   const [compareA, setCompareA] = useState<WorkHoursSnapshot | null>(null);
   const [compareB, setCompareB] = useState<WorkHoursSnapshot | null>(null);
@@ -188,7 +188,7 @@ export default function WorkHoursCalculator() {
     setHourlyRate('28.50');
     setRounding('15min');
     setOvertimeRule('weekly');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -375,9 +375,7 @@ export default function WorkHoursCalculator() {
                         onChange={(e) => {
                           const nd = [...days];
                           nd[i].clockIn = e.target.value;
-                          setDays(nd);
-                          setCalculated(false);
-                        }}
+                          setDays(nd); setCalculated(true); }}
                         className="h-9 text-xs font-medium"
                       />
                     </div>
@@ -393,9 +391,7 @@ export default function WorkHoursCalculator() {
                         onChange={(e) => {
                           const nd = [...days];
                           nd[i].clockOut = e.target.value;
-                          setDays(nd);
-                          setCalculated(false);
-                        }}
+                          setDays(nd); setCalculated(true); }}
                         className="h-9 text-xs font-medium"
                       />
                     </div>
@@ -414,9 +410,7 @@ export default function WorkHoursCalculator() {
                         onChange={(e) => {
                           const nd = [...days];
                           nd[i].breakMin = e.target.value;
-                          setDays(nd);
-                          setCalculated(false);
-                        }}
+                          setDays(nd); setCalculated(true); }}
                         className="h-9 text-xs text-center"
                       />
                       <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground pointer-events-none">
@@ -464,7 +458,7 @@ export default function WorkHoursCalculator() {
                 min="0"
                 placeholder="25.00"
                 value={hourlyRate}
-                onChange={(e) => { setHourlyRate(e.target.value); setCalculated(false); }}
+                onChange={(e) => { setHourlyRate(e.target.value); setCalculated(true); }}
                 className="pl-7 font-semibold"
               />
             </div>
@@ -489,7 +483,7 @@ export default function WorkHoursCalculator() {
                 <button
                   key={r.id}
                   type="button"
-                  onClick={() => { setRounding(r.id as RoundingOption); setCalculated(false); }}
+                  onClick={() => { setRounding(r.id as RoundingOption); setCalculated(true); }}
                   className={`py-1.5 px-2 rounded-lg text-[11px] border font-medium text-center transition-all ${
                     rounding === r.id
                       ? 'bg-emerald-600 text-white border-emerald-600 font-semibold'
@@ -508,7 +502,7 @@ export default function WorkHoursCalculator() {
             <div className="grid grid-cols-2 gap-1.5">
               <button
                 type="button"
-                onClick={() => { setOvertimeRule('weekly'); setCalculated(false); }}
+                onClick={() => { setOvertimeRule('weekly'); setCalculated(true); }}
                 className={`py-2 px-2.5 rounded-lg text-[11px] border text-center transition-all ${
                   overtimeRule === 'weekly'
                     ? 'bg-emerald-600/10 border-emerald-600 text-emerald-700 dark:text-emerald-300 font-semibold'
@@ -519,7 +513,7 @@ export default function WorkHoursCalculator() {
               </button>
               <button
                 type="button"
-                onClick={() => { setOvertimeRule('california'); setCalculated(false); }}
+                onClick={() => { setOvertimeRule('california'); setCalculated(true); }}
                 className={`py-2 px-2.5 rounded-lg text-[11px] border text-center transition-all ${
                   overtimeRule === 'california'
                     ? 'bg-emerald-600/10 border-emerald-600 text-emerald-700 dark:text-emerald-300 font-semibold'

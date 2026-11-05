@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { curRev: number; tgtRev: number; curHc: number; revPerEmp: number; targetHc: number; growthNeeded: number; attritionLoss: number; totalHiresNeeded: number; annualHires: number; label: string; }
 
 export default function WorkforcePlanningCalculator() {
-  const [currentRevenue, setCurrentRevenue] = useState('');
-  const [targetRevenue, setTargetRevenue] = useState('');
-  const [currentHeadcount, setCurrentHeadcount] = useState('');
-  const [years, setYears] = useState('');
-  const [attritionRate, setAttritionRate] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [currentRevenue, setCurrentRevenue] = useState('10000000');
+  const [targetRevenue, setTargetRevenue] = useState('20000000');
+  const [currentHeadcount, setCurrentHeadcount] = useState('50');
+  const [years, setYears] = useState('3');
+  const [attritionRate, setAttritionRate] = useState('15');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ currentRevenue: string; targetRevenue: string; currentHeadcount: string; years: string; attritionRate: string }>('workforce-planning-calculator');
@@ -38,7 +38,7 @@ export default function WorkforcePlanningCalculator() {
   const totalHiresNeeded = growthNeeded + attritionLoss;
   const annualHires = Math.round(totalHiresNeeded / yrs);
 
-  const handleTryExample = () => { setCurrentRevenue('10000000'); setTargetRevenue('20000000'); setCurrentHeadcount('50'); setYears('3'); setAttritionRate('15'); setCalculated(false); };
+  const handleTryExample = () => { setCurrentRevenue('10000000'); setTargetRevenue('20000000'); setCurrentHeadcount('50'); setYears('3'); setAttritionRate('15'); setCalculated(true); };
   const handleCalculate = () => {
     if (curRev > 0 && tgtRev > 0 && curHc > 0) {
       setCalculated(true);
@@ -63,7 +63,7 @@ export default function WorkforcePlanningCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="currentRevenue" type="number" step="any" min="0" placeholder="10000000" className="pl-7"
-                value={currentRevenue} onChange={(e) => { setCurrentRevenue(e.target.value); setCalculated(false); }} />
+                value={currentRevenue} onChange={(e) => { setCurrentRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -71,7 +71,7 @@ export default function WorkforcePlanningCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="targetRevenue" type="number" step="any" min="0" placeholder="20000000" className="pl-7"
-                value={targetRevenue} onChange={(e) => { setTargetRevenue(e.target.value); setCalculated(false); }} />
+                value={targetRevenue} onChange={(e) => { setTargetRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -79,7 +79,7 @@ export default function WorkforcePlanningCalculator() {
             <div className="relative">
               
               <Input id="currentHeadcount" type="number" step="any" min="0" placeholder="50"
-                value={currentHeadcount} onChange={(e) => { setCurrentHeadcount(e.target.value); setCalculated(false); }} />
+                value={currentHeadcount} onChange={(e) => { setCurrentHeadcount(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -87,7 +87,7 @@ export default function WorkforcePlanningCalculator() {
             <div className="relative">
               
               <Input id="years" type="number" step="any" min="0" placeholder="3"
-                value={years} onChange={(e) => { setYears(e.target.value); setCalculated(false); }} />
+                value={years} onChange={(e) => { setYears(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -95,7 +95,7 @@ export default function WorkforcePlanningCalculator() {
             <div className="relative">
               
               <Input id="attritionRate" type="number" step="any" min="0" placeholder="15"
-                value={attritionRate} onChange={(e) => { setAttritionRate(e.target.value); setCalculated(false); }} />
+                value={attritionRate} onChange={(e) => { setAttritionRate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -116,11 +116,11 @@ export default function WorkforcePlanningCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Projected Headcount Need</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{targetHc} employees`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${targetHc} employees`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Net growth needed: ${growthNeeded} employees`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`${totalHiresNeeded} total hires over ${yrs} years`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`~${annualHires}/year`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Net growth needed: ${growthNeeded} employees`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`${totalHiresNeeded} total hires over ${yrs} years`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`~${annualHires}/year`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -131,19 +131,19 @@ export default function WorkforcePlanningCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Current HC</p>
-                    <p className={`text-lg font-bold`}>{`{curHc}`}</p>
+                    <p className={`text-lg font-bold`}>{`${curHc}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Target HC</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{targetHc}`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${targetHc}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Attrition Loss</p>
-                    <p className={`text-lg font-bold`}>{`{attritionLoss}`}</p>
+                    <p className={`text-lg font-bold`}>{`${attritionLoss}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Total Hires</p>
-                    <p className={`text-lg font-bold`}>{`{totalHiresNeeded}`}</p>
+                    <p className={`text-lg font-bold`}>{`${totalHiresNeeded}`}</p>
                   </div>
               </div>
 

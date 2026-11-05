@@ -16,13 +16,13 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { rev: number; c: number; grossProfit: number; totalOpex: number; netIncome: number; netMargin: number; breakEven: number; label: string; }
 
 export default function BudgetCalculator() {
-  const [revenue, setRevenue] = useState('');
-  const [cogs, setCogs] = useState('');
-  const [salaries, setSalaries] = useState('');
-  const [marketing, setMarketing] = useState('');
-  const [rent, setRent] = useState('');
-  const [other, setOther] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [revenue, setRevenue] = useState('1000000');
+  const [cogs, setCogs] = useState('400000');
+  const [salaries, setSalaries] = useState('300000');
+  const [marketing, setMarketing] = useState('80000');
+  const [rent, setRent] = useState('60000');
+  const [other, setOther] = useState('40000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ revenue: string; cogs: string; salaries: string; marketing: string; rent: string; other: string }>('budget-calculator');
@@ -39,7 +39,7 @@ export default function BudgetCalculator() {
   const netMargin = rev > 0 ? (netIncome / rev) * 100 : 0;
   const breakEven = grossProfit > 0 ? (totalOpex / grossProfit) * rev : 0;
 
-  const handleTryExample = () => { setRevenue('1000000'); setCogs('400000'); setSalaries('300000'); setMarketing('80000'); setRent('60000'); setOther('40000'); setCalculated(false); };
+  const handleTryExample = () => { setRevenue('1000000'); setCogs('400000'); setSalaries('300000'); setMarketing('80000'); setRent('60000'); setOther('40000'); setCalculated(true); };
   const handleCalculate = () => {
     if (rev > 0) {
       setCalculated(true);
@@ -64,7 +64,7 @@ export default function BudgetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="revenue" type="number" step="any" min="0" placeholder="1000000" className="pl-7"
-                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(false); }} />
+                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function BudgetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="cogs" type="number" step="any" min="0" placeholder="400000" className="pl-7"
-                value={cogs} onChange={(e) => { setCogs(e.target.value); setCalculated(false); }} />
+                value={cogs} onChange={(e) => { setCogs(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -80,7 +80,7 @@ export default function BudgetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="salaries" type="number" step="any" min="0" placeholder="300000" className="pl-7"
-                value={salaries} onChange={(e) => { setSalaries(e.target.value); setCalculated(false); }} />
+                value={salaries} onChange={(e) => { setSalaries(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -88,7 +88,7 @@ export default function BudgetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="marketing" type="number" step="any" min="0" placeholder="80000" className="pl-7"
-                value={marketing} onChange={(e) => { setMarketing(e.target.value); setCalculated(false); }} />
+                value={marketing} onChange={(e) => { setMarketing(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -96,7 +96,7 @@ export default function BudgetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="rent" type="number" step="any" min="0" placeholder="60000" className="pl-7"
-                value={rent} onChange={(e) => { setRent(e.target.value); setCalculated(false); }} />
+                value={rent} onChange={(e) => { setRent(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -104,7 +104,7 @@ export default function BudgetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="other" type="number" step="any" min="0" placeholder="40000" className="pl-7"
-                value={other} onChange={(e) => { setOther(e.target.value); setCalculated(false); }} />
+                value={other} onChange={(e) => { setOther(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -127,9 +127,9 @@ export default function BudgetCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Projected Net Income</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(netIncome)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Net margin: ${netMargin.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Break-even revenue: ${formatCurrency(breakEven)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{netIncome > 0 ? "Profitable" : "Loss"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Net margin: ${netMargin.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Break-even revenue: ${formatCurrency(breakEven)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{netIncome > 0 ? "Profitable" : "Loss"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

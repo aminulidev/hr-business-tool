@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { oh: number; base: number; overheadRate: number; monthlyOverhead: number; label: string; }
 
 export default function OverheadRateCalculator() {
-  const [totalOverhead, setTotalOverhead] = useState('');
-  const [allocationBase, setAllocationBase] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [totalOverhead, setTotalOverhead] = useState('200000');
+  const [allocationBase, setAllocationBase] = useState('10000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ totalOverhead: string; allocationBase: string }>('overhead-rate-calculator');
@@ -28,7 +28,7 @@ export default function OverheadRateCalculator() {
   const overheadRate = base > 0 ? oh / base : 0;
   const monthlyOverhead = oh / 12;
 
-  const handleTryExample = () => { setTotalOverhead('200000'); setAllocationBase('10000'); setCalculated(false); };
+  const handleTryExample = () => { setTotalOverhead('200000'); setAllocationBase('10000'); setCalculated(true); };
   const handleCalculate = () => {
     if (base > 0) {
       setCalculated(true);
@@ -53,7 +53,7 @@ export default function OverheadRateCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="totalOverhead" type="number" step="any" min="0" placeholder="200000" className="pl-7"
-                value={totalOverhead} onChange={(e) => { setTotalOverhead(e.target.value); setCalculated(false); }} />
+                value={totalOverhead} onChange={(e) => { setTotalOverhead(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -61,7 +61,7 @@ export default function OverheadRateCalculator() {
             <div className="relative">
               
               <Input id="allocationBase" type="number" step="any" min="0" placeholder="10000"
-                value={allocationBase} onChange={(e) => { setAllocationBase(e.target.value); setCalculated(false); }} />
+                value={allocationBase} onChange={(e) => { setAllocationBase(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -84,9 +84,9 @@ export default function OverheadRateCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Overhead Rate</p>
                 <p className="text-4xl font-bold text-emerald-600">{`${formatCurrency(overheadRate)}/unit`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Total overhead: ${formatCurrency(oh)}/yr`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Monthly: ${formatCurrency(monthlyOverhead)}/mo`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Base: ${base.toLocaleString()} units`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Total overhead: ${formatCurrency(oh)}/yr`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Monthly: ${formatCurrency(monthlyOverhead)}/mo`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Base: ${base.toLocaleString()} units`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -101,7 +101,7 @@ export default function OverheadRateCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Allocation Base</p>
-                    <p className={`text-lg font-bold`}>{`{base.toLocaleString()}`}</p>
+                    <p className={`text-lg font-bold`}>{`${base.toLocaleString()}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Overhead Rate</p>

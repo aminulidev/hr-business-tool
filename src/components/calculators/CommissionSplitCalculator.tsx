@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { commission: number; rs: number; repShare: number; managerShare: number; repTakeHome: number; companyShare: number; label: string; }
 
 export default function CommissionSplitCalculator() {
-  const [commissionEarned, setCommissionEarned] = useState('');
-  const [repSplit, setRepSplit] = useState('');
-  const [managerOverride, setManagerOverride] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [commissionEarned, setCommissionEarned] = useState('15000');
+  const [repSplit, setRepSplit] = useState('70');
+  const [managerOverride, setManagerOverride] = useState('5');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ commissionEarned: string; repSplit: string; managerOverride: string }>('commission-split-calculator');
@@ -32,7 +32,7 @@ export default function CommissionSplitCalculator() {
   const repTakeHome = repShare - managerShare;
   const companyShare = commission - repShare;
 
-  const handleTryExample = () => { setCommissionEarned('15000'); setRepSplit('70'); setManagerOverride('5'); setCalculated(false); };
+  const handleTryExample = () => { setCommissionEarned('15000'); setRepSplit('70'); setManagerOverride('5'); setCalculated(true); };
   const handleCalculate = () => {
     if (commission > 0) {
       setCalculated(true);
@@ -57,7 +57,7 @@ export default function CommissionSplitCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="commissionEarned" type="number" step="any" min="0" placeholder="15000" className="pl-7"
-                value={commissionEarned} onChange={(e) => { setCommissionEarned(e.target.value); setCalculated(false); }} />
+                value={commissionEarned} onChange={(e) => { setCommissionEarned(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -65,7 +65,7 @@ export default function CommissionSplitCalculator() {
             <div className="relative">
               
               <Input id="repSplit" type="number" step="any" min="0" placeholder="70"
-                value={repSplit} onChange={(e) => { setRepSplit(e.target.value); setCalculated(false); }} />
+                value={repSplit} onChange={(e) => { setRepSplit(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -73,7 +73,7 @@ export default function CommissionSplitCalculator() {
             <div className="relative">
               
               <Input id="managerOverride" type="number" step="any" min="0" placeholder="5"
-                value={managerOverride} onChange={(e) => { setManagerOverride(e.target.value); setCalculated(false); }} />
+                value={managerOverride} onChange={(e) => { setManagerOverride(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Of rep's split</p>
           </div>
@@ -97,9 +97,9 @@ export default function CommissionSplitCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Rep Take-Home</p>
                 <p className="text-4xl font-bold text-emerald-600">{`${formatCurrency(repTakeHome)}`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Rep gross: ${formatCurrency(repShare)} (${rs}%)`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Manager override: ${formatCurrency(managerShare)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Company: ${formatCurrency(companyShare)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Rep gross: ${formatCurrency(repShare)} (${rs}%)`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Manager override: ${formatCurrency(managerShare)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Company: ${formatCurrency(companyShare)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -114,7 +114,7 @@ export default function CommissionSplitCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Rep Split</p>
-                    <p className={`text-lg font-bold`}>{`{rs}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${rs}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Rep Take-Home</p>

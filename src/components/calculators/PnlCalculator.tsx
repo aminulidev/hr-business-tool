@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { rev: number; c: number; op: number; intr: number; tx: number; grossProfit: number; operatingIncome: number; pretaxIncome: number; netIncome: number; netMargin: number; grossMargin: number; label: string; }
 
 export default function PnlCalculator() {
-  const [revenue, setRevenue] = useState('');
-  const [cogs, setCogs] = useState('');
-  const [opex, setOpex] = useState('');
-  const [interest, setInterest] = useState('');
-  const [taxes, setTaxes] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [revenue, setRevenue] = useState('1000000');
+  const [cogs, setCogs] = useState('400000');
+  const [opex, setOpex] = useState('300000');
+  const [interest, setInterest] = useState('20000');
+  const [taxes, setTaxes] = useState('56000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ revenue: string; cogs: string; opex: string; interest: string; taxes: string }>('pnl-calculator');
@@ -38,7 +38,7 @@ export default function PnlCalculator() {
   const netMargin = rev > 0 ? (netIncome / rev) * 100 : 0;
   const grossMargin = rev > 0 ? (grossProfit / rev) * 100 : 0;
 
-  const handleTryExample = () => { setRevenue('1000000'); setCogs('400000'); setOpex('300000'); setInterest('20000'); setTaxes('56000'); setCalculated(false); };
+  const handleTryExample = () => { setRevenue('1000000'); setCogs('400000'); setOpex('300000'); setInterest('20000'); setTaxes('56000'); setCalculated(true); };
   const handleCalculate = () => {
     if (rev > 0) {
       setCalculated(true);
@@ -63,7 +63,7 @@ export default function PnlCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="revenue" type="number" step="any" min="0" placeholder="1000000" className="pl-7"
-                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(false); }} />
+                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -71,7 +71,7 @@ export default function PnlCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="cogs" type="number" step="any" min="0" placeholder="400000" className="pl-7"
-                value={cogs} onChange={(e) => { setCogs(e.target.value); setCalculated(false); }} />
+                value={cogs} onChange={(e) => { setCogs(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -79,7 +79,7 @@ export default function PnlCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="opex" type="number" step="any" min="0" placeholder="300000" className="pl-7"
-                value={opex} onChange={(e) => { setOpex(e.target.value); setCalculated(false); }} />
+                value={opex} onChange={(e) => { setOpex(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -87,7 +87,7 @@ export default function PnlCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="interest" type="number" step="any" min="0" placeholder="20000" className="pl-7"
-                value={interest} onChange={(e) => { setInterest(e.target.value); setCalculated(false); }} />
+                value={interest} onChange={(e) => { setInterest(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -95,7 +95,7 @@ export default function PnlCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="taxes" type="number" step="any" min="0" placeholder="56000" className="pl-7"
-                value={taxes} onChange={(e) => { setTaxes(e.target.value); setCalculated(false); }} />
+                value={taxes} onChange={(e) => { setTaxes(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -118,9 +118,9 @@ export default function PnlCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Net Income</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(netIncome)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Gross profit: ${formatCurrency(grossProfit)} (${grossMargin.toFixed(1)}%)`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Operating income: ${formatCurrency(operatingIncome)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Net margin: ${netMargin.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Gross profit: ${formatCurrency(grossProfit)} (${grossMargin.toFixed(1)}%)`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Operating income: ${formatCurrency(operatingIncome)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Net margin: ${netMargin.toFixed(1)}%`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Timer, DollarSign, Clock, Info, TrendingUp } from 'lucide-react';
 import TryExample from './TryExample';
@@ -51,9 +51,9 @@ const formatNumber = (value: number, decimals: number = 2): string =>
   value.toFixed(decimals);
 
 export default function OvertimeCalculator() {
-  const [hourlyRateInput, setHourlyRateInput] = useState<string>('');
+  const [hourlyRateInput, setHourlyRateInput] = useState<string>('22');
   const [regularHoursInput, setRegularHoursInput] = useState<string>('40');
-  const [overtimeHoursInput, setOvertimeHoursInput] = useState<string>('');
+  const [overtimeHoursInput, setOvertimeHoursInput] = useState<string>('8');
   const [multiplierPreset, setMultiplierPreset] = useState<OvertimeMultiplierPreset>('1.5');
   const [customMultiplierInput, setCustomMultiplierInput] = useState<string>('1.5');
   const [weeklyHoursInput, setWeeklyHoursInput] = useState<string>('');
@@ -67,7 +67,7 @@ export default function OvertimeCalculator() {
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<any>('overtime-calculator');
 
   // Auto overtime hint logic
-  useMemo(() => {
+  useEffect(() => {
     const w = parseFloat(weeklyHoursInput);
     const r = parseFloat(regularHoursInput) || 40;
     if (!isNaN(w) && !isNaN(r)) {
@@ -84,7 +84,7 @@ export default function OvertimeCalculator() {
     setResult(null);
   };
 
-  const handleCalculate = () => {
+  const handleCalculate = (saveToHistory = true) => {
     const rRate = parseFloat(hourlyRateInput) || 0;
     const rHrs = parseFloat(regularHoursInput) || 0;
     
@@ -116,8 +116,13 @@ export default function OvertimeCalculator() {
       multiplier: mult
     });
     
-    saveEntry({ hourlyRateInput, regularHoursInput, overtimeHoursInput, multiplierPreset, customMultiplierInput, weeklyHoursInput }, `${formatCurrency(totalPay)} (${totHrs}h)`);
+    if (saveToHistory) saveEntry({ hourlyRateInput, regularHoursInput, overtimeHoursInput, multiplierPreset, customMultiplierInput, weeklyHoursInput }, `${formatCurrency(totalPay)} (${totHrs}h)`);
   };
+
+  useEffect(() => {
+    handleCalculate(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hourlyRateInput, regularHoursInput, overtimeHoursInput, multiplierPreset, customMultiplierInput, weeklyHoursInput]);
 
   const handleReset = () => {
     setHourlyRateInput('');
@@ -294,7 +299,7 @@ return (
           <TryExample onClick={handleTryExample} />
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <Button
-              onClick={handleCalculate}
+              onClick={() => handleCalculate(true)}
               className="flex-1 sm:flex-none bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
               size="lg"
             >

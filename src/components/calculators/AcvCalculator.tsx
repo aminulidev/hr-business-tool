@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { tcv: number; years: number; acv: number; monthlyValue: number; label: string; }
 
 export default function AcvCalculator() {
-  const [contractValue, setContractValue] = useState('');
-  const [contractYears, setContractYears] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [contractValue, setContractValue] = useState('150000');
+  const [contractYears, setContractYears] = useState('3');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ contractValue: string; contractYears: string }>('acv-calculator');
@@ -28,7 +28,7 @@ export default function AcvCalculator() {
   const acv = years > 0 ? tcv / years : 0;
   const monthlyValue = acv / 12;
 
-  const handleTryExample = () => { setContractValue('150000'); setContractYears('3'); setCalculated(false); };
+  const handleTryExample = () => { setContractValue('150000'); setContractYears('3'); setCalculated(true); };
   const handleCalculate = () => {
     if (tcv > 0 && years > 0) {
       setCalculated(true);
@@ -53,7 +53,7 @@ export default function AcvCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="contractValue" type="number" step="any" min="0" placeholder="150000" className="pl-7"
-                value={contractValue} onChange={(e) => { setContractValue(e.target.value); setCalculated(false); }} />
+                value={contractValue} onChange={(e) => { setContractValue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -61,7 +61,7 @@ export default function AcvCalculator() {
             <div className="relative">
               
               <Input id="contractYears" type="number" step="any" min="0" placeholder="3"
-                value={contractYears} onChange={(e) => { setContractYears(e.target.value); setCalculated(false); }} />
+                value={contractYears} onChange={(e) => { setContractYears(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -84,9 +84,9 @@ export default function AcvCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Annual Contract Value</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(acv)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`TCV: ${formatCurrency(tcv)} over ${years} years`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Monthly: ${formatCurrency(monthlyValue)}/mo`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'SMB $5-25k, Mid-market $25-100k, Enterprise $100k+'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`TCV: ${formatCurrency(tcv)} over ${years} years`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Monthly: ${formatCurrency(monthlyValue)}/mo`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'SMB $5-25k, Mid-market $25-100k, Enterprise $100k+'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -101,7 +101,7 @@ export default function AcvCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Contract Term</p>
-                    <p className={`text-lg font-bold`}>{`{years} years`}</p>
+                    <p className={`text-lg font-bold`}>{`${years} years`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">ACV</p>

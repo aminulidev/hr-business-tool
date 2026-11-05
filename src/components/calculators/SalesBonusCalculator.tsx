@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { q: number; att: number; bb: number; overAttainment: number; acceleratorBonus: number; attainmentBonus: number; totalBonus: number; label: string; }
 
 export default function SalesBonusCalculator() {
-  const [quota, setQuota] = useState('');
-  const [attainment, setAttainment] = useState('');
-  const [baseBonus, setBaseBonus] = useState('');
-  const [accelerator, setAccelerator] = useState('');
-  const [spiff, setSpiff] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [quota, setQuota] = useState('500000');
+  const [attainment, setAttainment] = useState('110');
+  const [baseBonus, setBaseBonus] = useState('20000');
+  const [accelerator, setAccelerator] = useState('0.02');
+  const [spiff, setSpiff] = useState('2000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ quota: string; attainment: string; baseBonus: string; accelerator: string; spiff: string }>('sales-bonus-calculator');
@@ -36,7 +36,7 @@ export default function SalesBonusCalculator() {
   const attainmentBonus = att >= 100 ? bb : bb * (att / 100);
   const totalBonus = attainmentBonus + acceleratorBonus + sp;
 
-  const handleTryExample = () => { setQuota('500000'); setAttainment('110'); setBaseBonus('20000'); setAccelerator('0.02'); setSpiff('2000'); setCalculated(false); };
+  const handleTryExample = () => { setQuota('500000'); setAttainment('110'); setBaseBonus('20000'); setAccelerator('0.02'); setSpiff('2000'); setCalculated(true); };
   const handleCalculate = () => {
     if (att > 0 && bb > 0) {
       setCalculated(true);
@@ -61,7 +61,7 @@ export default function SalesBonusCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="quota" type="number" step="any" min="0" placeholder="500000" className="pl-7"
-                value={quota} onChange={(e) => { setQuota(e.target.value); setCalculated(false); }} />
+                value={quota} onChange={(e) => { setQuota(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -69,7 +69,7 @@ export default function SalesBonusCalculator() {
             <div className="relative">
               
               <Input id="attainment" type="number" step="any" min="0" placeholder="110"
-                value={attainment} onChange={(e) => { setAttainment(e.target.value); setCalculated(false); }} />
+                value={attainment} onChange={(e) => { setAttainment(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -77,7 +77,7 @@ export default function SalesBonusCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="baseBonus" type="number" step="any" min="0" placeholder="20000" className="pl-7"
-                value={baseBonus} onChange={(e) => { setBaseBonus(e.target.value); setCalculated(false); }} />
+                value={baseBonus} onChange={(e) => { setBaseBonus(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -85,7 +85,7 @@ export default function SalesBonusCalculator() {
             <div className="relative">
               
               <Input id="accelerator" type="number" step="any" min="0" placeholder="0.02"
-                value={accelerator} onChange={(e) => { setAccelerator(e.target.value); setCalculated(false); }} />
+                value={accelerator} onChange={(e) => { setAccelerator(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">2% = 0.02</p>
           </div>
@@ -94,7 +94,7 @@ export default function SalesBonusCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="spiff" type="number" step="any" min="0" placeholder="2000" className="pl-7"
-                value={spiff} onChange={(e) => { setSpiff(e.target.value); setCalculated(false); }} />
+                value={spiff} onChange={(e) => { setSpiff(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -117,9 +117,9 @@ export default function SalesBonusCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Total Bonus</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(totalBonus)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Attainment: ${att}% (${formatCurrency(q * att / 100)})`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Accelerator bonus: ${formatCurrency(acceleratorBonus)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`SPIFF: ${formatCurrency(sp)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Attainment: ${att}% (${formatCurrency(q * att / 100)})`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Accelerator bonus: ${formatCurrency(acceleratorBonus)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`SPIFF: ${formatCurrency(sp)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -130,7 +130,7 @@ export default function SalesBonusCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Attainment</p>
-                    <p className={`text-lg font-bold`}>{`{att}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${att}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Base Bonus</p>

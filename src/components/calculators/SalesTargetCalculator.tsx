@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { target: number; deal: number; dealsNeeded: number; meetingsNeeded: number; leadsNeeded: number; label: string; }
 
 export default function SalesTargetCalculator() {
-  const [revenueTarget, setRevenueTarget] = useState('');
-  const [avgDealSize, setAvgDealSize] = useState('');
-  const [meetingToClose, setMeetingToClose] = useState('');
-  const [leadToMeeting, setLeadToMeeting] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [revenueTarget, setRevenueTarget] = useState('1000000');
+  const [avgDealSize, setAvgDealSize] = useState('25000');
+  const [meetingToClose, setMeetingToClose] = useState('25');
+  const [leadToMeeting, setLeadToMeeting] = useState('30');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ revenueTarget: string; avgDealSize: string; meetingToClose: string; leadToMeeting: string }>('sales-target-calculator');
@@ -33,7 +33,7 @@ export default function SalesTargetCalculator() {
   const meetingsNeeded = m2c > 0 ? Math.ceil(dealsNeeded / (m2c / 100)) : 0;
   const leadsNeeded = l2m > 0 ? Math.ceil(meetingsNeeded / (l2m / 100)) : 0;
 
-  const handleTryExample = () => { setRevenueTarget('1000000'); setAvgDealSize('25000'); setMeetingToClose('25'); setLeadToMeeting('30'); setCalculated(false); };
+  const handleTryExample = () => { setRevenueTarget('1000000'); setAvgDealSize('25000'); setMeetingToClose('25'); setLeadToMeeting('30'); setCalculated(true); };
   const handleCalculate = () => {
     if (target > 0 && deal > 0) {
       setCalculated(true);
@@ -58,7 +58,7 @@ export default function SalesTargetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="revenueTarget" type="number" step="any" min="0" placeholder="1000000" className="pl-7"
-                value={revenueTarget} onChange={(e) => { setRevenueTarget(e.target.value); setCalculated(false); }} />
+                value={revenueTarget} onChange={(e) => { setRevenueTarget(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function SalesTargetCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="avgDealSize" type="number" step="any" min="0" placeholder="25000" className="pl-7"
-                value={avgDealSize} onChange={(e) => { setAvgDealSize(e.target.value); setCalculated(false); }} />
+                value={avgDealSize} onChange={(e) => { setAvgDealSize(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function SalesTargetCalculator() {
             <div className="relative">
               
               <Input id="meetingToClose" type="number" step="any" min="0" placeholder="25"
-                value={meetingToClose} onChange={(e) => { setMeetingToClose(e.target.value); setCalculated(false); }} />
+                value={meetingToClose} onChange={(e) => { setMeetingToClose(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -82,7 +82,7 @@ export default function SalesTargetCalculator() {
             <div className="relative">
               
               <Input id="leadToMeeting" type="number" step="any" min="0" placeholder="30"
-                value={leadToMeeting} onChange={(e) => { setLeadToMeeting(e.target.value); setCalculated(false); }} />
+                value={leadToMeeting} onChange={(e) => { setLeadToMeeting(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -105,9 +105,9 @@ export default function SalesTargetCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Required Deals</p>
                 <p className="text-4xl font-bold text-emerald-600">{`${dealsNeeded} deals`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Meetings needed: ${meetingsNeeded}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Leads needed: ${leadsNeeded}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Avg deal: ${formatCurrency(deal)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Meetings needed: ${meetingsNeeded}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Leads needed: ${leadsNeeded}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Avg deal: ${formatCurrency(deal)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

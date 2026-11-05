@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { absent: number; emps: number; days: number; totalScheduled: number; absenceRate: number; totalCost: number; bradford: number; label: string; }
 
 export default function AbsenteeismCalculator() {
-  const [absentDays, setAbsentDays] = useState('');
-  const [totalEmployees, setTotalEmployees] = useState('');
-  const [workDays, setWorkDays] = useState('Typical year: 220 after holidays');
-  const [dailyCost, setDailyCost] = useState('Lost productivity + replacement');
-  const [calculated, setCalculated] = useState(false);
+  const [absentDays, setAbsentDays] = useState('70');
+  const [totalEmployees, setTotalEmployees] = useState('100');
+  const [workDays, setWorkDays] = useState('220');
+  const [dailyCost, setDailyCost] = useState('350');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ absentDays: string; totalEmployees: string; workDays: string; dailyCost: string }>('absenteeism-calculator');
@@ -34,7 +34,7 @@ export default function AbsenteeismCalculator() {
   const totalCost = absent * cost;
   const bradford = absent * absent * 1;
 
-  const handleTryExample = () => { setAbsentDays('70'); setTotalEmployees('100'); setWorkDays('220'); setDailyCost('350'); setCalculated(false); };
+  const handleTryExample = () => { setAbsentDays('70'); setTotalEmployees('100'); setWorkDays('220'); setDailyCost('350'); setCalculated(true); };
   const handleCalculate = () => {
     if (absent > 0 && emps > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function AbsenteeismCalculator() {
             <div className="relative">
               
               <Input id="absentDays" type="number" step="any" min="0" placeholder="70"
-                value={absentDays} onChange={(e) => { setAbsentDays(e.target.value); setCalculated(false); }} />
+                value={absentDays} onChange={(e) => { setAbsentDays(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function AbsenteeismCalculator() {
             <div className="relative">
               
               <Input id="totalEmployees" type="number" step="any" min="0" placeholder="100"
-                value={totalEmployees} onChange={(e) => { setTotalEmployees(e.target.value); setCalculated(false); }} />
+                value={totalEmployees} onChange={(e) => { setTotalEmployees(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function AbsenteeismCalculator() {
             <div className="relative">
               
               <Input id="workDays" type="number" step="any" min="0" placeholder="220"
-                value={workDays} onChange={(e) => { setWorkDays(e.target.value); setCalculated(false); }} />
+                value={workDays} onChange={(e) => { setWorkDays(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Typical year: 220 after holidays</p>
           </div>
@@ -84,7 +84,7 @@ export default function AbsenteeismCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="dailyCost" type="number" step="any" min="0" placeholder="350" className="pl-7"
-                value={dailyCost} onChange={(e) => { setDailyCost(e.target.value); setCalculated(false); }} />
+                value={dailyCost} onChange={(e) => { setDailyCost(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Lost productivity + replacement</p>
           </div>
@@ -108,9 +108,9 @@ export default function AbsenteeismCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Absenteeism Rate</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(absenceRate)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-red-500/10 border-red-500/30 text-red-600'">{`Total cost: ${formatCurrency(totalCost)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Bradford Factor: ${bradford.toFixed(0)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{'Benchmark: 3.2% (SHRM)'}</Badge>
+                  <Badge variant="outline" className="bg-red-500/10 border-red-500/30 text-red-600">{`Total cost: ${formatCurrency(totalCost)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Bradford Factor: ${bradford.toFixed(0)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{'Benchmark: 3.2% (SHRM)'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -121,15 +121,15 @@ export default function AbsenteeismCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Absent Days</p>
-                    <p className={`text-lg font-bold`}>{`{absent}`}</p>
+                    <p className={`text-lg font-bold`}>{`${absent}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Scheduled Days</p>
-                    <p className={`text-lg font-bold`}>{`{totalScheduled}`}</p>
+                    <p className={`text-lg font-bold`}>{`${totalScheduled}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Absence Rate</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{absenceRate.toFixed(2)}%`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${absenceRate.toFixed(2)}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Total Cost</p>

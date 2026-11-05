@@ -52,11 +52,11 @@ export default function ShiftHoursCalculator() {
   const [grossShiftHours, setGrossShiftHours] = useState('8.5');
   const [breakMinutes, setBreakMinutes] = useState('30');
   const [daysPerWeek, setDaysPerWeek] = useState('5');
-  const [baseHourlyRate, setBaseHourlyRate] = useState('28.00');
+  const [baseHourlyRate, setBaseHourlyRate] = useState('38.00');
   const [shiftDiffMode, setShiftDiffMode] = useState<'flat' | 'percent'>('flat');
-  const [shiftDiffValue, setShiftDiffValue] = useState('0'); // e.g. +$2.50/hr night diff
+  const [shiftDiffValue, setShiftDiffValue] = useState('4.00'); // e.g. +$2.50/hr night diff
   const [overtimeRule, setOvertimeRule] = useState<'flsa' | 'california'>('flsa');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<ShiftHoursSnapshot | null>(null);
   const [compareB, setCompareB] = useState<ShiftHoursSnapshot | null>(null);
 
@@ -154,7 +154,7 @@ export default function ShiftHoursCalculator() {
     setShiftDiffMode('flat');
     setShiftDiffValue('4.00'); // night shift diff
     setOvertimeRule('flsa');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -285,7 +285,7 @@ export default function ShiftHoursCalculator() {
                 max="24"
                 placeholder="8.5"
                 value={grossShiftHours}
-                onChange={(e) => { setGrossShiftHours(e.target.value); setPresetKey('custom'); setCalculated(false); }}
+                onChange={(e) => { setGrossShiftHours(e.target.value); setPresetKey('custom'); setCalculated(true); }}
                 className="font-semibold"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">hrs</span>
@@ -305,7 +305,7 @@ export default function ShiftHoursCalculator() {
                 max="180"
                 placeholder="30"
                 value={breakMinutes}
-                onChange={(e) => { setBreakMinutes(e.target.value); setPresetKey('custom'); setCalculated(false); }}
+                onChange={(e) => { setBreakMinutes(e.target.value); setPresetKey('custom'); setCalculated(true); }}
                 className="font-semibold"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">min</span>
@@ -325,7 +325,7 @@ export default function ShiftHoursCalculator() {
                 max="7"
                 placeholder="5"
                 value={daysPerWeek}
-                onChange={(e) => { setDaysPerWeek(e.target.value); setPresetKey('custom'); setCalculated(false); }}
+                onChange={(e) => { setDaysPerWeek(e.target.value); setPresetKey('custom'); setCalculated(true); }}
                 className="font-semibold"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">days</span>
@@ -345,7 +345,7 @@ export default function ShiftHoursCalculator() {
                 min="0"
                 placeholder="28.00"
                 value={baseHourlyRate}
-                onChange={(e) => { setBaseHourlyRate(e.target.value); setCalculated(false); }}
+                onChange={(e) => { setBaseHourlyRate(e.target.value); setCalculated(true); }}
                 className="pl-7 font-semibold"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">/hr</span>
@@ -363,7 +363,7 @@ export default function ShiftHoursCalculator() {
               <div className="flex gap-1">
                 <button
                   type="button"
-                  onClick={() => { setShiftDiffMode('flat'); setCalculated(false); }}
+                  onClick={() => { setShiftDiffMode('flat'); setCalculated(true); }}
                   className={`px-2 py-0.5 rounded text-[10px] font-medium border ${
                     shiftDiffMode === 'flat' ? 'bg-violet-600 text-white border-violet-600' : 'bg-muted text-muted-foreground border-border'
                   }`}
@@ -372,7 +372,7 @@ export default function ShiftHoursCalculator() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => { setShiftDiffMode('percent'); setCalculated(false); }}
+                  onClick={() => { setShiftDiffMode('percent'); setCalculated(true); }}
                   className={`px-2 py-0.5 rounded text-[10px] font-medium border ${
                     shiftDiffMode === 'percent' ? 'bg-violet-600 text-white border-violet-600' : 'bg-muted text-muted-foreground border-border'
                   }`}
@@ -391,7 +391,7 @@ export default function ShiftHoursCalculator() {
                 min="0"
                 placeholder={shiftDiffMode === 'flat' ? '2.50' : '10'}
                 value={shiftDiffValue}
-                onChange={(e) => { setShiftDiffValue(e.target.value); setCalculated(false); }}
+                onChange={(e) => { setShiftDiffValue(e.target.value); setCalculated(true); }}
                 className="pl-8 text-xs font-medium"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
@@ -414,7 +414,7 @@ export default function ShiftHoursCalculator() {
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
-                onClick={() => { setOvertimeRule('flsa'); setCalculated(false); }}
+                onClick={() => { setOvertimeRule('flsa'); setCalculated(true); }}
                 className={`py-2 px-2.5 rounded-lg text-xs border text-center transition-all ${
                   overtimeRule === 'flsa'
                     ? 'bg-violet-600/10 border-violet-600 text-violet-700 dark:text-violet-300 font-semibold'
@@ -425,7 +425,7 @@ export default function ShiftHoursCalculator() {
               </button>
               <button
                 type="button"
-                onClick={() => { setOvertimeRule('california'); setCalculated(false); }}
+                onClick={() => { setOvertimeRule('california'); setCalculated(true); }}
                 className={`py-2 px-2.5 rounded-lg text-xs border text-center transition-all ${
                   overtimeRule === 'california'
                     ? 'bg-violet-600/10 border-violet-600 text-violet-700 dark:text-violet-300 font-semibold'

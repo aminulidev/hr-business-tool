@@ -17,10 +17,10 @@ import { formatPercent } from '@/lib/utils';
 interface Snapshot { start: number; end: number; retained: number; retentionRate: number; churnRate: number; label: string; }
 
 export default function EmployeeRetentionCalculator() {
-  const [startHeadcount, setStartHeadcount] = useState('');
-  const [endHeadcount, setEndHeadcount] = useState('');
-  const [hiredDuring, setHiredDuring] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [startHeadcount, setStartHeadcount] = useState('100');
+  const [endHeadcount, setEndHeadcount] = useState('92');
+  const [hiredDuring, setHiredDuring] = useState('5');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ startHeadcount: string; endHeadcount: string; hiredDuring: string }>('employee-retention-calculator');
@@ -32,7 +32,7 @@ export default function EmployeeRetentionCalculator() {
   const retentionRate = start > 0 ? (retained / start) * 100 : 0;
   const churnRate = Math.max(0, 100 - retentionRate);
 
-  const handleTryExample = () => { setStartHeadcount('100'); setEndHeadcount('92'); setHiredDuring('5'); setCalculated(false); };
+  const handleTryExample = () => { setStartHeadcount('100'); setEndHeadcount('92'); setHiredDuring('5'); setCalculated(true); };
   const handleCalculate = () => {
     if (start > 0) {
       setCalculated(true);
@@ -62,17 +62,17 @@ export default function EmployeeRetentionCalculator() {
           <div className="space-y-2">
             <Label htmlFor="er-start">Headcount at Start of Period</Label>
             <Input id="er-start" type="number" min="0" placeholder="100" value={startHeadcount}
-              onChange={(e) => { setStartHeadcount(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setStartHeadcount(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="er-end">Headcount at End of Period</Label>
             <Input id="er-end" type="number" min="0" placeholder="92" value={endHeadcount}
-              onChange={(e) => { setEndHeadcount(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setEndHeadcount(e.target.value); setCalculated(true); }} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="er-hired">Hired During Period</Label>
             <Input id="er-hired" type="number" min="0" placeholder="5" value={hiredDuring}
-              onChange={(e) => { setHiredDuring(e.target.value); setCalculated(false); }} />
+              onChange={(e) => { setHiredDuring(e.target.value); setCalculated(true); }} />
             <p className="text-xs text-muted-foreground">New hires don't count as retained.</p>
           </div>
         </div>

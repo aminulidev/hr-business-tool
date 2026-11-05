@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart3, ArrowRight, DollarSign, TrendingUp, Clock, Wallet } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend } from 'recharts';
@@ -91,6 +91,34 @@ export default function ROICalculator() {
     setAdditionalContributions('0');
     setResult(null);
   };
+
+  useEffect(() => {
+    const initial = parseFloat(initialInvestment) || 0;
+    const final = parseFloat(finalValue) || 0;
+    const years = parseFloat(duration) || 0;
+    const additional = parseFloat(additionalContributions) || 0;
+    if (initial <= 0 || final <= 0 || years <= 0) {
+      setResult(null);
+      return;
+    }
+    const totalCost = initial + additional;
+    const totalProfit = final - totalCost;
+    const roi = totalCost > 0 ? (totalProfit / totalCost) * 100 : 0;
+    const annualizedROI =
+      totalCost > 0 && final > 0 && years > 0
+        ? (Math.pow(final / totalCost, 1 / years) - 1) * 100
+        : 0;
+    setResult({
+      initialInvestment: initial,
+      additionalContributions: additional,
+      totalInvested: totalCost,
+      finalValue: final,
+      totalProfit,
+      roi,
+      annualizedROI,
+      years,
+    });
+  }, [initialInvestment, finalValue, duration, additionalContributions]);
 
   const handleCalculate = () => {
     const initial = parseFloat(initialInvestment) || 0;

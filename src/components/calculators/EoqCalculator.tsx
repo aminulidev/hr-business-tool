@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { D: number; S: number; H: number; eoq: number; numOrders: number; annualOrderCost: number; annualHoldingCost: number; totalCost: number; label: string; }
 
 export default function EoqCalculator() {
-  const [annualDemand, setAnnualDemand] = useState('');
-  const [orderCost, setOrderCost] = useState('');
-  const [holdingCost, setHoldingCost] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [annualDemand, setAnnualDemand] = useState('12000');
+  const [orderCost, setOrderCost] = useState('50');
+  const [holdingCost, setHoldingCost] = useState('3');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ annualDemand: string; orderCost: string; holdingCost: string }>('eoq-calculator');
@@ -33,7 +33,7 @@ export default function EoqCalculator() {
   const annualHoldingCost = (eoq / 2) * H;
   const totalCost = annualOrderCost + annualHoldingCost;
 
-  const handleTryExample = () => { setAnnualDemand('12000'); setOrderCost('50'); setHoldingCost('3'); setCalculated(false); };
+  const handleTryExample = () => { setAnnualDemand('12000'); setOrderCost('50'); setHoldingCost('3'); setCalculated(true); };
   const handleCalculate = () => {
     if (D > 0 && S > 0 && H > 0) {
       setCalculated(true);
@@ -58,7 +58,7 @@ export default function EoqCalculator() {
             <div className="relative">
               
               <Input id="annualDemand" type="number" step="any" min="0" placeholder="12000"
-                value={annualDemand} onChange={(e) => { setAnnualDemand(e.target.value); setCalculated(false); }} />
+                value={annualDemand} onChange={(e) => { setAnnualDemand(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function EoqCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="orderCost" type="number" step="any" min="0" placeholder="50" className="pl-7"
-                value={orderCost} onChange={(e) => { setOrderCost(e.target.value); setCalculated(false); }} />
+                value={orderCost} onChange={(e) => { setOrderCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function EoqCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="holdingCost" type="number" step="any" min="0" placeholder="3" className="pl-7"
-                value={holdingCost} onChange={(e) => { setHoldingCost(e.target.value); setCalculated(false); }} />
+                value={holdingCost} onChange={(e) => { setHoldingCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -95,11 +95,11 @@ export default function EoqCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Economic Order Quantity</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{eoq.toFixed(0)} units`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${eoq.toFixed(0)} units`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Orders per year: ${numOrders.toFixed(1)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Total inventory cost: ${formatCurrency(totalCost)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{'Minimizes ordering + holding cost'}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Orders per year: ${numOrders.toFixed(1)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Total inventory cost: ${formatCurrency(totalCost)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Minimizes ordering + holding cost'}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -110,7 +110,7 @@ export default function EoqCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Annual Demand</p>
-                    <p className={`text-lg font-bold`}>{`{D} units`}</p>
+                    <p className={`text-lg font-bold`}>{`${D} units`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Order Cost</p>
@@ -118,11 +118,11 @@ export default function EoqCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">EOQ</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{eoq.toFixed(0)} units`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${eoq.toFixed(0)} units`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Orders/Year</p>
-                    <p className={`text-lg font-bold`}>{`{numOrders.toFixed(1)}`}</p>
+                    <p className={`text-lg font-bold`}>{`${numOrders.toFixed(1)}`}</p>
                   </div>
               </div>
 

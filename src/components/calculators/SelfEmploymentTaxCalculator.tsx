@@ -37,11 +37,11 @@ interface SESnapshot {
 export default function SelfEmploymentTaxCalculator() {
   const [calculationMode, setCalculationMode] = useState<'net' | 'gross'>('net');
   const [netSEIncome, setNetSEIncome] = useState('80000');
-  const [grossRevenue, setGrossRevenue] = useState('110000');
-  const [businessExpenses, setBusinessExpenses] = useState('30000');
+  const [grossRevenue, setGrossRevenue] = useState('120000');
+  const [businessExpenses, setBusinessExpenses] = useState('35000');
   const [w2Wages, setW2Wages] = useState('0'); // W-2 wages that already used Social Security base
   const [filingStatus, setFilingStatus] = useState<'single' | 'mfj'>('single');
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<SESnapshot | null>(null);
   const [compareB, setCompareB] = useState<SESnapshot | null>(null);
 
@@ -136,7 +136,7 @@ export default function SelfEmploymentTaxCalculator() {
     setBusinessExpenses('35000');
     setW2Wages('0');
     setFilingStatus('single');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -226,7 +226,7 @@ export default function SelfEmploymentTaxCalculator() {
           <div className="flex flex-col sm:flex-row gap-2">
             <button
               type="button"
-              onClick={() => { setCalculationMode('net'); setCalculated(false); }}
+              onClick={() => { setCalculationMode('net'); setCalculated(true); }}
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg font-medium text-xs border transition-all ${
                 calculationMode === 'net'
                   ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
@@ -238,7 +238,7 @@ export default function SelfEmploymentTaxCalculator() {
             </button>
             <button
               type="button"
-              onClick={() => { setCalculationMode('gross'); setCalculated(false); }}
+              onClick={() => { setCalculationMode('gross'); setCalculated(true); }}
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg font-medium text-xs border transition-all ${
                 calculationMode === 'gross'
                   ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
@@ -267,7 +267,7 @@ export default function SelfEmploymentTaxCalculator() {
                     min="0"
                     placeholder="80,000"
                     value={netSEIncome}
-                    onChange={(e) => { setNetSEIncome(e.target.value); setCalculated(false); }}
+                    onChange={(e) => { setNetSEIncome(e.target.value); setCalculated(true); }}
                     className="pl-7 text-base font-semibold"
                   />
                 </div>
@@ -288,7 +288,7 @@ export default function SelfEmploymentTaxCalculator() {
                       min="0"
                       placeholder="110,000"
                       value={grossRevenue}
-                      onChange={(e) => { setGrossRevenue(e.target.value); setCalculated(false); }}
+                      onChange={(e) => { setGrossRevenue(e.target.value); setCalculated(true); }}
                       className="pl-7"
                     />
                   </div>
@@ -306,7 +306,7 @@ export default function SelfEmploymentTaxCalculator() {
                       min="0"
                       placeholder="30,000"
                       value={businessExpenses}
-                      onChange={(e) => { setBusinessExpenses(e.target.value); setCalculated(false); }}
+                      onChange={(e) => { setBusinessExpenses(e.target.value); setCalculated(true); }}
                       className="pl-7"
                     />
                   </div>
@@ -337,7 +337,7 @@ export default function SelfEmploymentTaxCalculator() {
                   min="0"
                   placeholder="0"
                   value={w2Wages}
-                  onChange={(e) => { setW2Wages(e.target.value); setCalculated(false); }}
+                  onChange={(e) => { setW2Wages(e.target.value); setCalculated(true); }}
                   className="pl-7"
                 />
               </div>
@@ -352,7 +352,7 @@ export default function SelfEmploymentTaxCalculator() {
               <div className="grid grid-cols-2 gap-2 pt-0.5">
                 <button
                   type="button"
-                  onClick={() => { setFilingStatus('single'); setCalculated(false); }}
+                  onClick={() => { setFilingStatus('single'); setCalculated(true); }}
                   className={`py-2 px-3 rounded-lg text-xs font-medium border text-center transition-all ${
                     filingStatus === 'single'
                       ? 'bg-blue-600/10 border-blue-600 text-blue-700 dark:text-blue-300 font-semibold'
@@ -363,7 +363,7 @@ export default function SelfEmploymentTaxCalculator() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => { setFilingStatus('mfj'); setCalculated(false); }}
+                  onClick={() => { setFilingStatus('mfj'); setCalculated(true); }}
                   className={`py-2 px-3 rounded-lg text-xs font-medium border text-center transition-all ${
                     filingStatus === 'mfj'
                       ? 'bg-blue-600/10 border-blue-600 text-blue-700 dark:text-blue-300 font-semibold'

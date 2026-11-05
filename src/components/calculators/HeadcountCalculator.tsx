@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { current: number; hires: number; departures: number; endHc: number; netGrowth: number; label: string; }
 
 export default function HeadcountCalculator() {
-  const [currentHc, setCurrentHc] = useState('');
-  const [plannedHires, setPlannedHires] = useState('');
-  const [attritionRate, setAttritionRate] = useState('');
-  const [periodMonths, setPeriodMonths] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [currentHc, setCurrentHc] = useState('100');
+  const [plannedHires, setPlannedHires] = useState('20');
+  const [attritionRate, setAttritionRate] = useState('15');
+  const [periodMonths, setPeriodMonths] = useState('12');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ currentHc: string; plannedHires: string; attritionRate: string; periodMonths: string }>('headcount-calculator');
@@ -33,7 +33,7 @@ export default function HeadcountCalculator() {
   const endHc = Math.max(0, current + hires - departures);
   const netGrowth = endHc - current;
 
-  const handleTryExample = () => { setCurrentHc('100'); setPlannedHires('20'); setAttritionRate('15'); setPeriodMonths('12'); setCalculated(false); };
+  const handleTryExample = () => { setCurrentHc('100'); setPlannedHires('20'); setAttritionRate('15'); setPeriodMonths('12'); setCalculated(true); };
   const handleCalculate = () => {
     if (current > 0) {
       setCalculated(true);
@@ -58,7 +58,7 @@ export default function HeadcountCalculator() {
             <div className="relative">
               
               <Input id="currentHc" type="number" step="any" min="0" placeholder="100"
-                value={currentHc} onChange={(e) => { setCurrentHc(e.target.value); setCalculated(false); }} />
+                value={currentHc} onChange={(e) => { setCurrentHc(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function HeadcountCalculator() {
             <div className="relative">
               
               <Input id="plannedHires" type="number" step="any" min="0" placeholder="20"
-                value={plannedHires} onChange={(e) => { setPlannedHires(e.target.value); setCalculated(false); }} />
+                value={plannedHires} onChange={(e) => { setPlannedHires(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function HeadcountCalculator() {
             <div className="relative">
               
               <Input id="attritionRate" type="number" step="any" min="0" placeholder="15"
-                value={attritionRate} onChange={(e) => { setAttritionRate(e.target.value); setCalculated(false); }} />
+                value={attritionRate} onChange={(e) => { setAttritionRate(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -82,7 +82,7 @@ export default function HeadcountCalculator() {
             <div className="relative">
               
               <Input id="periodMonths" type="number" step="any" min="0" placeholder="12"
-                value={periodMonths} onChange={(e) => { setPeriodMonths(e.target.value); setCalculated(false); }} />
+                value={periodMonths} onChange={(e) => { setPeriodMonths(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -103,11 +103,11 @@ export default function HeadcountCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Projected Year-End Headcount</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{endHc} employees`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${endHc} employees`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Net growth: ${netGrowth >= 0 ? "+" : ""}${netGrowth}`}</Badge>
-                  <Badge variant="outline" className="'bg-red-500/10 border-red-500/30 text-red-600'">{`${departures} expected departures`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`${hires} planned hires`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Net growth: ${netGrowth >= 0 ? "+" : ""}${netGrowth}`}</Badge>
+                  <Badge variant="outline" className="bg-red-500/10 border-red-500/30 text-red-600">{`${departures} expected departures`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`${hires} planned hires`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -118,19 +118,19 @@ export default function HeadcountCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Current</p>
-                    <p className={`text-lg font-bold`}>{`{current}`}</p>
+                    <p className={`text-lg font-bold`}>{`${current}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Hires</p>
-                    <p className={`text-lg font-bold`}>{`+{hires}`}</p>
+                    <p className={`text-lg font-bold`}>{`+${hires}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Departures</p>
-                    <p className={`text-lg font-bold`}>{`-{departures}`}</p>
+                    <p className={`text-lg font-bold`}>{`-${departures}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Projected</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{endHc}`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${endHc}`}</p>
                   </div>
               </div>
 

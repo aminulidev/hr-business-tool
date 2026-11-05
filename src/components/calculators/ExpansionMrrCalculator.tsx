@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { up: number; se: number; cs: number; tm: number; expansionMrr: number; expansionPct: number; annualExpansion: number; label: string; }
 
 export default function ExpansionMrrCalculator() {
-  const [upsellMrr, setUpsellMrr] = useState('');
-  const [seatMrr, setSeatMrr] = useState('');
-  const [crossSellMrr, setCrossSellMrr] = useState('');
-  const [totalMrr, setTotalMrr] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [upsellMrr, setUpsellMrr] = useState('3000');
+  const [seatMrr, setSeatMrr] = useState('2000');
+  const [crossSellMrr, setCrossSellMrr] = useState('1000');
+  const [totalMrr, setTotalMrr] = useState('100000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ upsellMrr: string; seatMrr: string; crossSellMrr: string; totalMrr: string }>('expansion-mrr-calculator');
@@ -33,7 +33,7 @@ export default function ExpansionMrrCalculator() {
   const expansionPct = tm > 0 ? (expansionMrr / tm) * 100 : 0;
   const annualExpansion = expansionMrr * 12;
 
-  const handleTryExample = () => { setUpsellMrr('3000'); setSeatMrr('2000'); setCrossSellMrr('1000'); setTotalMrr('100000'); setCalculated(false); };
+  const handleTryExample = () => { setUpsellMrr('3000'); setSeatMrr('2000'); setCrossSellMrr('1000'); setTotalMrr('100000'); setCalculated(true); };
   const handleCalculate = () => {
     if (tm > 0) {
       setCalculated(true);
@@ -58,7 +58,7 @@ export default function ExpansionMrrCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="upsellMrr" type="number" step="any" min="0" placeholder="3000" className="pl-7"
-                value={upsellMrr} onChange={(e) => { setUpsellMrr(e.target.value); setCalculated(false); }} />
+                value={upsellMrr} onChange={(e) => { setUpsellMrr(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function ExpansionMrrCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="seatMrr" type="number" step="any" min="0" placeholder="2000" className="pl-7"
-                value={seatMrr} onChange={(e) => { setSeatMrr(e.target.value); setCalculated(false); }} />
+                value={seatMrr} onChange={(e) => { setSeatMrr(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function ExpansionMrrCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="crossSellMrr" type="number" step="any" min="0" placeholder="1000" className="pl-7"
-                value={crossSellMrr} onChange={(e) => { setCrossSellMrr(e.target.value); setCalculated(false); }} />
+                value={crossSellMrr} onChange={(e) => { setCrossSellMrr(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -82,7 +82,7 @@ export default function ExpansionMrrCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="totalMrr" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={totalMrr} onChange={(e) => { setTotalMrr(e.target.value); setCalculated(false); }} />
+                value={totalMrr} onChange={(e) => { setTotalMrr(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -105,9 +105,9 @@ export default function ExpansionMrrCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Expansion MRR</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(expansionMrr)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Expansion %: ${expansionPct.toFixed(1)}% of MRR`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Annual expansion: ${formatCurrency(annualExpansion)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{expansionPct > 10 ? "Strong" : expansionPct > 5 ? "Good" : "Needs work"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Expansion %: ${expansionPct.toFixed(1)}% of MRR`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Annual expansion: ${formatCurrency(annualExpansion)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{expansionPct > 10 ? "Strong" : expansionPct > 5 ? "Good" : "Needs work"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -130,7 +130,7 @@ export default function ExpansionMrrCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Expansion %</p>
-                    <p className={`text-lg font-bold`}>{`{expansionPct.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${expansionPct.toFixed(1)}%`}</p>
                   </div>
               </div>
 

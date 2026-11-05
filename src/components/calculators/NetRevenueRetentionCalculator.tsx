@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { sm: number; em: number; cm: number; ctm: number; endingMrr: number; nrr: number; grr: number; netChurn: number; label: string; }
 
 export default function NetRevenueRetentionCalculator() {
-  const [startingMrr, setStartingMrr] = useState('');
-  const [expansionMrr, setExpansionMrr] = useState('');
-  const [churnedMrr, setChurnedMrr] = useState('');
-  const [contractionMrr, setContractionMrr] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [startingMrr, setStartingMrr] = useState('100000');
+  const [expansionMrr, setExpansionMrr] = useState('8000');
+  const [churnedMrr, setChurnedMrr] = useState('3000');
+  const [contractionMrr, setContractionMrr] = useState('2000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ startingMrr: string; expansionMrr: string; churnedMrr: string; contractionMrr: string }>('net-revenue-retention-calculator');
@@ -34,7 +34,7 @@ export default function NetRevenueRetentionCalculator() {
   const grr = sm > 0 ? ((sm - cm - ctm) / sm) * 100 : 0;
   const netChurn = 100 - nrr;
 
-  const handleTryExample = () => { setStartingMrr('100000'); setExpansionMrr('8000'); setChurnedMrr('3000'); setContractionMrr('2000'); setCalculated(false); };
+  const handleTryExample = () => { setStartingMrr('100000'); setExpansionMrr('8000'); setChurnedMrr('3000'); setContractionMrr('2000'); setCalculated(true); };
   const handleCalculate = () => {
     if (sm > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function NetRevenueRetentionCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="startingMrr" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={startingMrr} onChange={(e) => { setStartingMrr(e.target.value); setCalculated(false); }} />
+                value={startingMrr} onChange={(e) => { setStartingMrr(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function NetRevenueRetentionCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="expansionMrr" type="number" step="any" min="0" placeholder="8000" className="pl-7"
-                value={expansionMrr} onChange={(e) => { setExpansionMrr(e.target.value); setCalculated(false); }} />
+                value={expansionMrr} onChange={(e) => { setExpansionMrr(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function NetRevenueRetentionCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="churnedMrr" type="number" step="any" min="0" placeholder="3000" className="pl-7"
-                value={churnedMrr} onChange={(e) => { setChurnedMrr(e.target.value); setCalculated(false); }} />
+                value={churnedMrr} onChange={(e) => { setChurnedMrr(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -83,7 +83,7 @@ export default function NetRevenueRetentionCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="contractionMrr" type="number" step="any" min="0" placeholder="2000" className="pl-7"
-                value={contractionMrr} onChange={(e) => { setContractionMrr(e.target.value); setCalculated(false); }} />
+                value={contractionMrr} onChange={(e) => { setContractionMrr(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -106,9 +106,9 @@ export default function NetRevenueRetentionCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Net Revenue Retention</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatPercent(nrr)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`GRR: ${formatPercent(grr)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Net churn: ${formatPercent(netChurn)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{nrr > 110 ? "Excellent" : nrr > 100 ? "Healthy" : "Below 100%"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`GRR: ${formatPercent(grr)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Net churn: ${formatPercent(netChurn)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{nrr > 110 ? "Excellent" : nrr > 100 ? "Healthy" : "Below 100%"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

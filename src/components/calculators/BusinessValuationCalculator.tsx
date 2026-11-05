@@ -16,12 +16,12 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { rev: number; eb: number; ast: number; rmu: number; emu: number; revValue: number; ebitdaValue: number; assetValue: number; lowEstimate: number; highEstimate: number; midEstimate: number; label: string; }
 
 export default function BusinessValuationCalculator() {
-  const [revenue, setRevenue] = useState('');
-  const [ebitda, setEbitda] = useState('');
-  const [assets, setAssets] = useState('');
-  const [revMultiple, setRevMultiple] = useState('Industry: 0.5-3x');
-  const [ebitdaMultiple, setEbitdaMultiple] = useState('Industry: 3-8x');
-  const [calculated, setCalculated] = useState(false);
+  const [revenue, setRevenue] = useState('2000000');
+  const [ebitda, setEbitda] = useState('400000');
+  const [assets, setAssets] = useState('800000');
+  const [revMultiple, setRevMultiple] = useState('1.5');
+  const [ebitdaMultiple, setEbitdaMultiple] = useState('4');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ revenue: string; ebitda: string; assets: string; revMultiple: string; ebitdaMultiple: string }>('business-valuation-calculator');
@@ -38,7 +38,7 @@ export default function BusinessValuationCalculator() {
   const highEstimate = Math.max(revValue, ebitdaValue, assetValue);
   const midEstimate = (revValue + ebitdaValue + assetValue) / 3;
 
-  const handleTryExample = () => { setRevenue('2000000'); setEbitda('400000'); setAssets('800000'); setRevMultiple('1.5'); setEbitdaMultiple('4'); setCalculated(false); };
+  const handleTryExample = () => { setRevenue('2000000'); setEbitda('400000'); setAssets('800000'); setRevMultiple('1.5'); setEbitdaMultiple('4'); setCalculated(true); };
   const handleCalculate = () => {
     if (rev > 0 || eb > 0 || ast > 0) {
       setCalculated(true);
@@ -63,7 +63,7 @@ export default function BusinessValuationCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="revenue" type="number" step="any" min="0" placeholder="2000000" className="pl-7"
-                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(false); }} />
+                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -71,7 +71,7 @@ export default function BusinessValuationCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="ebitda" type="number" step="any" min="0" placeholder="400000" className="pl-7"
-                value={ebitda} onChange={(e) => { setEbitda(e.target.value); setCalculated(false); }} />
+                value={ebitda} onChange={(e) => { setEbitda(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -79,7 +79,7 @@ export default function BusinessValuationCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="assets" type="number" step="any" min="0" placeholder="800000" className="pl-7"
-                value={assets} onChange={(e) => { setAssets(e.target.value); setCalculated(false); }} />
+                value={assets} onChange={(e) => { setAssets(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -87,7 +87,7 @@ export default function BusinessValuationCalculator() {
             <div className="relative">
               
               <Input id="revMultiple" type="number" step="any" min="0" placeholder="1.5"
-                value={revMultiple} onChange={(e) => { setRevMultiple(e.target.value); setCalculated(false); }} />
+                value={revMultiple} onChange={(e) => { setRevMultiple(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Industry: 0.5-3x</p>
           </div>
@@ -96,7 +96,7 @@ export default function BusinessValuationCalculator() {
             <div className="relative">
               
               <Input id="ebitdaMultiple" type="number" step="any" min="0" placeholder="4"
-                value={ebitdaMultiple} onChange={(e) => { setEbitdaMultiple(e.target.value); setCalculated(false); }} />
+                value={ebitdaMultiple} onChange={(e) => { setEbitdaMultiple(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Industry: 3-8x</p>
           </div>
@@ -120,9 +120,9 @@ export default function BusinessValuationCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Business Valuation Range</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(midEstimate)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Revenue-based: ${formatCurrency(revValue)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`EBITDA-based: ${formatCurrency(ebitdaValue)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Asset-based: ${formatCurrency(assetValue)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Revenue-based: ${formatCurrency(revValue)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`EBITDA-based: ${formatCurrency(ebitdaValue)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Asset-based: ${formatCurrency(assetValue)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -145,7 +145,7 @@ export default function BusinessValuationCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Range</p>
-                    <p className={`text-lg font-bold`}>{`{formatCurrency(lowEstimate)} - {formatCurrency(highEstimate)}`}</p>
+                    <p className={`text-lg font-bold`}>{`${formatCurrency(lowEstimate)} - {formatCurrency(highEstimate)}`}</p>
                   </div>
               </div>
 

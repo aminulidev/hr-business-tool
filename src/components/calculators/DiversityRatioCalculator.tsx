@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { total: number; women: number; minority: number; over40: number; womenPct: number; minorityPct: number; over40Pct: number; diversityScore: number; label: string; }
 
 export default function DiversityRatioCalculator() {
-  const [totalEmployees, setTotalEmployees] = useState('');
-  const [womenCount, setWomenCount] = useState('');
-  const [minorityCount, setMinorityCount] = useState('');
-  const [over40Count, setOver40Count] = useState('ADEA protected class');
-  const [calculated, setCalculated] = useState(false);
+  const [totalEmployees, setTotalEmployees] = useState('100');
+  const [womenCount, setWomenCount] = useState('45');
+  const [minorityCount, setMinorityCount] = useState('35');
+  const [over40Count, setOver40Count] = useState('30');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ totalEmployees: string; womenCount: string; minorityCount: string; over40Count: string }>('diversity-ratio-calculator');
@@ -34,7 +34,7 @@ export default function DiversityRatioCalculator() {
   const over40Pct = total > 0 ? (over40 / total) * 100 : 0;
   const diversityScore = (womenPct + minorityPct + over40Pct) / 3;
 
-  const handleTryExample = () => { setTotalEmployees('100'); setWomenCount('45'); setMinorityCount('35'); setOver40Count('30'); setCalculated(false); };
+  const handleTryExample = () => { setTotalEmployees('100'); setWomenCount('45'); setMinorityCount('35'); setOver40Count('30'); setCalculated(true); };
   const handleCalculate = () => {
     if (total > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function DiversityRatioCalculator() {
             <div className="relative">
               
               <Input id="totalEmployees" type="number" step="any" min="0" placeholder="100"
-                value={totalEmployees} onChange={(e) => { setTotalEmployees(e.target.value); setCalculated(false); }} />
+                value={totalEmployees} onChange={(e) => { setTotalEmployees(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function DiversityRatioCalculator() {
             <div className="relative">
               
               <Input id="womenCount" type="number" step="any" min="0" placeholder="45"
-                value={womenCount} onChange={(e) => { setWomenCount(e.target.value); setCalculated(false); }} />
+                value={womenCount} onChange={(e) => { setWomenCount(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function DiversityRatioCalculator() {
             <div className="relative">
               
               <Input id="minorityCount" type="number" step="any" min="0" placeholder="35"
-                value={minorityCount} onChange={(e) => { setMinorityCount(e.target.value); setCalculated(false); }} />
+                value={minorityCount} onChange={(e) => { setMinorityCount(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -83,7 +83,7 @@ export default function DiversityRatioCalculator() {
             <div className="relative">
               
               <Input id="over40Count" type="number" step="any" min="0" placeholder="30"
-                value={over40Count} onChange={(e) => { setOver40Count(e.target.value); setCalculated(false); }} />
+                value={over40Count} onChange={(e) => { setOver40Count(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">ADEA protected class</p>
           </div>
@@ -105,11 +105,11 @@ export default function DiversityRatioCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Diversity Ratios</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{diversityScore.toFixed(1)}/100`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${diversityScore.toFixed(1)}/100`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Women: ${womenPct.toFixed(0)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Minorities: ${minorityPct.toFixed(0)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Age 40+: ${over40Pct.toFixed(0)}%`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Women: ${womenPct.toFixed(0)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Minorities: ${minorityPct.toFixed(0)}%`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Age 40+: ${over40Pct.toFixed(0)}%`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -120,19 +120,19 @@ export default function DiversityRatioCalculator() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Total</p>
-                    <p className={`text-lg font-bold`}>{`{total}`}</p>
+                    <p className={`text-lg font-bold`}>{`${total}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Women %</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{womenPct.toFixed(0)}%`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${womenPct.toFixed(0)}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Minority %</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{minorityPct.toFixed(0)}%`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${minorityPct.toFixed(0)}%`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Age 40+ %</p>
-                    <p className={`text-lg font-bold`}>{`{over40Pct.toFixed(0)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${over40Pct.toFixed(0)}%`}</p>
                   </div>
               </div>
 

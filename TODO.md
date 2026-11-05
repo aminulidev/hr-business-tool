@@ -34,86 +34,88 @@
 
 ---
 
-## 🚀 Phase 2: Post-Deploy & Google Search Console Actions (Do Immediately After Deploy)
+## ✅ Phase 2: Post-Deploy & Google Search Console Actions (Completed)
 
-- [ ] **1. Deploy to Production (`quickbizcalc.com`)**
-- [ ] **2. Request Indexing in Google Search Console (URL Inspection Tool)** for top pages:
-  - [ ] `https://www.quickbizcalc.com/`
-  - [ ] `https://www.quickbizcalc.com/calculators/hourly-paycheck-calculator`
-  - [ ] `https://www.quickbizcalc.com/calculators/wages-calculator`
-  - [ ] `https://www.quickbizcalc.com/calculators/business-day-calculator`
-  - [ ] `https://www.quickbizcalc.com/calculators/profit-margin-calculator`
-  - [ ] `https://www.quickbizcalc.com/calculators/time-card-calculator-with-lunch`
-  - [ ] `https://www.quickbizcalc.com/compare/jobs`
-- [ ] **3. Request `robots.txt` Recrawl in GSC** (`Settings → robots.txt → Request a recrawl`) to clear old `/_next/static/chunks/` blocks.
-
----
-
-## 📈 Phase 3: Expand State Hourly Paycheck Calculators (Highest-ROI Organic Traffic Lever)
-
-Currently, only 5 states (`CA`, `TX`, `FL`, `NY`, `IL`) are published in `src/lib/payroll/state-pages.ts` and `src/lib/payroll/withholding-2026.ts`. State-level paycheck keywords have much lower competition than national terms.
-
-- [ ] **Batch A — Add No-Income-Tax States (100% Exact Federal + FICA Math)**:
-  - [ ] **Washington (`WA`)** — `washington-hourly-paycheck-calculator` ($16.66+ min wage, WA Cares / PFML notes)
-  - [ ] **Tennessee (`TN`)** — `tennessee-hourly-paycheck-calculator` ($7.25 min wage, 0% state income tax)
-  - [ ] **Nevada (`NV`)** — `nevada-hourly-paycheck-calculator` ($12.00 min wage, 0% state income tax, daily OT rule for <1.5× min wage)
-- [ ] **Batch B — Add High-Population Flat-Tax States (Deterministic 2026 Withholding)**:
-  - [ ] **Pennsylvania (`PA`)** — `pennsylvania-hourly-paycheck-calculator` (3.07% flat state tax + PA UC employee withholding)
-  - [ ] **North Carolina (`NC`)** — `north-carolina-hourly-paycheck-calculator` (4.25% flat tax in 2026, NC-4 standard deduction)
-  - [ ] **Georgia (`GA`)** — `georgia-hourly-paycheck-calculator` (5.19%–5.39% flat tax rate, G-4 standard deduction)
-  - [ ] **Michigan (`MI`)** — `michigan-hourly-paycheck-calculator` (4.25% flat tax, MI-W4 personal exemption)
-  - [ ] **Indiana (`IN`)** — `indiana-hourly-paycheck-calculator` (3.00% flat state tax in 2026, WH-4 exemptions)
-  - [ ] **Arizona (`AZ`)** — `arizona-hourly-paycheck-calculator` (2.5% flat state tax, A-4 withholding election percentages)
-  - [ ] **Colorado (`CO`)** — `colorado-hourly-paycheck-calculator` (4.40% flat state tax, CO overtime rules)
-- [ ] **For Each New State**:
-  1. Add state code & withholding formula in `src/lib/payroll/withholding-2026.ts`
-  2. Add state metadata, minimum wage, overtime rule, and FAQs in `src/lib/payroll/state-pages.ts`
-  3. Create `src/lib/seo-data/[state]-hourly-paycheck-calculator.ts` calling `buildStatePaycheckSeo(code)`
-  4. Register the calculator entry in `src/lib/calculator-meta.ts` (`status: 'published'`) and `src/app/calculators/[slug]/page.tsx` + `embed/page.tsx`
+- [x] **1. Deploy to Production (`quickbizcalc.com`)**
+- [x] **2. Request Indexing in Google Search Console (URL Inspection Tool)** for top pages:
+  - [x] `https://www.quickbizcalc.com/`
+  - [x] `https://www.quickbizcalc.com/calculators/hourly-paycheck-calculator`
+  - [x] `https://www.quickbizcalc.com/calculators/wages-calculator`
+  - [x] `https://www.quickbizcalc.com/calculators/business-day-calculator`
+  - [x] `https://www.quickbizcalc.com/calculators/profit-margin-calculator`
+  - [x] `https://www.quickbizcalc.com/calculators/time-card-calculator-with-lunch`
+  - [x] `https://www.quickbizcalc.com/compare/jobs`
+- [x] **3. Request `robots.txt` Recrawl in GSC** (`Settings → robots.txt → Request a recrawl`) to clear old `/_next/static/chunks/` blocks.
 
 ---
 
-## ⚡ Phase 4: Convert Next 8 High-Impression Calculators to Instant Live Calculation
+## ✅ Phase 3: Expand State Hourly Paycheck Calculators (Completed — 15 Total States Live)
 
-Remove the "blank state until Calculate click" friction and `setResult(null)` on input change across the next highest-traffic tools:
+Expanded from 5 states (`CA`, `TX`, `FL`, `NY`, `IL`) to **15 states** in `src/lib/payroll/state-pages.ts`, `src/lib/payroll/withholding-2026.ts`, `src/lib/calculator-meta.ts`, `src/lib/seo-data/`, and `src/app/calculators/[slug]/page.tsx` (+ `embed/page.tsx`):
 
-- [ ] `src/components/calculators/TimeCardLunchCalculator.tsx` (8,625 GSC impressions — pre-fill a typical Mon–Fri 8:00 AM–4:30 PM schedule with 30m lunch break so totals display immediately)
-- [ ] `src/components/calculators/TimeCardCalculator.tsx` (6,844 GSC impressions — pre-fill default weekly hours & add print-friendly timesheet header with employee name & pay period dates like Redcort)
-- [ ] `src/components/calculators/SalesCommissionCalculator.tsx` (6,320 GSC impressions — pre-fill `$50,000` sales at `8%` commission rate + live updates across Flat, Tiered, and Quota modes)
-- [ ] `src/components/calculators/EmployeeTurnoverCalculator.tsx` (3,412 GSC impressions — pre-fill 50 employees, 6 departures, `$65,000` avg salary + live calculation)
-- [ ] `src/components/calculators/ROICalculator.tsx` (2,950 GSC impressions — pre-fill `$10,000` investment, `$14,500` return, `2` years + live calculation)
-- [ ] `src/components/calculators/DiscountCalculator.tsx` (Fix stale React state in `saveEntry` + live calculation)
-- [ ] `src/components/calculators/MarkupCalculator.tsx` (Fix stale React state in `saveEntry` + live calculation)
-- [ ] `src/components/calculators/OvertimeCalculator.tsx` (Pre-fill `$22/hr`, `40` reg hrs, `8` OT hrs + live calculation)
-
----
-
-## 📝 Phase 5: Expand Thin SEO Content on High-CPC B2B Calculators (Target: 1,500+ Words Each)
-
-Upgrade the below-the-fold guide, industry benchmarks table, worked examples, and FAQs in `src/lib/seo-data/`:
-
-- [ ] `src/lib/seo-data/billable-hours-calculator.ts` (Currently 552 words → Add consultant utilization rate benchmarks, agency realization rates, and 6-minute/15-minute increment billing table)
-- [ ] `src/lib/seo-data/fica-tax-calculator.ts` (Currently 591 words → Add 2026 `$184,500` Social Security cap table, Additional 0.9% Medicare surtax thresholds by filing status, and W-2 vs. 1099 SECA comparison)
-- [ ] `src/lib/seo-data/severance-pay-calculator.ts` (Currently 639 words → Add 1-week vs. 2-weeks per year of service benchmarks by job level, WARN Act 60-day notice rules, and 22% supplemental tax withholding examples)
-- [ ] `src/lib/seo-data/revenue-per-employee-calculator.ts` (Currently 650 words → Add 2026 SaaS, retail, manufacturing, and professional services RPE benchmark tables)
-- [ ] `src/lib/seo-data/salary-to-hourly-calculator.ts` (Currently 666 words → Add quick reference conversion table from `$30,000/yr` to `$150,000/yr` at 2,080 hours/year)
+- [x] **Batch A — Added No-Income-Tax States (100% Exact Federal + FICA + State Payroll Programs)**:
+  - [x] **Washington (`WA`)** — `washington-hourly-paycheck-calculator` ($17.13 min wage, 0% state income tax, WA PFML 0.57% + WA Cares 0.58%)
+  - [x] **Tennessee (`TN`)** — `tennessee-hourly-paycheck-calculator` ($7.25 min wage, 0% state income tax)
+  - [x] **Nevada (`NV`)** — `nevada-hourly-paycheck-calculator` ($12.00 min wage, 0% state income tax, daily OT rule for <$18/hr)
+- [x] **Batch B — Added High-Population Flat-Tax States (Deterministic 2026 Withholding)**:
+  - [x] **Pennsylvania (`PA`)** — `pennsylvania-hourly-paycheck-calculator` (3.07% flat state tax + 0.07% PA UC employee withholding)
+  - [x] **North Carolina (`NC`)** — `north-carolina-hourly-paycheck-calculator` (4.25% flat tax in 2026, $12,750 Single / $25,500 MFJ standard deduction)
+  - [x] **Georgia (`GA`)** — `georgia-hourly-paycheck-calculator` (5.19% flat tax rate in 2026, $12,000 Single / $24,000 MFJ G-4 standard deduction)
+  - [x] **Michigan (`MI`)** — `michigan-hourly-paycheck-calculator` (4.25% flat tax, $13.73 min wage in 2026)
+  - [x] **Indiana (`IN`)** — `indiana-hourly-paycheck-calculator` (2.95% flat state tax in 2026)
+  - [x] **Arizona (`AZ`)** — `arizona-hourly-paycheck-calculator` (2.50% flat state tax, $15.15 min wage in 2026)
+  - [x] **Colorado (`CO`)** — `colorado-hourly-paycheck-calculator` (4.40% flat state tax + 0.45% CO FAMLI, $15.16 min wage, 12-hour daily OT rule)
+- [x] **For Each New State**:
+  1. Added state code & withholding formula in `src/lib/payroll/withholding-2026.ts`
+  2. Added state metadata, minimum wage, overtime rule, and FAQs in `src/lib/payroll/state-pages.ts`
+  3. Created `src/lib/seo-data/[state]-hourly-paycheck-calculator.ts` calling `buildStatePaycheckSeo(code)`
+  4. Registered the calculator entry in `src/lib/calculator-meta.ts` (`status: 'published'`) and `src/app/calculators/[slug]/page.tsx` + `embed/page.tsx`
 
 ---
 
-## 🧹 Phase 6: Clean Up & Selectively Publish Best Draft Calculators
+## ✅ Phase 4: Convert Next 8 High-Impression Calculators to Instant Live Calculation (Completed)
 
-There are currently **128 calculators** in `status: 'draft'` in `src/lib/calculator-meta.ts`, and **146 `.tsx` files** contain malformed string-quoted Tailwind classes (`className="'bg-emerald-500/10 ...'"`) from an earlier batch script.
+Removed "blank state until Calculate click" friction, fixed stale React state bugs in `saveEntry`, and added live calculation on load across all 8 high-impression calculators:
 
-- [ ] **1. Run Automated Cleanup Script** on `src/components/calculators/*.tsx` to strip extra inner single quotes from `className="'...'"` across all 146 draft calculator components.
-- [ ] **2. Hand-Audit & Publish Top 10 High-Search-Volume Draft Calculators** (only after verifying unique math + writing 1,200+ word `seo-data` files):
-  - [ ] `break-even-calculator` (`BreakEvenCalculator.tsx`)
-  - [ ] `employer-payroll-tax-calculator` (`EmployerPayrollTaxCalculator.tsx` — FUTA + SUTA + Employer FICA)
-  - [ ] `pto-accrual-calculator` (`PtoCalculator.tsx`)
-  - [ ] `1099-vs-w2-calculator` (`ContractorVsEmployeeCalculator.tsx`)
-  - [ ] `burn-rate-calculator` (`BurnRateCalculator.tsx` — Startup runway & monthly burn)
-  - [ ] `customer-acquisition-cost-calculator` (`CacCalculator.tsx`)
-  - [ ] `ltv-calculator` (`CustomerLifetimeValueCalculator.tsx`)
-  - [ ] `salary-inflation-calculator` (`InflationCalculator.tsx`)
-  - [ ] `shift-differential-calculator` (`ShiftDifferentialCalculator.tsx`)
-  - [ ] `annual-income-calculator` (`AnnualIncomeCalculator.tsx`)
+- [x] `src/components/calculators/TimeCardLunchCalculator.tsx` (8,625 GSC impressions — pre-filled Mon–Fri 8:00 AM–4:30 PM schedule with 30m lunch break & `$22/hr` rate + employee name / pay period header + instant live calculation)
+- [x] `src/components/calculators/TimeCardCalculator.tsx` (6,844 GSC impressions — pre-filled 40h weekly schedule at `$25/hr` + employee name / pay period header + Copy Summary & Print Timesheet buttons + instant live calculation)
+- [x] `src/components/calculators/SalesCommissionCalculator.tsx` (6,320 GSC impressions — pre-filled `$50,000` sales at `8%` commission rate in Simple mode, `$180,000` in Tiered mode, and `$550,000` on `$500,000` quota in Quota mode)
+- [x] `src/components/calculators/EmployeeTurnoverCalculator.tsx` (3,412 GSC impressions — pre-filled 50 beginning / 54 ending headcount, 6 separations, `$65,000` avg salary + instant live updates)
+- [x] `src/components/calculators/ROICalculator.tsx` (2,950 GSC impressions — added `useEffect` so `$10,000` → `$15,000` over `5` years calculates immediately on load and updates live)
+- [x] `src/components/calculators/DiscountCalculator.tsx` (Pre-filled `$120` at `25%` off + fixed stale React state in `saveEntry` + instant live calculation)
+- [x] `src/components/calculators/MarkupCalculator.tsx` (Pre-filled `$50` cost at `40%` markup + fixed stale React state in `saveEntry` + instant live calculation)
+- [x] `src/components/calculators/OvertimeCalculator.tsx` (Pre-filled `$22/hr`, `40` reg hrs, `8` OT hrs + fixed `useMemo` side-effect anti-pattern + instant live calculation)
 
+---
+
+## ✅ Phase 5: Expand Thin SEO Content on High-CPC B2B Calculators (Completed — 1,500+ Words & Benchmark Tables Each)
+
+Added semantic HTML `benchmarkTables` and `deepDiveSections` support to `src/components/calculators/CalculatorLayoutServer.tsx` and `src/app/calculators/[slug]/page.tsx`, and upgraded all 5 B2B SEO data modules:
+
+- [x] `src/lib/seo-data/billable-hours-calculator.ts` (Added 6-minute `0.1 hr` vs. 15-minute `0.25 hr` legal/consulting billing increment table, 2026 utilization & realization benchmarks by profession, and 3 deep-dive sections)
+- [x] `src/lib/seo-data/fica-tax-calculator.ts` (Added 2026 `$184,500` Social Security wage cap table, W-2 vs. 1099 SECA tax liability table from `$50k` to `$400k`, Additional 0.9% Medicare surtax rules, and excess SS credit guide)
+- [x] `src/lib/seo-data/severance-pay-calculator.ts` (Added 2026 severance multiplier benchmarks by job level, Gross vs. Net lump-sum severance payout table after 22% supplemental tax, WARN Act / Mini-WARN / OWBPA 21-day & 45-day rules)
+- [x] `src/lib/seo-data/revenue-per-employee-calculator.ts` (Added 2026 RPE percentile benchmarks across 11 industries, B2B SaaS ARR per FTE table from Seed to IPO, and Gross Profit per Employee / FTE counting guide)
+- [x] `src/lib/seo-data/salary-converter.ts` & `src/lib/seo-data/salary-to-hourly-calculator.ts` (Added `$30,000`–`$150,000` 7-period conversion table, `$15/hr`–`$60/hr` full-time vs. part-time table, 2× mental math shortcut, and bi-weekly vs. semi-monthly guide)
+
+---
+
+## ✅ Phase 6: Clean Up & Selectively Publish Best Draft Calculators (Completed — 70 Published Calculators Live)
+
+Cleaned up systematic batch-generator bugs across all calculator `.tsx` components and selectively audited, upgraded, wrote deep 2026 SEO data + benchmark tables for, and published the **Top 10 High-Search-Volume Draft Calculators**:
+
+- [x] **1. Automated Codebase-Wide Component Cleanup (`src/components/calculators/*.tsx`)**:
+  - [x] Stripped malformed inner single quotes from `className="'bg-emerald-500/10 ...'"` across **146 `.tsx` files**.
+  - [x] Fixed missing `$` in JSX template literals (`{`{expr}`}` → `{`${expr}`}`) across **99 `.tsx` files**.
+  - [x] Replaced broken non-numeric hint strings in `useState('Health, 401k, PTO')` with valid numeric defaults from `handleTryExample` and enabled instant live calculation (`useState(true)`) across **183 `.tsx` files**.
+- [x] **2. Hand-Audited, Upgraded & Published Top 10 High-Search-Volume Draft Calculators (`status: 'published'`)**:
+  - [x] `employee-cost-calculator` (`EmployeeCostCalculator.tsx` + `src/lib/seo-data/employee-cost-calculator.ts` — 2026 loaded employee burden breakdown & role multipliers)
+  - [x] `fte-calculator` (`FTECalculator.tsx` + `src/lib/seo-data/fte-calculator.ts` — 40-hour Budgeting FTE vs. 30-hour IRS ACA 50-FTE mandate calculator & tables)
+  - [x] `burn-rate-calculator` (`BurnRateCalculator.tsx` + `src/lib/seo-data/burn-rate-calculator.ts` — upgraded with Cash Balance & Cash Runway in months + Bessemer/Craft Burn Multiple tables)
+  - [x] `customer-acquisition-cost-calculator` (`CustomerAcquisitionCostCalculator.tsx` + `src/lib/seo-data/customer-acquisition-cost-calculator.ts` — Blended vs. Paid CAC + 2026 CAC payback benchmarks)
+  - [x] `customer-lifetime-value-calculator` (`CustomerLifetimeValueCalculator.tsx` + `src/lib/seo-data/customer-lifetime-value-calculator.ts` — Gross-margin CLV, churn sensitivity table, and LTV:CAC matrix)
+  - [x] `freelance-hourly-rate-calculator` (`FreelanceHourlyRateCalculator.tsx` + `src/lib/seo-data/freelance-hourly-rate-calculator.ts` — W-2 to Freelance Hourly & Day Rate conversion after 15.3% SECA tax & 1,200 billable hours)
+  - [x] `upwork-fee-calculator` (`UpworkFeeCalculator.tsx` + `src/lib/seo-data/upwork-fee-calculator.ts` — upgraded with 10%/5%/15%/0% fee presets, withdrawal methods, and Reverse Client Bid calculator)
+  - [x] `sales-tax-calculator` (`SalesTaxCalculator.tsx` + `src/lib/seo-data/sales-tax-calculator.ts` — upgraded with Forward + Reverse Sales Tax extraction tabs, US state presets, and 2026 state rate table)
+  - [x] `ebitda-margin-calculator` (`EbitdaMarginCalculator.tsx` + `src/lib/seo-data/ebitda-margin-calculator.ts` — operational EBITDA margin & 2026 EV/EBITDA buyout multiples by industry)
+  - [x] `churn-rate-calculator` (`ChurnRateCalculator.tsx` + `src/lib/seo-data/churn-rate-calculator.ts` — Customer Logo Churn vs. Gross MRR Revenue Churn + compound annual churn conversion table)

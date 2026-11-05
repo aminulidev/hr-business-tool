@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import {
   Coffee,
@@ -88,10 +88,10 @@ function minutesToTimeStr(minutes: number): string {
 function createEmptyDay(): DayEntry {
   return {
     enabled: true,
-    clockIn: '09:00 AM',
+    clockIn: '08:00 AM',
     lunchStart: '12:00 PM',
-    lunchEnd: '01:00 PM',
-    clockOut: '05:00 PM',
+    lunchEnd: '12:30 PM',
+    clockOut: '04:30 PM',
   };
 }
 
@@ -131,7 +131,9 @@ export default function TimeCardLunchCalculator() {
   const [autoLunchDuration, setAutoLunchDuration] = useState('60');
   const [overtimeThreshold, setOvertimeThreshold] = useState('40');
   const [weeks, setWeeks] = useState(1);
-  const [hourlyRate, setHourlyRate] = useState('');
+  const [hourlyRate, setHourlyRate] = useState('22');
+  const [employeeName, setEmployeeName] = useState('');
+  const [payPeriodLabel, setPayPeriodLabel] = useState('');
   const [result, setResult] = useState<TimeCardResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -145,6 +147,8 @@ export default function TimeCardLunchCalculator() {
 
     const summary = [
       `--- ${result.weeks > 1 ? 'Biweekly' : 'Weekly'} Time Card Summary with Lunch (QuickBizCalc) ---`,
+      employeeName ? `Employee: ${employeeName}` : null,
+      payPeriodLabel ? `Pay Period: ${payPeriodLabel}` : null,
       `Total Hours Worked: ${result.totalHours.toFixed(2)} hrs`,
       `Regular Hours: ${result.totalRegularHours.toFixed(2)} hrs`,
       result.totalOvertimeHours > 0 ? `Overtime Hours: ${result.totalOvertimeHours.toFixed(2)} hrs` : null,
@@ -341,6 +345,11 @@ export default function TimeCardLunchCalculator() {
     });
   };
 
+  useEffect(() => {
+    handleCalculate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [days, lunchMode, autoLunchDuration, overtimeThreshold, weeks, hourlyRate]);
+
   const handleReset = () => {
     setDays(DEFAULT_DAYS);
     setLunchMode('manual');
@@ -390,6 +399,35 @@ export default function TimeCardLunchCalculator() {
   return (
     <div className="w-full">
       <div className="p-4 sm:p-6 space-y-6 calculator-form">
+        {/* Optional Timesheet Header (for Print / Payroll Export) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-xl border border-border/50 bg-muted/20 p-3.5">
+          <div className="space-y-1.5">
+            <Label htmlFor="empNameLunch" className="text-xs font-medium text-muted-foreground">
+              Employee Name (optional — for print/export)
+            </Label>
+            <Input
+              id="empNameLunch"
+              type="text"
+              placeholder="e.g., Alex Rivera"
+              value={employeeName}
+              onChange={(e) => setEmployeeName(e.target.value)}
+              className="h-9 text-sm bg-background"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="payPeriodLunch" className="text-xs font-medium text-muted-foreground">
+              Pay Period Dates (optional)
+            </Label>
+            <Input
+              id="payPeriodLunch"
+              type="text"
+              placeholder="e.g., Nov 2 – Nov 8, 2026"
+              value={payPeriodLabel}
+              onChange={(e) => setPayPeriodLabel(e.target.value)}
+              className="h-9 text-sm bg-background"
+            />
+          </div>
+        </div>
         {/* Lunch Mode */}
         <div className="space-y-2">
           <Label className="text-sm font-medium">
@@ -745,6 +783,20 @@ export default function TimeCardLunchCalculator() {
           aria-live="polite"
         >
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
+            {(employeeName || payPeriodLabel) && (
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/50 pb-3 text-xs text-muted-foreground">
+                {employeeName && (
+                  <span>
+                    <strong className="text-foreground">Employee:</strong> {employeeName}
+                  </span>
+                )}
+                {payPeriodLabel && (
+                  <span>
+                    <strong className="text-foreground">Pay Period:</strong> {payPeriodLabel}
+                  </span>
+                )}
+              </div>
+            )}
             {/* Main Result */}
             <div className="text-center space-y-2">
               <p className="text-sm text-muted-foreground font-medium">

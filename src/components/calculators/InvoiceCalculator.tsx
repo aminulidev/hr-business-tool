@@ -16,13 +16,13 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { l1q: number; l1p: number; l2q: number; l2p: number; dp: number; tp: number; subtotal: number; discount: number; afterDiscount: number; tax: number; total: number; label: string; }
 
 export default function InvoiceCalculator() {
-  const [line1Qty, setLine1Qty] = useState('');
-  const [line1Price, setLine1Price] = useState('');
-  const [line2Qty, setLine2Qty] = useState('');
-  const [line2Price, setLine2Price] = useState('');
-  const [discountPct, setDiscountPct] = useState('');
-  const [taxPct, setTaxPct] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [line1Qty, setLine1Qty] = useState('1');
+  const [line1Price, setLine1Price] = useState('2000');
+  const [line2Qty, setLine2Qty] = useState('10');
+  const [line2Price, setLine2Price] = useState('100');
+  const [discountPct, setDiscountPct] = useState('10');
+  const [taxPct, setTaxPct] = useState('8.5');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ line1Qty: string; line1Price: string; line2Qty: string; line2Price: string; discountPct: string; taxPct: string }>('invoice-calculator');
@@ -41,7 +41,7 @@ export default function InvoiceCalculator() {
   const tax = afterDiscount * (tp / 100);
   const total = afterDiscount + tax;
 
-  const handleTryExample = () => { setLine1Qty('1'); setLine1Price('2000'); setLine2Qty('10'); setLine2Price('100'); setDiscountPct('10'); setTaxPct('8.5'); setCalculated(false); };
+  const handleTryExample = () => { setLine1Qty('1'); setLine1Price('2000'); setLine2Qty('10'); setLine2Price('100'); setDiscountPct('10'); setTaxPct('8.5'); setCalculated(true); };
   const handleCalculate = () => {
     if (subtotal > 0) {
       setCalculated(true);
@@ -66,7 +66,7 @@ export default function InvoiceCalculator() {
             <div className="relative">
               
               <Input id="line1Qty" type="number" step="any" min="0" placeholder="1"
-                value={line1Qty} onChange={(e) => { setLine1Qty(e.target.value); setCalculated(false); }} />
+                value={line1Qty} onChange={(e) => { setLine1Qty(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function InvoiceCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="line1Price" type="number" step="any" min="0" placeholder="2000" className="pl-7"
-                value={line1Price} onChange={(e) => { setLine1Price(e.target.value); setCalculated(false); }} />
+                value={line1Price} onChange={(e) => { setLine1Price(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -82,7 +82,7 @@ export default function InvoiceCalculator() {
             <div className="relative">
               
               <Input id="line2Qty" type="number" step="any" min="0" placeholder="10"
-                value={line2Qty} onChange={(e) => { setLine2Qty(e.target.value); setCalculated(false); }} />
+                value={line2Qty} onChange={(e) => { setLine2Qty(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -90,7 +90,7 @@ export default function InvoiceCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="line2Price" type="number" step="any" min="0" placeholder="100" className="pl-7"
-                value={line2Price} onChange={(e) => { setLine2Price(e.target.value); setCalculated(false); }} />
+                value={line2Price} onChange={(e) => { setLine2Price(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -98,7 +98,7 @@ export default function InvoiceCalculator() {
             <div className="relative">
               
               <Input id="discountPct" type="number" step="any" min="0" placeholder="10"
-                value={discountPct} onChange={(e) => { setDiscountPct(e.target.value); setCalculated(false); }} />
+                value={discountPct} onChange={(e) => { setDiscountPct(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -106,7 +106,7 @@ export default function InvoiceCalculator() {
             <div className="relative">
               
               <Input id="taxPct" type="number" step="any" min="0" placeholder="8.5"
-                value={taxPct} onChange={(e) => { setTaxPct(e.target.value); setCalculated(false); }} />
+                value={taxPct} onChange={(e) => { setTaxPct(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -129,9 +129,9 @@ export default function InvoiceCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Invoice Total</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(total)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Subtotal: ${formatCurrency(subtotal)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Discount: -${formatCurrency(discount)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Tax: ${formatCurrency(tax)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Subtotal: ${formatCurrency(subtotal)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Discount: -${formatCurrency(discount)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Tax: ${formatCurrency(tax)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

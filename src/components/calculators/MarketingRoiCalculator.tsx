@@ -16,9 +16,9 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { cost: number; rev: number; profit: number; roi: number; roas: number; label: string; }
 
 export default function MarketingRoiCalculator() {
-  const [campaignCost, setCampaignCost] = useState('');
-  const [revenueGenerated, setRevenueGenerated] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [campaignCost, setCampaignCost] = useState('10000');
+  const [revenueGenerated, setRevenueGenerated] = useState('35000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ campaignCost: string; revenueGenerated: string }>('marketing-roi-calculator');
@@ -29,7 +29,7 @@ export default function MarketingRoiCalculator() {
   const roi = cost > 0 ? (profit / cost) * 100 : 0;
   const roas = cost > 0 ? rev / cost : 0;
 
-  const handleTryExample = () => { setCampaignCost('10000'); setRevenueGenerated('35000'); setCalculated(false); };
+  const handleTryExample = () => { setCampaignCost('10000'); setRevenueGenerated('35000'); setCalculated(true); };
   const handleCalculate = () => {
     if (cost > 0) {
       setCalculated(true);
@@ -54,7 +54,7 @@ export default function MarketingRoiCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="campaignCost" type="number" step="any" min="0" placeholder="10000" className="pl-7"
-                value={campaignCost} onChange={(e) => { setCampaignCost(e.target.value); setCalculated(false); }} />
+                value={campaignCost} onChange={(e) => { setCampaignCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -62,7 +62,7 @@ export default function MarketingRoiCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="revenueGenerated" type="number" step="any" min="0" placeholder="35000" className="pl-7"
-                value={revenueGenerated} onChange={(e) => { setRevenueGenerated(e.target.value); setCalculated(false); }} />
+                value={revenueGenerated} onChange={(e) => { setRevenueGenerated(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -83,11 +83,11 @@ export default function MarketingRoiCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Marketing ROI</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{roi.toFixed(0)}%`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${roi.toFixed(0)}%`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Profit: ${formatCurrency(profit)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`ROAS: ${roas.toFixed(2)}x`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{roi > 200 ? "Strong" : roi > 100 ? "Good" : roi > 0 ? "Marginal" : "Loss"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Profit: ${formatCurrency(profit)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`ROAS: ${roas.toFixed(2)}x`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{roi > 200 ? "Strong" : roi > 100 ? "Good" : roi > 0 ? "Marginal" : "Loss"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -110,7 +110,7 @@ export default function MarketingRoiCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">ROI</p>
-                    <p className={`text-lg font-bold`}>{`{roi.toFixed(0)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${roi.toFixed(0)}%`}</p>
                   </div>
               </div>
 

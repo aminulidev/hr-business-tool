@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { cost: number; mgn: number; mu: number; sellingPrice: number; marginRealized: number; markupRealized: number; label: string; }
 
 export default function SellingPriceCalculator() {
-  const [unitCost, setUnitCost] = useState('');
-  const [marginPct, setMarginPct] = useState('');
-  const [markupPct, setMarkupPct] = useState('Use this OR margin');
-  const [calculated, setCalculated] = useState(false);
+  const [unitCost, setUnitCost] = useState('20');
+  const [marginPct, setMarginPct] = useState('40');
+  const [markupPct, setMarkupPct] = useState('0');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ unitCost: string; marginPct: string; markupPct: string }>('selling-price-calculator');
@@ -33,7 +33,7 @@ export default function SellingPriceCalculator() {
   const markupRealized = cost > 0 ? ((sellingPrice - cost) / cost) * 100 : 0;
   const marginRealized = sellingPrice > 0 ? ((sellingPrice - cost) / sellingPrice) * 100 : 0;
 
-  const handleTryExample = () => { setUnitCost('20'); setMarginPct('40'); setMarkupPct('0'); setCalculated(false); };
+  const handleTryExample = () => { setUnitCost('20'); setMarginPct('40'); setMarkupPct('0'); setCalculated(true); };
   const handleCalculate = () => {
     if (cost > 0 && (mgn > 0 || mu > 0)) {
       setCalculated(true);
@@ -58,7 +58,7 @@ export default function SellingPriceCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="unitCost" type="number" step="any" min="0" placeholder="20" className="pl-7"
-                value={unitCost} onChange={(e) => { setUnitCost(e.target.value); setCalculated(false); }} />
+                value={unitCost} onChange={(e) => { setUnitCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function SellingPriceCalculator() {
             <div className="relative">
               
               <Input id="marginPct" type="number" step="any" min="0" placeholder="40"
-                value={marginPct} onChange={(e) => { setMarginPct(e.target.value); setCalculated(false); }} />
+                value={marginPct} onChange={(e) => { setMarginPct(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function SellingPriceCalculator() {
             <div className="relative">
               
               <Input id="markupPct" type="number" step="any" min="0" placeholder="0"
-                value={markupPct} onChange={(e) => { setMarkupPct(e.target.value); setCalculated(false); }} />
+                value={markupPct} onChange={(e) => { setMarkupPct(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">Use this OR margin</p>
           </div>
@@ -98,9 +98,9 @@ export default function SellingPriceCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Selling Price</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(sellingPrice)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Realized margin: ${marginRealized.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Realized markup: ${markupRealized.toFixed(1)}%`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Profit per unit: ${formatCurrency(sellingPrice - cost)}`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Realized margin: ${marginRealized.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Realized markup: ${markupRealized.toFixed(1)}%`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Profit per unit: ${formatCurrency(sellingPrice - cost)}`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -123,7 +123,7 @@ export default function SellingPriceCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Margin %</p>
-                    <p className={`text-lg font-bold`}>{`{marginRealized.toFixed(1)}%`}</p>
+                    <p className={`text-lg font-bold`}>{`${marginRealized.toFixed(1)}%`}</p>
                   </div>
               </div>
 

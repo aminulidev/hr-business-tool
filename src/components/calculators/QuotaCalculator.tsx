@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { tam: number; ms: number; reps: number; gm: number; totalTarget: number; quotaPerRep: number; monthlyQuota: number; label: string; }
 
 export default function QuotaCalculator() {
-  const [territoryTAM, setTerritoryTAM] = useState('');
-  const [marketShare, setMarketShare] = useState('');
-  const [numReps, setNumReps] = useState('');
-  const [growthMultiplier, setGrowthMultiplier] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [territoryTAM, setTerritoryTAM] = useState('5000000');
+  const [marketShare, setMarketShare] = useState('2');
+  const [numReps, setNumReps] = useState('5');
+  const [growthMultiplier, setGrowthMultiplier] = useState('1.2');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ territoryTAM: string; marketShare: string; numReps: string; growthMultiplier: string }>('quota-calculator');
@@ -33,7 +33,7 @@ export default function QuotaCalculator() {
   const quotaPerRep = reps > 0 ? totalTarget / reps : 0;
   const monthlyQuota = quotaPerRep / 12;
 
-  const handleTryExample = () => { setTerritoryTAM('5000000'); setMarketShare('2'); setNumReps('5'); setGrowthMultiplier('1.2'); setCalculated(false); };
+  const handleTryExample = () => { setTerritoryTAM('5000000'); setMarketShare('2'); setNumReps('5'); setGrowthMultiplier('1.2'); setCalculated(true); };
   const handleCalculate = () => {
     if (tam > 0 && reps > 0) {
       setCalculated(true);
@@ -58,7 +58,7 @@ export default function QuotaCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="territoryTAM" type="number" step="any" min="0" placeholder="5000000" className="pl-7"
-                value={territoryTAM} onChange={(e) => { setTerritoryTAM(e.target.value); setCalculated(false); }} />
+                value={territoryTAM} onChange={(e) => { setTerritoryTAM(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function QuotaCalculator() {
             <div className="relative">
               
               <Input id="marketShare" type="number" step="any" min="0" placeholder="2"
-                value={marketShare} onChange={(e) => { setMarketShare(e.target.value); setCalculated(false); }} />
+                value={marketShare} onChange={(e) => { setMarketShare(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function QuotaCalculator() {
             <div className="relative">
               
               <Input id="numReps" type="number" step="any" min="0" placeholder="5"
-                value={numReps} onChange={(e) => { setNumReps(e.target.value); setCalculated(false); }} />
+                value={numReps} onChange={(e) => { setNumReps(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -82,7 +82,7 @@ export default function QuotaCalculator() {
             <div className="relative">
               
               <Input id="growthMultiplier" type="number" step="any" min="0" placeholder="1.2"
-                value={growthMultiplier} onChange={(e) => { setGrowthMultiplier(e.target.value); setCalculated(false); }} />
+                value={growthMultiplier} onChange={(e) => { setGrowthMultiplier(e.target.value); setCalculated(true); }} />
             </div>
             <p className="text-xs text-muted-foreground">1.0 = flat, 1.2 = 20% growth</p>
           </div>
@@ -106,9 +106,9 @@ export default function QuotaCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Annual Quota per Rep</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(quotaPerRep)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Total team target: ${formatCurrency(totalTarget)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Monthly quota: ${formatCurrency(monthlyQuota)}`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Target market share: ${ms}%`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Total team target: ${formatCurrency(totalTarget)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Monthly quota: ${formatCurrency(monthlyQuota)}`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Target market share: ${ms}%`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>

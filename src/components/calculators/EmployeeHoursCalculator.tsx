@@ -57,7 +57,7 @@ const PRESET_TEAMS: Record<string, EmployeeRow[]> = {
 export default function EmployeeHoursCalculator() {
   const [employees, setEmployees] = useState<EmployeeRow[]>(PRESET_TEAMS.office);
   const [employerTaxLoad, setEmployerTaxLoad] = useState('10.0'); // 7.65% FICA + ~2.35% FUTA/SUTA/Workers Comp
-  const [calculated, setCalculated] = useState(false);
+  const [calculated, setCalculated] = useState(true);
   const [copied, setCopied] = useState(false);
   const [compareA, setCompareA] = useState<EmployeeHoursSnapshot | null>(null);
   const [compareB, setCompareB] = useState<EmployeeHoursSnapshot | null>(null);
@@ -144,7 +144,7 @@ export default function EmployeeHoursCalculator() {
   const handleTryExample = () => {
     loadPreset('office');
     setEmployerTaxLoad('10.0');
-    setCalculated(false);
+    setCalculated(true);
   };
 
   const handleCalculate = () => {
@@ -333,7 +333,7 @@ export default function EmployeeHoursCalculator() {
                   min="0"
                   max="30"
                   value={employerTaxLoad}
-                  onChange={(e) => { setEmployerTaxLoad(e.target.value); setCalculated(false); }}
+                  onChange={(e) => { setEmployerTaxLoad(e.target.value); setCalculated(true); }}
                   className="h-7 text-xs pr-4 text-right"
                 />
                 <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground pointer-events-none">%</span>

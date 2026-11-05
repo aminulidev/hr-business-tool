@@ -16,10 +16,10 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { rev: number; ba: number; ea: number; avgAssets: number; turnover: number; label: string; }
 
 export default function AssetTurnoverCalculator() {
-  const [revenue, setRevenue] = useState('');
-  const [beginAssets, setBeginAssets] = useState('');
-  const [endAssets, setEndAssets] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [revenue, setRevenue] = useState('2000000');
+  const [beginAssets, setBeginAssets] = useState('1500000');
+  const [endAssets, setEndAssets] = useState('1700000');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ revenue: string; beginAssets: string; endAssets: string }>('asset-turnover-calculator');
@@ -30,7 +30,7 @@ export default function AssetTurnoverCalculator() {
   const avgAssets = (ba + ea) / 2;
   const turnover = avgAssets > 0 ? rev / avgAssets : 0;
 
-  const handleTryExample = () => { setRevenue('2000000'); setBeginAssets('1500000'); setEndAssets('1700000'); setCalculated(false); };
+  const handleTryExample = () => { setRevenue('2000000'); setBeginAssets('1500000'); setEndAssets('1700000'); setCalculated(true); };
   const handleCalculate = () => {
     if (rev > 0 && (ba > 0 || ea > 0)) {
       setCalculated(true);
@@ -55,7 +55,7 @@ export default function AssetTurnoverCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="revenue" type="number" step="any" min="0" placeholder="2000000" className="pl-7"
-                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(false); }} />
+                value={revenue} onChange={(e) => { setRevenue(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -63,7 +63,7 @@ export default function AssetTurnoverCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="beginAssets" type="number" step="any" min="0" placeholder="1500000" className="pl-7"
-                value={beginAssets} onChange={(e) => { setBeginAssets(e.target.value); setCalculated(false); }} />
+                value={beginAssets} onChange={(e) => { setBeginAssets(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -71,7 +71,7 @@ export default function AssetTurnoverCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="endAssets" type="number" step="any" min="0" placeholder="1700000" className="pl-7"
-                value={endAssets} onChange={(e) => { setEndAssets(e.target.value); setCalculated(false); }} />
+                value={endAssets} onChange={(e) => { setEndAssets(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -92,11 +92,11 @@ export default function AssetTurnoverCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Asset Turnover Ratio</p>
-                <p className="text-4xl font-bold text-emerald-600">{`{turnover.toFixed(2)}x`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${turnover.toFixed(2)}x`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Avg assets: ${formatCurrency(avgAssets)}`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{'Retail 2.5x, Tech 0.8x, Mfg 1.0x'}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{turnover < 1 ? "Low efficiency" : turnover > 2 ? "High efficiency" : "Healthy"}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Avg assets: ${formatCurrency(avgAssets)}`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{'Retail 2.5x, Tech 0.8x, Mfg 1.0x'}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{turnover < 1 ? "Low efficiency" : turnover > 2 ? "High efficiency" : "Healthy"}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -115,7 +115,7 @@ export default function AssetTurnoverCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Turnover</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{`{turnover.toFixed(2)}x`}</p>
+                    <p className={`text-lg font-bold text-emerald-600`}>{`${turnover.toFixed(2)}x`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Per $1 Asset</p>

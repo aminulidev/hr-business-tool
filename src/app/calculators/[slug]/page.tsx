@@ -47,6 +47,16 @@ const componentMap: Record<string, React.ComponentType> = {
   'florida-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="FL" />,
   'new-york-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="NY" />,
   'illinois-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="IL" />,
+  'washington-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="WA" />,
+  'tennessee-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="TN" />,
+  'nevada-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="NV" />,
+  'pennsylvania-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="PA" />,
+  'north-carolina-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="NC" />,
+  'georgia-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="GA" />,
+  'michigan-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="MI" />,
+  'indiana-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="IN" />,
+  'arizona-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="AZ" />,
+  'colorado-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="CO" />,
   'severance-pay-calculator': dynamic(() => import('@/components/calculators/SeverancePayCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'workers-comp-calculator': dynamic(() => import('@/components/calculators/WorkersCompCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'fica-tax-calculator': dynamic(() => import('@/components/calculators/FicaTaxCalculator'), { loading: () => <CalculatorSkeleton /> }),
@@ -353,6 +363,8 @@ export default async function CalculatorPage({
             ...(seoData.formula ? [{ id: 'formula', label: 'Formula' }] : []),
             ...(seoData.commissionStructures?.length > 0 ? [{ id: 'commission-structures', label: 'Common Commission Structures' }] : []),
             ...(seoData.workedExamples?.length > 0 ? [{ id: 'worked-examples', label: 'Worked Examples' }] : []),
+            ...(seoData.benchmarkTables?.length > 0 ? [{ id: 'benchmarks-reference', label: 'Benchmarks & Tables' }] : []),
+            ...(seoData.deepDiveSections?.length > 0 ? [{ id: 'in-depth-guide', label: 'In-Depth Guide' }] : []),
             ...(seoData.faqs?.length > 0 ? [{ id: 'frequently-asked-questions', label: 'FAQs' }] : []),
             { id: 'statutory-sources', label: 'Statutory Sources' },
             ...(relatedTools.length > 0 ? [{ id: 'related-calculators', label: 'Related Calculators' }] : []),
@@ -362,6 +374,8 @@ export default async function CalculatorPage({
           formulaDescription={seoData.formulaDescription}
           commissionStructures={seoData.commissionStructures}
           workedExamples={seoData.workedExamples}
+          benchmarkTables={seoData.benchmarkTables}
+          deepDiveSections={seoData.deepDiveSections}
           faqs={seoData.faqs}
           relatedTools={relatedTools}
         >

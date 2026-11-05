@@ -16,11 +16,11 @@ import { formatCurrency, formatPercent } from '@/lib/utils';
 interface Snapshot { tc: number; d1: number; d2: number; d3: number; totalBase: number; dept1Cost: number; dept2Cost: number; dept3Cost: number; label: string; }
 
 export default function CostAllocationCalculator() {
-  const [totalCost, setTotalCost] = useState('');
-  const [dept1Base, setDept1Base] = useState('');
-  const [dept2Base, setDept2Base] = useState('');
-  const [dept3Base, setDept3Base] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [totalCost, setTotalCost] = useState('100000');
+  const [dept1Base, setDept1Base] = useState('30');
+  const [dept2Base, setDept2Base] = useState('20');
+  const [dept3Base, setDept3Base] = useState('50');
+  const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot | null>(null);
   const [compareB, setCompareB] = useState<Snapshot | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ totalCost: string; dept1Base: string; dept2Base: string; dept3Base: string }>('cost-allocation-calculator');
@@ -34,7 +34,7 @@ export default function CostAllocationCalculator() {
   const dept2Cost = totalBase > 0 ? tc * (d2 / totalBase) : 0;
   const dept3Cost = totalBase > 0 ? tc * (d3 / totalBase) : 0;
 
-  const handleTryExample = () => { setTotalCost('100000'); setDept1Base('30'); setDept2Base('20'); setDept3Base('50'); setCalculated(false); };
+  const handleTryExample = () => { setTotalCost('100000'); setDept1Base('30'); setDept2Base('20'); setDept3Base('50'); setCalculated(true); };
   const handleCalculate = () => {
     if (tc > 0 && totalBase > 0) {
       setCalculated(true);
@@ -59,7 +59,7 @@ export default function CostAllocationCalculator() {
             <div className="relative">
               <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
               <Input id="totalCost" type="number" step="any" min="0" placeholder="100000" className="pl-7"
-                value={totalCost} onChange={(e) => { setTotalCost(e.target.value); setCalculated(false); }} />
+                value={totalCost} onChange={(e) => { setTotalCost(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function CostAllocationCalculator() {
             <div className="relative">
               
               <Input id="dept1Base" type="number" step="any" min="0" placeholder="30"
-                value={dept1Base} onChange={(e) => { setDept1Base(e.target.value); setCalculated(false); }} />
+                value={dept1Base} onChange={(e) => { setDept1Base(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -75,7 +75,7 @@ export default function CostAllocationCalculator() {
             <div className="relative">
               
               <Input id="dept2Base" type="number" step="any" min="0" placeholder="20"
-                value={dept2Base} onChange={(e) => { setDept2Base(e.target.value); setCalculated(false); }} />
+                value={dept2Base} onChange={(e) => { setDept2Base(e.target.value); setCalculated(true); }} />
             </div>
           </div>
           <div className="space-y-2">
@@ -83,7 +83,7 @@ export default function CostAllocationCalculator() {
             <div className="relative">
               
               <Input id="dept3Base" type="number" step="any" min="0" placeholder="50"
-                value={dept3Base} onChange={(e) => { setDept3Base(e.target.value); setCalculated(false); }} />
+                value={dept3Base} onChange={(e) => { setDept3Base(e.target.value); setCalculated(true); }} />
             </div>
           </div>
         </div>
@@ -106,9 +106,9 @@ export default function CostAllocationCalculator() {
                 <p className="text-sm text-muted-foreground font-medium">Cost Allocation</p>
                 <p className="text-4xl font-bold text-emerald-600">{formatCurrency(dept1Cost) + " / " + formatCurrency(dept2Cost) + " / " + formatCurrency(dept3Cost)}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="'bg-emerald-500/10 border-emerald-500/30 text-emerald-600'">{`Dept 1: ${formatCurrency(dept1Cost)} (${d1} base)`}</Badge>
-                  <Badge variant="outline" className="'bg-blue-500/10 border-blue-500/30 text-blue-600'">{`Dept 2: ${formatCurrency(dept2Cost)} (${d2} base)`}</Badge>
-                  <Badge variant="outline" className="'bg-amber-500/10 border-amber-500/30 text-amber-600'">{`Dept 3: ${formatCurrency(dept3Cost)} (${d3} base)`}</Badge>
+                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Dept 1: ${formatCurrency(dept1Cost)} (${d1} base)`}</Badge>
+                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Dept 2: ${formatCurrency(dept2Cost)} (${d2} base)`}</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Dept 3: ${formatCurrency(dept3Cost)} (${d3} base)`}</Badge>
                 </div>
                 <div className="flex justify-center gap-2 pt-2">
                   <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
@@ -123,7 +123,7 @@ export default function CostAllocationCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Total Base</p>
-                    <p className={`text-lg font-bold`}>{`{totalBase}`}</p>
+                    <p className={`text-lg font-bold`}>{`${totalBase}`}</p>
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Dept 1</p>
