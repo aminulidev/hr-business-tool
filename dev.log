@@ -1,0 +1,22 @@
+▲ Next.js 16.1.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.102:3000
+- Environments: .env
+- Experiments (use with caution):
+  · optimizePackageImports
+
+✓ Starting...
+✓ Ready in 4s
+○ Compiling / ...
+ GET / 200 in 7.0s (compile: 5.2s, render: 1760ms)
+ GET / 200 in 184ms (compile: 93ms, render: 92ms)
+✓ Compiled in 364ms
+ GET / 200 in 200ms (compile: 106ms, render: 94ms)
+✓ Compiled in 716ms
+ GET / 200 in 1075ms (compile: 109ms, render: 966ms)
+ GET / 200 in 930ms (compile: 13ms, render: 917ms)
+✓ Compiled in 1002ms
+○ Compiling /calculators/[slug] ...
+ GET /calculators/sales-tax-calculator 200 in 8.8s (compile: 6.4s, generate-params: 1135ms, render: 2.4s)
+ GET /calculators/georgia-hourly-paycheck-calculator 200 in 835ms (compile: 40ms, generate-params: 18ms, render: 795ms)
+ GET /calculators/freelance-hourly-rate-calculator 200 in 969ms (compile: 109ms, generate-params: 87ms, render: 860ms)
