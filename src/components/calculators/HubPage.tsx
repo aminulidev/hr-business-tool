@@ -1,9 +1,24 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
-import { Search, X, Flame, ArrowRight, Scale } from 'lucide-react';
+import {
+  Search,
+  X,
+  Flame,
+  ArrowRight,
+  Scale,
+  LayoutGrid,
+  Landmark,
+  Wallet,
+  Clock,
+  TrendingUp,
+  Users,
+  Briefcase,
+  ShieldCheck,
+  type LucideIcon,
+} from 'lucide-react';
 import { getPublishedCalculators, categoryOrder, categoryMeta, type CalculatorMeta } from '@/lib/calculator-meta';
 import { searchCalculators } from '@/lib/search-calculators';
 
@@ -12,13 +27,13 @@ const containerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.06,
+      staggerChildren: 0.05,
     },
   },
 };
 
 const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 16 },
   visible: {
     opacity: 1,
     y: 0,
@@ -27,17 +42,70 @@ const cardVariants: Variants = {
 };
 
 const TOP_TOOL_SLUGS = [
-  { slug: 'hourly-paycheck-calculator', label: 'Hourly Paycheck (2026)', badge: 'Most Popular' },
-  { slug: 'wages-calculator', label: 'Wages & Salary Converter' },
-  { slug: 'business-day-calculator', label: 'Business Days & Holidays' },
-  { slug: 'profit-margin-calculator', label: 'Profit Margin & Markup' },
-  { slug: 'time-card-calculator-with-lunch', label: 'Time Card + Lunch Break' },
-  { slug: 'federal-tax-calculator', label: '2026 Federal Tax Estimator' },
+  { slug: 'hourly-paycheck-calculator', label: 'Hourly Paycheck', badge: '#1 Tool' },
+  { slug: 'wages-calculator', label: 'Salary to Hourly' },
+  { slug: 'business-day-calculator', label: 'Business Days' },
+  { slug: 'profit-margin-calculator', label: 'Profit Margin' },
+  { slug: 'time-card-calculator-with-lunch', label: 'Time Card + Lunch' },
+  { slug: 'employee-cost-calculator', label: 'Employee Cost' },
 ];
+
+const CATEGORY_UI_CONFIG: Record<
+  string,
+  { shortLabel: string; icon: LucideIcon; description: string }
+> = {
+  'Payroll & Taxes': {
+    shortLabel: 'Payroll & Taxes',
+    icon: Landmark,
+    description: '2026 federal & state paycheck calculators, FICA, W-2 vs. 1099, and withholding estimators',
+  },
+  'Time & Attendance': {
+    shortLabel: 'Time & Attendance',
+    icon: Clock,
+    description: 'Weekly time cards with lunch breaks, business days, PTO accrual, and billable hours',
+  },
+  'Salary & Compensation': {
+    shortLabel: 'Salary & Pay',
+    icon: Wallet,
+    description: 'Salary-to-hourly converters, overtime (1.5x & 2x), pro-rata pay, raises, and shift differentials',
+  },
+  'Business Finance': {
+    shortLabel: 'Business Finance',
+    icon: TrendingUp,
+    description: 'Profit margin, markup, ROI, EBITDA margin, startup burn rate, break-even, and sales tax',
+  },
+  'HR Analytics': {
+    shortLabel: 'HR & Workforce',
+    icon: Users,
+    description: 'True loaded employee cost, FTE & ACA compliance, turnover cost, severance, and revenue per employee',
+  },
+  'Sales & Compensation': {
+    shortLabel: 'Sales, SaaS & Freelance',
+    icon: Briefcase,
+    description: 'Sales commission, CAC, CLV, SaaS churn rate, freelance hourly rates, and Upwork fee calculators',
+  },
+};
 
 export default function HubPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Press "/" anywhere (when not already typing in an input) to focus search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.key === '/' &&
+        document.activeElement?.tagName !== 'INPUT' &&
+        document.activeElement?.tagName !== 'TEXTAREA'
+      ) {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const isSearching = searchQuery.trim().length > 0;
   const searchResults = useMemo(() => {
@@ -61,6 +129,20 @@ export default function HubPage() {
     return counts;
   }, [activeCalculators]);
 
+  // Order categories by highest tool count / demand
+  const orderedActiveCategories = useMemo(() => {
+    const preferredOrder = [
+      'Payroll & Taxes',
+      'Time & Attendance',
+      'Salary & Compensation',
+      'Business Finance',
+      'HR Analytics',
+      'Sales & Compensation',
+    ];
+    const allCats = Array.from(new Set([...preferredOrder, ...categoryOrder]));
+    return allCats.filter((cat) => (categoryCounts[cat] || 0) > 0);
+  }, [categoryCounts]);
+
   const grouped = useMemo(() => {
     const groups: {
       category: string;
@@ -69,9 +151,9 @@ export default function HubPage() {
       maxScore: number;
     }[] = [];
 
-    categoryOrder.forEach((cat) => {
+    orderedActiveCategories.forEach((cat) => {
       const items = filteredCalculators.filter((c) => c.category === cat);
-      if (items.length > 0 && categoryMeta[cat]) {
+      if (items.length > 0) {
         let maxScore = 0;
         if (searchResults) {
           for (const item of items) {
@@ -83,119 +165,117 @@ export default function HubPage() {
         }
         groups.push({
           category: cat,
-          meta: categoryMeta[cat],
+          meta: {
+            emoji: categoryMeta[cat]?.emoji || '📊',
+            description:
+              CATEGORY_UI_CONFIG[cat]?.description ||
+              categoryMeta[cat]?.description ||
+              `${cat} calculators and tools`,
+          },
           items,
           maxScore,
         });
       }
     });
 
-    const coveredCategories = new Set(groups.map((g) => g.category));
-    const remainingItems = filteredCalculators.filter((c) => !coveredCategories.has(c.category));
-    if (remainingItems.length > 0) {
-      const remainingCats = Array.from(new Set(remainingItems.map((c) => c.category)));
-      remainingCats.forEach((cat) => {
-        const items = remainingItems.filter((c) => c.category === cat);
-        let maxScore = 0;
-        if (searchResults) {
-          for (const item of items) {
-            const found = searchResults.find((r) => r.calculator.slug === item.slug);
-            if (found && found.score > maxScore) {
-              maxScore = found.score;
-            }
-          }
-        }
-        groups.push({
-          category: cat,
-          meta: categoryMeta[cat] || { emoji: '📊', description: `${cat} calculators and tools` },
-          items,
-          maxScore,
-        });
-      });
-    }
-
     if (searchResults) {
       groups.sort((a, b) => b.maxScore - a.maxScore);
     }
 
     return groups;
-  }, [filteredCalculators, searchResults]);
+  }, [filteredCalculators, orderedActiveCategories, searchResults]);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
+      transition={{ duration: 0.35 }}
       className="py-6 sm:py-10"
     >
       {/* Hero Section */}
       <div className="text-center mb-8 sm:mb-10 px-4">
-        <motion.h1
-          initial={{ opacity: 0, y: 16 }}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
-          className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4"
+          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-semibold mb-4"
+        >
+          <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+          <span>2026 IRS &amp; FLSA Verified · {activeCalculators.length} Free Calculators</span>
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.04 }}
+          className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-3.5"
         >
           Business &amp; HR{' '}
           <span className="bg-gradient-to-r from-emerald-500 via-emerald-600 to-gold-500 bg-clip-text text-transparent">
             Calculators
           </span>
         </motion.h1>
+
         <motion.p
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="text-muted-foreground max-w-2xl mx-auto text-base sm:text-lg mb-6"
+          transition={{ delay: 0.08 }}
+          className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-lg mb-6"
         >
-          Instant, IRS &amp; FLSA-verified 2026 calculators for small business owners, HR managers, and employees.
-          No signup, 100% browser-private.
+          Instant, accurate 2026 payroll, tax, time card, and financial calculators for business owners, HR
+          managers, and employees. No signup, 100% browser-private.
         </motion.p>
 
-        {/* Search Bar */}
+        {/* Search Bar — Flex layout ensures Search icon is never covered by backdrop-blur */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="max-w-xl mx-auto relative group"
+          transition={{ delay: 0.12 }}
+          className="max-w-2xl mx-auto relative group"
         >
           <div className="absolute inset-0 bg-emerald-500/15 blur-2xl group-focus-within:bg-emerald-500/25 transition-all duration-500 -z-10 rounded-full" />
-          <div className="relative flex items-center">
-            <Search className="absolute left-4 h-5 w-5 text-muted-foreground group-focus-within:text-emerald-600 transition-colors" />
+          <div className="flex items-center w-full h-13 sm:h-14 px-4 rounded-2xl border border-border/70 bg-card/90 backdrop-blur-xl shadow-lg group-focus-within:ring-2 group-focus-within:ring-emerald-500/40 group-focus-within:border-emerald-500/60 transition-all">
+            <Search className="h-5 w-5 text-emerald-600 shrink-0 mr-3" />
             <input
+              ref={searchInputRef}
               type="text"
-              placeholder="Search 50+ calculators (e.g. 'hourly paycheck', 'profit margin', 'business days')..."
-              className="w-full h-14 pl-12 pr-12 rounded-2xl border border-border/60 bg-background/80 backdrop-blur-xl shadow-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all text-base"
+              placeholder={`Search ${activeCalculators.length} calculators (e.g. 'hourly paycheck', 'profit margin', 'employee cost')...`}
+              className="w-full h-full bg-transparent text-foreground placeholder:text-muted-foreground/80 focus:outline-none text-sm sm:text-base truncate"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            {searchQuery && (
+            {searchQuery ? (
               <button
+                type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-4 p-1.5 rounded-full hover:bg-muted text-muted-foreground transition-colors"
+                className="ml-2 p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors shrink-0"
                 aria-label="Clear search"
               >
                 <X className="h-4 w-4" />
               </button>
+            ) : (
+              <kbd className="hidden sm:inline-flex items-center justify-center h-6 px-2 ml-2 rounded-md border border-border/70 bg-muted/60 font-mono text-[11px] font-medium text-muted-foreground shrink-0 select-none">
+                /
+              </kbd>
             )}
           </div>
         </motion.div>
 
-        {/* Most Popular Quick-Launch Strip Above the Fold */}
-        <div className="max-w-4xl mx-auto mt-6">
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400 mr-1">
-              <Flame className="h-3.5 w-3.5" />
-              Most Popular:
+        {/* Popular Quick-Launch Strip */}
+        <div className="max-w-4xl mx-auto mt-4">
+          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400 mr-0.5">
+              <Flame className="h-3.5 w-3.5 fill-amber-500/20" />
+              Popular:
             </span>
             {TOP_TOOL_SLUGS.map((item) => (
               <Link
                 key={item.slug}
                 href={`/calculators/${item.slug}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-card hover:bg-emerald-500/10 hover:border-emerald-500/40 hover:text-emerald-600 border border-border/60 transition-all shadow-xs"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-card/90 hover:bg-emerald-500/10 hover:border-emerald-500/40 hover:text-emerald-600 border border-border/60 transition-all shadow-2xs"
               >
                 <span>{item.label}</span>
                 {item.badge && (
-                  <span className="px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 text-[10px] font-bold">
+                  <span className="px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold">
                     {item.badge}
                   </span>
                 )}
@@ -203,7 +283,7 @@ export default function HubPage() {
             ))}
             <Link
               href="/compare/jobs"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-all shadow-xs"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-600/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 hover:bg-emerald-600 hover:text-white transition-all shadow-2xs"
             >
               <Scale className="h-3 w-3" />
               Compare 2 Job Offers
@@ -212,44 +292,76 @@ export default function HubPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-14">
-        {/* Interactive Category Filter Tabs */}
-        <div className="flex items-center justify-start sm:justify-center overflow-x-auto pb-2 gap-2 no-scrollbar">
-          <button
-            type="button"
-            onClick={() => setSelectedCategory('ALL')}
-            className={`shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all ${
-              selectedCategory === 'ALL'
-                ? 'bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-600/20'
-                : 'bg-card hover:bg-muted text-muted-foreground hover:text-foreground border-border/60'
-            }`}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-12">
+        {/* Redesigned Category Filter Dock — Centered, Wrapped, Zero Scrollbar, Zero Clipping */}
+        <div className="max-w-5xl mx-auto">
+          <div
+            role="tablist"
+            aria-label="Filter calculators by category"
+            className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 p-2 rounded-2xl bg-card/75 dark:bg-card/40 backdrop-blur-xl border border-border/60 shadow-sm"
           >
-            All Calculators ({categoryCounts.ALL})
-          </button>
-          {categoryOrder.map((cat) => {
-            const count = categoryCounts[cat] || 0;
-            if (count === 0) return null;
-            const emoji = categoryMeta[cat]?.emoji || '📊';
-            const isSelected = selectedCategory === cat;
-            return (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setSelectedCategory(cat)}
-                className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all ${
-                  isSelected
-                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-600/20'
-                    : 'bg-card hover:bg-muted text-muted-foreground hover:text-foreground border-border/60'
+            <button
+              type="button"
+              role="tab"
+              aria-selected={selectedCategory === 'ALL'}
+              onClick={() => setSelectedCategory('ALL')}
+              className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                selectedCategory === 'ALL'
+                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/25'
+                  : 'bg-transparent hover:bg-muted/80 text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <LayoutGrid className="h-3.5 w-3.5 shrink-0" />
+              <span>All Tools</span>
+              <span
+                className={`px-1.5 py-0.5 rounded-md text-[11px] font-bold leading-none ${
+                  selectedCategory === 'ALL'
+                    ? 'bg-white/20 text-white'
+                    : 'bg-muted text-muted-foreground'
                 }`}
               >
-                <span>{emoji}</span>
-                <span>{cat}</span>
-                <span className={`text-xs ${isSelected ? 'text-emerald-100' : 'text-muted-foreground'}`}>
-                  ({count})
-                </span>
-              </button>
-            );
-          })}
+                {categoryCounts.ALL}
+              </span>
+            </button>
+
+            {orderedActiveCategories.map((cat) => {
+              const count = categoryCounts[cat] || 0;
+              if (count === 0) return null;
+              const config = CATEGORY_UI_CONFIG[cat];
+              const IconComponent = config?.icon || LayoutGrid;
+              const displayLabel = config?.shortLabel || cat;
+              const isSelected = selectedCategory === cat;
+
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  role="tab"
+                  aria-selected={isSelected}
+                  onClick={() => setSelectedCategory(isSelected ? 'ALL' : cat)}
+                  className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                    isSelected
+                      ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/25'
+                      : 'bg-transparent hover:bg-muted/80 text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  <IconComponent
+                    className={`h-3.5 w-3.5 shrink-0 ${
+                      isSelected ? 'text-white' : 'text-emerald-600 dark:text-emerald-400'
+                    }`}
+                  />
+                  <span>{displayLabel}</span>
+                  <span
+                    className={`px-1.5 py-0.5 rounded-md text-[11px] font-bold leading-none ${
+                      isSelected ? 'bg-white/20 text-white' : 'bg-muted text-muted-foreground'
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Calculator Grid */}
@@ -264,7 +376,7 @@ export default function HubPage() {
                 We couldn&apos;t find any tool matching &ldquo;{searchQuery}&rdquo;. Try another search term:
               </p>
               <div className="mt-5 flex flex-wrap justify-center gap-2">
-                {['ROI', 'Commission', 'Payroll', 'Overtime', 'Break-Even', 'PTO'].map((term) => (
+                {['Paycheck', 'Profit Margin', 'Time Card', 'Overtime', 'Employee Cost', 'Burn Rate'].map((term) => (
                   <button
                     key={term}
                     type="button"
@@ -280,34 +392,66 @@ export default function HubPage() {
               </div>
             </div>
           ) : (
-            grouped.map((group) => (
-              <section key={group.category}>
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="text-2xl">{group.meta.emoji}</span>
-                  <div>
-                    <h2 className="text-xl font-bold">
-                      {group.category}
-                      <span className="ml-2 text-sm font-medium text-muted-foreground">
-                        ({group.items.length} tool{group.items.length > 1 ? 's' : ''})
-                      </span>
-                    </h2>
-                    <p className="text-sm text-muted-foreground">{group.meta.description}</p>
+            grouped.map((group) => {
+              const SectionIcon = CATEGORY_UI_CONFIG[group.category]?.icon || LayoutGrid;
+              const sectionTitle = CATEGORY_UI_CONFIG[group.category]?.shortLabel || group.category;
+
+              return (
+                <section key={group.category} className="scroll-mt-24">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-3 border-b border-border/50">
+                    <div className="flex items-start sm:items-center gap-3.5">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600">
+                        <SectionIcon className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2.5">
+                          <h2 className="text-xl font-bold tracking-tight text-foreground">
+                            {sectionTitle}
+                          </h2>
+                          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                            {group.items.length} {group.items.length === 1 ? 'tool' : 'tools'}
+                          </span>
+                        </div>
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                          {group.meta.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    {selectedCategory === 'ALL' ? (
+                      <button
+                        type="button"
+                        onClick={() => setSelectedCategory(group.category)}
+                        className="self-start sm:self-center text-xs font-semibold text-emerald-600 hover:text-emerald-700 inline-flex items-center gap-1 cursor-pointer shrink-0"
+                      >
+                        Filter category &rarr;
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setSelectedCategory('ALL')}
+                        className="self-start sm:self-center text-xs font-semibold text-muted-foreground hover:text-foreground inline-flex items-center gap-1 cursor-pointer shrink-0"
+                      >
+                        &larr; Show all {categoryCounts.ALL} calculators
+                      </button>
+                    )}
                   </div>
-                </div>
-                <motion.div
-                  key={group.category}
-                  variants={containerVariants}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.05 }}
-                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
-                >
-                  {group.items.map((calc) => (
-                    <CalculatorCardComponent key={calc.slug} calc={calc} />
-                  ))}
-                </motion.div>
-              </section>
-            ))
+
+                  <motion.div
+                    key={group.category}
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.05 }}
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5"
+                  >
+                    {group.items.map((calc) => (
+                      <CalculatorCardComponent key={calc.slug} calc={calc} />
+                    ))}
+                  </motion.div>
+                </section>
+              );
+            })
           )}
         </div>
 
@@ -529,18 +673,21 @@ function CalculatorCardComponent({ calc }: { calc: CalculatorMeta }) {
       className="cursor-pointer group hover:-translate-y-1 active:scale-[0.98] transition-transform duration-200"
     >
       <Link href={calc.path} className="block h-full">
-        <div className="relative h-full rounded-2xl border border-border/60 bg-card/80 backdrop-blur-sm p-5 sm:p-6 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/5 hover:border-emerald-500/30">
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/30 transition-shadow">
-              <Icon className="h-6 w-6 text-white" />
+        <div className="relative h-full rounded-2xl border border-border/60 bg-card/85 backdrop-blur-sm p-5 sm:p-6 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/8 hover:border-emerald-500/35 flex flex-col justify-between">
+          <div>
+            <div className="flex items-start justify-between mb-3.5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-md shadow-emerald-500/20 group-hover:shadow-emerald-500/30 transition-shadow">
+                <Icon className="h-5 w-5 text-white" />
+              </div>
+              <ArrowRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-all" />
             </div>
+            <h3 className="font-bold text-base mb-1.5 group-hover:text-emerald-600 transition-colors">
+              {calc.title}
+            </h3>
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              {calc.shortDescription}
+            </p>
           </div>
-          <h3 className="font-bold text-base mb-1.5 group-hover:text-emerald-600 transition-colors">
-            {calc.title}
-          </h3>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            {calc.shortDescription}
-          </p>
         </div>
       </Link>
     </motion.div>
