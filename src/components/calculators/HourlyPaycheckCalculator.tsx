@@ -19,6 +19,9 @@ import {
   ArrowRight,
   Sparkles,
   Link2,
+  FileText,
+  Receipt,
+  User,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -35,11 +38,23 @@ import {
   TAX_YEAR,
   type FilingStatus,
   type PayFrequency,
+  W4_CHILD_CREDIT,
+  W4_OTHER_DEPENDENT_CREDIT,
+  type PaycheckInput,
   type PaycheckResult,
   type PaycheckState,
   type StateCode,
+  type W4Adjustments,
 } from '@/lib/payroll/withholding-2026';
 import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
+import EmployerCostPanel, { ResultViewToggle, type ResultView } from './EmployerCostPanel';
+import ReverseSolverCard from './ReverseSolverCard';
+import PaycheckScenarioCompare from './PaycheckScenarioCompare';
+import PayStubDialog from './PayStubDialog';
+import BulkPayrollPanel from './BulkPayrollPanel';
+import { useSearchParam } from '@/hooks/useSearchParam';
+import { calculateEmployerCost } from '@/lib/payroll/employer-cost-2026';
+import { parseScenarioParams, writeScenarioParams, type CompareScenario } from '@/lib/payroll/scenario-params';
 
 // ---------------------------------------------------------------------------
 // Labels & Presets
@@ -113,7 +128,43 @@ interface PaycheckDefaults {
   benefitsPerPeriod: string;
   otherDeductions: string;
   nycResident: boolean;
+  /** ?view=employer opens the employer-cost side of the result */
+  view: ResultView;
+  /** Scenario B from b_* params, or null */
+  compare: CompareScenario | null;
+  /** Form W-4 Steps 2–4 (w4_2, w4_kids, w4_dep, w4_a, w4_b, w4_c) */
+  w4MultipleJobs: boolean;
+  w4Children: string;
+  w4Dependents: string;
+  w4OtherIncome: string;
+  w4Deductions: string;
+  w4Extra: string;
 }
+
+/** Steps 2–4 as the engine wants them; undefined when every field is blank */
+function w4FromInputs(multipleJobs: boolean, children: string, dependents: string, otherIncome: string, deductions: string, extra: string): W4Adjustments | undefined {
+  const kids = parseInt(children || '0', 10) || 0;
+  const deps = parseInt(dependents || '0', 10) || 0;
+  const w4: W4Adjustments = {
+    multipleJobs,
+    dependentsCredit: kids * W4_CHILD_CREDIT + deps * W4_OTHER_DEPENDENT_CREDIT,
+    otherIncome: parseFloat(otherIncome || '0') || 0,
+    deductions: parseFloat(deductions || '0') || 0,
+    extraWithholdingPerPeriod: parseFloat(extra || '0') || 0,
+  };
+  return multipleJobs || w4.dependentsCredit || w4.otherIncome || w4.deductions || w4.extraWithholdingPerPeriod ? w4 : undefined;
+}
+
+const scenarioOf = (d: PaycheckDefaults): CompareScenario => ({
+  state: d.state,
+  hourlyRate: d.hourlyRate,
+  regularHours: d.regularHours,
+  overtimeHours: d.overtimeHours,
+  annualSalary: d.annualSalary,
+  filingStatus: d.filingStatus,
+  payFrequency: d.payFrequency,
+  retirementPct: d.retirementPct,
+});
 
 // Pre-filled sensible defaults for instant live calculation on page load, overridden by the
 // shareable URL query params (?rate=28&hours=40&ot=5&state=CA&freq=bi-weekly&status=single)
@@ -131,6 +182,14 @@ function readDefaults(params: URLSearchParams | null): PaycheckDefaults {
     benefitsPerPeriod: '',
     otherDeductions: '',
     nycResident: false,
+    view: 'employee',
+    compare: null,
+    w4MultipleJobs: false,
+    w4Children: '',
+    w4Dependents: '',
+    w4OtherIncome: '',
+    w4Deductions: '',
+    w4Extra: '',
   };
   if (!params || !params.toString()) return d;
   const qRate = params.get('rate');
@@ -161,6 +220,18 @@ function readDefaults(params: URLSearchParams | null): PaycheckDefaults {
   if (qBen) d.benefitsPerPeriod = qBen;
   if (qOther) d.otherDeductions = qOther;
   if (qNyc === '1') d.nycResident = true;
+  if (params.get('view') === 'employer') d.view = 'employer';
+  if (params.get('w4_2') === '1') d.w4MultipleJobs = true;
+  const w4num = (k: string) => {
+    const v = params.get(k);
+    return v !== null && Number.isFinite(parseFloat(v)) && parseFloat(v) >= 0 ? v : null;
+  };
+  d.w4Children = w4num('w4_kids') ?? '';
+  d.w4Dependents = w4num('w4_dep') ?? '';
+  d.w4OtherIncome = w4num('w4_a') ?? '';
+  d.w4Deductions = w4num('w4_b') ?? '';
+  d.w4Extra = w4num('w4_c') ?? '';
+  d.compare = parseScenarioParams(params, scenarioOf(d));
   return d;
 }
 
@@ -190,6 +261,24 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
   const [otherDeductions, setOtherDeductions] = useState(defaults.otherDeductions);
   const [copied, setCopied] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
+  const [view, setView] = useState<ResultView>(defaults.view);
+  const [stubOpen, setStubOpen] = useState(false);
+  // Bulk payroll (Phase 16.1): ?mode=bulk opens the multi-employee table
+  const urlMode = useSearchParam('mode');
+  const [bulkOverride, setBulkMode] = useState<boolean | null>(null);
+  const bulkMode = bulkOverride ?? urlMode === 'bulk';
+  const [scenario, setScenario] = useState<CompareScenario | null>(defaults.compare);
+  // Form W-4 Steps 2–4 (Phase 16.1)
+  const [w4MultipleJobs, setW4MultipleJobs] = useState(defaults.w4MultipleJobs);
+  const [w4Children, setW4Children] = useState(defaults.w4Children);
+  const [w4Dependents, setW4Dependents] = useState(defaults.w4Dependents);
+  const [w4OtherIncome, setW4OtherIncome] = useState(defaults.w4OtherIncome);
+  const [w4Deductions, setW4Deductions] = useState(defaults.w4Deductions);
+  const [w4Extra, setW4Extra] = useState(defaults.w4Extra);
+  const [w4Open, setW4Open] = useState(
+    defaults.w4MultipleJobs || !!(defaults.w4Children || defaults.w4Dependents || defaults.w4OtherIncome || defaults.w4Deductions || defaults.w4Extra),
+  );
+  const w4 = w4FromInputs(w4MultipleJobs, w4Children, w4Dependents, w4OtherIncome, w4Deductions, w4Extra);
 
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<HistoryInputs>(historySlug);
 
@@ -262,6 +351,9 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
     if (isNaN(benefits) || benefits < 0 || isNaN(other) || other < 0) {
       return { result: null, noTaxStateComparison: null, error: 'Deductions cannot be negative.' };
     }
+    if ([w4Children, w4Dependents, w4OtherIncome, w4Deductions, w4Extra].some((v) => v !== '' && (!Number.isFinite(parseFloat(v)) || parseFloat(v) < 0))) {
+      return { result: null, noTaxStateComparison: null, error: 'W-4 entries must be zero or more.' };
+    }
 
     const grossAnnual = (rate * reg + rate * 1.5 * ot) * 52;
     const periods = PERIODS_PER_YEAR[payFrequency];
@@ -276,6 +368,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
       preTaxRetirementAnnual: grossAnnual * (retPct / 100),
       preTaxBenefitsAnnual: benefits * periods,
       otherDeductionsPerPeriod: other,
+      w4,
     };
 
     const r = calculatePaycheck({
@@ -310,7 +403,58 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
     benefitsPerPeriod,
     otherDeductions,
     page,
+    w4,
   ]);
+
+  // Reverse solver (Phase 16.1): the current settings applied to any candidate hourly rate
+  const inputForRate = (rate: number): PaycheckInput | null => {
+    if (error) return null;
+    const reg = isSalary ? SALARY_HOURS_PER_WEEK : parseFloat(regularHours) || 0;
+    const ot = isSalary ? 0 : parseFloat(overtimeHours || '0') || 0;
+    const periods = PERIODS_PER_YEAR[payFrequency];
+    const grossAnnual = (rate * reg + rate * 1.5 * ot) * 52;
+    return {
+      state,
+      hourlyRate: rate,
+      regularHoursPerWeek: reg,
+      overtimeHoursPerWeek: ot,
+      overtimeMultiplier: 1.5,
+      payFrequency,
+      filingStatus,
+      stateAllowances: page?.allowances ? parseInt(allowances || '0', 10) || 0 : 0,
+      nycResident: state === 'NY' && nycResident,
+      customStateRate: state === 'other' ? (parseFloat(customStateRate || '0') || 0) / 100 : undefined,
+      preTaxRetirementAnnual: grossAnnual * ((parseFloat(retirementPct || '0') || 0) / 100),
+      preTaxBenefitsAnnual: (parseFloat(benefitsPerPeriod || '0') || 0) * periods,
+      otherDeductionsPerPeriod: parseFloat(otherDeductions || '0') || 0,
+      w4,
+    };
+  };
+  const applySolvedRate = (rate: number) => {
+    if (isSalary) setAnnualSalary(String(Math.ceil(rate * SALARY_HOURS_PER_YEAR)));
+    else setHourlyRate(rate.toFixed(2));
+  };
+
+  // Scenario compare (Phase 16.1): A is the form above, B is editable and lives in the share link
+  const currentScenario: CompareScenario = { state, hourlyRate, regularHours, overtimeHours, annualSalary, filingStatus, payFrequency, retirementPct };
+  const scenarioBase = result ? inputForRate(isSalary ? (parseFloat(annualSalary) || 0) / SALARY_HOURS_PER_YEAR : parseFloat(hourlyRate) || 0) : null;
+  const swapScenarios = () => {
+    if (!scenario) return;
+    const previous = currentScenario;
+    setState(scenario.state);
+    setAllowances(defaultAllowances(scenario.state, scenario.filingStatus));
+    setFilingStatus(scenario.filingStatus);
+    setPayFrequency(scenario.payFrequency);
+    setRetirementPct(scenario.retirementPct);
+    if (isSalary) {
+      setAnnualSalary(scenario.annualSalary);
+    } else {
+      setHourlyRate(scenario.hourlyRate);
+      setRegularHours(scenario.regularHours);
+      setOvertimeHours(scenario.overtimeHours);
+    }
+    setScenario(previous);
+  };
 
   const handleSaveSnapshot = () => {
     if (!result) return;
@@ -375,6 +519,12 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
   };
 
   const handleReset = () => {
+    setW4MultipleJobs(false);
+    setW4Children('');
+    setW4Dependents('');
+    setW4OtherIncome('');
+    setW4Deductions('');
+    setW4Extra('');
     setHourlyRate('25');
     setRegularHours('40');
     setOvertimeHours('0');
@@ -410,7 +560,15 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
     if (retirementPct) url.searchParams.set('ret', retirementPct);
     if (benefitsPerPeriod) url.searchParams.set('benefits', benefitsPerPeriod);
     if (otherDeductions) url.searchParams.set('other', otherDeductions);
+    if (w4MultipleJobs) url.searchParams.set('w4_2', '1');
+    if (w4Children) url.searchParams.set('w4_kids', w4Children);
+    if (w4Dependents) url.searchParams.set('w4_dep', w4Dependents);
+    if (w4OtherIncome) url.searchParams.set('w4_a', w4OtherIncome);
+    if (w4Deductions) url.searchParams.set('w4_b', w4Deductions);
+    if (w4Extra) url.searchParams.set('w4_c', w4Extra);
     if (state === 'NY' && nycResident) url.searchParams.set('nyc', '1');
+    if (view === 'employer') url.searchParams.set('view', 'employer');
+    writeScenarioParams(url, scenario, isSalary ? 'salary' : 'hourly');
 
     const shareUrl = url.toString();
     window.history.replaceState({}, '', shareUrl);
@@ -458,11 +616,64 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
 
   const totalWeeklyHours = Math.max(1, (parseFloat(regularHours) || 0) + (parseFloat(overtimeHours) || 0));
   const totalAnnualHours = isSalary ? SALARY_HOURS_PER_YEAR : totalWeeklyHours * 52;
+
+  // Pay stub preview (Phase 16.1): the live paycheck plus the employer side at the state default SUI rate
+  const stubData = result
+    ? {
+        payFrequency,
+        payFrequencyLabel: FREQ_LABELS[payFrequency].replace(/ \(.*\)$/, ''),
+        stateName: state === 'none' ? 'No state income tax' : state === 'other' ? `flat ${customStateRate}% state rate` : page!.name,
+        taxYear: TAX_YEAR,
+        isSalary,
+        hourlyRate: isSalary ? (parseFloat(annualSalary) || 0) / SALARY_HOURS_PER_YEAR : parseFloat(hourlyRate) || 0,
+        regularHoursPerWeek: isSalary ? SALARY_HOURS_PER_WEEK : parseFloat(regularHours) || 0,
+        overtimeHoursPerWeek: isSalary ? 0 : parseFloat(overtimeHours || '0') || 0,
+        annualSalary: isSalary ? parseFloat(annualSalary) || 0 : undefined,
+        result,
+        employer: calculateEmployerCost({ state, grossAnnual: result.grossAnnual, ficaWagesAnnual: result.ficaWagesAnnual, payFrequency, hoursPerYear: totalAnnualHours }),
+        sourceUrl: `https://www.quickbizcalc.com/calculators/${historySlug}`,
+      }
+    : null;
   const stateTaxSavingsInNoTaxState =
     result && noTaxStateComparison ? Math.max(0, noTaxStateComparison.netAnnual - result.netAnnual) : 0;
 
+  const modeSwitch = (
+    <div className="px-4 sm:px-6 pt-4">
+      <div className="flex rounded-xl bg-muted/50 p-1 border border-border/50" role="tablist" aria-label="Single employee or bulk payroll">
+        {[
+          { bulk: false, label: 'One employee', icon: User },
+          { bulk: true, label: `Bulk payroll (up to ${25})`, icon: Users },
+        ].map((o) => (
+          <button
+            key={o.label}
+            type="button"
+            role="tab"
+            aria-selected={bulkMode === o.bulk}
+            onClick={() => setBulkMode(o.bulk)}
+            className={`flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              bulkMode === o.bulk ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/25' : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <o.icon className="h-4 w-4" />
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  if (bulkMode) {
+    return (
+      <div className="w-full">
+        {modeSwitch}
+        <BulkPayrollPanel initialFrequency={payFrequency} />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
+      {modeSwitch}
       <div className="p-4 sm:p-6 space-y-6 calculator-form">
         {/* Quick Preset Bar */}
         <div className="flex flex-wrap items-center gap-2">
@@ -757,6 +968,60 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
           </div>
         </div>
 
+        {/* Form W-4 Steps 2–4 (Phase 16.1) */}
+        <div className="rounded-xl border border-border/50 bg-muted/20 p-4 space-y-4">
+          <button
+            type="button"
+            onClick={() => setW4Open((o) => !o)}
+            aria-expanded={w4Open}
+            className="w-full flex items-center justify-between gap-2 text-left"
+          >
+            <span className="text-sm font-semibold flex items-center gap-1.5">
+              <FileText className="h-4 w-4 text-muted-foreground" />
+              W-4 Steps 2–4 <span className="text-muted-foreground font-normal text-xs">(optional — two jobs, dependents, other income, extra withholding)</span>
+            </span>
+            <span className="text-xs font-medium text-emerald-600">{w4Open ? 'Hide' : w4 ? 'Edit' : 'Add'}</span>
+          </button>
+          {w4Open && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-3 rounded-lg bg-background border border-border/50 px-3 py-2.5">
+                <div>
+                  <Label htmlFor="w4Multi" className="text-sm">Step 2(c): two jobs in total, or my spouse also works</Label>
+                  <p className="text-xs text-muted-foreground">Uses the "Step 2, Checkbox" withholding table: half the standard deduction and half-width brackets, so each job withholds as if it were the only one.</p>
+                </div>
+                <Switch id="w4Multi" checked={w4MultipleJobs} onCheckedChange={(v) => setW4MultipleJobs(v)} />
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="w4Kids" className="text-xs text-muted-foreground">Step 3: children under 17</Label>
+                  <Input id="w4Kids" type="number" min="0" max="20" step="1" placeholder="0" value={w4Children} onChange={(e) => setW4Children(e.target.value)} className="text-sm" />
+                  <p className="text-xs text-muted-foreground">× {formatCurrency(W4_CHILD_CREDIT)}/yr</p>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="w4Dep" className="text-xs text-muted-foreground">Other dependents</Label>
+                  <Input id="w4Dep" type="number" min="0" max="20" step="1" placeholder="0" value={w4Dependents} onChange={(e) => setW4Dependents(e.target.value)} className="text-sm" />
+                  <p className="text-xs text-muted-foreground">× {formatCurrency(W4_OTHER_DEPENDENT_CREDIT)}/yr</p>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="w4a" className="text-xs text-muted-foreground">4(a) other income / yr</Label>
+                  <Input id="w4a" type="number" min="0" step="500" placeholder="0" value={w4OtherIncome} onChange={(e) => setW4OtherIncome(e.target.value)} className="text-sm" />
+                  <p className="text-xs text-muted-foreground">Interest, dividends, retirement.</p>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="w4b" className="text-xs text-muted-foreground">4(b) deductions / yr</Label>
+                  <Input id="w4b" type="number" min="0" step="500" placeholder="0" value={w4Deductions} onChange={(e) => setW4Deductions(e.target.value)} className="text-sm" />
+                  <p className="text-xs text-muted-foreground">Beyond the standard deduction.</p>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="w4c" className="text-xs text-muted-foreground">4(c) extra per paycheck</Label>
+                  <Input id="w4c" type="number" min="0" step="5" placeholder="0" value={w4Extra} onChange={(e) => setW4Extra(e.target.value)} className="text-sm" />
+                  <p className="text-xs text-muted-foreground">Added to every check.</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Error */}
         {error && (
           <motion.div
@@ -789,6 +1054,11 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
         </div>
       </div>
 
+      {/* Reverse solver: take-home target → required gross (Phase 16.1) */}
+      <div className="mt-4 px-4 sm:px-6">
+        <ReverseSolverCard mode={isSalary ? 'salary' : 'hourly'} buildInput={inputForRate} payFrequency={payFrequency} onApply={applySolvedRate} />
+      </div>
+
       {/* Live Results */}
       {result && (
         <motion.div
@@ -798,6 +1068,19 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
           className="mt-4 px-4 sm:px-6 result-display"
           aria-live="polite"
         >
+          {/* Phase 16.1: the same paycheck from the employer's side */}
+          <ResultViewToggle view={view} onChange={setView} />
+          {view === 'employer' && (
+            <EmployerCostPanel
+              state={state}
+              stateName={state === 'none' || state === 'other' ? null : page!.name}
+              paycheck={result}
+              payFrequency={payFrequency}
+              hoursPerYear={totalAnnualHours}
+              frequencyLabel={FREQ_LABELS[payFrequency]}
+            />
+          )}
+          {view === 'employee' && (
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 sm:p-6 space-y-6">
             {/* Primary Headline */}
             <div className="text-center space-y-1">
@@ -1022,10 +1305,31 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
                   {copied ? <Check className="h-4 w-4 mr-1.5 text-emerald-600" /> : <Copy className="h-4 w-4 mr-1.5" />}
                   {copied ? 'Copied' : 'Copy summary'}
                 </Button>
+                <Button onClick={() => setStubOpen(true)} variant="outline" size="sm">
+                  <Receipt className="h-4 w-4 mr-1.5" />
+                  Pay stub preview
+                </Button>
               </div>
             </div>
           </div>
+          )}
         </motion.div>
+      )}
+
+      {stubData && <PayStubDialog open={stubOpen} onOpenChange={setStubOpen} data={stubData} />}
+
+      {/* Scenario compare: A (above) vs. B, persisted as b_* params (Phase 16.1) */}
+      {result && (
+        <div className="mt-4 px-4 sm:px-6">
+          <PaycheckScenarioCompare
+            mode={isSalary ? 'salary' : 'hourly'}
+            base={scenarioBase}
+            baseScenario={currentScenario}
+            scenario={scenario}
+            onChange={setScenario}
+            onSwap={swapScenarios}
+          />
+        </div>
       )}
 
       {history.length > 0 && (
