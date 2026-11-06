@@ -99,7 +99,7 @@ const scenarios: Scenario[] = [
   },
   {
     title: '$30 an Hour, Married, Illinois, Paid Twice a Month',
-    where: 'in Illinois with 2 IL-W-4 allowances',
+    where: 'in Illinois with 2 IL-W-4 allowances ($2,925 each is subtracted from annual wages before the flat 4.95% rate applies)',
     input: {
       state: 'IL',
       hourlyRate: 30,
@@ -112,8 +112,8 @@ const scenarios: Scenario[] = [
     },
   },
   {
-    title: '$18 an Hour, 35 Hours, Another State at a 5% Flat Rate',
-    where: 'in a state estimated at a flat 5% income tax, with $25 of after-tax insurance taken from each paycheck',
+    title: '$18 an Hour, 35 Hours, Using the Flat-Rate Option (5%)',
+    where: 'in a state not in the exact list, using the flat-rate option at 5% and $25 of after-tax insurance taken from each paycheck',
     input: {
       state: 'other',
       customStateRate: 0.05,
@@ -137,9 +137,9 @@ const seoData = {
     'Choose how often you are paid: weekly, every two weeks, twice a month, or monthly. This sets the size of each paycheck but not your yearly taxes.',
     'Pick your federal filing status from Step 1 of your W-4: single, married filing jointly, or head of household. The calculator applies the matching ' +
       `${TAX_YEAR} standard deduction and tax brackets.`,
-    `Select your state. ${exactStateNames} use their exact ${TAX_YEAR} withholding tables, including California SDI and New York PFL. ` +
-      'Pick "No state income tax" for Alaska, Nevada, New Hampshire, South Dakota, Tennessee, Washington, or Wyoming. For any other state, enter a flat rate as an estimate.',
-    'Optionally add your deductions: a 401(k) percentage (pre-tax, lowers income tax only), health or other Section 125 premiums per paycheck (pre-tax, lowers income tax and FICA), and after-tax deductions such as union dues. Click "Calculate Paycheck" to see gross pay, each tax line, take-home pay per paycheck and per year, and your take-home pay per hour worked.',
+    `Select your state. ${exactStateNames} use their exact ${TAX_YEAR} withholding rules, including states with no wage tax (Florida, Nevada, Tennessee, Texas) and state payroll programs such as California SDI, New York PFL, and Washington PFML. ` +
+      'Pick "No state income tax" if you work in Alaska, New Hampshire, South Dakota, or Wyoming. For any other state, enter your flat or effective rate as an estimate.',
+    'Optionally add your deductions: a 401(k) percentage (pre-tax, lowers income tax only), health or other Section 125 premiums per paycheck (pre-tax, lowers income tax and FICA), and after-tax deductions such as union dues. Results update as you type: gross pay, each tax line, take-home pay per paycheck and per year, and your take-home pay per hour worked.',
   ],
 
   formula: 'Take-Home Pay = Gross Pay − Federal Income Tax − Social Security − Medicare − State Taxes − Other Deductions',
@@ -194,8 +194,8 @@ const seoData = {
     {
       question: 'My state is not in the list. What rate should I enter?',
       answer:
-        'Nine states do not tax wages: Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas, Washington, and Wyoming. Choose "No state income tax" for those. ' +
-        'Flat-tax states such as Colorado (4.4%), Michigan (4.25%), Pennsylvania (3.07%), and Indiana (3.0%) can enter their rate directly. ' +
+        'Nine states do not tax wages: Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas, Washington, and Wyoming. Florida, Nevada, Tennessee, Texas, and Washington are already in the list; choose "No state income tax" for the other four. ' +
+        `Flat-tax states that are not yet in the list can enter their single ${TAX_YEAR} rate directly from the state withholding guide. ` +
         'For states with brackets, use the effective state rate from last year\'s return (state tax divided by state wages). Most hourly workers land between 2% and 6%. ' +
         `Exact ${TAX_YEAR} tables are built in for ${exactStateNames}.`,
     },
