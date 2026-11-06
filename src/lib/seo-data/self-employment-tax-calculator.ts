@@ -4,6 +4,8 @@ const seoData = {
     { id: 'how-to-calculate', label: 'How to Calculate' },
     { id: 'formula', label: 'SECA Tax Formulas & Rules' },
     { id: 'worked-examples', label: 'Worked Practical Scenarios' },
+    { id: 'benchmarks', label: '2026 SECA Tax Benchmarks by Net Profit' },
+    { id: 'deep-dive', label: 'Deep Dive: S-Corp Election & Tax Optimization' },
     { id: 'frequently-asked-questions', label: 'Frequently Asked Questions' },
     { id: 'related-calculators', label: 'Related Tax & Payroll Calculators' },
   ],
@@ -42,6 +44,37 @@ const seoData = {
       description: 'An equity partner in a medical consulting partnership receives a $350,000 Schedule K-1 with active self-employment earnings (Married Filing Jointly). SECA taxable base is $350,000 x 92.35% = $323,225. Social Security tax is capped at $184,500 x 12.4% = $22,878.00. Uncapped Medicare tax is $323,225 x 2.9% = $9,373.53. Under MFJ rules, the 0.9% Additional Medicare surtax kicks in over $250,000: ($323,225 - $250,000) x 0.9% = $659.03. Total SECA liability equals $32,910.56 ($8,227.64/quarter), generating an above-the-line deduction of $16,455.28.',
     },
   ],
+  benchmarkTables: [
+    {
+      title: '2026 Self-Employment Tax (SECA) Schedule by Net Schedule C Profit',
+      description: 'Exact 2026 SECA tax liability, 92.35% taxable base, 50% above-the-line Schedule 1 deduction, and quarterly Form 1040-ES installment for a Single filer with $0 prior W-2 wages.',
+      headers: ['Net Schedule C Profit', 'SECA Taxable Base (92.35%)', 'Social Security (12.4%)', 'Medicare (2.9% + 0.9%)', 'Total Annual SECA Tax', '50% AGI Deduction'],
+      rows: [
+        ['$40,000', '$36,940', '$4,581', '$1,071', '$5,652', '$2,826'],
+        ['$60,000', '$55,410', '$6,871', '$1,607', '$8,478', '$4,239'],
+        ['$80,000', '$73,880', '$9,161', '$2,143', '$11,304', '$5,652'],
+        ['$100,000', '$92,350', '$11,451', '$2,678', '$14,130', '$7,065'],
+        ['$150,000', '$138,525', '$17,177', '$4,017', '$21,194', '$10,597'],
+        ['$200,000', '$184,700', '$22,878 (Cap)', '$5,356', '$28,234', '$14,117'],
+        ['$250,000', '$230,875', '$22,878 (Cap)', '$6,973', '$29,851', '$14,926'],
+      ],
+    },
+  ],
+  deepDiveSections: [
+    {
+      id: 'deep-dive',
+      title: 'When Should a Sole Proprietor Elect S-Corporation Status to Save SECA Tax?',
+      paragraphs: [
+        'Because sole proprietors and single-member LLCs pay the full 15.3% SECA tax on 92.35% of every dollar of net profit up to the $184,500 Social Security cap (an effective tax rate of 14.13%), self-employment tax is frequently a freelancer\'s single largest tax bill—often exceeding federal ordinary income tax for businesses earning under $120,000.',
+        'Once your consistent annual net business profit exceeds $80,000 to $100,000, electing S-Corporation taxation via IRS Form 2553 allows you to split business earnings into two buckets: a "reasonable W-2 salary" (subject to 15.3% FICA tax) and "shareholder distributions" (exempt from 15.3% FICA/SECA tax). However, you must weigh these FICA savings against S-Corp administrative costs ($1,200–$2,500/year for Gusto/ADP payroll and Form 1120-S corporate tax return preparation) and the reduced Section 199A QBI base (since W-2 officer wages do not qualify for the 20% QBI deduction).',
+      ],
+      highlights: [
+        'Under $75,000 Net Profit: Keep a standard Sole Proprietorship or Single-Member LLC; S-Corp compliance fees and reduced QBI deductions outweigh payroll tax savings.',
+        '$80,000–$180,000 Net Profit: The "sweet spot" for S-Corp conversion—paying a 45%–55% reasonable salary typically saves $5,000 to $11,500 per year in net SECA taxes.',
+        'Over $200,000 Net Profit: Even after hitting the $184,500 Social Security wage cap, an S-Corp still saves the uncapped 3.8% Medicare + Additional Medicare tax on shareholder distributions.',
+      ],
+    },
+  ],
   faqs: [
     {
       question: 'What is the self-employment tax rate for 2026 and what does it fund?',
@@ -61,7 +94,7 @@ const seoData = {
     },
     {
       question: 'How do concurrent W-2 wages affect self-employment tax calculations?',
-      answer: 'The Social Security wage cap ($184,500 in 2026) applies across all earned income combined, whether earned as a W-2 employee or through 1099 self-employment. Because W-2 wages have Social Security taxes withheld first by your employer, every dollar of W-2 wage reduces your remaining self-employment Social Security cap. For instance, if you earn $120,000 on a W-2 and $80,000 in net 1099 income, only $56,100 ($184,500 - $120,000) of your 1099 SECA taxable income is subject to the 12.4% Social Security tax; the rest is subject only to 2.9% Medicare. If your W-2 wages exceed $184,500, you pay 0% Social Security tax on your self-employment income.',
+      answer: 'The Social Security wage cap ($184,500 in 2026) applies across all earned income combined, whether earned as a W-2 employee or through 1099 self-employment. Because W-2 wages have Social Security taxes withheld first by your employer, every dollar of W-2 wage reduces your remaining self-employment Social Security cap. For instance, if you earn $120,000 on a W-2 and $80,000 in net 1099 income, only $64,500 ($184,500 - $120,000) of your 1099 SECA taxable income is subject to the 12.4% Social Security tax; the rest is subject only to 2.9% Medicare. If your W-2 wages exceed $184,500, you pay 0% Social Security tax on your self-employment income.',
     },
     {
       question: 'When and how do self-employed individuals pay their SECA taxes?',
@@ -73,7 +106,7 @@ const seoData = {
     },
     {
       question: 'Does the 50% SECA deduction interact with the Section 199A QBI deduction?',
-      answer: 'Yes, the two deductions interact systematically. Under Treasury Regulation § 1.199A-3(b)(1)(vi), when determining Qualified Business Income (QBI) for the 20% Section 199A pass-through deduction, your net Schedule C income must be reduced by both the deductible 50% portion of your self-employment tax (Form 1040 Schedule 1, Line 15) and your self-employed health insurance deduction. For example, if you have $100,000 in net Schedule C profit and a $7,066 half-SECA deduction, your tentative QBI base is $92,934, resulting in a maximum potential QBI deduction of $18,586.80 (20% of $92,934).',
+      answer: 'Yes, the two deductions interact systematically. Under Treasury Regulation § 1.199A-3(b)(1)(vi), when determining Qualified Business Income (QBI) for the 20% Section 199A pass-through deduction, your net Schedule C income must be reduced by both the deductible 50% portion of your self-employment tax (Form 1040 Schedule 1, Line 15) and your self-employed health insurance deduction. For example, if you have $100,000 in net Schedule C profit and a $7,065 half-SECA deduction, your tentative QBI base is $92,935, resulting in a maximum potential QBI deduction of $18,587 (20% of $92,935).',
     },
   ],
   relatedTools: [

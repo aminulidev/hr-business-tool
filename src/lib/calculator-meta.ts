@@ -108,6 +108,21 @@ export type CalculatorSlug =
   | 'indiana-hourly-paycheck-calculator'
   | 'arizona-hourly-paycheck-calculator'
   | 'colorado-hourly-paycheck-calculator'
+  | 'utah-hourly-paycheck-calculator'
+  | 'kentucky-hourly-paycheck-calculator'
+  | 'louisiana-hourly-paycheck-calculator'
+  | 'iowa-hourly-paycheck-calculator'
+  | 'idaho-hourly-paycheck-calculator'
+  | 'ohio-hourly-paycheck-calculator'
+  | 'virginia-hourly-paycheck-calculator'
+  | 'new-jersey-hourly-paycheck-calculator'
+  | 'massachusetts-hourly-paycheck-calculator'
+  | 'maryland-hourly-paycheck-calculator'
+  | 'minnesota-hourly-paycheck-calculator'
+  | 'missouri-hourly-paycheck-calculator'
+  | 'wisconsin-hourly-paycheck-calculator'
+  | 'oregon-hourly-paycheck-calculator'
+  | 'south-carolina-hourly-paycheck-calculator'
   | 'severance-pay-calculator'
   | 'workers-comp-calculator'
   | 'fica-tax-calculator'
@@ -1494,6 +1509,338 @@ export const calculators: CalculatorMeta[] = [
     tier: 'tier2',
     category: 'Payroll & Taxes',
     path: '/calculators/colorado-hourly-paycheck-calculator',
+  },
+
+  // ── HR Analytics ──
+  {
+    slug: 'utah-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Utah Hourly Paycheck Calculator',
+    metaTitle: 'Utah Hourly Paycheck Calculator 2026 — 4.50% Flat Tax & Credit',
+    shortDescription:
+      'Take-home pay for hourly workers in Utah using 2026 federal withholding and the 4.50% flat Utah state income tax with Taxpayer Tax Credit.',
+    metaDescription:
+      'Free Utah hourly paycheck calculator for 2026. Enter your hourly wage and hours to see net take-home pay after federal tax, FICA, and Utah 4.50% flat state tax with the 6% Taxpayer Tax Credit.',
+    keywords: [
+      'utah hourly paycheck calculator',
+      'utah paycheck calculator',
+      'ut hourly paycheck calculator',
+      'salt lake city paycheck calculator',
+      'utah take home pay calculator',
+      'utah paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/utah-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'kentucky-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Kentucky Hourly Paycheck Calculator',
+    metaTitle: 'Kentucky Hourly Paycheck Calculator 2026 — 3.50% Flat State Tax',
+    shortDescription:
+      'Take-home pay for hourly workers in Kentucky using 2026 federal withholding and the reduced 3.50% flat Kentucky state income tax.',
+    metaDescription:
+      'Free Kentucky hourly paycheck calculator for 2026. Calculate net take-home pay after federal tax, FICA, and the reduced 3.50% flat Kentucky state income tax ($3,270 standard deduction).',
+    keywords: [
+      'kentucky hourly paycheck calculator',
+      'kentucky paycheck calculator',
+      'ky hourly paycheck calculator',
+      'louisville paycheck calculator',
+      'kentucky take home pay calculator',
+      'kentucky paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/kentucky-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'louisiana-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Louisiana Hourly Paycheck Calculator',
+    metaTitle: 'Louisiana Hourly Paycheck Calculator 2026 — 3.00% Flat State Tax',
+    shortDescription:
+      'Take-home pay for hourly workers in Louisiana using 2026 federal withholding and the 3.00% flat Louisiana state income tax.',
+    metaDescription:
+      'Free Louisiana hourly paycheck calculator for 2026. Enter your hourly wage and hours to see net take-home pay after federal tax, FICA, and the 3.00% flat LA state tax ($12,500 standard deduction).',
+    keywords: [
+      'louisiana hourly paycheck calculator',
+      'louisiana paycheck calculator',
+      'la hourly paycheck calculator',
+      'new orleans paycheck calculator',
+      'louisiana take home pay calculator',
+      'louisiana paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/louisiana-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'iowa-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Iowa Hourly Paycheck Calculator',
+    metaTitle: 'Iowa Hourly Paycheck Calculator 2026 — 3.80% Flat State Tax',
+    shortDescription:
+      'Take-home pay for hourly workers in Iowa using 2026 federal withholding and the 3.80% flat Iowa state income tax.',
+    metaDescription:
+      'Free Iowa hourly paycheck calculator for 2026. Calculate net take-home pay after federal tax, FICA, and the 3.80% flat Iowa state income tax.',
+    keywords: [
+      'iowa hourly paycheck calculator',
+      'iowa paycheck calculator',
+      'ia hourly paycheck calculator',
+      'des moines paycheck calculator',
+      'iowa take home pay calculator',
+      'iowa paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/iowa-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'idaho-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Idaho Hourly Paycheck Calculator',
+    metaTitle: 'Idaho Hourly Paycheck Calculator 2026 — 5.30% Flat State Tax',
+    shortDescription:
+      'Take-home pay for hourly workers in Idaho using 2026 federal withholding and the 5.30% flat Idaho state income tax.',
+    metaDescription:
+      'Free Idaho hourly paycheck calculator for 2026. Enter your hourly wage and hours to see net take-home pay after federal tax, FICA, and the 5.30% flat ID state tax.',
+    keywords: [
+      'idaho hourly paycheck calculator',
+      'idaho paycheck calculator',
+      'id hourly paycheck calculator',
+      'boise paycheck calculator',
+      'idaho take home pay calculator',
+      'idaho paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/idaho-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'ohio-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Ohio Hourly Paycheck Calculator',
+    metaTitle: 'Ohio Hourly Paycheck Calculator 2026 — 0% Up to $26,050 & 2.75% Flat Rate',
+    shortDescription:
+      'Take-home pay for hourly workers in Ohio using 2026 federal withholding and Ohio state tax (0% up to $26,050, 2.75% above).',
+    metaDescription:
+      'Free Ohio hourly paycheck calculator for 2026. Enter your hourly wage ($11.00+ min wage) and hours to see net take-home pay with 0% Ohio state tax up to $26,050 and 2.75% above.',
+    keywords: [
+      'ohio hourly paycheck calculator',
+      'ohio paycheck calculator',
+      'oh hourly paycheck calculator',
+      'columbus paycheck calculator',
+      'ohio take home pay calculator',
+      'ohio paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/ohio-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'virginia-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Virginia Hourly Paycheck Calculator',
+    metaTitle: 'Virginia Hourly Paycheck Calculator 2026 — VA-4 & $12.77 Min Wage',
+    shortDescription:
+      'Take-home pay for hourly workers in Virginia using 2026 federal withholding and Virginia state tax brackets (2% to 5.75%).',
+    metaDescription:
+      'Free Virginia hourly paycheck calculator for 2026. Enter your hourly wage ($12.77+ min wage) and hours to see take-home pay after federal tax, FICA, and Virginia state tax ($8,500/$17,000 standard deduction).',
+    keywords: [
+      'virginia hourly paycheck calculator',
+      'virginia paycheck calculator',
+      'va hourly paycheck calculator',
+      'richmond paycheck calculator',
+      'virginia take home pay calculator',
+      'virginia paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/virginia-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'new-jersey-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'New Jersey Hourly Paycheck Calculator',
+    metaTitle: 'New Jersey Hourly Paycheck Calculator 2026 — NJ Tax & SUI/FLI ($15.92 Min)',
+    shortDescription:
+      'Take-home pay for hourly workers in New Jersey using 2026 federal withholding, NJ graduated state tax, and NJ SUI/FLI.',
+    metaDescription:
+      'Free New Jersey hourly paycheck calculator for 2026. Enter your hourly wage ($15.92+ min wage) and hours to see net take-home pay after federal tax, NJ state tax, and NJ SUI/FLI payroll deductions.',
+    keywords: [
+      'new jersey hourly paycheck calculator',
+      'new jersey paycheck calculator',
+      'nj hourly paycheck calculator',
+      'nj take home pay calculator',
+      'new jersey salary after taxes',
+      'nj paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/new-jersey-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'massachusetts-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Massachusetts Hourly Paycheck Calculator',
+    metaTitle: 'Massachusetts Hourly Paycheck Calculator 2026 — 5.0% Tax & MA PFML',
+    shortDescription:
+      'Take-home pay for hourly workers in Massachusetts using 2026 federal withholding, 5.0% MA state tax, and MA PFML.',
+    metaDescription:
+      'Free Massachusetts hourly paycheck calculator for 2026. Enter your hourly wage ($15.00+ min wage) and hours to see take-home pay after federal tax, 5.0% MA income tax, and MA PFML (0.46%).',
+    keywords: [
+      'massachusetts hourly paycheck calculator',
+      'massachusetts paycheck calculator',
+      'ma hourly paycheck calculator',
+      'boston paycheck calculator',
+      'massachusetts take home pay calculator',
+      'ma paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/massachusetts-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'maryland-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Maryland Hourly Paycheck Calculator',
+    metaTitle: 'Maryland Hourly Paycheck Calculator 2026 — State + County Local Tax',
+    shortDescription:
+      'Take-home pay for hourly workers in Maryland using 2026 federal withholding, MD state tax, and Maryland county local income tax.',
+    metaDescription:
+      'Free Maryland hourly paycheck calculator for 2026. Enter your hourly wage ($15.00+ min wage) and hours to see net take-home pay after federal tax, FICA, Maryland state tax, and county local income tax.',
+    keywords: [
+      'maryland hourly paycheck calculator',
+      'maryland paycheck calculator',
+      'md hourly paycheck calculator',
+      'baltimore paycheck calculator',
+      'maryland take home pay calculator',
+      'maryland paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/maryland-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'minnesota-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Minnesota Hourly Paycheck Calculator',
+    metaTitle: 'Minnesota Hourly Paycheck Calculator 2026 — MN Tax & New Paid Leave (0.44%)',
+    shortDescription:
+      'Take-home pay for hourly workers in Minnesota using 2026 federal withholding, MN brackets, and 0.44% MN Paid Leave.',
+    metaDescription:
+      'Free Minnesota hourly paycheck calculator for 2026. Calculate take-home pay after federal tax, FICA, Minnesota progressive tax brackets, and the new 2026 Minnesota Paid Leave deduction (0.44%).',
+    keywords: [
+      'minnesota hourly paycheck calculator',
+      'minnesota paycheck calculator',
+      'mn hourly paycheck calculator',
+      'minneapolis paycheck calculator',
+      'minnesota take home pay calculator',
+      'mn paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/minnesota-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'missouri-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Missouri Hourly Paycheck Calculator',
+    metaTitle: 'Missouri Hourly Paycheck Calculator 2026 — $15.00 Min Wage & 4.70% Top Rate',
+    shortDescription:
+      'Take-home pay for hourly workers in Missouri using 2026 federal withholding and Missouri state income tax ($15.00 min wage).',
+    metaDescription:
+      'Free Missouri hourly paycheck calculator for 2026. Enter your hourly wage ($15.00 min wage) and hours to see net take-home pay after federal tax, FICA, and Missouri graduated state tax.',
+    keywords: [
+      'missouri hourly paycheck calculator',
+      'missouri paycheck calculator',
+      'mo hourly paycheck calculator',
+      'st louis paycheck calculator',
+      'kansas city paycheck calculator',
+      'missouri take home pay calculator',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/missouri-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'wisconsin-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Wisconsin Hourly Paycheck Calculator',
+    metaTitle: 'Wisconsin Hourly Paycheck Calculator 2026 — WI Tax & Sliding Deduction',
+    shortDescription:
+      'Take-home pay for hourly workers in Wisconsin using 2026 federal withholding and Wisconsin graduated tax with sliding-scale deduction.',
+    metaDescription:
+      'Free Wisconsin hourly paycheck calculator for 2026. Calculate net take-home pay after federal tax, FICA, and Wisconsin state tax (3.50% to 7.65% brackets with sliding-scale standard deduction).',
+    keywords: [
+      'wisconsin hourly paycheck calculator',
+      'wisconsin paycheck calculator',
+      'wi hourly paycheck calculator',
+      'milwaukee paycheck calculator',
+      'wisconsin take home pay calculator',
+      'wisconsin paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/wisconsin-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'oregon-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'Oregon Hourly Paycheck Calculator',
+    metaTitle: 'Oregon Hourly Paycheck Calculator 2026 — OR Tax, Paid Leave & Transit Tax',
+    shortDescription:
+      'Take-home pay for hourly workers in Oregon using 2026 federal withholding, OR state tax (with federal tax subtraction), Paid Leave OR, and STT.',
+    metaDescription:
+      'Free Oregon hourly paycheck calculator for 2026. Enter your hourly wage and hours to see net take-home pay after federal tax, Oregon income tax (with federal tax subtraction), Paid Leave Oregon (0.60%), and Transit Tax (0.10%).',
+    keywords: [
+      'oregon hourly paycheck calculator',
+      'oregon paycheck calculator',
+      'or hourly paycheck calculator',
+      'portland paycheck calculator',
+      'oregon take home pay calculator',
+      'oregon paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/oregon-hourly-paycheck-calculator',
+  },
+  {
+    slug: 'south-carolina-hourly-paycheck-calculator',
+    status: 'published',
+    title: 'South Carolina Hourly Paycheck Calculator',
+    metaTitle: 'South Carolina Hourly Paycheck Calculator 2026 — SC W-4 & 6.0% Top Bracket',
+    shortDescription:
+      'Take-home pay for hourly workers in South Carolina using 2026 federal withholding and South Carolina state tax (0%, 3%, 6%).',
+    metaDescription:
+      'Free South Carolina hourly paycheck calculator for 2026. Enter your hourly wage and hours to see net take-home pay after federal tax, FICA, and South Carolina state income tax.',
+    keywords: [
+      'south carolina hourly paycheck calculator',
+      'south carolina paycheck calculator',
+      'sc hourly paycheck calculator',
+      'charleston paycheck calculator',
+      'south carolina take home pay calculator',
+      'sc paycheck calculator 2026',
+    ],
+    icon: MapIcon,
+    tier: 'tier2',
+    category: 'Payroll & Taxes',
+    path: '/calculators/south-carolina-hourly-paycheck-calculator',
   },
 
   // ── HR Analytics ──
@@ -3963,7 +4310,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'working-capital-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Working Capital Calculator',
     metaTitle: 'Free Working Capital Calculator 2026 — Current Assets - Liabilities',
     shortDescription:
@@ -4260,7 +4607,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'business-valuation-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Business Valuation Calculator',
     metaTitle: 'Free Business Valuation Calculator 2026 — DCF, Multiple, Asset',
     shortDescription:
@@ -4287,7 +4634,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'depreciation-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Depreciation Calculator',
     metaTitle: 'Free Depreciation Calculator 2026 — Straight Line, MACRS, Double Declining',
     shortDescription:
@@ -4907,7 +5254,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'cac-payback-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'CAC Payback Calculator',
     metaTitle: 'Free CAC Payback Calculator 2026 — Months to Recover CAC',
     shortDescription:
@@ -5074,7 +5421,7 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'roas-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'ROAS Calculator (Return on Ad Spend)',
     metaTitle: 'Free ROAS Calculator 2026 — Return on Ad Spend by Channel',
     shortDescription:
@@ -5643,13 +5990,13 @@ export const calculators: CalculatorMeta[] = [
 
   {
     slug: 'mrr-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'MRR Calculator',
     metaTitle: 'Free MRR Calculator 2026 — Monthly Recurring Revenue',
     shortDescription: 'Calculate Monthly Recurring Revenue (MRR) from active subscriptions, upgrades, downgrades, and churn.',
     metaDescription: 'Free MRR calculator 2026. Calculate Monthly Recurring Revenue from active subscriptions. Track new MRR, expansion MRR, churned MRR, and net new MRR. Critical SaaS metric for growth tracking.',
     keywords: ['mrr calculator', 'monthly recurring revenue', 'how to calculate mrr', 'mrr formula', 'saas mrr', 'net new mrr', 'mrr growth', 'recurring revenue calculator'],
-    icon: TrendingUp, tier: 'tier1', category: 'Startup & SaaS', path: '/calculators/mrr-calculator',
+    icon: TrendingUp, tier: 'tier1', category: 'Sales & Compensation', path: '/calculators/mrr-calculator',
   },
   {
     slug: 'arr-calculator',
@@ -5683,13 +6030,13 @@ export const calculators: CalculatorMeta[] = [
   },
   {
     slug: 'net-revenue-retention-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Net Revenue Retention (NRR) Calculator',
     metaTitle: 'Free NRR Calculator 2026 — Net Revenue Retention',
     shortDescription: 'Calculate NRR = (starting MRR + expansion - churn - contraction) / starting MRR. SaaS benchmark: >110%.',
     metaDescription: 'Free NRR calculator 2026. Calculate Net Revenue Retention = (starting MRR + expansion - churn - contraction) / starting MRR. SaaS benchmark: >110%. Companies with >120% NRR command premium valuations.',
     keywords: ['nrr calculator', 'net revenue retention', 'how to calculate nrr', 'nrr formula', 'saas nrr', 'net dollar retention', 'ndrr calculator'],
-    icon: TrendingUp, tier: 'tier1', category: 'Startup & SaaS', path: '/calculators/net-revenue-retention-calculator',
+    icon: TrendingUp, tier: 'tier1', category: 'Sales & Compensation', path: '/calculators/net-revenue-retention-calculator',
   },
   {
     slug: 'saas-pricing-calculator',
@@ -6063,13 +6410,13 @@ export const calculators: CalculatorMeta[] = [
   },
   {
     slug: 'cogs-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'COGS Calculator (Cost of Goods Sold)',
     metaTitle: 'Free COGS Calculator 2026 — Cost of Goods Sold Formula',
     shortDescription: 'Calculate COGS = beginning inventory + purchases - ending inventory. See gross profit.',
     metaDescription: 'Free COGS calculator 2026. Calculate Cost of Goods Sold = beginning inventory + purchases - ending inventory. See gross profit and gross margin. Essential for income statement and tax.',
     keywords: ['cogs calculator', 'cost of goods sold', 'how to calculate cogs', 'cogs formula', 'beginning inventory', 'ending inventory', 'cogs calculation'],
-    icon: DollarSign, tier: 'tier1', category: 'Accounting', path: '/calculators/cogs-calculator',
+    icon: DollarSign, tier: 'tier1', category: 'Business Finance', path: '/calculators/cogs-calculator',
   },
   {
     slug: 'operating-expense-ratio-calculator',

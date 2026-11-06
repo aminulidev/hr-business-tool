@@ -52,34 +52,40 @@ const TOP_TOOL_SLUGS = [
 
 const CATEGORY_UI_CONFIG: Record<
   string,
-  { shortLabel: string; icon: LucideIcon; description: string }
+  { hubSlug: string; shortLabel: string; icon: LucideIcon; description: string }
 > = {
   'Payroll & Taxes': {
+    hubSlug: 'payroll-taxes',
     shortLabel: 'Payroll & Taxes',
     icon: Landmark,
     description: '2026 federal & state paycheck calculators, FICA, W-2 vs. 1099, and withholding estimators',
   },
   'Time & Attendance': {
+    hubSlug: 'time-attendance',
     shortLabel: 'Time & Attendance',
     icon: Clock,
     description: 'Weekly time cards with lunch breaks, business days, PTO accrual, and billable hours',
   },
   'Salary & Compensation': {
+    hubSlug: 'salary-compensation',
     shortLabel: 'Salary & Pay',
     icon: Wallet,
     description: 'Salary-to-hourly converters, overtime (1.5x & 2x), pro-rata pay, raises, and shift differentials',
   },
   'Business Finance': {
+    hubSlug: 'business-finance',
     shortLabel: 'Business Finance',
     icon: TrendingUp,
     description: 'Profit margin, markup, ROI, EBITDA margin, startup burn rate, break-even, and sales tax',
   },
   'HR Analytics': {
+    hubSlug: 'hr-analytics',
     shortLabel: 'HR & Workforce',
     icon: Users,
     description: 'True loaded employee cost, FTE & ACA compliance, turnover cost, severance, and revenue per employee',
   },
   'Sales & Compensation': {
+    hubSlug: 'sales-saas',
     shortLabel: 'Sales, SaaS & Freelance',
     icon: Briefcase,
     description: 'Sales commission, CAC, CLV, SaaS churn rate, freelance hourly rates, and Upwork fee calculators',
@@ -395,6 +401,7 @@ export default function HubPage() {
             grouped.map((group) => {
               const SectionIcon = CATEGORY_UI_CONFIG[group.category]?.icon || LayoutGrid;
               const sectionTitle = CATEGORY_UI_CONFIG[group.category]?.shortLabel || group.category;
+              const hubSlug = CATEGORY_UI_CONFIG[group.category]?.hubSlug;
 
               return (
                 <section key={group.category} className="scroll-mt-24">
@@ -418,7 +425,15 @@ export default function HubPage() {
                       </div>
                     </div>
 
-                    {selectedCategory === 'ALL' ? (
+                    {hubSlug && (
+                      <Link
+                        href={`/category/${hubSlug}`}
+                        className="self-start sm:self-center text-xs font-semibold text-emerald-600 hover:text-emerald-700 inline-flex items-center gap-1 shrink-0"
+                      >
+                        Explore {sectionTitle} Hub &rarr;
+                      </Link>
+                    )}
+                    {false && selectedCategory === 'ALL' ? (
                       <button
                         type="button"
                         onClick={() => setSelectedCategory(group.category)}

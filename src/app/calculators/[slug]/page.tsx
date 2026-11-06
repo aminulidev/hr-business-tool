@@ -10,6 +10,7 @@ import {
   SITE_NAME,
 } from '@/lib/calculator-meta';
 import AppShell from '@/components/layout/AppShell';
+import { getCategoryHubByName } from '@/lib/category-hubs';
 import CalculatorLayoutServer from '@/components/calculators/CalculatorLayoutServer';
 import CalculatorSkeleton from '@/components/calculators/CalculatorSkeleton';
 
@@ -57,6 +58,21 @@ const componentMap: Record<string, React.ComponentType> = {
   'indiana-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="IN" />,
   'arizona-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="AZ" />,
   'colorado-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="CO" />,
+  'utah-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="UT" />,
+  'kentucky-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="KY" />,
+  'louisiana-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="LA" />,
+  'iowa-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="IA" />,
+  'idaho-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="ID" />,
+  'ohio-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="OH" />,
+  'virginia-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="VA" />,
+  'new-jersey-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="NJ" />,
+  'massachusetts-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="MA" />,
+  'maryland-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="MD" />,
+  'minnesota-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="MN" />,
+  'missouri-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="MO" />,
+  'wisconsin-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="WI" />,
+  'oregon-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="OR" />,
+  'south-carolina-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="SC" />,
   'severance-pay-calculator': dynamic(() => import('@/components/calculators/SeverancePayCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'workers-comp-calculator': dynamic(() => import('@/components/calculators/WorkersCompCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'fica-tax-calculator': dynamic(() => import('@/components/calculators/FicaTaxCalculator'), { loading: () => <CalculatorSkeleton /> }),
@@ -303,9 +319,9 @@ export function generateMetadata({
         locale: 'en_US',
         images: [
           {
-            url: '/og-image.png',
-            width: 1344,
-            height: 768,
+            url: `/api/og?title=${encodeURIComponent(calc.title)}&category=${encodeURIComponent(calc.category)}&subtitle=${encodeURIComponent(calc.shortDescription)}`,
+            width: 1200,
+            height: 630,
             alt: calc.title,
           },
         ],
@@ -314,7 +330,7 @@ export function generateMetadata({
         card: 'summary_large_image',
         title: fullTitle,
         description: calc.metaDescription,
-        images: ['/og-image.png'],
+        images: [`/api/og?title=${encodeURIComponent(calc.title)}&category=${encodeURIComponent(calc.category)}&subtitle=${encodeURIComponent(calc.shortDescription)}`],
       },
     };
   });
@@ -346,6 +362,7 @@ export default async function CalculatorPage({
     // If no SEO data exists yet for this slug, fallback gracefully
   }
   const relatedTools = getLiveRelatedTools(seoData?.relatedTools, slug);
+  const categoryHub = getCategoryHubByName(calc.category);
 
   return (
     <AppShell>
@@ -355,7 +372,9 @@ export default async function CalculatorPage({
           description={calc.metaDescription}
           icon={<calc.icon className="h-7 w-7 text-white" />}
           breadcrumbs={[
-            { label: 'Calculators', href: '/calculators' },
+            categoryHub
+              ? { label: categoryHub.shortTitle, href: `/category/${categoryHub.slug}` }
+              : { label: 'Calculators', href: '/calculators' },
             { label: calc.title, href: calc.path },
           ]}
           tableOfContents={[

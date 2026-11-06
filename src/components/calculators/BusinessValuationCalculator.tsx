@@ -145,7 +145,7 @@ export default function BusinessValuationCalculator() {
                   </div>
                   <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
                     <p className="text-xs text-muted-foreground mb-1">Range</p>
-                    <p className={`text-lg font-bold`}>{`${formatCurrency(lowEstimate)} - {formatCurrency(highEstimate)}`}</p>
+                    <p className={`text-lg font-bold`}>{`${formatCurrency(lowEstimate)} - ${formatCurrency(highEstimate)}`}</p>
                   </div>
               </div>
 
