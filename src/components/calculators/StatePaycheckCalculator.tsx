@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
@@ -13,6 +13,8 @@ import {
   AlertCircle,
   Sparkles,
   ArrowRight,
+  Link2,
+  Check,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -57,6 +59,50 @@ export default function StatePaycheckCalculator({ state }: { state: StateCode })
   const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
   const [allowances, setAllowances] = useState(String(page.allowances?.defaultSingle ?? 0));
   const [nycResident, setNycResident] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
+
+  // Sync from shareable URL query params (?rate=28&hours=40&ot=5&freq=bi-weekly&status=single)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    if (!params.toString()) return;
+    const qRate = params.get('rate');
+    const qHours = params.get('hours');
+    const qOt = params.get('ot');
+    const qFreq = params.get('freq') as PayFrequency | null;
+    const qStatus = params.get('status') as FilingStatus | null;
+    const qAllow = params.get('allowances');
+    const qNyc = params.get('nyc');
+
+    if (qRate) setHourlyRate(qRate);
+    if (qHours) setRegularHours(qHours);
+    if (qOt) setOvertimeHours(qOt);
+    if (qFreq && qFreq in FREQ_LABELS) setPayFrequency(qFreq);
+    if (qStatus && qStatus in FILING_LABELS) setFilingStatus(qStatus);
+    if (qAllow) setAllowances(qAllow);
+    if (qNyc === '1') setNycResident(true);
+  }, []);
+
+  const handleShareLink = () => {
+    if (typeof window === 'undefined') return;
+    const url = new URL(window.location.href);
+    url.search = '';
+    url.searchParams.set('rate', hourlyRate);
+    url.searchParams.set('hours', regularHours);
+    if (parseFloat(overtimeHours || '0') > 0) url.searchParams.set('ot', overtimeHours);
+    url.searchParams.set('freq', payFrequency);
+    url.searchParams.set('status', filingStatus);
+    if (page.allowances && allowances) url.searchParams.set('allowances', allowances);
+    if (state === 'NY' && nycResident) url.searchParams.set('nyc', '1');
+
+    const shareUrl = url.toString();
+    window.history.replaceState({}, '', shareUrl);
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(shareUrl);
+    }
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2500);
+  };
 
   const changeFilingStatus = (status: FilingStatus) => {
     setFilingStatus(status);
@@ -420,13 +466,24 @@ export default function StatePaycheckCalculator({ state }: { state: StateCode })
               </div>
             </div>
 
-            <div className="flex items-start gap-2 rounded-lg bg-muted/30 border border-border/30 p-3 text-xs text-muted-foreground">
-              <Info className="h-4 w-4 shrink-0 mt-0.5" />
-              <p>
-                Estimate based on {TAX_YEAR} IRS and {page.name} withholding formulas for a standard W-4 with no
-                pre-tax deductions. 401(k) contributions, health insurance premiums, or extra W-4 withholding will
-                change your actual paycheck.
-              </p>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-lg bg-muted/30 border border-border/30 p-3 text-xs text-muted-foreground">
+              <div className="flex items-start gap-2">
+                <Info className="h-4 w-4 shrink-0 mt-0.5" />
+                <p>
+                  Estimate based on {TAX_YEAR} IRS and {page.name} withholding formulas for a standard W-4 with no
+                  pre-tax deductions. 401(k) contributions, health insurance premiums, or extra W-4 withholding will
+                  change your actual paycheck.
+                </p>
+              </div>
+              <Button
+                onClick={handleShareLink}
+                variant="outline"
+                size="sm"
+                className="shrink-0 border-emerald-500/30 hover:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+              >
+                {linkCopied ? <Check className="h-4 w-4 mr-1.5 text-emerald-600" /> : <Link2 className="h-4 w-4 mr-1.5" />}
+                {linkCopied ? 'Share Link Copied!' : 'Share Calculation Link'}
+              </Button>
             </div>
           </div>
         </motion.div>

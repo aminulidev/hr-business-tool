@@ -1,43 +1,92 @@
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Business Valuation Calculator' }],
   tableOfContents: [
-    { id: 'how-to-calculate', label: 'How to Calculate' },
-    { id: 'formula', label: 'Formula' },
-    { id: 'worked-examples', label: 'Worked Examples' },
+    { id: 'how-to-calculate', label: 'How to Calculate Business Valuation' },
+    { id: 'formula', label: 'EBITDA, SDE, Revenue & Asset Valuation Formulas' },
+    { id: 'worked-examples', label: 'Worked M&A Valuation Scenarios' },
+    { id: 'benchmarks', label: '2026 Business Valuation Multiples by Industry' },
+    { id: 'deep-dive', label: 'Deep Dive: SDE vs. EBITDA & Value Drivers' },
     { id: 'frequently-asked-questions', label: 'FAQs' },
     { id: 'related-calculators', label: 'Related Calculators' },
   ],
   howToSteps: [
-    'Enter annual revenue.',
-    'Enter annual EBITDA.',
-    'Enter net assets (book value).',
-    'Enter revenue multiple (industry: 0.5-3x typical, 5-10x SaaS).',
-    'Enter EBITDA multiple (industry: 3-8x typical, 10-15x tech).',
-    'Click Calculate to see valuation range across methods.',
+    'Enter your Trailing 12-Month (TTM) Annual Revenue ($) and select an appropriate industry Revenue Multiple (e.g., 0.5x–1.5x for traditional small businesses, 4x–8x+ for SaaS).',
+    'Enter your annual EBITDA ($) (or Seller\'s Discretionary Earnings for owner-operated businesses) and select an industry EBITDA Multiple (typically 3.0x–6.0x for SMBs, 8.0x–14.0x for mid-market).',
+    'Enter your Total Tangible Assets ($) and Total Liabilities ($) so the calculator can compute your Net Asset / Book Value.',
+    'Click "Calculate Valuation" to compare your Revenue Valuation, EBITDA Valuation, Asset-Based Book Value, and blended Low-to-High Enterprise Value range.',
   ],
-  formula: 'Revenue-Based Value = Revenue x Revenue Multiple\nEBITDA-Based Value = EBITDA x EBITDA Multiple\nAsset-Based Value = Net Assets\nMid Estimate = Average of Methods\nRange = Min to Max',
-  formulaDescription: 'Business valuation methods: (1) Revenue multiple (0.5-3x typical, 5-10x SaaS), (2) EBITDA multiple (3-8x typical, 10-15x tech), (3) Asset-based (book value). Mid estimate = average. True value = what buyer will pay. Hire appraiser for formal valuation.',
+  formula: '1. Earnings / EBITDA Multiple Method (Income Approach):\nEnterprise Value = Normalized EBITDA (or SDE) × Industry Multiple\n\n2. Revenue Multiple Method (Market Approach):\nEnterprise Value = Annual Recurring / Gross Revenue × Industry Revenue Multiple\n\n3. Net Asset Method (Asset Approach):\nBook / Net Asset Value = Total Fair Market Assets - Total Liabilities\n\nEquity Value (Cash to Seller at Close) = Enterprise Value + Cash on Hand - Total Debt',
+  formulaDescription: 'Valuing a private business combines three core appraisal methodologies: the Earnings Multiple Method (EBITDA or Seller\'s Discretionary Earnings), the Revenue Multiple Method (used heavily for high-growth SaaS and subscription companies), and the Net Asset Method (the floor valuation for asset-heavy businesses). By triangulating all three methods, founders, buyers, and M&A advisors establish a defensible Low, Mid, and High valuation range before entering negotiations.',
   workedExamples: [
-    { title: 'Small Business', description: '$1M revenue, $200k EBITDA, $300k assets. 1x rev, 4x EBITDA. Rev value = $1M, EBITDA value = $800k, Asset = $300k. Mid = $700k. Range $300k-$1M.' },
-    { title: 'SaaS Company', description: '$2M revenue, $500k EBITDA, $200k assets. 5x rev, 10x EBITDA. Rev = $10M, EBITDA = $5M, Asset = $200k. Mid = $5M. Range $200k-$10M.' },
-    { title: 'Manufacturing', description: '$5M revenue, $750k EBITDA, $2M assets. 0.8x rev, 5x EBITDA. Rev = $4M, EBITDA = $3.75M, Asset = $2M. Mid = $3.25M. Range $2M-$4M.' },
-    { title: 'Loss-Making Startup', description: '$1M revenue, -$200k EBITDA, $100k assets. 2x rev, N/A EBITDA. Rev = $2M, EBITDA = N/A, Asset = $100k. Use rev multiple.' },
-    { title: 'Mature Business', description: '$3M revenue, $600k EBITDA, $1.5M assets. 0.7x rev, 4x EBITDA. Rev = $2.1M, EBITDA = $2.4M, Asset = $1.5M. Mid = $2M. Range $1.5M-$2.4M.' },
+    {
+      title: 'Profitable HVAC & Home Services Company ($2.4M Revenue, $480k EBITDA)',
+      description: 'A regional HVAC service business generates $2,400,000 in annual revenue and $480,000 in normalized EBITDA (20% margin), with $350,000 in service vans/equipment and $100,000 in debt ($250,000 Net Asset Value). Using a 0.9x Revenue multiple ($2.16M) and a 4.5x EBITDA multiple ($2.16M), the company\'s operating Enterprise Value is ~$2.16M (range $1.80M to $2.40M), far above its $250,000 liquidation book value due to recurring maintenance contracts.',
+    },
+    {
+      title: 'B2B SaaS Company ($1.8M ARR, $300k EBITDA, 112% NRR)',
+      description: 'A B2B software business with $1,800,000 in Annual Recurring Revenue (ARR) growing 35% YoY with $300,000 in EBITDA is valued primarily on an ARR multiple. Applying a 5.0x SaaS ARR multiple yields a $9,000,000 valuation, whereas a traditional 10x EBITDA multiple would value it at $3,000,000. Strategic SaaS acquirers pay on ARR multiples because high-margin recurring revenue scales rapidly once sales and R&D stabilize.',
+    },
+    {
+      title: 'Main Street E-Commerce / Retail Brand ($1.2M Revenue, $250k SDE)',
+      description: 'An owner-operated e-commerce brand generates $1,200,000 in sales and $250,000 in Seller\'s Discretionary Earnings (SDE—which adds back the solo owner\'s $100,000 salary to $150,000 net profit), plus $180,000 in sellable inventory. Main street e-commerce brands typically trade at 2.8x to 3.8x SDE ($700,000 to $950,000), often structured as a multiple of SDE plus landed inventory at cost.',
+    },
+  ],
+  benchmarkTables: [
+    {
+      title: '2026 Private Business Valuation Multiples by Industry & Size',
+      description: 'Observed private-market transaction multiples across Seller\'s Discretionary Earnings (SDE), EBITDA, and Annual Revenue.',
+      headers: ['Industry Sector', 'Small Business SDE Multiple (<$1M Profit)', 'Mid-Market EBITDA Multiple ($1M–$5M EBITDA)', 'Typical Revenue Multiple', 'Key Valuation Premium Driver'],
+      rows: [
+        ['B2B SaaS & Cloud Software', '3.5x – 5.5x SDE', '10.0x – 16.0x+ EBITDA', '3.5x – 8.0x+ ARR', 'Net Revenue Retention (>110%) & Rule of 40'],
+        ['Home Services (HVAC, Plumbing, Pest)', '2.8x – 4.2x SDE', '5.0x – 8.5x EBITDA', '0.7x – 1.4x Rev', 'Recurring service plans & non-owner technician team'],
+        ['Healthcare & Dental Practices', '3.0x – 4.5x SDE', '6.0x – 9.5x EBITDA', '0.8x – 1.6x Rev', 'Multi-provider model & payer mix diversification'],
+        ['Manufacturing & Industrial', '3.0x – 4.5x SDE', '4.5x – 7.0x EBITDA', '0.6x – 1.3x Rev', 'Proprietary IP/tooling & <15% customer concentration'],
+        ['Digital Agencies & IT Managed Services (MSP)', '2.5x – 4.0x SDE', '4.5x – 7.5x EBITDA', '0.8x – 1.5x Rev', '12-month retainer contracts vs. one-off project work'],
+        ['E-Commerce & Consumer Brands', '2.5x – 3.8x SDE', '4.0x – 6.5x EBITDA', '0.6x – 1.5x Rev', 'Repeat purchase rate, organic traffic %, & brand moat'],
+      ],
+    },
+  ],
+  deepDiveSections: [
+    {
+      id: 'deep-dive',
+      title: 'SDE vs. EBITDA & the 5 Factors That Double Your Valuation Multiple',
+      paragraphs: [
+        'For small businesses earning under $1M in annual profit, buyers value the company on Seller\'s Discretionary Earnings (SDE)—which equals pretax net income plus interest, depreciation, amortization, one-time non-recurring expenses, and a single full-time owner\'s total compensation and personal add-backs (auto, travel, health insurance). Once a business exceeds $1M in annual profit and has a management team in place, private equity and strategic buyers switch to Adjusted EBITDA (which deducts the market-rate salary required to hire a replacement CEO).',
+        'Why does one $3M-revenue company sell for 3.0x EBITDA while another in the same industry sells for 6.5x EBITDA? Valuation multiples expand dramatically based on five de-risking pillars: (1) Recurring vs. re-occurring revenue contracts; (2) Low customer concentration (no single client >10%–15% of revenue); (3) Low owner dependency (the business runs without the founder working 50 hours/week); (4) Clean accrual-basis financials; and (5) Documented YoY organic growth.',
+      ],
+      highlights: [
+        'Document Legitimate Add-Backs Early: Track one-time legal fees, non-operating personal vehicle/travel expenses, and above-market family payroll 2–3 years before selling.',
+        'Eliminate Customer Concentration: If a single client accounts for >25% of revenue, buyers will either discount the multiple by 20%–35% or shift purchase price into a contingent earnout.',
+        'Understand Enterprise Value vs. Equity Proceeds: Most M&A deals are "Cash-Free, Debt-Free"—you keep your cash, pay off existing loans at closing, and deliver a normalized level of Working Capital.',
+      ],
+    },
   ],
   faqs: [
-    { question: 'What is business valuation?', answer: 'Estimating the value of a business. Methods: (1) Revenue multiple (revenue × industry multiple), (2) EBITDA multiple (EBITDA × industry multiple), (3) Asset-based (net asset value), (4) DCF (discounted cash flow). True value = what a buyer will pay. Hire a business appraiser (CVA, ABV) for formal valuation.' },
-    { question: 'What revenue multiple should I use?', answer: 'Industry varies: small business 0.5-1.5x, SaaS 5-10x, tech 3-7x, healthcare 1-3x, retail 0.3-0.8x, manufacturing 0.5-1.2x, services 0.5-1.5x. Higher multiples for: high growth, high margin, recurring revenue, strategic value. Use median multiple from recent comparable sales (BizBuySell, Pratt\'s Stats).' },
-    { question: 'What EBITDA multiple should I use?', answer: 'Industry varies: small business 2-4x, middle market 5-8x, large cap 8-12x, SaaS 10-15x+. Higher for: high growth, high margin, recurring revenue, large scale. Lower for: declining, cyclical, customer concentration. Use comparable company analysis (public peers) or precedent transactions.' },
-    { question: 'What is DCF valuation?', answer: 'Discounted Cash Flow = present value of projected future cash flows. Steps: (1) Project cash flows 5-10 years, (2) Estimate terminal value (Gordon growth or exit multiple), (3) Discount to present using WACC. Most theoretically sound method but sensitive to assumptions. Use alongside multiples for range. See our Cash Flow Forecast Calculator.' },
-    { question: 'How do I value a small business?', answer: 'Common for small business: (1) SDE (Seller\'s Discretionary Earnings) × 2-3x = value. SDE = net profit + owner salary + owner perks + interest + depreciation. (2) EBITDA × 3-5x. (3) Revenue × 0.5-1.5x. Adjust for: owner dependence, customer concentration, growth, industry trends. Get SBA loan pre-approval to validate.' },
-    { question: 'What affects business valuation?', answer: 'Factors: (1) Financial performance (revenue growth, profitability), (2) Industry (growth, multiples), (3) Size (larger = higher multiple), (4) Recurring revenue (higher multiple), (5) Customer concentration (lower = riskier), (6) Management team, (7) Market position, (8) Growth potential, (9) Economic conditions. Improve these to increase value.' },
+    {
+      question: 'What is the difference between SDE and EBITDA in business valuation?',
+      answer: 'EBITDA (Earnings Before Interest, Taxes, Depreciation, and Amortization) measures corporate operating cash flow after paying all management salaries. SDE (Seller\'s Discretionary Earnings) starts with EBITDA and adds back the single owner-operator\'s salary, payroll taxes, health insurance, and discretionary owner perks. SDE is standard for Main Street businesses under $1M in profit; EBITDA is standard for lower-middle-market companies above $1M in profit.',
+    },
+    {
+      question: 'What is a typical EBITDA multiple for a small business?',
+      answer: 'Across most traditional US industries, small and lower-middle-market businesses with $500k to $3M in annual EBITDA trade between 3.5x and 6.0x Adjusted EBITDA. Smaller owner-operated businesses (<$500k profit) typically sell for 2.5x to 3.8x SDE, while larger companies ($5M+ EBITDA) or high-retention SaaS businesses command 7.0x to 12.0x+ EBITDA.',
+    },
+    {
+      question: 'When should I use a Revenue Multiple vs. an EBITDA Multiple?',
+      answer: 'EBITDA (or SDE) multiples are the primary valuation benchmark for 90% of profitable private businesses because buyers purchase future cash flows. Revenue multiples are primarily used in two cases: (1) High-growth B2B SaaS or subscription businesses reinvesting heavily in R&D and sales, or (2) Quick rule-of-thumb benchmarking in standardized service trades (such as CPA bookkeeping practices or insurance books of business that trade at 1.0x–1.3x annual recurring commissions).',
+    },
+    {
+      question: 'Does a business valuation include inventory, cash, and real estate?',
+      answer: 'In standard M&A transactions, Enterprise Value is calculated on a "Cash-Free, Debt-Free" basis and includes a normal operating level of working capital (including normal inventory and accounts receivable). Excess cash stays with the seller, debt is paid off at close, and owner-occupied real estate is either valued separately via a commercial real estate appraisal or leased back to the buyer at fair market rent.',
+    },
   ],
   relatedTools: [
-    { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Return on investment', icon: 'BarChart3' },
-    { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Margin analysis', icon: 'Percent' },
-    { slug: 'break-even-calculator', title: 'Break-Even Calculator', description: 'Break-even units and revenue', icon: 'Target' },
-    { slug: 'gross-margin-calculator', title: 'Gross Margin Calculator', description: 'Gross profit margin', icon: 'PieChart' },
-    { slug: 'cash-flow-forecast-calculator', title: 'Cash Flow Forecast', description: '12-month cash projection', icon: 'TrendingUp' },
+    { slug: 'ebitda-calculator', title: 'EBITDA Calculator', description: 'Calculate EBITDA and EBITDA margin from operating income or net profit', icon: 'BarChart3' },
+    { slug: 'working-capital-calculator', title: 'Working Capital Calculator', description: 'Compute Net Working Capital and Current Ratio for M&A readiness', icon: 'Scale' },
+    { slug: 'profit-loss-calculator', title: 'Profit & Loss (P&L) Calculator', description: 'Model revenue, COGS, operating expenses, and net profit margins', icon: 'FileSpreadsheet' },
+    { slug: 'mrr-calculator', title: 'MRR & ARR Calculator', description: 'Calculate Monthly and Annual Recurring Revenue for subscription valuations', icon: 'TrendingUp' },
+    { slug: 'net-revenue-retention-calculator', title: 'Net Revenue Retention Calculator', description: 'Measure cohort NRR to benchmark SaaS valuation multiples', icon: 'Activity' },
+    { slug: 'depreciation-calculator', title: 'Depreciation Calculator', description: 'Calculate book and accelerated asset depreciation add-backs', icon: 'Layers' },
   ],
 };
+
 export default seoData;

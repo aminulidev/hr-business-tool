@@ -302,7 +302,7 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'office of the Nevada Labor Commissioner, Minimum Wage & Daily Overtime Bulletins',
+      'Office of the Nevada Labor Commissioner, Minimum Wage & Daily Overtime Bulletins',
       'Nevada Constitution, Article 10 §1',
     ],
   },
@@ -534,6 +534,506 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       'Colorado Department of Labor and Employment, FAMLI Division (0.45% employee rate) & COMPS Order',
     ],
   },
+  UT: {
+    code: 'UT',
+    name: 'Utah',
+    slug: 'utah-hourly-paycheck-calculator',
+    allowances: {
+      label: 'Dependent exemptions',
+      help: 'Number of qualifying dependents for the Utah taxpayer tax credit computation.',
+      defaultSingle: 0,
+      defaultMarried: 0,
+    },
+    minimumWage: 7.25,
+    minimumWageNote:
+      'Utah follows the federal minimum wage of $7.25 per hour ($2.13 per hour cash wage for tipped employees as long as tips bring total hourly earnings to $7.25).',
+    overtimeRule:
+      'Utah follows federal FLSA overtime rules: non-exempt employees earn 1.5× their regular hourly rate for all hours worked over 40 in a workweek.',
+    stateTaxSummary:
+      'Utah levies a flat 4.50% state income tax rate in 2026. Rather than subtracting a traditional standard deduction before applying the rate, Utah calculates a 6% Taxpayer Tax Credit based on your federal standard deduction and personal exemptions, which phases out at 1.3 cents per dollar of income above state thresholds.',
+    extraFaqs: [
+      {
+        question: 'Why does Utah use a taxpayer tax credit instead of a standard deduction?',
+        answer:
+          'Utah taxes gross wages at a flat 4.50% rate, then subtracts a nonrefundable Taxpayer Tax Credit equal to 6% of your federal standard deduction (plus Utah dependent exemptions). For high-income earners, this credit phases out at 1.3% of income above the Utah baseline threshold, effectively creating a zero-tax bracket for lower earners while keeping a flat 4.50% statutory rate.',
+      },
+      {
+        question: 'Do Salt Lake City or Provo charge a local city income tax?',
+        answer:
+          'No. No Utah city or county levies a local income or payroll tax on employee wages.',
+      },
+    ],
+    sources: [
+      'Utah State Tax Commission, Publication 14 — Withholding Tax Guide (2026)',
+      'Utah Labor Commission, Wage Claim & Minimum Wage',
+    ],
+  },
+  KY: {
+    code: 'KY',
+    name: 'Kentucky',
+    slug: 'kentucky-hourly-paycheck-calculator',
+    allowances: null,
+    minimumWage: 7.25,
+    minimumWageNote:
+      'Kentucky follows the federal minimum wage of $7.25 per hour ($2.13 per hour cash wage for tipped employees).',
+    overtimeRule:
+      'Kentucky requires 1.5× overtime pay for hours worked over 40 in a workweek. In addition, Kentucky Revised Statutes §337.285 requires 1.5× overtime pay for all hours worked on the seventh consecutive day of work in any one workweek (if the employee worked at least 40 hours that week).',
+    stateTaxSummary:
+      'Kentucky levies a flat 3.50% state income tax in 2026 (reduced from 4.0% in 2025 under HB 1) after subtracting the $3,270 Kentucky standard deduction. Note: most Kentucky cities and counties (including Louisville, Lexington, Covington, and Bowling Green) also withhold a local occupational license fee (payroll tax) ranging from 1.0% to 2.5%.',
+    extraFaqs: [
+      {
+        question: 'What is the Kentucky state income tax rate in 2026?',
+        answer:
+          'Kentucky lowered its flat state individual income tax rate from 4.0% to 3.5% effective January 1, 2026, after meeting state budget triggers under House Bill 1.',
+      },
+      {
+        question: 'Does this calculator include Kentucky local occupational taxes (Louisville / Lexington)?',
+        answer:
+          'The calculator computes the statewide 3.50% Kentucky income tax. Because local occupational license taxes vary by city and county (e.g., 2.2% for Louisville/Jefferson County residents, 2.25% in Lexington-Fayette), you can add your local rate in the national Hourly Paycheck Calculator.',
+      },
+    ],
+    sources: [
+      'Kentucky Department of Revenue, 2026 Withholding Tax Computer Formula (3.50% rate, $3,270 standard deduction)',
+      'Kentucky Education and Labor Cabinet, Wages and Hours',
+    ],
+  },
+  LA: {
+    code: 'LA',
+    name: 'Louisiana',
+    slug: 'louisiana-hourly-paycheck-calculator',
+    allowances: {
+      label: 'L-4 dependent exemptions',
+      help: 'Number of dependent exemptions claimed on Louisiana Form L-4 ($1,000 deduction per dependent).',
+      defaultSingle: 0,
+      defaultMarried: 0,
+    },
+    minimumWage: 7.25,
+    minimumWageNote:
+      'Louisiana has no state minimum wage statute, so employers covered by the federal FLSA must pay at least the federal minimum wage of $7.25 per hour ($2.13 for tipped employees).',
+    overtimeRule:
+      'Louisiana follows federal FLSA overtime rules: non-exempt employees earn 1.5× their regular hourly rate for hours worked over 40 in a workweek.',
+    stateTaxSummary:
+      'Following Louisiana’s historic 2024 tax reform (Act 11 of the Third Extraordinary Session), Louisiana replaced its old graduated tax brackets (1.85%, 3.5%, 4.25%) with a single flat 3.00% state income tax rate and tripled its standard deduction to $12,500 for Single filers and $25,000 for Married Filing Jointly / Head of Household.',
+    extraFaqs: [
+      {
+        question: 'How did Louisiana’s flat 3.0% tax reform change my paycheck?',
+        answer:
+          'Starting in 2025 and continuing in 2026, Louisiana eliminated its multi-bracket income tax system in favor of a flat 3.00% tax rate and increased the standard deduction from $4,500 to $12,500 for single filers ($25,000 for married couples), lowering state withholding for most hourly workers.',
+      },
+      {
+        question: 'Do New Orleans or Baton Rouge have a city income tax?',
+        answer:
+          'No. Louisiana parishes and municipalities do not levy a local income or wage tax on employees.',
+      },
+    ],
+    sources: [
+      'Louisiana Department of Revenue, Form L-4 & 2026 Withholding Tables (3.00% flat rate)',
+      'U.S. DOL, Fair Labor Standards Act',
+    ],
+  },
+  IA: {
+    code: 'IA',
+    name: 'Iowa',
+    slug: 'iowa-hourly-paycheck-calculator',
+    allowances: {
+      label: 'IA W-4 allowances ($40 credit/ea)',
+      help: 'Total exemption allowances from your Iowa Form IA W-4 ($40 annual tax credit per allowance).',
+      defaultSingle: 1,
+      defaultMarried: 2,
+    },
+    minimumWage: 7.25,
+    minimumWageNote:
+      'Iowa’s statewide minimum wage is $7.25 per hour, matching the federal rate ($4.35 per hour cash wage for tipped employees if tips bring total pay to at least $7.25).',
+    overtimeRule:
+      'Iowa follows federal FLSA overtime rules: 1.5× the regular hourly rate for hours worked beyond 40 in a workweek.',
+    stateTaxSummary:
+      'Iowa completed its transition to a flat income tax in 2025. For 2026, all Iowa taxable wage income (after subtracting the federal-aligned standard deduction of $16,100 Single / $32,200 Married) is taxed at a single flat 3.80% rate, minus $40 per personal/dependent exemption credit claimed on Form IA W-4.',
+    extraFaqs: [
+      {
+        question: 'What is Iowa’s flat income tax rate in 2026?',
+        answer:
+          'Under Senate File 2442, Iowa consolidated its old graduated tax brackets into a single flat 3.80% income tax rate starting January 1, 2025, which remains 3.80% in 2026.',
+      },
+      {
+        question: 'Do Iowa school districts levy an income surtax on paychecks?',
+        answer:
+          'Many Iowa school districts levy a local income surtax (ranging from 1% to 20% of your state tax liability), which is reconciled on your annual IA 1040 return rather than withheld directly from biweekly paychecks.',
+      },
+    ],
+    sources: [
+      'Iowa Department of Revenue, 2026 Iowa Withholding Formula and Instructions (3.80% flat rate)',
+      'Iowa Workforce Development, Wage FAQs',
+    ],
+  },
+  ID: {
+    code: 'ID',
+    name: 'Idaho',
+    slug: 'idaho-hourly-paycheck-calculator',
+    allowances: {
+      label: 'ID W-4 child tax allowances',
+      help: 'Qualifying children claimed on Idaho Form ID W-4 ($2,960 deduction per allowance).',
+      defaultSingle: 0,
+      defaultMarried: 0,
+    },
+    minimumWage: 7.25,
+    minimumWageNote:
+      'Idaho’s state minimum wage is $7.25 per hour, matching the federal minimum wage ($3.35 per hour cash wage for tipped employees).',
+    overtimeRule:
+      'Idaho follows the federal FLSA overtime rule: 1.5× the regular hourly rate for hours worked over 40 in a workweek.',
+    stateTaxSummary:
+      'Idaho levies a flat 5.30% state income tax in 2026 (reduced from 5.695% under recent tax cut legislation) after subtracting the federal-aligned standard deduction ($16,100 for Single, $32,200 for Married Filing Jointly, $24,150 for Head of Household) and $2,960 per allowance claimed on Form ID W-4.',
+    extraFaqs: [
+      {
+        question: 'What is the Idaho state income tax rate for 2026?',
+        answer:
+          'Idaho’s flat individual income tax rate is 5.30% for 2026 after legislative rate reductions from the prior 5.695% and 5.8% rates. Because Idaho matches the large federal standard deduction, your first $16,100 (Single) or $32,200 (Married) of annual wages is exempt from state withholding.',
+      },
+      {
+        question: 'Do Boise or Meridian have a local city income tax?',
+        answer:
+          'No. Idaho cities and counties do not levy a local income or payroll tax on employee wages.',
+      },
+    ],
+    sources: [
+      'Idaho State Tax Commission, A Guide to Idaho Income Tax Withholding (2026)',
+      'Idaho Department of Labor, Wage and Hour',
+    ],
+  },
+  OH: {
+    code: 'OH',
+    name: 'Ohio',
+    slug: 'ohio-hourly-paycheck-calculator',
+    allowances: {
+      label: 'IT 4 exemptions',
+      help: 'Personal and dependent exemptions claimed on Ohio Form IT 4 ($2,400 deduction per exemption).',
+      defaultSingle: 1,
+      defaultMarried: 2,
+    },
+    minimumWage: 11,
+    minimumWageNote:
+      'Ohio’s minimum wage is $11.00 per hour in 2026 for employers with annual gross receipts over $405,000 ($5.50 per hour cash wage for tipped employees), adjusted annually for inflation.',
+    overtimeRule:
+      'Ohio follows the federal FLSA overtime standard: 1.5× the regular hourly rate for all hours worked over 40 in a workweek.',
+    stateTaxSummary:
+      'Ohio has one of the most worker-friendly state tax structures in the Midwest: the first $26,050 of Ohio taxable income is completely exempt (0% state tax), and effective in 2026 Ohio transitioned to a single flat 2.75% rate on all taxable income above $26,050. Note: most Ohio cities and villages also withhold a municipal income tax (typically 1.5% to 2.5%, such as 2.5% in Columbus, Cleveland, and Dayton, and 1.8% in Cincinnati).',
+    extraFaqs: [
+      {
+        question: 'Why is my Ohio state income tax $0 if I make under $26,050 a year?',
+        answer:
+          'Ohio sets a 0% tax bracket on the first $26,050 of taxable income (after subtracting $2,400 per IT 4 exemption). Part-time workers and lower-wage earners often have zero Ohio state income tax withheld from their paychecks.',
+      },
+      {
+        question: 'Does this calculator include Ohio municipal (RITA / CCA) city income tax?',
+        answer:
+          'This page calculates your exact statewide Ohio income tax and federal taxes. Because Ohio has over 600 municipalities with local wage taxes (commonly 2.0% to 2.5%, administered by RITA, CCA, or the city directly), you can enter your exact city tax in the national Hourly Paycheck Calculator.',
+      },
+    ],
+    sources: [
+      'Ohio Department of Taxation, 2026 Employer Withholding Tables (0% up to $26,050; 2.75% flat bracket)',
+      'Ohio Department of Commerce, 2026 Minimum Wage Poster',
+    ],
+  },
+  VA: {
+    code: 'VA',
+    name: 'Virginia',
+    slug: 'virginia-hourly-paycheck-calculator',
+    allowances: {
+      label: 'VA-4 exemptions',
+      help: 'Personal and dependent exemptions from Virginia Form VA-4 ($930 deduction per exemption).',
+      defaultSingle: 1,
+      defaultMarried: 2,
+    },
+    minimumWage: 12.77,
+    minimumWageNote:
+      'Virginia’s statewide minimum wage is $12.77 per hour in 2026 (adjusted for CPI inflation under the Virginia Minimum Wage Act; $2.13 per hour cash wage for tipped employees).',
+    overtimeRule:
+      'Virginia follows federal FLSA overtime rules: non-exempt employees earn 1.5× their regular hourly rate for hours worked over 40 in a workweek.',
+    stateTaxSummary:
+      'Virginia uses four graduated income tax brackets that take effect quickly: 2% on the first $3,000 of taxable income, 3% on $3,000–$5,000, 5% on $5,000–$17,000, and 5.75% on all taxable income over $17,000. Before applying the brackets, employers subtract the Virginia standard deduction ($8,500 for Single, $17,000 for Married Filing Jointly) and $930 per VA-4 exemption.',
+    extraFaqs: [
+      {
+        question: 'Why does almost all full-time Virginia pay fall into the 5.75% bracket?',
+        answer:
+          'Virginia’s top 5.75% bracket starts at just $17,000 of taxable income (unchanged for decades), though the standard deduction ($8,500 Single / $17,000 Married) shields a substantial portion of your wages before the brackets apply.',
+      },
+      {
+        question: 'Do Northern Virginia cities or Richmond have a local income tax?',
+        answer:
+          'No. No Virginia city or county (including Fairfax, Arlington, Alexandria, Richmond, or Virginia Beach) levies a local income tax on employee wages.',
+      },
+    ],
+    sources: [
+      'Virginia Tax, Employer Income Tax Withholding Formula (2026)',
+      'Virginia Department of Labor and Industry, Virginia Minimum Wage Act',
+    ],
+  },
+  NJ: {
+    code: 'NJ',
+    name: 'New Jersey',
+    slug: 'new-jersey-hourly-paycheck-calculator',
+    allowances: {
+      label: 'NJ-W4 allowances',
+      help: 'Total allowances claimed on New Jersey Form NJ-W4 ($1,000 deduction per allowance).',
+      defaultSingle: 1,
+      defaultMarried: 2,
+    },
+    minimumWage: 15.92,
+    minimumWageNote:
+      'New Jersey’s statewide minimum wage for most employers is $15.92 per hour in 2026, adjusted annually based on CPI-W inflation.',
+    overtimeRule:
+      'New Jersey requires 1.5× overtime pay for all hours worked over 40 in a workweek for non-exempt employees.',
+    stateTaxSummary:
+      'New Jersey taxes wages progressively from 1.4% up to 10.75% (with no standard deduction, using $1,000 per NJ-W4 allowance). In addition, New Jersey paychecks include mandatory employee payroll deductions for Unemployment Insurance, Workforce Development, and Family Leave Insurance (SUI/FLI, totaling ~0.585% up to $44,800/$165,400 wage caps; TDI employee rate is 0% in 2026).',
+    extraFaqs: [
+      {
+        question: 'What are the NJ SUI / FLI / TDI deductions on my New Jersey paycheck?',
+        answer:
+          'New Jersey employees contribute to the Unemployment Insurance & Workforce Development fund (0.425% on the first $44,800 of wages) and Family Leave Insurance (FLI, ~0.16% up to $165,400), which provides up to 12 weeks of paid family leave.',
+      },
+      {
+        question: 'What if I live in New Jersey and work in New York City?',
+        answer:
+          'You do not pay NYC city income tax if you live in New Jersey. Your NY employer withholds NY State tax, and you claim a resident credit on your NJ-1040 return so your wages are not double-taxed.',
+      },
+    ],
+    sources: [
+      'New Jersey Division of Taxation, NJ-WT Income Tax Withholding Instructions (2026)',
+      'New Jersey Department of Labor & Workforce Development, 2026 Minimum Wage & SUI/FLI/TDI Rates',
+    ],
+  },
+  MA: {
+    code: 'MA',
+    name: 'Massachusetts',
+    slug: 'massachusetts-hourly-paycheck-calculator',
+    allowances: {
+      label: 'M-4 exemptions',
+      help: 'Total exemptions claimed on Massachusetts Form M-4 ($4,400 personal + $1,000 per additional exemption).',
+      defaultSingle: 1,
+      defaultMarried: 2,
+    },
+    minimumWage: 15,
+    minimumWageNote:
+      'Massachusetts’ statewide minimum wage is $15.00 per hour in 2026 ($6.75 per hour service rate for tipped employees whose tips bring total pay to at least $15.00).',
+    overtimeRule:
+      'Massachusetts requires 1.5× overtime pay for all hours worked over 40 in a workweek for non-exempt employees.',
+    stateTaxSummary:
+      'Massachusetts levies a 5.00% flat state income tax on taxable wages (after subtracting M-4 personal exemptions of $4,400 Single / $8,800 Married, plus $1,000 per dependent and a deduction of up to $2,000 for FICA/PFML taxes paid), plus a 4% “Millionaires Tax” surtax on income above $1.08 million. Most employees also have ~0.46% deducted for Massachusetts Paid Family and Medical Leave (MA PFML) up to the $184,500 Social Security wage cap.',
+    extraFaqs: [
+      {
+        question: 'What is the MA PFML deduction on my Massachusetts paycheck?',
+        answer:
+          'Massachusetts Paid Family and Medical Leave (PFML) funds up to 26 combined weeks of paid family and medical leave. For 2026, the maximum employee payroll deduction at employers with 25+ workers is ~0.46% of gross wages up to the $184,500 Social Security cap.',
+      },
+      {
+        question: 'Does Boston charge a city income tax?',
+        answer:
+          'No. Neither Boston nor any other Massachusetts city or town levies a local income tax on employee wages.',
+      },
+    ],
+    sources: [
+      'Massachusetts Department of Revenue, Circular M — 2026 Income Tax Withholding Tables (5.0% rate)',
+      'Massachusetts Department of Family and Medical Leave, 2026 PFML Contribution Rates',
+    ],
+  },
+  MD: {
+    code: 'MD',
+    name: 'Maryland',
+    slug: 'maryland-hourly-paycheck-calculator',
+    allowances: {
+      label: 'MW507 exemptions',
+      help: 'Total personal and dependent exemptions on Maryland Form MW507 ($3,200 deduction per exemption).',
+      defaultSingle: 1,
+      defaultMarried: 2,
+    },
+    minimumWage: 15,
+    minimumWageNote:
+      'Maryland’s statewide minimum wage is $15.00 per hour for all employers in 2026 (Montgomery County and Howard County set higher local minimum wages).',
+    overtimeRule:
+      'Maryland follows the 40-hour workweek rule: non-exempt employees earn 1.5× their regular hourly rate for all hours worked over 40 in a workweek.',
+    stateTaxSummary:
+      'Every Maryland paycheck has two income taxes withheld: Maryland state income tax (graduated from 2.0% to 5.75%) AND a mandatory county/Baltimore City local income tax ranging from 2.25% to 3.20% (averaging ~3.05% statewide; Montgomery, Prince George’s, Baltimore County, Howard County, and Baltimore City all charge 3.20%). Both apply after subtracting the Maryland standard deduction ($2,800 Single / $5,600 Married) and $3,200 per MW507 exemption.',
+    extraFaqs: [
+      {
+        question: 'Why is Maryland withholding roughly 7.5% to 8% of my paycheck?',
+        answer:
+          'Unlike most states, Maryland requires employers to withhold both the state income tax (mostly 4.75% for middle-income earners) and your county/city local income tax (up to 3.20% in major counties and Baltimore City) together in a single combined state/local tax line on your pay stub.',
+      },
+      {
+        question: 'Which Maryland counties have the lowest and highest local income tax rates?',
+        answer:
+          'Worcester County (2.25%) and Talbot County (2.40%) have the lowest local rates, while Baltimore City, Baltimore County, Montgomery County, Prince George’s County, Howard County, Cecil County, St. Mary’s County, and Wicomico County are at the 3.20% maximum.',
+      },
+    ],
+    sources: [
+      'Comptroller of Maryland, 2026 Maryland Employer Withholding Guide (Form MW507 & County Rates)',
+      'Maryland Department of Labor, Minimum Wage and Overtime Law',
+    ],
+  },
+  MN: {
+    code: 'MN',
+    name: 'Minnesota',
+    slug: 'minnesota-hourly-paycheck-calculator',
+    allowances: {
+      label: 'W-4MN allowances',
+      help: 'Withholding allowances claimed on Minnesota Form W-4MN ($5,200 deduction per allowance).',
+      defaultSingle: 0,
+      defaultMarried: 0,
+    },
+    minimumWage: 11.41,
+    minimumWageNote:
+      'Minnesota’s statewide minimum wage is $11.41 per hour in 2026 (adjusted annually for inflation), while Minneapolis ($15.97+) and St. Paul set higher city minimum wages. Minnesota does not allow a tip credit.',
+    overtimeRule:
+      'Minnesota requires 1.5× overtime pay for hours worked over 48 in a workweek under state law, or over 40 hours in a workweek for employers covered by the federal FLSA (which covers nearly all businesses).',
+    stateTaxSummary:
+      'Minnesota taxes wages across four progressive brackets: 5.35%, 6.80%, 7.85%, and 9.85%, after subtracting the Minnesota standard deduction ($14,950 Single / $29,900 Married Filing Jointly) and $5,200 per W-4MN allowance. Starting January 1, 2026, Minnesota employers also withhold up to 0.44% of wages (50% of the 0.88% total premium, up to the $184,500 Social Security cap) for the new Minnesota Paid Leave program.',
+    extraFaqs: [
+      {
+        question: 'What is the new 2026 Minnesota Paid Leave deduction on my paycheck?',
+        answer:
+          'Minnesota’s Paid Family and Medical Leave program launched on January 1, 2026. The total payroll premium is 0.88% of wages up to the $184,500 Social Security wage base, and employers may deduct up to half (0.44%) from employee paychecks.',
+      },
+      {
+        question: 'Do tipped workers in Minnesota get the full minimum wage?',
+        answer:
+          'Yes. Minnesota prohibits tip credits, so servers and hospitality workers must be paid at least the full state or local minimum wage ($11.41 statewide, or $15.97+ in Minneapolis and St. Paul) before tips.',
+      },
+    ],
+    sources: [
+      'Minnesota Department of Revenue, 2026 Income Tax Withholding Instruction Booklet',
+      'Minnesota Department of Employment and Economic Development (DEED), Paid Leave 2026 Premium Rates (0.44% employee share)',
+    ],
+  },
+  MO: {
+    code: 'MO',
+    name: 'Missouri',
+    slug: 'missouri-hourly-paycheck-calculator',
+    allowances: null,
+    minimumWage: 15,
+    minimumWageNote:
+      'Missouri’s minimum wage rose to $15.00 per hour on January 1, 2026 under voter-approved Proposition A (up from $13.75 in 2025). Tipped employees must be paid at least 50% of the state minimum wage ($7.50/hour) plus tips.',
+    overtimeRule:
+      'Missouri follows federal FLSA overtime rules: non-exempt employees earn 1.5× their regular hourly rate for all hours worked over 40 in a workweek.',
+    stateTaxSummary:
+      'Missouri uses graduated income tax brackets topping out at 4.70% in 2026 (down from 4.80% under legislative rate reductions), with the first $1,313 of taxable income exempt and the federal-aligned standard deduction ($16,100 Single / $32,200 Married Filing Jointly) subtracted first. Note: employees who live or work in Kansas City or the City of St. Louis also have a 1.0% local city earnings tax withheld.',
+    extraFaqs: [
+      {
+        question: 'Did Missouri’s minimum wage increase to $15.00 in 2026?',
+        answer:
+          'Yes. Missouri voters approved Proposition A in November 2024, raising the state minimum wage to $13.75 in 2025 and $15.00 per hour effective January 1, 2026, with annual CPI inflation adjustments thereafter.',
+      },
+      {
+        question: 'Who pays the 1% Kansas City or St. Louis Earnings Tax?',
+        answer:
+          'Both Kansas City, MO and the City of St. Louis levy a flat 1.0% local earnings tax on gross wages earned by city residents (regardless of where they work) and by nonresidents for work performed inside the city limits.',
+      },
+    ],
+    sources: [
+      'Missouri Department of Revenue, 2026 Employer’s Tax Guide & Withholding Formula (4.70% top rate)',
+      'Missouri Department of Labor and Industrial Relations, 2026 Minimum Wage ($15.00/hr)',
+    ],
+  },
+  WI: {
+    code: 'WI',
+    name: 'Wisconsin',
+    slug: 'wisconsin-hourly-paycheck-calculator',
+    allowances: {
+      label: 'WT-4 exemptions',
+      help: 'Total personal and dependent exemptions claimed on Wisconsin Form WT-4 ($700 deduction per exemption).',
+      defaultSingle: 1,
+      defaultMarried: 2,
+    },
+    minimumWage: 7.25,
+    minimumWageNote:
+      'Wisconsin follows the federal minimum wage of $7.25 per hour ($2.33 per hour cash wage for tipped employees if tips bring total pay to at least $7.25).',
+    overtimeRule:
+      'Wisconsin requires 1.5× overtime pay for all hours worked over 40 in a workweek for non-exempt employees.',
+    stateTaxSummary:
+      'Wisconsin taxes wages across four graduated brackets: 3.50%, 4.40%, 5.30%, and 7.65%. Before applying the brackets, Wisconsin uses a sliding-scale standard deduction ($13,560 for Single filers and $25,080 for Married Filing Jointly, which phases out gradually as income rises) plus $700 per exemption claimed on Form WT-4.',
+    extraFaqs: [
+      {
+        question: 'Why does Wisconsin’s standard deduction shrink as my hourly wage goes up?',
+        answer:
+          'Wisconsin uses a sliding-scale standard deduction designed to target tax relief to low- and middle-income workers. Once your annual wages pass ~$19,530 (Single) or ~$28,150 (Married), the standard deduction phases out by 12% to 19.778% of the excess income until it reaches $0 for higher earners.',
+      },
+      {
+        question: 'Do Milwaukee or Madison have a local city income tax?',
+        answer:
+          'No. Wisconsin state law prohibits cities and counties from levying a local income or payroll tax on employee wages.',
+      },
+    ],
+    sources: [
+      'Wisconsin Department of Revenue, Publication W-166 Withholding Tax Guide (Alternate Method A)',
+      'Wisconsin Department of Workforce Development, Minimum Wage & Overtime',
+    ],
+  },
+  OR: {
+    code: 'OR',
+    name: 'Oregon',
+    slug: 'oregon-hourly-paycheck-calculator',
+    allowances: {
+      label: 'OR-W-4 allowances ($256 credit/ea)',
+      help: 'Total allowances from Oregon Form OR-W-4 ($256 annual personal exemption credit per allowance).',
+      defaultSingle: 1,
+      defaultMarried: 2,
+    },
+    minimumWage: 15.45,
+    minimumWageNote:
+      'Oregon uses a three-tier minimum wage adjusted each July 1 for inflation: in 2026, the Standard rate is ~$15.45/hr, the Portland Metro rate is ~$16.70/hr, and the Nonurban County rate is ~$14.45/hr. Oregon does not allow a tip credit.',
+    overtimeRule:
+      'Oregon requires 1.5× overtime pay for hours worked over 40 in a workweek (and has special daily/weekly overtime rules for manufacturing, cannery, and agricultural workers).',
+    stateTaxSummary:
+      'Oregon has no state sales tax, so it relies heavily on state income tax: rates start at 4.75%, 6.75%, and 8.75% (applying to taxable income above ~$11,050 Single) and reach 9.90% above $125,000. On top of income tax, Oregon deducts 0.60% for Paid Leave Oregon (up to $184,500) and 0.10% for the Statewide Transit Tax (STT). Note: Oregon lets you deduct up to $8,500 of your federal income tax before computing Oregon tax.',
+    extraFaqs: [
+      {
+        question: 'Why is Oregon paycheck withholding higher than in most other states?',
+        answer:
+          'Because Oregon has no general sales tax, its 8.75% income tax bracket kicks in at just $11,050 of taxable income for single filers ($22,100 married). However, Oregon allows a unique "federal tax subtraction" of up to $8,500 of federal income tax paid, which reduces the wages subject to Oregon tax.',
+      },
+      {
+        question: 'What are Paid Leave Oregon and the Statewide Transit Tax (STT)?',
+        answer:
+          'Paid Leave Oregon deducts 0.60% of gross wages (60% of the 1.0% total rate, up to $184,500) to fund up to 12 weeks of paid family, medical, or safe leave. The Oregon Statewide Transit Tax (STT) deducts 0.10% ($1 per $1,000 of wages) to fund public transit across the state.',
+      },
+    ],
+    sources: [
+      'Oregon Department of Revenue, 2026 Oregon Withholding Tax Formulas',
+      'Oregon Employment Department, Paid Leave Oregon (0.60% employee rate) & BOLI Minimum Wage',
+    ],
+  },
+  SC: {
+    code: 'SC',
+    name: 'South Carolina',
+    slug: 'south-carolina-hourly-paycheck-calculator',
+    allowances: {
+      label: 'SC W-4 allowances',
+      help: 'Total allowances claimed on South Carolina Form SC W-4 ($4,860 deduction per allowance).',
+      defaultSingle: 1,
+      defaultMarried: 2,
+    },
+    minimumWage: 7.25,
+    minimumWageNote:
+      'South Carolina has no state minimum wage law, so employers covered by the federal Fair Labor Standards Act must pay at least the federal minimum wage of $7.25 per hour ($2.13 for tipped employees).',
+    overtimeRule:
+      'South Carolina follows federal FLSA overtime rules: non-exempt employees earn 1.5× their regular hourly rate for all hours worked over 40 in a workweek.',
+    stateTaxSummary:
+      'South Carolina simplified its income tax into three brackets: 0% on the first $3,560 of taxable income, 3.0% on $3,560 to $17,830, and 6.0% on taxable income over $17,830 (reduced from 7.0% under the Comprehensive Tax Cut Act). If you claim 1 or more allowances on Form SC W-4, your employer subtracts a standard deduction (10% of gross wages up to $7,130) plus $4,860 per allowance.',
+    extraFaqs: [
+      {
+        question: 'What is South Carolina’s top income tax rate in 2026?',
+        answer:
+          'Under South Carolina’s phased tax reduction law (Senate Bill 1087), the top individual income tax bracket dropped from 7.0% down to 6.0% (after 6.2% in 2024), with the first $3,560 of taxable income taxed at 0% and the middle bracket at 3.0%.',
+      },
+      {
+        question: 'Do Charleston, Columbia, or Greenville have a local city income tax?',
+        answer:
+          'No. South Carolina cities and counties do not levy a local income or payroll tax on employee wages.',
+      },
+    ],
+    sources: [
+      'South Carolina Department of Revenue, WH-1603F Withholding Tax Formula (2026)',
+      'South Carolina Department of Labor, Licensing and Regulation, Wages & Payment',
+    ],
+  },
 };
 
 export const STATE_CODES = Object.keys(STATE_PAYCHECK_PAGES) as StateCode[];
@@ -592,7 +1092,7 @@ function describeScenario(page: StatePaycheckPage, s: Scenario) {
 
 export function buildStatePaycheckSeo(code: StateCode) {
   const page = STATE_PAYCHECK_PAGES[code];
-  const hasIncomeTax = page.allowances !== null || code === 'PA' || code === 'WA';
+  const hasIncomeTax = code !== 'TX' && code !== 'FL' && code !== 'TN' && code !== 'NV';
 
   const scenarios: Scenario[] = [
     {
@@ -632,9 +1132,39 @@ export function buildStatePaycheckSeo(code: StateCode) {
     });
   }
 
-  const otherStates = STATE_CODES.filter((c) => c !== code)
-    .slice(0, 6)
-    .map((c) => STATE_PAYCHECK_PAGES[c]);
+  // Rotate related state links across all 30 states so every state page receives equal internal link equity
+  const codeIdx = STATE_CODES.indexOf(code);
+  const otherStates = Array.from({ length: 6 }, (_, i) => {
+    const nextCode = STATE_CODES[(codeIdx + 1 + i) % STATE_CODES.length];
+    return STATE_PAYCHECK_PAGES[nextCode];
+  });
+
+  // Build dynamic 2026 hourly wage reference table ($15–$50/hr + state min wage)
+  const sampleRates = Array.from(
+    new Set([page.minimumWage, 15, 18, 20, 25, 30, 35, 40, 50])
+  ).sort((a, b) => a - b);
+
+  const defaultSingleAllowance = page.allowances?.defaultSingle ?? 0;
+  const benchmarkRows = sampleRates.map((rate) => {
+    const r = singleFullTime(code, rate, defaultSingleAllowance);
+    const fedAndFicaPerPeriod = r.deductions
+      .filter((d) => d.key === 'federal' || d.key === 'ss' || d.key === 'medicare')
+      .reduce((sum, d) => sum + d.perPeriod, 0);
+    const statePerPeriod = r.deductions
+      .filter((d) => d.key !== 'federal' && d.key !== 'ss' && d.key !== 'medicare')
+      .reduce((sum, d) => sum + d.perPeriod, 0);
+    const label =
+      rate === page.minimumWage ? `${usd(rate)}/hr (Min Wage)` : `${usd(rate)}/hr`;
+    return [
+      label,
+      usd(r.grossAnnual),
+      usd(r.grossPerPeriod),
+      usd(fedAndFicaPerPeriod),
+      usd(statePerPeriod),
+      usd(r.netPerPeriod),
+      usd(r.netAnnual),
+    ];
+  });
 
   return {
     howToSteps: [
@@ -657,6 +1187,40 @@ export function buildStatePaycheckSeo(code: StateCode) {
       page.stateTaxSummary,
 
     workedExamples: scenarios.map((s) => describeScenario(page, s)),
+
+    benchmarkTables: [
+      {
+        title: `${TAX_YEAR} ${page.name} Hourly Paycheck Take-Home Reference Table (40 hrs/week, Bi-Weekly, Single)`,
+        headers: [
+          'Hourly Rate',
+          'Gross Annual',
+          'Bi-Weekly Gross',
+          'Federal + FICA',
+          `${page.name} Tax`,
+          'Bi-Weekly Net',
+          'Net Annual Pay',
+        ],
+        rows: benchmarkRows,
+        note: `Calculated for a Single filer working 40 regular hours/week (2,080 hours/year) paid bi-weekly in ${page.name} using official ${TAX_YEAR} IRS and ${page.name} withholding formulas.`,
+      },
+    ],
+
+    deepDiveSections: [
+      {
+        title: `${page.name} Minimum Wage & Overtime Rules in ${TAX_YEAR}`,
+        paragraphs: [
+          page.minimumWageNote,
+          page.overtimeRule,
+        ],
+      },
+      {
+        title: `How ${page.name} Paycheck Withholding & FICA Taxes Work`,
+        paragraphs: [
+          page.stateTaxSummary,
+          `In addition to ${page.name} state rules, all hourly employees pay federal FICA payroll taxes: 6.2% for Social Security on wages up to the ${TAX_YEAR} $184,500 wage base cap, plus 1.45% for Medicare on all wages (with an extra 0.9% Additional Medicare Tax on annual wages above $200,000). Federal income tax is withheld using the ${TAX_YEAR} IRS Publication 15-T percentage method tables after subtracting the ${TAX_YEAR} standard deduction ($16,100 Single, $32,200 Married Filing Jointly, $24,150 Head of Household).`,
+        ],
+      },
+    ],
 
     faqs: [
       {

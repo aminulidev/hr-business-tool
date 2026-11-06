@@ -83,7 +83,7 @@ export default function RoasCalculator() {
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground font-medium">Return on Ad Spend (ROAS)</p>
-                <p className="text-4xl font-bold text-emerald-600">{`${roas.toFixed(2)}x ({roasPct.toFixed(0)}%)`}</p>
+                <p className="text-4xl font-bold text-emerald-600">{`${roas.toFixed(2)}x (${roasPct.toFixed(0)}%)`}</p>
                 <div className="flex justify-center gap-2 flex-wrap">
                   <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Revenue: ${formatCurrency(rev)}`}</Badge>
                   <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Spend: ${formatCurrency(spend)}`}</Badge>

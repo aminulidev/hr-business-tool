@@ -92,9 +92,36 @@ export default function Footer() {
           Please consult a qualified professional for advice specific to your situation.
         </p>
 
+        {/* Category Pillar Hubs */}
+        <nav aria-label="Calculator categories" className="mb-4">
+          <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs font-medium text-muted-foreground">
+            <Link href="/category/payroll-taxes" className={linkClass('/category/payroll-taxes')}>
+              Payroll &amp; Tax Calculators
+            </Link>
+            <Link href="/category/time-attendance" className={linkClass('/category/time-attendance')}>
+              Time Card &amp; Attendance
+            </Link>
+            <Link href="/category/salary-compensation" className={linkClass('/category/salary-compensation')}>
+              Salary &amp; Overtime
+            </Link>
+            <Link href="/category/business-finance" className={linkClass('/category/business-finance')}>
+              Business Finance &amp; Margin
+            </Link>
+            <Link href="/category/hr-analytics" className={linkClass('/category/hr-analytics')}>
+              HR &amp; Workforce Analytics
+            </Link>
+            <Link href="/category/sales-saas" className={linkClass('/category/sales-saas')}>
+              Sales, SaaS &amp; Freelance
+            </Link>
+          </div>
+        </nav>
+
         {/* Legal links - 2 rows for better mobile layout */}
         <nav aria-label="Footer navigation">
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground/60 mb-6">
+            <Link href="/salary" className={linkClass('/salary')}>
+              Wage &amp; Salary Guides
+            </Link>
             <Link href="/compare/jobs" className={linkClass('/compare/jobs')}>
               Compare Job Offers
             </Link>

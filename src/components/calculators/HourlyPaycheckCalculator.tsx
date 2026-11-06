@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
@@ -17,6 +17,7 @@ import {
   BookmarkPlus,
   ArrowRight,
   Sparkles,
+  Link2,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -117,6 +118,44 @@ export default function HourlyPaycheckCalculator({ mode = 'hourly' }: { mode?: P
   const [benefitsPerPeriod, setBenefitsPerPeriod] = useState('');
   const [otherDeductions, setOtherDeductions] = useState('');
   const [copied, setCopied] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
+
+  // Sync from shareable URL query params (?rate=28&hours=40&ot=5&state=CA&freq=bi-weekly&status=single)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    if (!params.toString()) return;
+    const qRate = params.get('rate');
+    const qHours = params.get('hours');
+    const qOt = params.get('ot');
+    const qSalary = params.get('salary');
+    const qFreq = params.get('freq') as PayFrequency | null;
+    const qStatus = params.get('status') as FilingStatus | null;
+    const qState = params.get('state') as PaycheckState | null;
+    const qAllow = params.get('allowances');
+    const qRet = params.get('ret');
+    const qBen = params.get('benefits');
+    const qOther = params.get('other');
+    const qNyc = params.get('nyc');
+
+    if (qRate) setHourlyRate(qRate);
+    if (qHours) setRegularHours(qHours);
+    if (qOt) setOvertimeHours(qOt);
+    if (qSalary) setAnnualSalary(qSalary);
+    if (qFreq && qFreq in FREQ_LABELS) setPayFrequency(qFreq);
+    if (qStatus && qStatus in FILING_LABELS) setFilingStatus(qStatus);
+    if (qState && (qState === 'none' || qState === 'other' || STATE_CODES.includes(qState as StateCode))) {
+      setState(qState);
+      if (!qAllow) {
+        setAllowances(defaultAllowances(qState, (qStatus && qStatus in FILING_LABELS) ? qStatus : 'single'));
+      }
+    }
+    if (qAllow) setAllowances(qAllow);
+    if (qRet) setRetirementPct(qRet);
+    if (qBen) setBenefitsPerPeriod(qBen);
+    if (qOther) setOtherDeductions(qOther);
+    if (qNyc === '1') setNycResident(true);
+  }, []);
 
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<HistoryInputs>(historySlug);
 
@@ -315,6 +354,37 @@ export default function HourlyPaycheckCalculator({ mode = 'hourly' }: { mode?: P
     setRetirementPct('');
     setBenefitsPerPeriod('');
     setOtherDeductions('');
+  };
+
+  const handleShareLink = () => {
+    if (typeof window === 'undefined') return;
+    const url = new URL(window.location.href);
+    url.search = '';
+    if (isSalary) {
+      url.searchParams.set('salary', annualSalary);
+    } else {
+      url.searchParams.set('rate', hourlyRate);
+      url.searchParams.set('hours', regularHours);
+      if (parseFloat(overtimeHours || '0') > 0) url.searchParams.set('ot', overtimeHours);
+    }
+    url.searchParams.set('freq', payFrequency);
+    url.searchParams.set('status', filingStatus);
+    url.searchParams.set('state', state);
+    if (allowances && allowances !== defaultAllowances(state, filingStatus)) {
+      url.searchParams.set('allowances', allowances);
+    }
+    if (retirementPct) url.searchParams.set('ret', retirementPct);
+    if (benefitsPerPeriod) url.searchParams.set('benefits', benefitsPerPeriod);
+    if (otherDeductions) url.searchParams.set('other', otherDeductions);
+    if (state === 'NY' && nycResident) url.searchParams.set('nyc', '1');
+
+    const shareUrl = url.toString();
+    window.history.replaceState({}, '', shareUrl);
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(shareUrl);
+    }
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2500);
   };
 
   const handleCopySummary = () => {
@@ -909,10 +979,16 @@ export default function HourlyPaycheckCalculator({ mode = 'hourly' }: { mode?: P
                   W-4 withholding, local taxes, and employer-specific deductions will change your actual paycheck.
                 </p>
               </div>
-              <Button onClick={handleCopySummary} variant="outline" size="sm" className="shrink-0">
-                {copied ? <Check className="h-4 w-4 mr-1.5 text-emerald-600" /> : <Copy className="h-4 w-4 mr-1.5" />}
-                {copied ? 'Copied' : 'Copy summary'}
-              </Button>
+              <div className="flex flex-wrap items-center gap-2 shrink-0">
+                <Button onClick={handleShareLink} variant="outline" size="sm" className="border-emerald-500/30 hover:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
+                  {linkCopied ? <Check className="h-4 w-4 mr-1.5 text-emerald-600" /> : <Link2 className="h-4 w-4 mr-1.5" />}
+                  {linkCopied ? 'Share Link Copied!' : 'Share Calculation Link'}
+                </Button>
+                <Button onClick={handleCopySummary} variant="outline" size="sm">
+                  {copied ? <Check className="h-4 w-4 mr-1.5 text-emerald-600" /> : <Copy className="h-4 w-4 mr-1.5" />}
+                  {copied ? 'Copied' : 'Copy summary'}
+                </Button>
+              </div>
             </div>
           </div>
         </motion.div>
