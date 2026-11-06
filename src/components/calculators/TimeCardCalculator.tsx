@@ -11,6 +11,8 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import TryExample from './TryExample';
 import { parseTimeToMinutes, minutesToDecimal, formatDecimalHours, formatHHMM, TIME_FORMAT_EXAMPLES } from '@/lib/time-utils';
+import { TimeCardModeSwitcher, HoursBetweenMode, ClockOutMode, BreakRulesMode, isTimeCardMode, type TimeCardMode } from './TimeCardModes';
+import { useSearchParam } from '@/hooks/useSearchParam';
 
 interface WorkDay {
   id: string;
@@ -65,6 +67,11 @@ const defaultDays: WorkDay[] = DAY_LABELS.slice(0, 5).map((label) => ({
 }));
 
 export default function TimeCardCalculator() {
+  // Phase 15.1: hours-between, clock-out and break pages were folded in as modes;
+  // their old URLs 301 here with ?mode=…
+  const urlMode = useSearchParam('mode');
+  const [modeOverride, setMode] = useState<TimeCardMode | null>(null);
+  const mode: TimeCardMode = modeOverride ?? (isTimeCardMode(urlMode) ? urlMode : 'timecard');
   const [days, setDays] = useState<WorkDay[]>(defaultDays);
   const [hourlyRate, setHourlyRate] = useState('25');
   const [employeeName, setEmployeeName] = useState('');
@@ -211,8 +218,8 @@ export default function TimeCardCalculator() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     handleCalculate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [days, hourlyRate, overtimeThreshold, overtimeMultiplier, rounding]);
 
   const handleCopySummary = () => {
@@ -244,6 +251,13 @@ export default function TimeCardCalculator() {
 
   return (
     <div className="w-full">
+      <div className="px-4 pt-4 sm:px-6 sm:pt-6">
+        <TimeCardModeSwitcher mode={mode} onChange={setMode} />
+      </div>
+      {mode === 'hours-between' && <HoursBetweenMode />}
+      {mode === 'clock-out' && <ClockOutMode />}
+      {mode === 'breaks' && <BreakRulesMode />}
+      {mode === 'timecard' && (<>
       <div className="p-4 sm:p-6 space-y-6">
         {/* Optional Timesheet Header (for Print / Payroll Export) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-xl border border-border/50 bg-muted/20 p-3.5">
@@ -670,6 +684,7 @@ export default function TimeCardCalculator() {
           </div>
         </motion.div>
       )}
+      </>)}
     </div>
   );
 }

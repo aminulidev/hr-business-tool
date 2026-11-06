@@ -28,7 +28,7 @@ Production sits behind Caddy (`Caddyfile`, port 81 → localhost:3000). `.env` h
 - `published` — live, in sitemap, statically generated.
 - `draft` — exists in registry but returns 404 (`dynamicParams = false`, so unknown/draft slugs are real 404s).
 - `scheduled` — live once `publishDate` passes.
-- `merged` — absorbed into another page; `mergedInto` is required. `next.config.ts` auto-generates 301 redirects from merged slugs to their target (with a hardcoded `DRAFT_TARGET_FALLBACK` when the target itself is unpublished).
+- `merged` — absorbed into another page; `mergedInto` is required and `mergedQuery` (e.g. `mode=breaks`) is optional. `next.config.ts` auto-generates 301 redirects from merged slugs to their target, appending `?mergedQuery` so the visitor lands on the right tab; the target component reads it from `window.location.search` in a `useEffect` (see `TimeCardCalculator`, `ShiftSchedulePlanner`, `PTOAccrualCalculator`, `BusinessDayCalculator`, `FTECalculator`). Component file names are case-sensitive on Vercel — `FTECalculator.tsx`, `PTOAccrualCalculator.tsx`.
 
 Helpers `isCalculatorPublished`, `getPublishedCalculators`, `resolveMergedCalculator`, and `getLiveRelatedTools` are used by the sitemap, hub page, search, category hubs, and related-tools lists so nothing links to a dead page.
 
@@ -66,7 +66,7 @@ Nearly every calculator follows the same pattern (see `HolidayCountdownCalculato
 
 `src/lib/payroll/withholding-2026.ts` is the one place for federal brackets, standard deductions, FICA, and per-state withholding (`calculatePaycheck`, `StateCode`, `TAX_YEAR`). `HourlyPaycheckCalculator` (also rendered as `PayrollCalculator` in salary mode), `StatePaycheckCalculator` (one component, `state` prop, serves all 30 state slugs), and `/salary/[slug]` pages all use it. Only a few components import this engine; the standalone tax calculators (`AfterTaxIncome`, `SalaryTax`, `FederalTax`, `IncomeTax`, `Calculator1099`, `TaxRefund`) each carry their own copy of the 2026 brackets and standard deductions. When tax figures change, update the engine and grep those components for the same numbers.
 
-Adding a state: add withholding in `withholding-2026.ts` → add `STATE_PAYCHECK_PAGES[code]` in `state-pages.ts` → create `src/lib/seo-data/<state>-hourly-paycheck-calculator.ts` that just calls `buildStatePaycheckSeo(code)` (worked examples are generated from the real engine so article numbers always match the calculator) → register slug in `calculator-meta.ts` and both component maps as `() => <StatePaycheckCalculator state="XX" />`.
+Adding a state: add withholding in `withholding-2026.ts` → add `STATE_PAYCHECK_PAGES[code]` in `state-pages.ts` (facts, hand-written FAQs, linked sources) **and** `STATE_DETAILS[code]` in `state-details.ts` (BLS median wage, neighbours, local minimum wages or pre-emption note, payroll programs, local income taxes, overtime and 2026-change bullets) → create `src/lib/seo-data/<state>-hourly-paycheck-calculator.ts` that just calls `buildStatePaycheckSeo(code)` (worked examples, reference table and neighbour comparison are generated from the real engine so article numbers always match the calculator) → register slug in `registry/calculators/payroll-taxes.ts` and `registry/components.tsx` as `() => <StatePaycheckCalculator state="XX" />`. `state-pages.test.ts` fails if any FAQ, bullet, note or example title is shared between two states, so every state needs its own wording.
 
 ### Other programmatic page families
 

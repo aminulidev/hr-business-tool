@@ -2,6 +2,7 @@ import type { CalculatorSeoData } from './types';
 import { SRC } from './sources';
 const seoData = {
   howToSteps: [
+    'Pick a tab. Time card totals a week or two of punches with overtime and pay. Hours between gives the duration between any two clock times (or two dates). Clock-out time tells you when to leave to hit a target. Break rules shows the meal and rest breaks your state requires for a shift of a given length.',
     'Enter the clock-in and clock-out time for each workday. Both 12-hour (9:00 AM, 5:30 PM, 9am) and 24-hour (09:00, 17:30) formats work. For a night shift, enter the real times — a clock-out earlier than the clock-in (e.g. 10:00 PM to 6:30 AM) is counted as ending the next morning.',
     'Enter the unpaid lunch or meal break for each day in minutes. The default is 30 minutes. Leave paid rest breaks (usually 5–20 minutes) out — under federal rules they count as time worked.',
     'Use "Copy to All" if you work the same schedule every day, or "Add Day" for weekend shifts. Add up to 14 days to total a biweekly timesheet.',
@@ -51,6 +52,26 @@ const seoData = {
         'Yes — add up to 14 days with "Add Day." Be aware that overtime is calculated per workweek, not per pay period: 45 hours in week one and 35 in week two is 80 hours total but still includes 5 overtime hours, because the weeks cannot be averaged. For an accurate biweekly overtime figure, total each week separately.',
     },
     {
+      question: 'How do I calculate the hours between two times?',
+      answer:
+        'Subtract the start from the end. 9:00 AM to 5:30 PM is 8 hours 30 minutes, or 8.50 decimal hours. If the end time is earlier than the start — 10:00 PM to 6:00 AM — the shift crossed midnight, so add 24 hours: (6 + 24) − 22 = 8 hours. The Hours between tab does this for you and, with dates switched on, handles spans of several days (Monday 9 AM to Wednesday 5 PM = 56 hours). Subtract any unpaid meal break before using the figure for pay.',
+    },
+    {
+      question: 'What time should I clock out to hit 8 hours?',
+      answer:
+        'Clock-out = clock-in + hours you want to work + unpaid break. Clock in at 8:00 AM with a 30-minute lunch and you clock out at 4:30 PM for 8 hours; with a 60-minute lunch it is 5:30 PM. The Clock-out time tab also takes the hours you have already worked this week, so you can see where today leaves you against the 40-hour overtime line — if you are at 36 hours, 4 more hours keeps you at exactly 40.',
+    },
+    {
+      question: 'Which states require meal and rest breaks?',
+      answer:
+        'Federal law requires none; if an employer gives short rest breaks of 5–20 minutes they must be paid, and a 30-minute meal period can be unpaid only if the worker is fully relieved of duty (29 CFR 785.18–785.19). California requires a 30-minute meal period before the end of the fifth hour, a second before the end of the tenth, and a paid 10-minute rest break per 4 hours, with one hour of premium pay for each missed break. Oregon, Washington and Colorado have similar meal-and-rest rules; New York requires a 30-minute meal period (60 for factory workers) on shifts over 6 hours and no rest breaks. About 20 states have some meal-period law; the Break rules tab covers the five with the most detailed rules.',
+    },
+    {
+      question: 'Do paid rest breaks go on the time card?',
+      answer:
+        'Yes — they are hours worked and stay in the total. Only the unpaid meal period comes off, which is why the time card asks for lunch minutes and nothing else. A working lunch at your desk, or a meal break interrupted by a call, is paid time under the FLSA and should not be deducted.',
+    },
+    {
       question: 'How long do employers have to keep time cards?',
       answer:
         'The FLSA requires employers to keep time cards and work schedules for at least 2 years, and payroll records for 3 years (29 CFR 516.5–516.6). Several states require longer — California 3 years and New York 6 years, for example. Employees should keep their own record of hours too, which is useful if a paycheck ever looks short.',
@@ -79,9 +100,41 @@ const seoData = {
         'An employee punches in at 8:07 AM and out at 4:38 PM with a 30-minute lunch. Exact time: 8 hours 31 minutes − 30 = 8.02 hours. Rounded to the nearest 15 minutes, 8:07 becomes 8:00 (7 minutes rounds down) and 4:38 becomes 4:45 (8 minutes rounds up), giving 8.75 − 0.5 = 8.25 hours. Rounding must balance out over time — some days it favors the employee, some days the employer.',
     },
     {
+      title: 'Hours Between Two Times — Overnight Security Shift',
+      description:
+        'Clock in 10:00 PM, clock out 6:00 AM, 30-minute unpaid break. The end is earlier than the start, so the duration is (6:00 + 24:00) − 22:00 = 8 hours 0 minutes; minus the break, 7.50 paid hours. Five such shifts total 37.50 hours — no overtime — and at $19/hour gross pay is $712.50.',
+    },
+    {
+      title: 'Clock-Out Time to Stop Exactly at 40 Hours',
+      description:
+        'Monday through Thursday came to 34.5 hours. On Friday the target is 40 − 34.5 = 5.5 hours. Clock in 8:00 AM with a 30-minute lunch: 8:00 + 5.5 hours + 0.5 hours = 2:00 PM. Leaving at 2:00 PM keeps the week at 40.00 hours with no overtime; staying until 4:30 PM would make it 42.5 hours and 2.5 hours at time-and-a-half.',
+    },
+    {
+      title: 'California 10-Hour Shift — Required Breaks',
+      description:
+        'A 10-hour shift in California requires two 30-minute unpaid meal periods (the first before the end of the fifth hour, the second before the end of the tenth) and two paid 10-minute rest breaks (one per 4 hours). Paid time is 10 − 1 = 9.00 hours, of which 1 hour is daily overtime at 1.5× under Labor Code § 510. If either meal period is missed, one extra hour of pay is owed for the day.',
+    },
+    {
       title: 'Part-Time Variable Schedule',
       description:
         'Mon 9:00 AM–1:00 PM (4h), Wed 10:00 AM–3:00 PM (5h), Fri 8:00 AM–5:00 PM with a 30-minute lunch (8.5h), and Sat 9:00 AM–2:00 PM (5h). Weekly total: 4 + 5 + 8.5 + 5 = 22.50 hours, all regular time. At $16/hour, gross pay = 22.50 × $16 = $360.00.',
+    },
+  ],
+
+  benchmarkTables: [
+    {
+      title: 'State Meal and Rest Break Rules Used by the Break Rules Tab (2026)',
+      subtitle: 'Federal law requires no breaks. These five states set the most detailed rules for private-sector adults; about 20 states have some meal-period requirement.',
+      headers: ['State', 'Meal period', 'Second meal period', 'Paid rest breaks', 'Authority'],
+      rows: [
+        ['California', '30 min, unpaid, before the end of the 5th hour (shifts over 5 h)', '30 min before the end of the 10th hour (shifts over 10 h)', '10 min per 4 hours or major fraction', 'Labor Code §§ 512, 226.7'],
+        ['Oregon', '30 min, unpaid, shifts of 6 h or more', 'Second at 14 h', '10 min per 4-hour segment', 'OAR 839-020-0050'],
+        ['Washington', '30 min, unpaid, shifts over 5 h, between the 2nd and 5th hour', 'Second after 11 h', '10 min per 4 hours; no more than 3 h without one', 'WAC 296-126-092'],
+        ['Colorado', '30 min, uninterrupted, shifts over 5 h', '—', '10 min per 4 hours or major fraction', 'COMPS Order #39'],
+        ['New York', '30 min (60 for factory workers), shifts over 6 h spanning 11 AM–2 PM', '—', 'None required', 'Labor Law § 162'],
+        ['No state rule (e.g. TX, FL, GA)', 'Not required; if given, 30+ min fully relieved of duty may be unpaid', '—', 'Not required; 5–20 min breaks, if given, must be paid', '29 CFR 785.18–785.19'],
+      ],
+      note: 'Missed California meal or rest breaks earn one hour of premium pay each (Labor Code § 226.7). Exemptions exist for some healthcare, union and on-duty-meal situations; check the state agency before relying on a row.',
     },
   ],
 
@@ -117,7 +170,7 @@ const seoData = {
       icon: 'Clock',
     },
   ],
-  sources: [SRC.dolFactSheet21, SRC.cfr785_48, SRC.dolOvertime],
+  sources: [SRC.dolFactSheet21, SRC.cfr785_48, SRC.dolOvertime, SRC.dolBreaks, SRC.cfr785_18, SRC.dolStateMealBreaks],
 } satisfies CalculatorSeoData;
 
 export default seoData;

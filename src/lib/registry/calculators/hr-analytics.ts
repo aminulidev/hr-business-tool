@@ -236,7 +236,9 @@ export const hrAnalyticsCalculators = defineCalculators([
   },
   {
     slug: 'headcount-calculator',
-    status: 'published',
+    status: 'merged',
+    mergedInto: 'fte-calculator',
+    mergedQuery: 'mode=headcount',
     title: 'Headcount Calculator',
     metaTitle: 'Free Headcount Calculator 2026 — Track & Project Headcount',
     shortDescription:

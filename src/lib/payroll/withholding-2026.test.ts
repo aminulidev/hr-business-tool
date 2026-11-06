@@ -169,9 +169,42 @@ describe('state engines — hand-computed flat-tax checks on $52,000', () => {
     expect(line(r, 'state')!.annual).toBeCloseTo(1596.4, 2);
     expect(line(r, 'sdi')!.annual).toBeCloseTo(36.4, 2);
   });
-  it('Colorado FAMLI is 0.45% of FICA wages', () => {
+  it('Colorado FAMLI is 0.44% of FICA wages (2026 premium 0.88%, half employee)', () => {
     const r = calculatePaycheck(base({ state: 'CO' }));
-    expect(line(r, 'pfl')!.annual).toBeCloseTo(234, 2);
+    expect(line(r, 'pfl')!.annual).toBeCloseTo(228.8, 2);
+  });
+  // 2026 rate changes verified Nov 6 2026 (state DOR publications / EY payroll alerts)
+  it('Kentucky: 3.50% after the $3,270 standard deduction (H.B. 1)', () => {
+    const r = calculatePaycheck(base({ state: 'KY' }));
+    expect(line(r, 'state')!.annual).toBeCloseTo((52000 - 3270) * 0.035, 2); // 1,705.55
+  });
+  it('North Carolina: withholds at 4.09% (3.99% tax + 0.10) after the $12,750 single deduction', () => {
+    const r = calculatePaycheck(base({ state: 'NC' }));
+    expect(line(r, 'state')!.annual).toBeCloseTo((52000 - 12750) * 0.0409, 2); // 1,605.33
+  });
+  it('Georgia: 4.99% after the $12,000 single deduction (H.B. 463)', () => {
+    const r = calculatePaycheck(base({ state: 'GA' }));
+    expect(line(r, 'state')!.annual).toBeCloseTo((52000 - 12000) * 0.0499, 2); // 1,996.00
+  });
+  it('Idaho: 5.30% after the federal standard deduction (H.B. 40)', () => {
+    const r = calculatePaycheck(base({ state: 'ID' }));
+    expect(line(r, 'state')!.annual).toBeCloseTo((52000 - 16100) * 0.053, 2); // 1,902.70
+  });
+  it('Ohio: flat 2.75% above $26,050 and nothing more at $120,000 (H.B. 96)', () => {
+    const r = calculatePaycheck(base({ state: 'OH' }));
+    expect(line(r, 'state')!.annual).toBeCloseTo((52000 - 26050) * 0.0275, 2); // 713.63
+    const high = calculatePaycheck(base({ state: 'OH', hourlyRate: 57.6923 })); // ≈ $120,000
+    expect(line(high, 'state')!.annual).toBeCloseTo((high.grossAnnual - 26050) * 0.0275, 1);
+  });
+  it('Utah: 4.45% less the Publication 14 credit (S.B. 60)', () => {
+    const r = calculatePaycheck(base({ state: 'UT' }));
+    // credit = 446 − (52,000 − 18,278) × 1.3% = 446 − 438.386 = 7.614
+    expect(line(r, 'state')!.annual).toBeCloseTo(52000 * 0.0445 - 7.614, 2); // 2,306.39
+  });
+  it('Washington: PFML employee share is 0.8072% of wages up to the SS cap, WA Cares 0.58%', () => {
+    const r = calculatePaycheck(base({ state: 'WA' }));
+    expect(line(r, 'pfl')!.annual).toBeCloseTo(52000 * 0.008072, 2); // 419.74
+    expect(line(r, 'sdi')!.annual).toBeCloseTo(52000 * 0.0058, 2); // 301.60
   });
   it("'other' state applies the custom flat rate to taxable wages", () => {
     const r = calculatePaycheck(base({ state: 'other', customStateRate: 0.05 }));

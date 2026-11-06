@@ -172,6 +172,12 @@ export const SRC = {
     publisher: DOL,
     note: 'Hours-worked records employers must keep',
   },
+  dolFactSheet8: {
+    label: 'DOL Fact Sheet #8, Law Enforcement and Fire Protection Employees Under the FLSA (Section 7(k))',
+    url: 'https://www.dol.gov/agencies/whd/fact-sheets/8-flsa-police-firefighters',
+    publisher: DOL,
+    note: '28-day work periods: overtime after 171 hours for police and 212 for firefighters',
+  },
   dolFactSheet20: {
     label: 'DOL Fact Sheet #20, Employees Paid Commissions by Retail Establishments',
     url: 'https://www.dol.gov/agencies/whd/fact-sheets/20-flsa-commissions',
@@ -304,6 +310,12 @@ export const SRC = {
     url: 'https://www.bls.gov/jlt/',
     publisher: BLS,
     note: 'Monthly hires, quits and separations rates by industry',
+  },
+  blsOews: {
+    label: 'BLS, Occupational Employment and Wage Statistics (OEWS), May 2025 state estimates',
+    url: 'https://www.bls.gov/oes/tables.htm',
+    publisher: BLS,
+    note: 'All-occupations median wage by state used for the worked examples and the neighboring-state comparison',
   },
   blsEcec: {
     label: 'BLS, Employer Costs for Employee Compensation',

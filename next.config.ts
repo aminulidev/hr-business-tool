@@ -11,7 +11,8 @@ function mergedCalculatorRedirects() {
     .filter((c) => c.status === 'merged')
     .map((c) => {
       const target = resolveMergedCalculator(c);
-      const destination = isCalculatorPublished(target) ? target.path : '/';
+      const query = (c as { mergedQuery?: string }).mergedQuery;
+      const destination = isCalculatorPublished(target) ? `${target.path}${query ? `?${query}` : ''}` : '/';
       return { source: c.path, destination, permanent: true };
     })
     .filter((r) => r.source !== r.destination);

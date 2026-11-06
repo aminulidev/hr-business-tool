@@ -13,7 +13,8 @@ import {
 } from './withholding-2026';
 import type { CalculatorSlug } from '@/lib/registry';
 import type { CalculatorSeoData, SeoSource } from '@/lib/seo-data/types';
-import { FEDERAL_PAYCHECK_SOURCES } from '@/lib/seo-data/sources';
+import { FEDERAL_PAYCHECK_SOURCES, SRC } from '@/lib/seo-data/sources';
+import { STATE_DETAILS } from './state-details';
 
 const usd = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
@@ -232,7 +233,7 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
     overtimeRule:
       'Washington requires 1.5× pay for hours worked over 40 in a seven-day workweek for non-exempt employees. There is no general daily overtime rule.',
     stateTaxSummary:
-      'Washington has no state personal income tax on wages. However, two mandatory employee payroll deductions apply in 2026: Washington Paid Family & Medical Leave (PFML) at roughly 0.57% of gross wages up to the $184,500 Social Security cap, and the WA Cares Fund (long-term care insurance) at 0.58% of all wages unless you hold an approved exemption.',
+      'Washington has no state personal income tax on wages. However, two mandatory employee payroll deductions apply in 2026: Washington Paid Family & Medical Leave (PFML) at 0.8072% of gross wages up to the $184,500 Social Security cap (the employee share, 71.43% of the 1.13% premium), and the WA Cares Fund (long-term care insurance) at 0.58% of all wages unless you hold an approved exemption.',
     extraFaqs: [
       {
         question: 'Why does Washington deduct PFML and WA Cares if there is no income tax?',
@@ -354,7 +355,7 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
     overtimeRule:
       'North Carolina follows federal FLSA overtime rules: non-exempt employees receive 1.5× their regular hourly rate for hours worked over 40 in a workweek.',
     stateTaxSummary:
-      'North Carolina has a flat 4.25% state income tax rate for 2026 (down from 4.5% in 2025 under scheduled legislative rate reductions). Before applying the 4.25% rate, employers subtract the NC-4 standard deduction ($12,750 for Single, $25,500 for Married Filing Jointly, or $19,125 for Head of Household) plus $2,500 for each allowance claimed on Form NC-4.',
+      'North Carolina has a flat 3.99% state income tax rate for 2026 (down from 4.25% in 2025 under Session Law 2023-134). Employers withhold at 4.09% — by statute the withholding rate sits 0.10 point above the tax rate — so most workers get a small refund. Before applying the 4.09% rate, employers subtract the NC-4 standard deduction ($12,750 for Single, $25,500 for Married Filing Jointly, or $19,125 for Head of Household) plus $2,500 for each allowance claimed on Form NC-4.',
     extraFaqs: [
       {
         question: 'What is the North Carolina income tax rate for 2026?',
@@ -388,7 +389,7 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
     overtimeRule:
       'Georgia follows the federal FLSA overtime standard: 1.5× regular pay for all hours worked over 40 in a workweek.',
     stateTaxSummary:
-      'Georgia transitioned from graduated tax brackets to a flat income tax system in 2024. For 2026, Georgia applies a flat 5.19% state income tax rate after subtracting the Georgia standard deduction ($12,000 for Single or Head of Household, $24,000 for Married Filing Jointly) and $4,000 per dependent allowance claimed on Form G-4.',
+      'Georgia transitioned from graduated tax brackets to a flat income tax system in 2024. For 2026, Georgia applies a flat 4.99% state income tax rate (cut from 5.19% by House Bill 463, retroactive to January 1, 2026, with revised withholding tables from June 2026) after subtracting the Georgia standard deduction ($12,000 for Single or Head of Household, $24,000 for Married Filing Jointly) and $4,000 per dependent allowance claimed on Form G-4.',
     extraFaqs: [
       {
         question: 'How did Georgia change its paycheck tax brackets?',
@@ -416,9 +417,9 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       defaultSingle: 1,
       defaultMarried: 2,
     },
-    minimumWage: 12.48,
+    minimumWage: 13.73,
     minimumWageNote:
-      "Michigan's minimum wage is $12.48 per hour in 2026 under the state's scheduled statutory increases.",
+      "Michigan's minimum wage is $13.73 per hour in 2026 (up from $12.48) under the 2025 amendments to the Improved Workforce Opportunity Wage Act, and it rises to $15.00 on January 1, 2027. The tipped cash wage is $5.49 (40% of the minimum).",
     overtimeRule:
       'Michigan requires 1.5× overtime pay for hours worked over 40 in a workweek under the Improved Workforce Opportunity Wage Act and federal FLSA.',
     stateTaxSummary:
@@ -462,6 +463,11 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
         question: 'Why do Indiana paychecks have both state and county tax?',
         answer:
           'Indiana has one of the lowest flat state income tax rates in the country (2.95% in 2026), but every Indiana county also collects a county income tax (typically between 1.0% and 3.0%, such as 2.02% in Marion County / Indianapolis). This calculator shows your exact 2.95% state tax; you can include your county rate in the main Hourly Paycheck Calculator.',
+      },
+      {
+        question: 'Which Indiana county tax rate applies if I live and work in different counties?',
+        answer:
+          'The county where you lived on January 1 of the tax year. If you lived in Hamilton County on January 1 but work in Indianapolis (Marion County), your employer withholds Hamilton County\'s rate, not Marion County\'s 2.02%. Only non-residents of Indiana use the rate of the county where they work. Moving mid-year does not change the rate until the next January 1.',
       },
     ],
     sources: [
@@ -513,13 +519,13 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       defaultSingle: 0,
       defaultMarried: 0,
     },
-    minimumWage: 15.2,
+    minimumWage: 15.16,
     minimumWageNote:
-      "Colorado's statewide minimum wage is $15.20 per hour in 2026 (adjusted annually for inflation), while Denver and Boulder County set higher local minimum wages (over $19.00/hour in Denver).",
+      "Colorado's statewide minimum wage is $15.16 per hour in 2026 (adjusted annually for inflation), while Denver ($19.29), Edgewater ($18.17) and Boulder city and county ($16.82) set higher local minimum wages.",
     overtimeRule:
       'Under the Colorado Overtime and Minimum Pay Standards (COMPS) Order, non-exempt employees earn 1.5× overtime pay for hours worked over 40 in a workweek, over 12 in a workday, or over 12 consecutive hours.',
     stateTaxSummary:
-      'Colorado levies a flat 4.40% state income tax on federal taxable income (gross wages minus the $16,100 Single / $32,200 Married standard deduction). Most Colorado employees also have 0.45% deducted for the Colorado Family and Medical Leave Insurance (FAMLI) program up to the $184,500 Social Security wage cap.',
+      'Colorado levies a flat 4.40% state income tax on federal taxable income (gross wages minus the $16,100 Single / $32,200 Married standard deduction). Most Colorado employees also have 0.44% deducted for the Colorado Family and Medical Leave Insurance (FAMLI) program (half of the 0.88% 2026 premium) up to the $184,500 Social Security wage cap.',
     extraFaqs: [
       {
         question: 'What is the CO FAMLI deduction on my Colorado paycheck?',
@@ -554,7 +560,7 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
     overtimeRule:
       'Utah follows federal FLSA overtime rules: non-exempt employees earn 1.5× their regular hourly rate for all hours worked over 40 in a workweek.',
     stateTaxSummary:
-      'Utah levies a flat 4.50% state income tax rate in 2026. Rather than subtracting a traditional standard deduction before applying the rate, Utah calculates a 6% Taxpayer Tax Credit based on your federal standard deduction and personal exemptions, which phases out at 1.3 cents per dollar of income above state thresholds.',
+      'Utah levies a flat 4.45% state income tax rate in 2026 (Senate Bill 60 cut it from 4.50%, retroactive to January 1; revised Publication 14 withholding tables apply from June 1, 2026). Rather than subtracting a traditional standard deduction before applying the rate, Utah calculates a 6% Taxpayer Tax Credit based on your federal standard deduction and personal exemptions, which phases out at 1.3 cents per dollar of income above state thresholds.',
     extraFaqs: [
       {
         question: 'Why does Utah use a taxpayer tax credit instead of a standard deduction?',
@@ -853,7 +859,7 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
     },
     minimumWage: 15,
     minimumWageNote:
-      'Maryland’s statewide minimum wage is $15.00 per hour for all employers in 2026 (Montgomery County and Howard County set higher local minimum wages).',
+      'Maryland’s statewide minimum wage is $15.00 per hour for all employers in 2026. Montgomery County is higher ($18.00 at employers with 51+ workers, $16.50 at 11–50 and $15.95 at 10 or fewer from July 1, 2026), as is Howard County ($16.00 for all employers).',
     overtimeRule:
       'Maryland follows the 40-hour workweek rule: non-exempt employees earn 1.5× their regular hourly rate for all hours worked over 40 in a workweek.',
     stateTaxSummary:
@@ -982,9 +988,9 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       defaultSingle: 1,
       defaultMarried: 2,
     },
-    minimumWage: 15.45,
+    minimumWage: 15.55,
     minimumWageNote:
-      'Oregon uses a three-tier minimum wage adjusted each July 1 for inflation: in 2026, the Standard rate is ~$15.45/hr, the Portland Metro rate is ~$16.70/hr, and the Nonurban County rate is ~$14.45/hr. Oregon does not allow a tip credit.',
+      'Oregon uses a three-tier minimum wage adjusted each July 1 for inflation. From July 1, 2026 the Standard rate is $15.55 an hour, the Portland Metro rate (inside the urban growth boundary) is $16.80, and the Nonurban County rate is $14.55; the first half of 2026 used $15.05 / $16.30 / $14.05. Oregon does not allow a tip credit.',
     overtimeRule:
       'Oregon requires 1.5× overtime pay for hours worked over 40 in a workweek (and has special daily/weekly overtime rules for manufacturing, cannery, and agricultural workers).',
     stateTaxSummary:
@@ -1052,6 +1058,8 @@ const FREQ_WORD: Record<PayFrequency, string> = {
   monthly: 'monthly',
 };
 
+const FEDERAL_KEYS = new Set(['federal', 'social-security', 'medicare']);
+
 interface Scenario {
   title: string;
   hourlyRate: number;
@@ -1097,13 +1105,27 @@ function describeScenario(page: StatePaycheckPage, s: Scenario) {
   };
 }
 
+/** Round to the nearest $0.50 so overtime scenarios read naturally */
+const toHalfDollar = (n: number) => Math.round(n * 2) / 2;
+
+/** Signed difference for the neighbour comparison, e.g. "+$612.30 more" / "−$88.40 less" */
+function signedDiff(n: number): string {
+  if (Math.abs(n) < 0.005) return 'same';
+  return n > 0 ? `+${usd(n)} more` : `−${usd(-n)} less`;
+}
+
 export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
   const page = STATE_PAYCHECK_PAGES[code];
+  const details = STATE_DETAILS[code];
   const hasIncomeTax = code !== 'TX' && code !== 'FL' && code !== 'TN' && code !== 'NV';
+  const median = details.medianHourlyWage;
+  const overtimeRate = toHalfDollar(median * 1.25);
 
+  // Scenarios are anchored to this state's own wage levels (minimum wage and the
+  // BLS median), so no two state pages show the same worked examples.
   const scenarios: Scenario[] = [
     {
-      title: `Full Time at the ${page.name} Minimum Wage`,
+      title: `Full Time at the ${page.name} Minimum Wage (${usd(page.minimumWage)})`,
       hourlyRate: page.minimumWage,
       regularHours: 40,
       overtimeHours: 0,
@@ -1111,16 +1133,16 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
       payFrequency: 'bi-weekly',
     },
     {
-      title: `$25 an Hour in ${page.name}`,
-      hourlyRate: 25,
+      title: `${usd(median)} an Hour — the ${page.name} Median Wage`,
+      hourlyRate: median,
       regularHours: 40,
       overtimeHours: 0,
       filingStatus: 'single',
       payFrequency: 'bi-weekly',
     },
     {
-      title: `$32 an Hour with 5 Hours of Overtime, Married`,
-      hourlyRate: 32,
+      title: `${usd(overtimeRate)} an Hour with 5 Hours of Overtime in ${page.name}, Married, Paid Weekly`,
+      hourlyRate: overtimeRate,
       regularHours: 40,
       overtimeHours: 5,
       filingStatus: 'married',
@@ -1129,8 +1151,8 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
   ];
   if (code === 'NY') {
     scenarios.splice(2, 0, {
-      title: '$25 an Hour as a New York City Resident',
-      hourlyRate: 25,
+      title: `${usd(median)} an Hour as a New York City Resident`,
+      hourlyRate: median,
       regularHours: 40,
       overtimeHours: 0,
       filingStatus: 'single',
@@ -1146,22 +1168,26 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
     return STATE_PAYCHECK_PAGES[nextCode];
   });
 
-  // Build dynamic 2026 hourly wage reference table ($15–$50/hr + state min wage)
+  // Build dynamic 2026 hourly wage reference table ($15–$50/hr + state min wage + state median)
   const sampleRates = Array.from(
-    new Set([page.minimumWage, 15, 18, 20, 25, 30, 35, 40, 50])
+    new Set([page.minimumWage, 15, 18, 20, 25, median, 30, 35, 40, 50])
   ).sort((a, b) => a - b);
 
   const defaultSingleAllowance = page.allowances?.defaultSingle ?? 0;
   const benchmarkRows = sampleRates.map((rate) => {
     const r = singleFullTime(code, rate, defaultSingleAllowance);
     const fedAndFicaPerPeriod = r.deductions
-      .filter((d) => d.key === 'federal' || d.key === 'social-security' || d.key === 'medicare')
+      .filter((d) => FEDERAL_KEYS.has(d.key))
       .reduce((sum, d) => sum + d.perPeriod, 0);
     const statePerPeriod = r.deductions
-      .filter((d) => d.key !== 'federal' && d.key !== 'social-security' && d.key !== 'medicare')
+      .filter((d) => !FEDERAL_KEYS.has(d.key))
       .reduce((sum, d) => sum + d.perPeriod, 0);
     const label =
-      rate === page.minimumWage ? `${usd(rate)}/hr (Min Wage)` : `${usd(rate)}/hr`;
+      rate === page.minimumWage
+        ? `${usd(rate)}/hr (Min Wage)`
+        : rate === median
+          ? `${usd(rate)}/hr (Median)`
+          : `${usd(rate)}/hr`;
     return [
       label,
       usd(r.grossAnnual),
@@ -1173,9 +1199,59 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
     ];
   });
 
+  // Neighbour comparison, generated from the engine at this state's median wage
+  const here = singleFullTime(code, median, defaultSingleAllowance);
+  const neighborRows = details.neighbors.map((n) => {
+    const np = STATE_PAYCHECK_PAGES[n];
+    const r = singleFullTime(n, median, np.allowances?.defaultSingle ?? 0);
+    return { code: n, name: np.name, slug: np.slug, result: r };
+  });
+  const stateMoneyPerPeriod = (r: ReturnType<typeof singleFullTime>) =>
+    r.deductions.filter((d) => !FEDERAL_KEYS.has(d.key)).reduce((s, d) => s + d.perPeriod, 0);
+  const comparisonTable = {
+    title: `${usd(median)} an Hour in ${page.name} vs. Neighboring States (${TAX_YEAR}, Single, Bi-Weekly)`,
+    subtitle: `Same ${usd(median)}/hour, 40 hours a week, single filer with the default state allowances. Federal tax and FICA are identical everywhere; only state income tax and state payroll programs differ.`,
+    headers: ['State', 'State Tax & Programs (Bi-Weekly)', 'Take-Home (Bi-Weekly)', 'Take-Home (Annual)', `vs. ${page.name}`],
+    rows: [
+      [page.name, usd(stateMoneyPerPeriod(here)), usd(here.netPerPeriod), usd(here.netAnnual), '—'],
+      ...neighborRows.map((n) => [
+        n.name,
+        usd(stateMoneyPerPeriod(n.result)),
+        usd(n.result.netPerPeriod),
+        usd(n.result.netAnnual),
+        signedDiff(n.result.netAnnual - here.netAnnual),
+      ]),
+    ],
+    note: `${usd(median)} is the ${page.name} all-occupations median hourly wage (BLS Occupational Employment and Wage Statistics, May 2025, annual median ÷ 2,080 hours). Local taxes such as city income taxes are not included.`,
+  };
+  const bestNeighbor = [...neighborRows].sort((a, b) => b.result.netAnnual - a.result.netAnnual)[0];
+  const worstNeighbor = [...neighborRows].sort((a, b) => a.result.netAnnual - b.result.netAnnual)[0];
+  const neighborSentences = neighborRows.map((n) => {
+    const diff = n.result.netAnnual - here.netAnnual;
+    const dir = Math.abs(diff) < 0.5 ? 'the same take-home pay' : diff > 0 ? `${usd(diff)} more a year` : `${usd(-diff)} less a year`;
+    return `In ${n.name} the same ${usd(median)} an hour leaves ${usd(n.result.netAnnual)} after taxes — ${dir}.`;
+  });
+
+  const localWageTable = details.localMinimumWages
+    ? {
+        title: `${page.name} Minimum Wage by City and County (${TAX_YEAR})`,
+        subtitle: `Where a local rate is higher than the ${page.name} statewide minimum, the local rate applies to hours worked inside that jurisdiction.`,
+        headers: ['Where', `${TAX_YEAR} Minimum Wage`, 'Notes'],
+        rows: details.localMinimumWages.map((l) => [l.jurisdiction, l.rate, l.note ?? '']),
+      }
+    : null;
+
+  const programSentence =
+    details.payrollPrograms.length > 0
+      ? `Besides income tax, ${page.name} paychecks carry ${details.payrollPrograms.length === 1 ? 'one employee-paid state program' : `${details.payrollPrograms.length} employee-paid state programs`}: ${details.payrollPrograms.map((p) => p.name).join(' and ')}.`
+      : `${page.name} has no employee-paid state disability, paid-leave or unemployment deduction, so the state's share of your pay stub is ${hasIncomeTax ? 'income tax alone' : 'nothing at all'}.`;
+  const localTaxSentence = details.localIncomeTax
+    ? null
+    : `No ${page.name} city or county withholds a local income tax from wages.`;
+
   return {
     howToSteps: [
-      `Enter your hourly wage. The ${page.name} minimum wage for ${TAX_YEAR} is ${usd(page.minimumWage)}${code === 'NY' ? ' in New York City, Long Island, and Westchester' : ''}.`,
+      `Enter your hourly wage. The ${page.name} minimum wage for ${TAX_YEAR} is ${usd(page.minimumWage)}${code === 'NY' ? ' in New York City, Long Island, and Westchester' : ''}, and the state's median hourly wage is about ${usd(median)}.`,
       'Enter your regular hours per week and any overtime hours. Overtime is paid at 1.5× your hourly rate.',
       'Choose how often you are paid (weekly, every two weeks, twice a month, or monthly) and your federal filing status from your W-4.',
       page.allowances
@@ -1210,6 +1286,8 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
         rows: benchmarkRows,
         note: `Calculated for a Single filer working 40 regular hours/week (2,080 hours/year) paid bi-weekly in ${page.name} using official ${TAX_YEAR} IRS and ${page.name} withholding formulas.`,
       },
+      ...(localWageTable ? [localWageTable] : []),
+      comparisonTable,
     ],
 
     deepDiveSections: [
@@ -1217,14 +1295,53 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
         title: `${page.name} Minimum Wage & Overtime Rules in ${TAX_YEAR}`,
         paragraphs: [
           page.minimumWageNote,
+          ...(details.localMinimumWageNote ? [details.localMinimumWageNote] : []),
           page.overtimeRule,
         ],
+        bullets: details.overtimeDetail,
       },
       {
         title: `How ${page.name} Paycheck Withholding & FICA Taxes Work`,
         paragraphs: [
           page.stateTaxSummary,
+          programSentence,
+          ...(localTaxSentence ? [localTaxSentence] : []),
           `In addition to ${page.name} state rules, all hourly employees pay federal FICA payroll taxes: 6.2% for Social Security on wages up to the ${TAX_YEAR} $184,500 wage base cap, plus 1.45% for Medicare on all wages (with an extra 0.9% Additional Medicare Tax on annual wages above $200,000). Federal income tax is withheld using the ${TAX_YEAR} IRS Publication 15-T percentage method tables after subtracting the ${TAX_YEAR} standard deduction ($16,100 Single, $32,200 Married Filing Jointly, $24,150 Head of Household).`,
+        ],
+      },
+      ...(details.payrollPrograms.length > 0
+        ? [
+            {
+              title: `Employee-Paid Payroll Programs on a ${page.name} Pay Stub`,
+              paragraphs: [
+                `These deductions are set by ${page.name} law, come out before you see your pay, and are included in the calculator's ${page.name} line items:`,
+              ],
+              bullets: details.payrollPrograms.map((p) => `${p.name} — ${p.rate}. ${p.what}`),
+            },
+          ]
+        : []),
+      ...(details.localIncomeTax
+        ? [
+            {
+              title: `Local Income Taxes in ${page.name}`,
+              paragraphs: [details.localIncomeTax.summary],
+              bullets: details.localIncomeTax.examples?.map((e) => `${e.place}: ${e.rate}`),
+            },
+          ]
+        : []),
+      {
+        title: `What Changed on ${page.name} Paychecks in ${TAX_YEAR}`,
+        paragraphs: [
+          `Compared with a ${TAX_YEAR - 1} paycheck for the same hours, these are the ${page.name}-specific changes. Federal changes apply everywhere: the standard deduction rose to $16,100 (single), the brackets were widened for inflation, and the Social Security wage base rose to $184,500.`,
+        ],
+        bullets: details.changes2026,
+      },
+      {
+        title: `Moving Across the State Line? ${page.name} vs. ${neighborRows.map((n) => n.name).join(', ')}`,
+        paragraphs: [
+          `A single worker earning the ${page.name} median of ${usd(median)} an hour full time takes home ${usd(here.netAnnual)} a year here (${usd(here.netPerPeriod)} every two weeks).`,
+          ...neighborSentences,
+          `Federal tax and FICA are identical in every state, so the whole gap is state income tax and state payroll programs; local city taxes, cost of living and the local minimum wage are not part of this comparison. The table above shows the per-paycheck split.`,
         ],
       },
     ],
@@ -1234,19 +1351,34 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
         question: `How much tax is taken out of a paycheck in ${page.name}?`,
         answer:
           `${page.stateTaxSummary} On top of state deductions, every worker pays federal income tax (based on your W-4), Social Security at 6.2%, and Medicare at 1.45%. ` +
-          `For a single worker earning $25 an hour full time, total deductions come to about ${Math.round(
-            singleFullTime(code, 25, page.allowances?.defaultSingle ?? 0).effectiveRate * 100
-          )}% of gross pay.`,
+          `For a single worker earning the ${page.name} median wage of ${usd(median)} an hour full time, total deductions come to about ${Math.round(here.effectiveRate * 100)}% of gross pay, leaving ${usd(here.netPerPeriod)} of a ${usd(here.grossPerPeriod)} bi-weekly paycheck.`,
       },
       {
         question: `What is the minimum wage in ${page.name} in ${TAX_YEAR}?`,
-        answer: page.minimumWageNote,
+        answer: page.minimumWageNote + (details.localMinimumWageNote ? ` ${details.localMinimumWageNote}` : ''),
       },
       {
         question: `How does overtime work in ${page.name}?`,
         answer:
-          `${page.overtimeRule} Enter your weekly overtime hours in the calculator to include them. ` +
+          `${page.overtimeRule} ${details.overtimeDetail[0]} Enter your weekly overtime hours in the calculator to include them. ` +
           'Under the federal "no tax on overtime" rule for 2025–2028, you may be able to deduct up to $12,500 of the extra half of your overtime pay ($25,000 if married filing jointly) on your federal return. That deduction is claimed when you file, so it does not lower the withholding shown here unless you adjust your W-4.',
+      },
+      {
+        question: `What is the median hourly wage in ${page.name}?`,
+        answer:
+          `About ${usd(median)} an hour across all occupations, according to the Bureau of Labor Statistics' May 2025 Occupational Employment and Wage Statistics (annual median ÷ 2,080 hours). ` +
+          `At that wage a single full-time worker in ${page.name} grosses ${usd(here.grossAnnual)} a year and keeps ${usd(here.netAnnual)} after federal, FICA and ${page.name} deductions. Half of ${page.name} workers earn less than this and half earn more; the state minimum wage is ${usd(page.minimumWage)}.`,
+      },
+      {
+        question: `Is take-home pay higher in ${page.name} or ${bestNeighbor.name}?`,
+        answer:
+          bestNeighbor.result.netAnnual > here.netAnnual + 0.5
+            ? `At ${usd(median)} an hour, ${bestNeighbor.name}: ${usd(bestNeighbor.result.netAnnual)} a year versus ${usd(here.netAnnual)} in ${page.name}, a gap of ${usd(bestNeighbor.result.netAnnual - here.netAnnual)}. `
+            : `At ${usd(median)} an hour, ${page.name}: ${usd(here.netAnnual)} a year versus ${usd(bestNeighbor.result.netAnnual)} in ${bestNeighbor.name}${Math.abs(bestNeighbor.result.netAnnual - here.netAnnual) < 0.5 ? ' (the same)' : `, a gap of ${usd(here.netAnnual - bestNeighbor.result.netAnnual)}`}. ` +
+            (worstNeighbor.code !== bestNeighbor.code
+              ? `${worstNeighbor.name} is the lowest of ${page.name}'s neighbours covered here at ${usd(worstNeighbor.result.netAnnual)}. `
+              : '') +
+            `The difference is entirely state income tax and state payroll programs, because federal withholding is the same everywhere. Local taxes and living costs are not included.`,
       },
       ...page.extraFaqs,
       {
@@ -1254,6 +1386,7 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
         answer:
           `It uses the official ${TAX_YEAR} withholding formulas, so for a standard W-4${page.allowances ? ` and ${page.allowances.label}` : ''} with no other deductions it should be within a few dollars of your actual paycheck. ` +
           'Your real check will be lower if you have pre-tax deductions like 401(k) contributions or health insurance premiums (those also reduce your income tax), or extra withholding on your W-4. ' +
+          (details.localIncomeTax ? `Local taxes (${details.localIncomeTax.examples?.[0]?.place ?? 'city or county income tax'}) are not included. ` : '') +
           `Sources: IRS Rev. Proc. 2025-32, Social Security Administration ${TAX_YEAR} wage base, ${page.sources.map((src) => src.label).join('; ')}.`,
       },
     ],
@@ -1265,12 +1398,21 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
         description: 'Quick take-home estimate for any state with 401(k) & health deductions',
         icon: 'DollarSign',
       },
-      ...otherStates.map((s) => ({
-        slug: s.slug,
-        title: `${s.name} Hourly Paycheck Calculator`,
-        description: `${TAX_YEAR} take-home pay after ${s.name} and federal taxes`,
+      ...neighborRows.map((n) => ({
+        slug: n.slug,
+        title: `${n.name} Hourly Paycheck Calculator`,
+        description: `${TAX_YEAR} take-home pay after ${n.name} and federal taxes — compare with ${page.name}`,
         icon: 'Map' as const,
       })),
+      ...otherStates
+        .filter((s) => !details.neighbors.includes(s.code) && s.code !== code)
+        .slice(0, Math.max(0, 6 - neighborRows.length))
+        .map((s) => ({
+          slug: s.slug,
+          title: `${s.name} Hourly Paycheck Calculator`,
+          description: `${TAX_YEAR} take-home pay after ${s.name} and federal taxes`,
+          icon: 'Map' as const,
+        })),
       {
         slug: 'time-card-calculator',
         title: 'Time Card Calculator',
@@ -1278,6 +1420,6 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
         icon: 'Clock',
       },
     ],
-    sources: [...FEDERAL_PAYCHECK_SOURCES, ...page.sources],
+    sources: [...FEDERAL_PAYCHECK_SOURCES, ...page.sources, SRC.blsOews],
   };
 }
