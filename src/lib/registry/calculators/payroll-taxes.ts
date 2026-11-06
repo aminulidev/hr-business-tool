@@ -10,6 +10,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'payroll-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'Federal and state withholding computed by the shared 2026 payroll engine, which is covered by hand-computed golden tests (withholding-2026.test.ts).',
     title: 'Payroll & Paycheck Calculator',
     metaTitle: 'Free Payroll Calculator 2026 — Net Paycheck, Taxes & Deductions',
     shortDescription:
@@ -264,6 +266,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'Federal and state withholding computed by the shared 2026 payroll engine, which is covered by hand-computed golden tests (withholding-2026.test.ts).',
     title: 'Hourly Paycheck Calculator',
     metaTitle: 'Free Hourly Paycheck Calculator 2026 — Take-Home Pay After Taxes',
     shortDescription:
@@ -293,6 +297,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'california-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'California Hourly Paycheck Calculator',
     metaTitle: 'California Hourly Paycheck Calculator 2026 — Take-Home Pay After Taxes',
     shortDescription:
@@ -315,6 +321,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'texas-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Texas Hourly Paycheck Calculator',
     metaTitle: 'Texas Hourly Paycheck Calculator 2026 — Take-Home Pay After Taxes',
     shortDescription:
@@ -337,6 +345,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'florida-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Florida Hourly Paycheck Calculator',
     metaTitle: 'Florida Hourly Paycheck Calculator 2026 — Take-Home Pay After Taxes',
     shortDescription:
@@ -359,6 +369,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'new-york-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'New York Hourly Paycheck Calculator',
     metaTitle: 'New York Hourly Paycheck Calculator 2026 — Take-Home Pay After Taxes',
     shortDescription:
@@ -381,6 +393,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'illinois-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Illinois Hourly Paycheck Calculator',
     metaTitle: 'Illinois Hourly Paycheck Calculator 2026 — Take-Home Pay After Taxes',
     shortDescription:
@@ -403,6 +417,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'washington-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Washington Hourly Paycheck Calculator',
     metaTitle: 'Washington Hourly Paycheck Calculator 2026 — No State Tax + WA Cares & PFML',
     shortDescription:
@@ -425,6 +441,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'tennessee-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Tennessee Hourly Paycheck Calculator',
     metaTitle: 'Tennessee Hourly Paycheck Calculator 2026 — Take-Home Pay (0% State Tax)',
     shortDescription:
@@ -447,6 +465,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'nevada-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Nevada Hourly Paycheck Calculator',
     metaTitle: 'Nevada Hourly Paycheck Calculator 2026 — Take-Home Pay (0% State Tax)',
     shortDescription:
@@ -469,6 +489,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'pennsylvania-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Pennsylvania Hourly Paycheck Calculator',
     metaTitle: 'Pennsylvania Hourly Paycheck Calculator 2026 — 3.07% State Tax & PA UC',
     shortDescription:
@@ -491,6 +513,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'north-carolina-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'North Carolina Hourly Paycheck Calculator',
     metaTitle: 'North Carolina Hourly Paycheck Calculator 2026 — 4.25% Flat State Tax',
     shortDescription:
@@ -513,6 +537,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'georgia-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Georgia Hourly Paycheck Calculator',
     metaTitle: 'Georgia Hourly Paycheck Calculator 2026 — 5.19% Flat State Tax',
     shortDescription:
@@ -535,6 +561,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'michigan-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Michigan Hourly Paycheck Calculator',
     metaTitle: 'Michigan Hourly Paycheck Calculator 2026 — 4.25% State Tax ($13.73 Min Wage)',
     shortDescription:
@@ -557,6 +585,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'indiana-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Indiana Hourly Paycheck Calculator',
     metaTitle: 'Indiana Hourly Paycheck Calculator 2026 — 2.95% Flat State Tax',
     shortDescription:
@@ -579,6 +609,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'arizona-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Arizona Hourly Paycheck Calculator',
     metaTitle: 'Arizona Hourly Paycheck Calculator 2026 — 2.5% Flat Tax ($15.15 Min Wage)',
     shortDescription:
@@ -601,6 +633,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'colorado-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Colorado Hourly Paycheck Calculator',
     metaTitle: 'Colorado Hourly Paycheck Calculator 2026 — 4.40% Tax & CO FAMLI ($15.16 Min)',
     shortDescription:
@@ -623,6 +657,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'utah-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Utah Hourly Paycheck Calculator',
     metaTitle: 'Utah Hourly Paycheck Calculator 2026 — 4.50% Flat Tax & Credit',
     shortDescription:
@@ -645,6 +681,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'kentucky-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Kentucky Hourly Paycheck Calculator',
     metaTitle: 'Kentucky Hourly Paycheck Calculator 2026 — 3.50% Flat State Tax',
     shortDescription:
@@ -667,6 +705,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'louisiana-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Louisiana Hourly Paycheck Calculator',
     metaTitle: 'Louisiana Hourly Paycheck Calculator 2026 — 3.00% Flat State Tax',
     shortDescription:
@@ -689,6 +729,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'iowa-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Iowa Hourly Paycheck Calculator',
     metaTitle: 'Iowa Hourly Paycheck Calculator 2026 — 3.80% Flat State Tax',
     shortDescription:
@@ -711,6 +753,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'idaho-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Idaho Hourly Paycheck Calculator',
     metaTitle: 'Idaho Hourly Paycheck Calculator 2026 — 5.30% Flat State Tax',
     shortDescription:
@@ -733,6 +777,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'ohio-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Ohio Hourly Paycheck Calculator',
     metaTitle: 'Ohio Hourly Paycheck Calculator 2026 — 0% Up to $26,050 & 2.75% Flat Rate',
     shortDescription:
@@ -755,6 +801,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'virginia-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Virginia Hourly Paycheck Calculator',
     metaTitle: 'Virginia Hourly Paycheck Calculator 2026 — VA-4 & $12.77 Min Wage',
     shortDescription:
@@ -777,6 +825,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'new-jersey-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'New Jersey Hourly Paycheck Calculator',
     metaTitle: 'New Jersey Hourly Paycheck Calculator 2026 — NJ Tax & SUI/FLI ($15.92 Min)',
     shortDescription:
@@ -799,6 +849,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'massachusetts-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Massachusetts Hourly Paycheck Calculator',
     metaTitle: 'Massachusetts Hourly Paycheck Calculator 2026 — 5.0% Tax & MA PFML',
     shortDescription:
@@ -821,6 +873,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'maryland-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Maryland Hourly Paycheck Calculator',
     metaTitle: 'Maryland Hourly Paycheck Calculator 2026 — State + County Local Tax',
     shortDescription:
@@ -843,6 +897,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'minnesota-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Minnesota Hourly Paycheck Calculator',
     metaTitle: 'Minnesota Hourly Paycheck Calculator 2026 — MN Tax & New Paid Leave (0.44%)',
     shortDescription:
@@ -865,6 +921,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'missouri-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Missouri Hourly Paycheck Calculator',
     metaTitle: 'Missouri Hourly Paycheck Calculator 2026 — $15.00 Min Wage & 4.70% Top Rate',
     shortDescription:
@@ -887,6 +945,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'wisconsin-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Wisconsin Hourly Paycheck Calculator',
     metaTitle: 'Wisconsin Hourly Paycheck Calculator 2026 — WI Tax & Sliding Deduction',
     shortDescription:
@@ -909,6 +969,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'oregon-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Oregon Hourly Paycheck Calculator',
     metaTitle: 'Oregon Hourly Paycheck Calculator 2026 — OR Tax, Paid Leave & Transit Tax',
     shortDescription:
@@ -931,6 +993,8 @@ export const payrollTaxesCalculators = defineCalculators([
   {
     slug: 'south-carolina-hourly-paycheck-calculator',
     status: 'published',
+    lastReviewed: '2026-11-06',
+    reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'South Carolina Hourly Paycheck Calculator',
     metaTitle: 'South Carolina Hourly Paycheck Calculator 2026 — SC W-4 & 6.0% Top Bracket',
     shortDescription:

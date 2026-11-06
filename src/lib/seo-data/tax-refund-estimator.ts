@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   // ------ SEO content ------
 
@@ -72,8 +73,7 @@ const seoData = {
     { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Estimate your take-home pay after taxes and deductions', icon: 'CreditCard' },
     { slug: 'hourly-paycheck-calculator', title: 'Hourly Paycheck Calculator', description: 'Calculate your hourly take-home pay after taxes', icon: 'BadgeDollarSign' },
   ],
-
-  
+  sources: [SRC.irsRevProc2025_32, SRC.irsBrackets, SRC.irsPub15T],
 } satisfies CalculatorSeoData;
 
 export default seoData;

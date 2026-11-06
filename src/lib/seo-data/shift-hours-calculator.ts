@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Shift Hours Calculator' }],
   tableOfContents: [
@@ -86,6 +87,7 @@ const seoData = {
     { slug: 'employee-hours-calculator', title: 'Employee Hours Calculator', description: 'Track hours, overtime, and gross payroll for multiple employees', icon: 'Users' },
     { slug: 'payroll-hours-calculator', title: 'Payroll Hours Calculator', description: 'Convert time-clock hours and minutes into gross employee paychecks', icon: 'Banknote' },
   ],
+  sources: [SRC.dolFactSheet21, SRC.dolOvertime],
 } satisfies CalculatorSeoData;
 
 export default seoData;

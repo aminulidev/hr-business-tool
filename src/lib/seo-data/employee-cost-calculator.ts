@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Employee Cost Calculator' }],
   tableOfContents: [
@@ -92,5 +93,6 @@ const seoData = {
     { slug: 'employee-turnover-calculator', title: 'Employee Turnover Calculator', description: 'Turnover rate and replacement cost', icon: 'Users' },
     { slug: 'fte-calculator', title: 'FTE Calculator', description: 'Full-time equivalent & ACA headcount', icon: 'Users' },
   ],
+  sources: [SRC.irsPub15, SRC.irsTopic759, SRC.blsEcec],
 } satisfies CalculatorSeoData;
 export default seoData;

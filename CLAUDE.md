@@ -37,9 +37,13 @@ Helpers `isCalculatorPublished`, `getPublishedCalculators`, `resolveMergedCalcul
 1. **Registry**: add/flip the entry in the matching `src/lib/registry/calculators/<category>.ts`. The slug type updates automatically.
 2. **Component**: `src/components/calculators/<Name>Calculator.tsx` (client component).
 3. **Component map**: add `slug → dynamic(() => import(...))` to `src/lib/registry/components.tsx`. It is the only map; both the page and embed routes read it. Keys are type-checked against `CalculatorSlug`, and `registry.test.ts` fails if a published slug has no entry.
-4. **SEO content**: `src/lib/seo-data/<slug>.ts` ending in `} satisfies CalculatorSeoData;` (type in `seo-data/types.ts`). The page does `await import(\`@/lib/seo-data/${slug}\`)` at render time; if the file is missing the calculator renders bare. `relatedTools[].slug` must be a registry slug and `relatedTools[].icon` an `IconName` from `src/lib/registry/icons.ts`; add new icons there.
+4. **SEO content**: `src/lib/seo-data/<slug>.ts` ending in `} satisfies CalculatorSeoData;` (type in `seo-data/types.ts`). The page does `await import(\`@/lib/seo-data/${slug}\`)` at render time; if the file is missing the calculator renders bare. `relatedTools[].slug` must be a registry slug and `relatedTools[].icon` an `IconName` from `src/lib/registry/icons.ts`; add new icons there. `sources` (optional) lists the primary publications the page relies on, picked from the shared constants in `seo-data/sources.ts` (`SRC.irsPub15T`, `SRC.dolOvertime`, …); it is required by the tests for every published Payroll & Taxes calculator, and the Sources section is simply not rendered when a page has none — do not add decorative sources to pure business-math pages.
 
 `npm test` checks all four agree. `npx tsc --noEmit` catches slug/icon typos before the build does.
+
+### Trust layer (author, review dates, sources)
+
+`src/lib/authors.ts` attributes every page to the "QuickBizCalc Editorial Team" as an Organization (owner decision, Nov 2026: no named person on the site, and never an invented person or credential). `getAuthor(calc.author)` feeds the `Byline` component (`src/components/seo/Byline.tsx`: "By · Reviewed · Tax year") under every calculator, salary page and blog H1, plus JSON-LD (`authorJsonLd` returns an Organization, or a Person only for a `kind: 'person'` entry added for a real, consenting reviewer). There is no `/authors` route; bylines link to `/editorial-policy#who`. Registry entries may carry `lastReviewed` (YYYY-MM-DD) and `reviewNotes`; set them only when the math has actually been verified (today: the 32 engine-backed paycheck pages), never in bulk — `registry.test.ts` rejects future dates and dates without notes. `/editorial-policy` explains who the team is, what "Reviewed" means and the correction policy, and is in the sitemap.
 
 ### Page composition
 

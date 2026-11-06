@@ -41,6 +41,13 @@ const usd = (n: number, decimals = 0) =>
     maximumFractionDigits: decimals,
   });
 
+/**
+ * Date the salary-page math was last verified: every figure is produced by the
+ * shared payroll engine, whose golden tests (withholding-2026.test.ts) and
+ * generated-content tests (state-pages.test.ts) ran green on this date.
+ */
+export const SALARY_PAGES_REVIEWED = '2026-11-06';
+
 export const SALARY_TIERS: SalaryTierConfig[] = [
   ...HOURLY_TIERS.map((hr): SalaryTierConfig => ({
     slug: `${hr}-an-hour`,

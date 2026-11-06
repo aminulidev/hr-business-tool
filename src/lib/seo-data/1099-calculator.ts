@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: '1099 Calculator' }],
   tableOfContents: [
@@ -145,6 +146,7 @@ const seoData = {
       icon: 'Shield',
     },
   ],
+  sources: [SRC.irsSelfEmploymentTax, SRC.irsScheduleSE, SRC.irsForm1099Nec, SRC.irsRevProc2025_32],
 } satisfies CalculatorSeoData;
 
 export default seoData;

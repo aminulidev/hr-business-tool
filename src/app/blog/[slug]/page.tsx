@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import AppShell from '@/components/layout/AppShell';
 import { notFound } from 'next/navigation';
+import Byline from '@/components/seo/Byline';
+import { authorJsonLd, getAuthor, publisherJsonLd } from '@/lib/authors';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -59,23 +61,18 @@ export default async function PostPage({ params }: Props) {
     notFound();
   }
 
+  // Frontmatter "author" is a display label; JSON-LD attributes every post to
+  // the editorial team as an Organization (Phase 13.1, no named persons).
+  const author = getAuthor();
   const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.excerpt,
     datePublished: post.date,
-    author: {
-      '@type': 'Organization',
-      name: SITE_NAME,
-      url: `${SITE_URL}/about`,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: SITE_NAME,
-      url: SITE_URL,
-      logo: `${SITE_URL}/logo.svg`,
-    },
+    dateModified: post.updated ?? post.date,
+    author: authorJsonLd(author),
+    publisher: publisherJsonLd(),
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': `${SITE_URL}/blog/${slug}`,
@@ -115,18 +112,23 @@ export default async function PostPage({ params }: Props) {
               {post.title}
             </h1>
 
-            <div className="flex items-center gap-3 p-4 rounded-2xl bg-card border border-border/50 shadow-sm">
-              <div className="h-10 w-10 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 text-emerald-600 font-bold text-xs">
-                {post.author.slice(0, 2).toUpperCase()}
+            <Byline author={author} published={post.date} lastReviewed={post.updated} />
+
+            <Link
+              href={author.path}
+              className="flex items-center gap-3 p-4 rounded-2xl bg-card border border-border/50 shadow-sm hover:border-emerald-500/30 transition-colors"
+            >
+              <div className="h-10 w-10 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 p-2">
+                <img src="/logo.svg" alt="" width={24} height={24} className="h-6 w-6" />
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold text-foreground flex items-center gap-1.5">
-                  {post.author}
+                  {author.name}
                   <ShieldCheck className="h-4 w-4 text-emerald-600 inline" />
                 </p>
-                <p className="text-xs text-muted-foreground">Published by QuickBizCalc &bull; Sources cited in the text</p>
+                <p className="text-xs text-muted-foreground">{author.role} &bull; Sources cited in the text</p>
               </div>
-            </div>
+            </Link>
           </div>
 
           {/* Content */}
@@ -143,11 +145,14 @@ export default async function PostPage({ params }: Props) {
           <div className="rounded-3xl border border-border/60 bg-muted/20 p-6 sm:p-8 space-y-4 mb-8">
             <h3 className="text-base font-bold text-foreground">About This Guide</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Written by the QuickBizCalc team from primary sources: IRS publications, Department of Labor guidance, and
-              state agency tables. Rates and thresholds are checked against the current year&apos;s publications whenever the
-              guide is updated. Read{' '}
-              <Link href="/about" className="text-emerald-600 hover:underline">
-                how we build and check our calculators
+              Written by the{' '}
+              <Link href={author.path} className="text-emerald-600 hover:underline">
+                {author.name}
+              </Link>{' '}
+              from primary sources: IRS publications, Department of Labor guidance, and state agency tables. Rates and
+              thresholds are checked against the current year&apos;s publications whenever the guide is updated. Read our{' '}
+              <Link href="/editorial-policy" className="text-emerald-600 hover:underline">
+                editorial policy
               </Link>
               , and email us if you spot an error.
             </p>

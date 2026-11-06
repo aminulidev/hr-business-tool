@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Night Shift Differential Calculator' }],
   tableOfContents: [
@@ -99,6 +100,7 @@ const seoData = {
       icon: 'ArrowLeftRight',
     },
   ],
+  sources: [SRC.dolNightWork, SRC.cfr778],
 } satisfies CalculatorSeoData;
 
 export default seoData;

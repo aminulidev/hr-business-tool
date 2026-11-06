@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   // ---------------------------------------------------------------------------
 
@@ -99,8 +100,8 @@ const seoData = {
   ],
 
   // ---------------------------------------------------------------------------
-  // Render
-  
+  // Render,
+  sources: [SRC.irsRevProc2025_32, SRC.irsBrackets],
 } satisfies CalculatorSeoData;
 
 export default seoData;

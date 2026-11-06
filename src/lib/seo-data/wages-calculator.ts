@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 export const wagesSEOData = {
   howToSteps: [
     'Enter your hourly rate and the number of regular hours you work per week in the first row. This is your standard pay at the base rate.',
@@ -81,6 +82,7 @@ export const wagesSEOData = {
       icon: 'Clock',
     },
   ],
+  sources: [SRC.dolMinWage, SRC.dolStateMinWage, SRC.dolOvertime],
 } satisfies CalculatorSeoData;
 
 export default wagesSEOData;

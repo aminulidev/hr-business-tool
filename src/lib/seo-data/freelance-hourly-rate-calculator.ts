@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Freelance Hourly Rate Calculator' }],
   tableOfContents: [
@@ -77,5 +78,6 @@ const seoData = {
     { slug: 'salary-converter', title: 'Salary to Hourly Calculator', description: 'Convert annual salary to hourly pay', icon: 'BadgeDollarSign' },
     { slug: 'hourly-paycheck-calculator', title: 'Hourly Paycheck Calculator', description: 'W-2 take-home paycheck comparison', icon: 'Wallet' },
   ],
+  sources: [SRC.irsSelfEmploymentTax, SRC.irsScheduleSE],
 } satisfies CalculatorSeoData;
 export default seoData;
