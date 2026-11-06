@@ -4,8 +4,9 @@ const seoData = {
     { id: 'how-to-calculate', label: 'How to Calculate' },
     { id: 'formula', label: 'SECA & Income Tax Formulas' },
     { id: 'worked-examples', label: 'Worked Examples & Contractor Scenarios' },
+    { id: 'benchmarks', label: '2026 1099 Tax Reserve & Take-Home Table' },
+    { id: 'deep-dive', label: 'Deep Dive: High-ROI Schedule C Deductions' },
     { id: 'frequently-asked-questions', label: 'FAQs' },
-    { id: 'statutory-sources', label: 'Statutory Sources' },
     { id: 'related-calculators', label: 'Related Calculators' },
   ],
   howToSteps: [
@@ -17,7 +18,7 @@ const seoData = {
     'Inspect the IRS Form 1040-ES quarterly estimated tax payment schedule to see exact payment amounts and calendar deadlines (April 15, June 15, September 15, January 15).',
     'Review the detailed reconciliation breakdown to observe how above-the-line half-SECA deduction and QBI reduce your taxable income.',
   ],
-  formula: 'Schedule C Net Profit:\nNet Self-Employment Income = 1099 Gross Revenue - Allowable Business Expenses\n\nSECA Self-Employment Tax (IRC § 1401):\nSECA Taxable Base = Net Profit × 92.35% (0.9235)\nSocial Security Portion (OASDI) = 12.4% × Min(SECA Taxable Base, $184,500 Statutory Cap)\nMedicare Portion (HI) = 2.9% × SECA Taxable Base + 0.9% Additional Medicare on earnings exceeding $200k (Single) / $250k (MFJ)\nTotal SECA Tax = Social Security Portion + Medicare Portion\n\nAbove-the-Line Tax Deduction:\nOne-Half SECA Deduction (IRC § 164(f)) = Total SECA Tax ÷ 2\n\nSection 199A Qualified Business Income (QBI) Deduction:\nQBI Deduction = Net Profit × 20% (phase-out begins at $201,750 Single / $403,500 MFJ taxable income in 2026 and is complete for SSTBs at $276,750 / $553,500)\n\nFederal Income Tax Withholding:\nTaxable Federal Income = Max(0, Net Profit - Half-SECA Deduction - QBI Deduction - Standard Deduction)\nFederal Income Tax = ∑ (Taxable Federal Income in Bracket_i × Statutory Rate_i)\n\nQuarterly Form 1040-ES Estimated Payments:\nQuarterly Payment = (Total SECA Tax + Federal Income Tax + State Tax) ÷ 4',
+  formula: 'Schedule C Net Profit:\nNet Self-Employment Income = 1099 Gross Revenue - Allowable Business Expenses\n\nSECA Self-Employment Tax (IRC § 1401):\nSECA Taxable Base = Net Profit × 92.35% (0.9235)\nSocial Security Portion (OASDI) = 12.4% × Min(SECA Taxable Base, $184,500 Statutory Cap)\nMedicare Portion (HI) = 2.9% × SECA Taxable Base + 0.9% Additional Medicare on earnings exceeding $200k (Single) / $250k (MFJ)\nTotal SECA Tax = Social Security Portion + Medicare Portion\n\nAbove-the-Line Tax Deduction:\nOne-Half SECA Deduction (IRC § 164(f)) = Total SECA Tax ÷ 2\n\nSection 199A Qualified Business Income (QBI) Deduction:\nQBI Deduction = Net Profit × 20% (phase-out begins at $201,750 Single / $403,500 MFJ taxable income in 2026)\n\nFederal Income Tax Withholding:\nTaxable Federal Income = Max(0, Net Profit - Half-SECA Deduction - QBI Deduction - Standard Deduction)\nFederal Income Tax = ∑ (Taxable Federal Income in Bracket_i × Statutory Rate_i)\n\nQuarterly Form 1040-ES Estimated Payments:\nQuarterly Payment = (Total SECA Tax + Federal Income Tax + State Tax) ÷ 4',
   formulaDescription: 'Independent contractors and freelancers receiving 1099-NEC compensation are considered self-employed sole proprietors under the Internal Revenue Code. Unlike W-2 employees whose employers absorb half of FICA taxes, 1099 contractors pay the entire 15.3% Self-Employment Contributions Act (SECA) tax (12.4% Social Security up to $184,500 + 2.9% Medicare uncapped). To offset this burden, the IRS grants two substantial statutory tax deductions: (1) An above-the-line deduction equal to 50% of your SECA tax liability under IRC § 164(f), and (2) The Section 199A Qualified Business Income (QBI) deduction, allowing eligible pass-through businesses to deduct 20% of net profits from federal income tax.',
   workedExamples: [
     {
@@ -39,6 +40,36 @@ const seoData = {
     {
       title: '1099 Contractor vs. W-2 Employee Compensation Parity ($100k Benchmark)',
       description: 'Comparing a $100,000 W-2 job offer versus a $100,000 1099 contract. For W-2, employee FICA is 7.65% ($7,650), leaving ~$76,500 after taxes. For 1099 with $0 expenses, SECA tax is 15.3% on $92,350 ($14,129.55). Even after a $20,000 QBI deduction and half-SECA deduction, 1099 net take-home is roughly $72,200 — approx. $4,300 lower than W-2. To achieve true take-home and benefits parity with a $100,000 W-2 salary, a 1099 contractor must bill between $125,000 and $135,000 to cover self-employment tax, uncompensated health insurance, PTO, and retirement match.',
+    },
+  ],
+  benchmarkTables: [
+    {
+      title: '2026 1099 Contractor Tax & Take-Home Pay Benchmarks (Single Filer, 15% Expenses, 5% State Tax)',
+      description: 'Reference guide showing how much of every 1099 invoice to set aside in a dedicated tax savings account across common gross contractor income tiers.',
+      headers: ['Gross 1099 Income', 'Net Schedule C (85%)', 'SECA Tax (15.3%)', 'Fed + 5% State Tax', 'Recommended Tax Reserve %', 'Net Annual Take-Home'],
+      rows: [
+        ['$50,000', '$42,500', '$6,005', '$2,980', '21.1% of Net', '$33,515'],
+        ['$75,000', '$63,750', '$9,008', '$5,890', '23.4% of Net', '$48,852'],
+        ['$100,000', '$85,000', '$12,010', '$9,420', '25.2% of Net', '$63,570'],
+        ['$150,000', '$127,500', '$18,015', '$18,650', '28.8% of Net', '$90,835'],
+        ['$200,000', '$170,000', '$24,020', '$28,900', '31.1% of Net', '$117,080'],
+        ['$300,000', '$255,000', '$29,962', '$58,400', '34.7% of Net', '$166,638'],
+      ],
+    },
+  ],
+  deepDiveSections: [
+    {
+      id: 'deep-dive',
+      title: 'High-Impact Schedule C & Above-the-Line Deductions for 1099 Contractors',
+      paragraphs: [
+        'Every $1,000 in legitimate Schedule C business expenses reduces both your 15.3% SECA tax and your marginal federal/state income tax—yielding a combined tax savings of $320 to $450 per $1,000 deducted. Unlike W-2 employees (who cannot deduct unreimbursed work expenses), 1099 contractors can deduct any "ordinary and necessary" expense incurred to operate their business under IRC § 162.',
+        'Beyond standard Schedule C operational write-offs (software, laptops, travel, home office, and business mileage), high-earning 1099 contractors can shelter up to $70,000+ per year from federal and state income tax using a Solo 401(k) or SEP IRA, while deducting 100% of self-employed health, dental, and vision insurance premiums on Form 1040 Schedule 1.',
+      ],
+      highlights: [
+        'Home Office Deduction (Form 8829): Deduct $5/sq ft up to 300 sq ft ($1,500 simplified) or the exact square-footage percentage of your rent, mortgage interest, utilities, and home insurance.',
+        'Solo 401(k) Contributions: Contribute up to $23,500 as an "employee" plus up to 20% of net self-employment earnings as the "employer" to slash taxable income.',
+        '100% Self-Employed Health Insurance Deduction: Deduct medical, dental, and long-term care premiums for yourself, your spouse, and dependents above-the-line without itemizing.',
+      ],
     },
   ],
   faqs: [
@@ -68,7 +99,7 @@ const seoData = {
     },
     {
       question: 'What business expenses can 1099 independent contractors deduct on Schedule C?',
-      answer: 'Legitimate business deductions include: home office expenses (simplified deduction of $5/sq ft up to 300 sq ft, or actual allocated housing costs), business vehicle mileage (standard IRS rate of 67¢/mile), software and SaaS subscriptions, advertising and website hosting, professional liability insurance, legal and accounting fees, equipment depreciation (Section 179 expensing), contractor labor, and self-employed health insurance premiums.',
+      answer: 'Legitimate business deductions include: home office expenses (simplified deduction of $5/sq ft up to 300 sq ft, or actual allocated housing costs), business vehicle mileage (standard IRS rate), software and SaaS subscriptions, advertising and website hosting, professional liability insurance, legal and accounting fees, equipment depreciation (Section 179 expensing), contractor labor, and self-employed health insurance premiums.',
     },
     {
       question: 'How much higher should a 1099 contractor rate be compared to a W-2 salary?',

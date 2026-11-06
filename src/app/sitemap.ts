@@ -1,5 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { getPublishedCalculators, SITE_URL } from '@/lib/calculator-meta';
+import { CATEGORY_HUBS } from '@/lib/category-hubs';
+import { SALARY_TIERS } from '@/lib/salary-pages';
 import { getSortedPostsData } from '@/lib/blog';
 
 // lastModified is only set where a real date exists (blog frontmatter).
@@ -12,12 +14,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 1.0,
   };
 
+  // Topical Category Pillar Hub pages
+  const categoryEntries: MetadataRoute.Sitemap = CATEGORY_HUBS.map((cat) => ({
+    url: `${SITE_URL}/category/${cat.slug}`,
+    changeFrequency: 'weekly' as const,
+    priority: 0.85,
+  }));
+
   // Individual calculator pages
   const calculatorEntries: MetadataRoute.Sitemap = getPublishedCalculators().map((calc) => ({
     url: `${SITE_URL}${calc.path}`,
     changeFrequency: 'monthly' as const,
     priority: 0.9,
   }));
+
+  // Programmatic Wage & Salary Breakdown pages (/salary + /salary/[slug])
+  const salaryEntries: MetadataRoute.Sitemap = [
+    {
+      url: `${SITE_URL}/salary`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.85,
+    },
+    ...SALARY_TIERS.map((tier) => ({
+      url: `${SITE_URL}/salary/${tier.slug}`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    })),
+  ];
 
   // Blog entries
   const posts = await getSortedPostsData();
@@ -49,8 +72,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   };
 
-  // Informational and legal pages. /newsletter and /compare/jobs are noindex
-  // and intentionally left out.
+  // Informational and legal pages
   const legalPages = [
     { path: '/compare/jobs', priority: 0.8, changeFreq: 'monthly' as const },
     { path: '/about', priority: 0.6, changeFreq: 'monthly' as const },
@@ -67,5 +89,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: page.priority,
   }));
 
-  return [hubEntry, ...calculatorEntries, ...blogEntries, guidesEntry, glossaryEntry, ...legalEntries];
+  return [
+    hubEntry,
+    ...categoryEntries,
+    ...calculatorEntries,
+    ...salaryEntries,
+    ...blogEntries,
+    guidesEntry,
+    glossaryEntry,
+    ...legalEntries,
+  ];
 }

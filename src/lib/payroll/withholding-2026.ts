@@ -17,6 +17,21 @@
 // - Indiana: 2.95% flat state tax after $1,000 per WH-4 exemption
 // - Arizona: 2.50% flat state tax after standard deduction & $100/allowance credit
 // - Colorado: 4.40% flat state tax after standard deduction; CO FAMLI employee share 0.45% (capped at $184,500)
+// - Utah: 4.55% flat state tax with UT taxpayer tax credit phaseout (Publication 14)
+// - Kentucky: 4.00% flat state tax after $3,270 standard deduction
+// - Louisiana: 3.00% flat state tax after $12,500 Single / $25,000 Married standard deduction
+// - Iowa: 3.80% flat state tax after standard deduction & $40 per IA W-4 allowance credit
+// - Idaho: 5.695% flat state tax after standard deduction
+// - Ohio: 0% up to $26,050, 2.75% up to $100k, 3.50% over $100k after $2,400/exemption
+// - Virginia: 2%–5.75% progressive brackets after $8,500/$17,000 standard deduction & $930/exemption
+// - New Jersey: 1.4%–10.75% progressive schedules + 0.515% NJ SUI/SDI/FLI employee payroll deductions
+// - Massachusetts: 5.00% flat tax after M-4 exemption (+4% over $1M) + 0.46% MA PFML
+// - Maryland: 2%–5.75% state brackets + 3.05% avg county local tax after standard deduction & $3,200/exemption
+// - Minnesota: 5.35%–9.85% progressive brackets + 0.44% MN Paid Leave employee share
+// - Missouri: 2%–4.70% progressive brackets after federal standard deduction
+// - Wisconsin: 3.50%–7.65% progressive brackets after sliding standard deduction & $700/exemption
+// - Oregon: 4.75%–9.90% brackets after federal tax subtraction & standard deduction + 0.60% Paid Leave OR + 0.10% Transit
+// - South Carolina: 0%, 3%, 6.0% progressive brackets after standard deduction & $4,700/allowance
 // - Texas, Florida, Tennessee, Nevada: 0% state income tax, no employee payroll tax
 
 export const TAX_YEAR = 2026;
@@ -38,7 +53,22 @@ export type StateCode =
   | 'MI'
   | 'IN'
   | 'AZ'
-  | 'CO';
+  | 'CO'
+  | 'UT'
+  | 'KY'
+  | 'LA'
+  | 'IA'
+  | 'ID'
+  | 'OH'
+  | 'VA'
+  | 'NJ'
+  | 'MA'
+  | 'MD'
+  | 'MN'
+  | 'MO'
+  | 'WI'
+  | 'OR'
+  | 'SC';
 
 /** StateCode plus the two generic options used by the national hourly paycheck calculator */
 export type PaycheckState = StateCode | 'none' | 'other';
@@ -245,10 +275,10 @@ function illinoisIncomeTax(annualWages: number, allowances: number): number {
 }
 
 // ---------------------------------------------------------------------------
-// Additional Exact 2026 State Withholding Engines
+// Phase 3 State Withholding Engines (WA, PA, NC, GA, MI, IN, AZ, CO)
 // ---------------------------------------------------------------------------
 
-// Washington: 0% income tax, WA PFML employee share ~0.5714% (71.43% of 0.80% up to SS cap), WA Cares 0.58%
+// Washington: 0% income tax, WA PFML employee share ~0.5714% (up to SS cap), WA Cares 0.58%
 export const WA_PFML_EMPLOYEE_RATE = 0.005714;
 export const WA_CARES_RATE = 0.0058;
 
@@ -316,6 +346,185 @@ export const CO_FAMLI_RATE = 0.0045;
 function coloradoIncomeTax(annualWages: number, status: FilingStatus, allowances: number): number {
   const taxable = Math.max(0, annualWages - FEDERAL_STANDARD_DEDUCTION[status] - allowances * 1000);
   return taxable * CO_RATE;
+}
+
+// ---------------------------------------------------------------------------
+// Phase 9 State Withholding Engines (UT, KY, LA, IA, ID, OH, VA, NJ, MA, MD, MN, MO, WI, OR, SC)
+// ---------------------------------------------------------------------------
+
+// Utah: 4.55% flat tax with Utah Publication 14 withholding credit phaseout (1.3% phaseout above threshold)
+export const UT_RATE = 0.0455;
+function utahIncomeTax(annualWages: number, status: FilingStatus): number {
+  const baseTax = Math.max(0, annualWages) * UT_RATE;
+  const baseAllowance = status === 'married' ? 892 : 446;
+  const phaseoutThreshold = status === 'married' ? 36556 : 18278;
+  const reduction = Math.max(0, (annualWages - phaseoutThreshold) * 0.013);
+  const credit = Math.max(0, baseAllowance - reduction);
+  return Math.max(0, baseTax - credit);
+}
+
+// Kentucky: 4.00% flat tax in 2026 after $3,270 Kentucky standard deduction
+export const KY_RATE = 0.04;
+export const KY_STD_DEDUCTION = 3270;
+function kentuckyIncomeTax(annualWages: number): number {
+  return Math.max(0, annualWages - KY_STD_DEDUCTION) * KY_RATE;
+}
+
+// Louisiana: 3.00% flat tax reform (Act 11) after $12,500 Single/HOH and $25,000 Married standard deduction
+export const LA_RATE = 0.03;
+export const LA_STD_DEDUCTION: Record<FilingStatus, number> = {
+  single: 12500,
+  married: 25000,
+  hoh: 12500,
+};
+function louisianaIncomeTax(annualWages: number, status: FilingStatus): number {
+  return Math.max(0, annualWages - LA_STD_DEDUCTION[status]) * LA_RATE;
+}
+
+// Iowa: 3.80% flat state income tax after standard deduction & $40 per IA W-4 allowance credit
+export const IA_RATE = 0.038;
+export const IA_ALLOWANCE_CREDIT = 40;
+function iowaIncomeTax(annualWages: number, status: FilingStatus, allowances: number): number {
+  const taxable = Math.max(0, annualWages - FEDERAL_STANDARD_DEDUCTION[status]);
+  return Math.max(0, taxable * IA_RATE - allowances * IA_ALLOWANCE_CREDIT);
+}
+
+// Idaho: 5.695% flat state income tax above standard deduction & $3,600 per ID W-4 child allowance
+export const ID_RATE = 0.05695;
+function idahoIncomeTax(annualWages: number, status: FilingStatus, allowances: number): number {
+  const taxable = Math.max(0, annualWages - FEDERAL_STANDARD_DEDUCTION[status] - allowances * 3600);
+  return taxable * ID_RATE;
+}
+
+// Ohio: 0% up to $26,050, 2.75% up to $100,000, 3.50% over $100,000 after $2,400 per OH IT 4 exemption
+const OH_SCHEDULE = scheduleFromBrackets([26050, 100000], [0, 0.0275, 0.035]);
+function ohioIncomeTax(annualWages: number, exemptions: number): number {
+  const taxable = Math.max(0, annualWages - exemptions * 2400);
+  return taxFromSchedule(taxable, OH_SCHEDULE);
+}
+
+// Virginia: 2% up to $3,000, 3% $3,000–$5,000, 5% $5,000–$17,000, 5.75% over $17,000 after $8,500/$17,000 std deduction & $930/exemption
+const VA_SCHEDULE = scheduleFromBrackets([3000, 5000, 17000], [0.02, 0.03, 0.05, 0.0575]);
+function virginiaIncomeTax(annualWages: number, status: FilingStatus, exemptions: number): number {
+  const stdDed = status === 'married' ? 17000 : 8500;
+  const taxable = Math.max(0, annualWages - stdDed - exemptions * 930);
+  return taxFromSchedule(taxable, VA_SCHEDULE);
+}
+
+// New Jersey: Progressive brackets after $1,000 per NJ-W4 allowance + NJ SUI/SDI/FLI employee payroll taxes
+const NJ_SCHEDULES: Record<'single' | 'married', ScheduleRow[]> = {
+  single: scheduleFromBrackets(
+    [20000, 35000, 40000, 75000, 500000, 1000000],
+    [0.014, 0.0175, 0.035, 0.05525, 0.0637, 0.0897, 0.1075]
+  ),
+  married: scheduleFromBrackets(
+    [20000, 50000, 70000, 80000, 150000, 500000, 1000000],
+    [0.014, 0.0175, 0.0245, 0.035, 0.05525, 0.0637, 0.0897, 0.1075]
+  ),
+};
+export const NJ_SUI_FLI_RATE = 0.00515; // 0.425% SUI/WF + 0.09% FLI employee withholding
+export const NJ_WAGE_CAP = 168600;
+function newJerseyIncomeTax(annualWages: number, status: FilingStatus, allowances: number): number {
+  const s = status === 'married' || status === 'hoh' ? 'married' : 'single';
+  const taxable = Math.max(0, annualWages - allowances * 1000);
+  return taxFromSchedule(taxable, NJ_SCHEDULES[s]);
+}
+
+// Massachusetts: 5.00% flat income tax after M-4 exemption ($4,400 Single, $8,800 Married, $6,800 HOH + $1,000/allowance) + 4% over $1M + 0.46% MA PFML
+export const MA_RATE = 0.05;
+export const MA_PFML_EMPLOYEE_RATE = 0.0046;
+function massachusettsIncomeTax(annualWages: number, status: FilingStatus, exemptions: number): number {
+  const baseExemption = status === 'married' ? 8800 : status === 'hoh' ? 6800 : 4400;
+  const extraExemptions = Math.max(0, exemptions - 1) * 1000;
+  const taxable = Math.max(0, annualWages - baseExemption - extraExemptions);
+  const surtax = Math.max(0, taxable - 1000000) * 0.04;
+  return taxable * MA_RATE + surtax;
+}
+
+// Maryland: State brackets (2%–5.75%) + 3.05% avg county local tax after $2,550/$5,150 std deduction & $3,200/exemption
+const MD_SCHEDULES: Record<'single' | 'married', ScheduleRow[]> = {
+  single: scheduleFromBrackets(
+    [1000, 2000, 3000, 100000, 125000, 150000, 250000],
+    [0.02, 0.03, 0.04, 0.0475, 0.05, 0.0525, 0.055, 0.0575]
+  ),
+  married: scheduleFromBrackets(
+    [1000, 2000, 3000, 150000, 175000, 225000, 300000],
+    [0.02, 0.03, 0.04, 0.0475, 0.05, 0.0525, 0.055, 0.0575]
+  ),
+};
+export const MD_AVG_LOCAL_RATE = 0.0305;
+function marylandTaxableIncome(annualWages: number, status: FilingStatus, exemptions: number): number {
+  const stdDed = status === 'married' || status === 'hoh' ? 5150 : 2550;
+  return Math.max(0, annualWages - stdDed - exemptions * 3200);
+}
+function marylandStateIncomeTax(annualWages: number, status: FilingStatus, exemptions: number): number {
+  const s = status === 'married' || status === 'hoh' ? 'married' : 'single';
+  return taxFromSchedule(marylandTaxableIncome(annualWages, status, exemptions), MD_SCHEDULES[s]);
+}
+function marylandLocalIncomeTax(annualWages: number, status: FilingStatus, exemptions: number): number {
+  return marylandTaxableIncome(annualWages, status, exemptions) * MD_AVG_LOCAL_RATE;
+}
+
+// Minnesota: 5.35%, 6.80%, 7.85%, 9.85% brackets after standard deduction & $5,150/allowance + 0.44% MN Paid Leave
+const MN_SCHEDULES: Record<FilingStatus, ScheduleRow[]> = {
+  single: scheduleFromBrackets([32570, 106990, 198630], [0.0535, 0.068, 0.0785, 0.0985]),
+  married: scheduleFromBrackets([47620, 189180, 330410], [0.0535, 0.068, 0.0785, 0.0985]),
+  hoh: scheduleFromBrackets([40100, 161130, 264050], [0.0535, 0.068, 0.0785, 0.0985]),
+};
+export const MN_STD_DEDUCTION: Record<FilingStatus, number> = {
+  single: 14950,
+  married: 29900,
+  hoh: 22500,
+};
+export const MN_PAID_LEAVE_RATE = 0.0044;
+function minnesotaIncomeTax(annualWages: number, status: FilingStatus, allowances: number): number {
+  const taxable = Math.max(0, annualWages - MN_STD_DEDUCTION[status] - allowances * 5150);
+  return taxFromSchedule(taxable, MN_SCHEDULES[status]);
+}
+
+// Missouri: Progressive brackets up to 4.70% top rate in 2026 after federal standard deduction
+const MO_SCHEDULE = scheduleFromBrackets(
+  [1313, 2626, 3939, 5252, 6565, 7878, 9191],
+  [0, 0.02, 0.025, 0.03, 0.035, 0.04, 0.045, 0.047]
+);
+function missouriIncomeTax(annualWages: number, status: FilingStatus): number {
+  const taxable = Math.max(0, annualWages - FEDERAL_STANDARD_DEDUCTION[status]);
+  return taxFromSchedule(taxable, MO_SCHEDULE);
+}
+
+// Wisconsin: 3.50%, 4.40%, 5.30%, 7.65% brackets after standard deduction & $700 per WT-4 exemption
+const WI_SCHEDULES: Record<'single' | 'married', ScheduleRow[]> = {
+  single: scheduleFromBrackets([14320, 28640, 315310], [0.035, 0.044, 0.053, 0.0765]),
+  married: scheduleFromBrackets([19090, 38190, 420420], [0.035, 0.044, 0.053, 0.0765]),
+};
+function wisconsinIncomeTax(annualWages: number, status: FilingStatus, exemptions: number): number {
+  const s = status === 'married' ? 'married' : 'single';
+  const stdDed = status === 'married' ? 24590 : status === 'hoh' ? 17090 : 13230;
+  const taxable = Math.max(0, annualWages - stdDed - exemptions * 700);
+  return taxFromSchedule(taxable, WI_SCHEDULES[s]);
+}
+
+// Oregon: 4.75%, 6.75%, 8.75%, 9.90% after federal tax subtraction (up to $8,250) & std deduction + 0.60% Paid Leave OR + 0.10% Transit
+const OR_SCHEDULES: Record<'single' | 'married', ScheduleRow[]> = {
+  single: scheduleFromBrackets([4400, 11050, 125000], [0.0475, 0.0675, 0.0875, 0.099]),
+  married: scheduleFromBrackets([8800, 22100, 250000], [0.0475, 0.0675, 0.0875, 0.099]),
+};
+export const OR_PAID_LEAVE_RATE = 0.006;
+export const OR_TRANSIT_TAX_RATE = 0.001;
+function oregonIncomeTax(annualWages: number, status: FilingStatus, allowances: number): number {
+  const s = status === 'married' || status === 'hoh' ? 'married' : 'single';
+  const fedSub = Math.min(8250, federalIncomeTax(annualWages, status));
+  const stdDed = status === 'married' ? 5670 : status === 'hoh' ? 4560 : 2835;
+  const taxable = Math.max(0, annualWages - fedSub - stdDed);
+  const tax = taxFromSchedule(taxable, OR_SCHEDULES[s]);
+  return Math.max(0, tax - allowances * 249);
+}
+
+// South Carolina: 0% up to $3,560, 3.0% $3,560–$17,830, 6.0% over $17,830 after standard deduction & $4,700 per SC W-4 allowance
+const SC_SCHEDULE = scheduleFromBrackets([3560, 17830], [0, 0.03, 0.06]);
+function southCarolinaIncomeTax(annualWages: number, status: FilingStatus, allowances: number): number {
+  const taxable = Math.max(0, annualWages - FEDERAL_STANDARD_DEDUCTION[status] - allowances * 4700);
+  return taxFromSchedule(taxable, SC_SCHEDULE);
 }
 
 // ---------------------------------------------------------------------------
@@ -523,6 +732,151 @@ export function calculatePaycheck(input: PaycheckInput): PaycheckResult {
         },
       );
       break;
+    case 'UT':
+      lines.push({
+        key: 'state',
+        label: 'Utah income tax (4.55%)',
+        annual: utahIncomeTax(taxableWages, input.filingStatus),
+      });
+      break;
+    case 'KY':
+      lines.push({
+        key: 'state',
+        label: 'Kentucky income tax (4.00%)',
+        annual: kentuckyIncomeTax(taxableWages),
+      });
+      break;
+    case 'LA':
+      lines.push({
+        key: 'state',
+        label: 'Louisiana income tax (3.00%)',
+        annual: louisianaIncomeTax(taxableWages, input.filingStatus),
+      });
+      break;
+    case 'IA':
+      lines.push({
+        key: 'state',
+        label: 'Iowa income tax (3.80%)',
+        annual: iowaIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
+      });
+      break;
+    case 'ID':
+      lines.push({
+        key: 'state',
+        label: 'Idaho income tax (5.695%)',
+        annual: idahoIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
+      });
+      break;
+    case 'OH':
+      lines.push({
+        key: 'state',
+        label: 'Ohio state income tax',
+        annual: ohioIncomeTax(taxableWages, input.stateAllowances),
+      });
+      break;
+    case 'VA':
+      lines.push({
+        key: 'state',
+        label: 'Virginia income tax',
+        annual: virginiaIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
+      });
+      break;
+    case 'NJ':
+      lines.push(
+        {
+          key: 'state',
+          label: 'New Jersey income tax',
+          annual: newJerseyIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
+        },
+        {
+          key: 'sdi',
+          label: 'NJ SUI/SDI/FLI Payroll Tax (0.515%)',
+          annual: Math.min(ficaWages, NJ_WAGE_CAP) * NJ_SUI_FLI_RATE,
+        },
+      );
+      break;
+    case 'MA':
+      lines.push(
+        {
+          key: 'state',
+          label: 'Massachusetts income tax (5.00%)',
+          annual: massachusettsIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
+        },
+        {
+          key: 'pfl',
+          label: 'MA Paid Family & Medical Leave (0.46%)',
+          annual: Math.min(ficaWages, SOCIAL_SECURITY_WAGE_BASE) * MA_PFML_EMPLOYEE_RATE,
+        },
+      );
+      break;
+    case 'MD':
+      lines.push(
+        {
+          key: 'state',
+          label: 'Maryland state income tax',
+          annual: marylandStateIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
+        },
+        {
+          key: 'local',
+          label: 'MD Avg County Local Tax (3.05%)',
+          annual: marylandLocalIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
+        },
+      );
+      break;
+    case 'MN':
+      lines.push(
+        {
+          key: 'state',
+          label: 'Minnesota income tax',
+          annual: minnesotaIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
+        },
+        {
+          key: 'pfl',
+          label: 'MN Paid Leave (0.44%)',
+          annual: Math.min(ficaWages, SOCIAL_SECURITY_WAGE_BASE) * MN_PAID_LEAVE_RATE,
+        },
+      );
+      break;
+    case 'MO':
+      lines.push({
+        key: 'state',
+        label: 'Missouri income tax',
+        annual: missouriIncomeTax(taxableWages, input.filingStatus),
+      });
+      break;
+    case 'WI':
+      lines.push({
+        key: 'state',
+        label: 'Wisconsin income tax',
+        annual: wisconsinIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
+      });
+      break;
+    case 'OR':
+      lines.push(
+        {
+          key: 'state',
+          label: 'Oregon income tax',
+          annual: oregonIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
+        },
+        {
+          key: 'pfl',
+          label: 'Paid Leave Oregon (0.60%)',
+          annual: Math.min(ficaWages, SOCIAL_SECURITY_WAGE_BASE) * OR_PAID_LEAVE_RATE,
+        },
+        {
+          key: 'local',
+          label: 'OR Statewide Transit Tax (0.10%)',
+          annual: ficaWages * OR_TRANSIT_TAX_RATE,
+        },
+      );
+      break;
+    case 'SC':
+      lines.push({
+        key: 'state',
+        label: 'South Carolina income tax',
+        annual: southCarolinaIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
+      });
+      break;
     case 'TX':
     case 'FL':
     case 'TN':
@@ -585,4 +939,19 @@ export const __test = {
   indianaIncomeTax,
   arizonaIncomeTax,
   coloradoIncomeTax,
+  utahIncomeTax,
+  kentuckyIncomeTax,
+  louisianaIncomeTax,
+  iowaIncomeTax,
+  idahoIncomeTax,
+  ohioIncomeTax,
+  virginiaIncomeTax,
+  newJerseyIncomeTax,
+  massachusettsIncomeTax,
+  marylandStateIncomeTax,
+  minnesotaIncomeTax,
+  missouriIncomeTax,
+  wisconsinIncomeTax,
+  oregonIncomeTax,
+  southCarolinaIncomeTax,
 };
