@@ -379,40 +379,6 @@ export default function SalesCommissionCalculator() {
   const [compareA, setCompareA] = useState<CompareSnapshot | null>(null);
   const [compareB, setCompareB] = useState<CompareSnapshot | null>(null);
 
-  const getSnapshot = (): CommissionSnapshot => {
-    if (activeTab === 'simple') {
-      const sales = parseNum(salesAmount);
-      return {
-        totalSales: sales,
-        grossCommission: simpleResults.gross,
-        netCommission: simpleResults.net,
-        totalComp: simpleResults.totalComp,
-        effectiveRate: sales > 0 ? (simpleResults.gross / sales) * 100 : 0,
-        mode: 'Simple'
-      };
-    } else if (activeTab === 'tiered') {
-      const sales = parseNum(tieredSalesAmount);
-      return {
-        totalSales: sales,
-        grossCommission: tieredResults.gross,
-        netCommission: tieredResults.net,
-        totalComp: tieredResults.totalComp,
-        effectiveRate: sales > 0 ? (tieredResults.totalCommission / sales) * 100 : 0,
-        mode: 'Tiered'
-      };
-    } else {
-      const sales = parseNum(actualSales);
-      return {
-        totalSales: sales,
-        grossCommission: quotaResults.gross,
-        netCommission: quotaResults.net,
-        totalComp: quotaResults.totalComp,
-        effectiveRate: sales > 0 ? (quotaResults.totalCommission / sales) * 100 : 0,
-        mode: 'Quota'
-      };
-    }
-  };
-
   // ─── Deduction total ────────────────────────────────────────────────────
   const totalDeductions = useMemo(() => {
     if (!deductions.enabled) return 0;
@@ -547,6 +513,42 @@ export default function SalesCommissionCalculator() {
       hasInput,
     };
   }, [quotaBase, quotaRate, salesQuota, actualSales, accelerator, totalDeductions]);
+
+  // ─── Comparison snapshot (reads the three memoised results above) ───────
+  const getSnapshot = (): CommissionSnapshot => {
+    if (activeTab === 'simple') {
+      const sales = parseNum(salesAmount);
+      return {
+        totalSales: sales,
+        grossCommission: simpleResults.gross,
+        netCommission: simpleResults.net,
+        totalComp: simpleResults.totalComp,
+        effectiveRate: sales > 0 ? (simpleResults.gross / sales) * 100 : 0,
+        mode: 'Simple'
+      };
+    } else if (activeTab === 'tiered') {
+      const sales = parseNum(tieredSalesAmount);
+      return {
+        totalSales: sales,
+        grossCommission: tieredResults.gross,
+        netCommission: tieredResults.net,
+        totalComp: tieredResults.totalComp,
+        effectiveRate: sales > 0 ? (tieredResults.totalCommission / sales) * 100 : 0,
+        mode: 'Tiered'
+      };
+    } else {
+      const sales = parseNum(actualSales);
+      return {
+        totalSales: sales,
+        grossCommission: quotaResults.gross,
+        netCommission: quotaResults.net,
+        totalComp: quotaResults.totalComp,
+        effectiveRate: sales > 0 ? (quotaResults.totalCommission / sales) * 100 : 0,
+        mode: 'Quota'
+      };
+    }
+  };
+
 
   // ─── History ────────────────────────────────────────────────────
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ activeTab: string; salesAmount: string; simpleRate: string; tieredSalesAmount: string; quotaBase: string; salesQuota: string; actualSales: string }>('commission-calculator');

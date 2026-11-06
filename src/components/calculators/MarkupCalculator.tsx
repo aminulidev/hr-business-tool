@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Package, DollarSign, Percent, Info, ArrowRightLeft } from 'lucide-react';
 import TryExample from './TryExample';
@@ -52,6 +52,54 @@ const referenceRates = [
   { markup: 100, margin: 50.00 },
 ];
 
+type MarkupComputation = { result: MarkupResult | null; error: string | null };
+
+function computeMarkup(mode: CalcMode, costPrice: string, markupPct: string, sellingPrice: string): MarkupComputation {
+  if (mode === 'cost-to-price') {
+    const cost = parseFloat(costPrice);
+    const markup = parseFloat(markupPct);
+    if (isNaN(cost) || cost < 0) {
+      return { result: null, error: 'Please enter a valid cost price (zero or greater).' };
+    }
+    if (isNaN(markup) || markup < 0) {
+      return { result: null, error: 'Please enter a valid markup percentage (zero or greater).' };
+    }
+    const price = cost * (1 + markup / 100);
+    const profit = price - cost;
+    const margin = markupToMargin(markup);
+
+    return { error: null, result: {
+      costPrice: cost,
+      markupPct: markup,
+      sellingPrice: price,
+      grossProfit: profit,
+      profitPerUnit: profit,
+      marginPct: margin,
+    } };
+  } else {
+    const price = parseFloat(sellingPrice);
+    const markup = parseFloat(markupPct);
+    if (isNaN(price) || price <= 0) {
+      return { result: null, error: 'Please enter a valid selling price greater than zero.' };
+    }
+    if (isNaN(markup) || markup < 0) {
+      return { result: null, error: 'Please enter a valid markup percentage (zero or greater).' };
+    }
+    const cost = price / (1 + markup / 100);
+    const profit = price - cost;
+    const margin = markupToMargin(markup);
+
+    return { error: null, result: {
+      costPrice: cost,
+      markupPct: markup,
+      sellingPrice: price,
+      grossProfit: profit,
+      profitPerUnit: profit,
+      marginPct: margin,
+    } };
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
@@ -61,96 +109,42 @@ export default function MarkupCalculator() {
   const [costPrice, setCostPrice] = useState('50');
   const [markupPct, setMarkupPct] = useState('40');
   const [sellingPrice, setSellingPrice] = useState('70');
-  const [result, setResult] = useState<MarkupResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  // Live result: recomputed whenever an input or the mode changes
+  const { result, error } = useMemo(
+    () => computeMarkup(mode, costPrice, markupPct, sellingPrice),
+    [mode, costPrice, markupPct, sellingPrice],
+  );
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ mode: string; costPrice: string; markupPct: string; sellingPrice: string }>('markup-calculator');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: MarkupResult; label: string } | null>(null);
   const [compareB, setCompareB] = useState<{ result: MarkupResult; label: string } | null>(null);
 
-    const handleTryExample = () => {
-    setCostPrice('50');
-    setMarkupPct('40');
-    setResult(null);
-  };
-
-  const handleCalculate = (saveToHistory = true) => {
-    setResult(null);
-    setError(null);
-
-    if (mode === 'cost-to-price') {
-      const cost = parseFloat(costPrice);
-      const markup = parseFloat(markupPct);
-      if (isNaN(cost) || cost < 0) {
-        setError('Please enter a valid cost price (zero or greater).');
-        return;
-      }
-      if (isNaN(markup) || markup < 0) {
-        setError('Please enter a valid markup percentage (zero or greater).');
-        return;
-      }
-      const price = cost * (1 + markup / 100);
-      const profit = price - cost;
-      const margin = markupToMargin(markup);
-
-      setResult({
-        costPrice: cost,
-        markupPct: markup,
-        sellingPrice: price,
-        grossProfit: profit,
-        profitPerUnit: profit,
-        marginPct: margin,
-      });
-    } else {
-      const price = parseFloat(sellingPrice);
-      const markup = parseFloat(markupPct);
-      if (isNaN(price) || price <= 0) {
-        setError('Please enter a valid selling price greater than zero.');
-        return;
-      }
-      if (isNaN(markup) || markup < 0) {
-        setError('Please enter a valid markup percentage (zero or greater).');
-        return;
-      }
-      const cost = price / (1 + markup / 100);
-      const profit = price - cost;
-      const margin = markupToMargin(markup);
-
-      setResult({
-        costPrice: cost,
-        markupPct: markup,
-        sellingPrice: price,
-        grossProfit: profit,
-        profitPerUnit: profit,
-        marginPct: margin,
-      });
-    }
-    if (saveToHistory) saveEntry(
+  const handleCalculate = () => {
+    if (!result) return;
+    saveEntry(
       { mode, costPrice, markupPct, sellingPrice },
-      `${(parseFloat(markupPct) || 0).toFixed(1)}% markup: ${formatCurrency(mode === 'cost-to-price' ? (parseFloat(costPrice) || 0) : (parseFloat(sellingPrice) || 0) / (1 + (parseFloat(markupPct) || 0) / 100))} cost → ${formatCurrency(mode === 'cost-to-price' ? (parseFloat(costPrice) || 0) * (1 + (parseFloat(markupPct) || 0) / 100) : (parseFloat(sellingPrice) || 0))} price`
+      `${result.markupPct.toFixed(1)}% markup: ${formatCurrency(result.costPrice)} cost → ${formatCurrency(result.sellingPrice)} price`
     );
   };
 
-  useEffect(() => {
-    handleCalculate(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, costPrice, markupPct, sellingPrice]);
+    const handleTryExample = () => {
+    setCostPrice('50');
+    setMarkupPct('40');
+  };
+
 
   const handleRestore = (inputs: { mode: string; costPrice: string; markupPct: string; sellingPrice: string }) => {
     setMode(inputs.mode as CalcMode);
     setCostPrice(inputs.costPrice);
     setMarkupPct(inputs.markupPct);
     setSellingPrice(inputs.sellingPrice);
-    setResult(null);
   };
 
   const handleReset = () => {
     setCostPrice('');
     setMarkupPct('');
     setSellingPrice('');
-    setResult(null);
-    setError(null);
   };
 
   return (
@@ -160,7 +154,7 @@ export default function MarkupCalculator() {
         <div className="flex rounded-xl bg-muted/50 p-1 border border-border/50">
           <button
             type="button"
-            onClick={() => { setMode('cost-to-price'); setResult(null); setError(null); }}
+            onClick={() => { setMode('cost-to-price'); }}
             className={`flex-1 flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
               mode === 'cost-to-price'
                 ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/25'
@@ -172,7 +166,7 @@ export default function MarkupCalculator() {
           </button>
           <button
             type="button"
-            onClick={() => { setMode('price-to-cost'); setResult(null); setError(null); }}
+            onClick={() => { setMode('price-to-cost'); }}
             className={`flex-1 flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
               mode === 'price-to-cost'
                 ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/25'
@@ -285,7 +279,7 @@ export default function MarkupCalculator() {
           <TryExample onClick={handleTryExample} />
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <Button
-              onClick={() => handleCalculate(true)}
+              onClick={handleCalculate}
               className="flex-1 sm:flex-none bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
               size="lg"
             >

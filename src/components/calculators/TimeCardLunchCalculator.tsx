@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import {
   Coffee,
@@ -121,6 +121,165 @@ function dayLabel(idx: number, weeks: number): string {
 const formatCurrency = (value: number): string =>
   value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
+type LunchComputation = { result: TimeCardResult | null; error: string | null };
+
+function computeLunchTimeCard(
+  days: DayEntry[],
+  lunchMode: LunchMode,
+  autoLunchDuration: string,
+  overtimeThreshold: string,
+  weeks: number,
+  hourlyRate: string,
+): LunchComputation {
+  const otThresh = parseFloat(overtimeThreshold);
+  if (isNaN(otThresh) || otThresh <= 0) {
+    return { result: null, error: 'Please enter a valid overtime threshold greater than zero.' };
+  }
+
+  const autoDur = parseFloat(autoLunchDuration);
+  if (lunchMode === 'auto' && (isNaN(autoDur) || autoDur < 0)) {
+    return { result: null, error: 'Please enter a valid lunch duration.' };
+  }
+
+  const rate = hourlyRate.trim() === '' ? 0 : parseFloat(hourlyRate);
+  if (isNaN(rate) || rate < 0) {
+    return { result: null, error: 'Please enter a valid hourly rate, or leave it blank.' };
+  }
+
+  const dayResults: DayResult[] = [];
+  let totalMinutes = 0;
+  // FLSA overtime is per workweek, so track each week separately
+  const weekMinutes = Array.from({ length: weeks }, () => 0);
+
+  for (let i = 0; i < weeks * 7; i++) {
+    const day = days[i];
+    const label = dayLabel(i, weeks);
+
+    if (!day.enabled) {
+      dayResults.push({
+        day: label,
+        enabled: false,
+        clockIn: '',
+        lunchStart: '',
+        lunchEnd: '',
+        clockOut: '',
+        hoursBeforeLunch: 0,
+        hoursAfterLunch: 0,
+        lunchDuration: 0,
+        totalHours: 0,
+      });
+      continue;
+    }
+
+    if (!day.clockIn || !day.clockOut) {
+      return { result: null, error: `Please enter clock-in and clock-out times for ${label}.` };
+    }
+
+    const clockInMin = parseTimeToMinutes(day.clockIn);
+    const rawClockOutMin = parseTimeToMinutes(day.clockOut);
+    // Times earlier than clock-in belong to the next day (overnight shift)
+    const afterClockIn = (t: number) => (t < clockInMin ? t + MINUTES_PER_DAY : t);
+
+    if (clockInMin < 0) {
+      return { result: null, error: `Invalid clock-in time for ${label}. Try formats like ${TIME_FORMAT_EXAMPLES}` };
+    }
+    if (rawClockOutMin < 0) {
+      return { result: null, error: `Invalid clock-out time for ${label}. Try formats like ${TIME_FORMAT_EXAMPLES}` };
+    }
+
+    if (rawClockOutMin === clockInMin) {
+      return { result: null, error: `Clock-in and clock-out are the same time for ${label}.` };
+    }
+    const clockOutMin = afterClockIn(rawClockOutMin);
+
+    let lunchMin = 0;
+    let hoursBefore = 0;
+    let hoursAfter = 0;
+
+    if (lunchMode === 'manual') {
+      if (!day.lunchStart || !day.lunchEnd) {
+        return { result: null, error: `Please enter lunch start and end times for ${label} (or switch to auto-deduct mode).` };
+      }
+      const rawLunchStartMin = parseTimeToMinutes(day.lunchStart);
+      const rawLunchEndMin = parseTimeToMinutes(day.lunchEnd);
+
+      if (rawLunchStartMin < 0) {
+        return { result: null, error: `Invalid lunch out time for ${label}. Try formats like ${TIME_FORMAT_EXAMPLES}` };
+      }
+      if (rawLunchEndMin < 0) {
+        return { result: null, error: `Invalid lunch in time for ${label}. Try formats like ${TIME_FORMAT_EXAMPLES}` };
+      }
+      const lunchStartMin = afterClockIn(rawLunchStartMin);
+      const lunchEndMin = afterClockIn(rawLunchEndMin);
+
+      if (lunchEndMin <= lunchStartMin) {
+        return { result: null, error: `Lunch end must be after lunch start for ${label}.` };
+      }
+      if (lunchStartMin < clockInMin || lunchEndMin > clockOutMin) {
+        return { result: null, error: `Lunch times must be within clock-in and clock-out times for ${label}.` };
+      }
+
+      lunchMin = lunchEndMin - lunchStartMin;
+      hoursBefore = lunchStartMin - clockInMin;
+      hoursAfter = clockOutMin - lunchEndMin;
+    } else {
+      // Auto-deduct: subtract lunch from the middle of the shift
+      lunchMin = autoDur || 0;
+      const totalShiftMin = clockOutMin - clockInMin;
+      if (totalShiftMin <= lunchMin) {
+        return { result: null, error: `Total shift time for ${label} is less than or equal to the lunch duration.` };
+      }
+      const effectiveMin = totalShiftMin - lunchMin;
+      const half = lunchMin / 2;
+      hoursBefore = totalShiftMin / 2 - half;
+      hoursAfter = totalShiftMin / 2 - half;
+    }
+
+    const totalDayMin = hoursBefore + hoursAfter;
+    totalMinutes += totalDayMin;
+    weekMinutes[Math.floor(i / 7)] += totalDayMin;
+
+    dayResults.push({
+      day: label,
+      enabled: true,
+      clockIn: day.clockIn,
+      lunchStart: lunchMode === 'manual' ? day.lunchStart : '',
+      lunchEnd: lunchMode === 'manual' ? day.lunchEnd : '',
+      clockOut: day.clockOut,
+      hoursBeforeLunch: minutesToDecimal(hoursBefore),
+      hoursAfterLunch: minutesToDecimal(hoursAfter),
+      lunchDuration: minutesToDecimal(lunchMin),
+      totalHours: minutesToDecimal(totalDayMin),
+    });
+  }
+
+  const totalHours = minutesToDecimal(totalMinutes);
+  // Overtime can't be averaged across weeks: 45h + 35h is still 5h of OT
+  const totalOvertimeHours = weekMinutes.reduce(
+    (sum, mins) => sum + Math.max(minutesToDecimal(mins) - otThresh, 0),
+    0
+  );
+  const totalRegularHours = totalHours - totalOvertimeHours;
+  const regularPay = rate * totalRegularHours;
+  const overtimePay = rate * OVERTIME_MULTIPLIER * totalOvertimeHours;
+
+  return {
+    error: null,
+    result: {
+    days: dayResults,
+    weeks,
+    totalRegularHours,
+    totalOvertimeHours,
+    totalHours,
+    overtimeThreshold: otThresh,
+    hourlyRate: rate,
+    regularPay,
+    overtimePay,
+    totalPay: regularPay + overtimePay,
+    },
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
@@ -134,8 +293,11 @@ export default function TimeCardLunchCalculator() {
   const [hourlyRate, setHourlyRate] = useState('22');
   const [employeeName, setEmployeeName] = useState('');
   const [payPeriodLabel, setPayPeriodLabel] = useState('');
-  const [result, setResult] = useState<TimeCardResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  // Live result: recomputed whenever a punch, the lunch rule, the rate or the period changes
+  const { result, error } = useMemo(
+    () => computeLunchTimeCard(days, lunchMode, autoLunchDuration, overtimeThreshold, weeks, hourlyRate),
+    [days, lunchMode, autoLunchDuration, overtimeThreshold, weeks, hourlyRate],
+  );
   const [copied, setCopied] = useState(false);
 
   const handleCopySummary = () => {
@@ -169,186 +331,8 @@ export default function TimeCardLunchCalculator() {
     setDays((prev) =>
       prev.map((d, i) => (i === idx ? { ...d, [field]: value } : d))
     );
-    setResult(null);
   };
 
-  const handleCalculate = () => {
-    setError(null);
-    setResult(null);
-
-    const otThresh = parseFloat(overtimeThreshold);
-    if (isNaN(otThresh) || otThresh <= 0) {
-      setError('Please enter a valid overtime threshold greater than zero.');
-      return;
-    }
-
-    const autoDur = parseFloat(autoLunchDuration);
-    if (lunchMode === 'auto' && (isNaN(autoDur) || autoDur < 0)) {
-      setError('Please enter a valid lunch duration.');
-      return;
-    }
-
-    const rate = hourlyRate.trim() === '' ? 0 : parseFloat(hourlyRate);
-    if (isNaN(rate) || rate < 0) {
-      setError('Please enter a valid hourly rate, or leave it blank.');
-      return;
-    }
-
-    const dayResults: DayResult[] = [];
-    let totalMinutes = 0;
-    // FLSA overtime is per workweek, so track each week separately
-    const weekMinutes = Array.from({ length: weeks }, () => 0);
-
-    for (let i = 0; i < weeks * 7; i++) {
-      const day = days[i];
-      const label = dayLabel(i, weeks);
-
-      if (!day.enabled) {
-        dayResults.push({
-          day: label,
-          enabled: false,
-          clockIn: '',
-          lunchStart: '',
-          lunchEnd: '',
-          clockOut: '',
-          hoursBeforeLunch: 0,
-          hoursAfterLunch: 0,
-          lunchDuration: 0,
-          totalHours: 0,
-        });
-        continue;
-      }
-
-      if (!day.clockIn || !day.clockOut) {
-        setError(`Please enter clock-in and clock-out times for ${label}.`);
-        return;
-      }
-
-      const clockInMin = parseTimeToMinutes(day.clockIn);
-      const rawClockOutMin = parseTimeToMinutes(day.clockOut);
-      // Times earlier than clock-in belong to the next day (overnight shift)
-      const afterClockIn = (t: number) => (t < clockInMin ? t + MINUTES_PER_DAY : t);
-
-      if (clockInMin < 0) {
-        setError(`Invalid clock-in time for ${label}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
-        return;
-      }
-      if (rawClockOutMin < 0) {
-        setError(`Invalid clock-out time for ${label}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
-        return;
-      }
-
-      if (rawClockOutMin === clockInMin) {
-        setError(
-          `Clock-in and clock-out are the same time for ${label}.`
-        );
-        return;
-      }
-      const clockOutMin = afterClockIn(rawClockOutMin);
-
-      let lunchMin = 0;
-      let hoursBefore = 0;
-      let hoursAfter = 0;
-
-      if (lunchMode === 'manual') {
-        if (!day.lunchStart || !day.lunchEnd) {
-          setError(
-            `Please enter lunch start and end times for ${label} (or switch to auto-deduct mode).`
-          );
-          return;
-        }
-        const rawLunchStartMin = parseTimeToMinutes(day.lunchStart);
-        const rawLunchEndMin = parseTimeToMinutes(day.lunchEnd);
-
-        if (rawLunchStartMin < 0) {
-          setError(`Invalid lunch out time for ${label}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
-          return;
-        }
-        if (rawLunchEndMin < 0) {
-          setError(`Invalid lunch in time for ${label}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
-          return;
-        }
-        const lunchStartMin = afterClockIn(rawLunchStartMin);
-        const lunchEndMin = afterClockIn(rawLunchEndMin);
-
-        if (lunchEndMin <= lunchStartMin) {
-          setError(
-            `Lunch end must be after lunch start for ${label}.`
-          );
-          return;
-        }
-        if (lunchStartMin < clockInMin || lunchEndMin > clockOutMin) {
-          setError(
-            `Lunch times must be within clock-in and clock-out times for ${label}.`
-          );
-          return;
-        }
-
-        lunchMin = lunchEndMin - lunchStartMin;
-        hoursBefore = lunchStartMin - clockInMin;
-        hoursAfter = clockOutMin - lunchEndMin;
-      } else {
-        // Auto-deduct: subtract lunch from the middle of the shift
-        lunchMin = autoDur || 0;
-        const totalShiftMin = clockOutMin - clockInMin;
-        if (totalShiftMin <= lunchMin) {
-          setError(
-            `Total shift time for ${label} is less than or equal to the lunch duration.`
-          );
-          return;
-        }
-        const effectiveMin = totalShiftMin - lunchMin;
-        const half = lunchMin / 2;
-        hoursBefore = totalShiftMin / 2 - half;
-        hoursAfter = totalShiftMin / 2 - half;
-      }
-
-      const totalDayMin = hoursBefore + hoursAfter;
-      totalMinutes += totalDayMin;
-      weekMinutes[Math.floor(i / 7)] += totalDayMin;
-
-      dayResults.push({
-        day: label,
-        enabled: true,
-        clockIn: day.clockIn,
-        lunchStart: lunchMode === 'manual' ? day.lunchStart : '',
-        lunchEnd: lunchMode === 'manual' ? day.lunchEnd : '',
-        clockOut: day.clockOut,
-        hoursBeforeLunch: minutesToDecimal(hoursBefore),
-        hoursAfterLunch: minutesToDecimal(hoursAfter),
-        lunchDuration: minutesToDecimal(lunchMin),
-        totalHours: minutesToDecimal(totalDayMin),
-      });
-    }
-
-    const totalHours = minutesToDecimal(totalMinutes);
-    // Overtime can't be averaged across weeks: 45h + 35h is still 5h of OT
-    const totalOvertimeHours = weekMinutes.reduce(
-      (sum, mins) => sum + Math.max(minutesToDecimal(mins) - otThresh, 0),
-      0
-    );
-    const totalRegularHours = totalHours - totalOvertimeHours;
-    const regularPay = rate * totalRegularHours;
-    const overtimePay = rate * OVERTIME_MULTIPLIER * totalOvertimeHours;
-
-    setResult({
-      days: dayResults,
-      weeks,
-      totalRegularHours,
-      totalOvertimeHours,
-      totalHours,
-      overtimeThreshold: otThresh,
-      hourlyRate: rate,
-      regularPay,
-      overtimePay,
-      totalPay: regularPay + overtimePay,
-    });
-  };
-
-  useEffect(() => {
-    handleCalculate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [days, lunchMode, autoLunchDuration, overtimeThreshold, weeks, hourlyRate]);
 
   const handleReset = () => {
     setDays(DEFAULT_DAYS);
@@ -357,8 +341,6 @@ export default function TimeCardLunchCalculator() {
     setOvertimeThreshold('40');
     setWeeks(1);
     setHourlyRate('');
-    setResult(null);
-    setError(null);
   };
 
   // Copy first enabled day's times to all other enabled (visible) days
@@ -378,7 +360,6 @@ export default function TimeCardLunchCalculator() {
         };
       })
     );
-    setResult(null);
   };
 
   // Try Example: standard 9-5 weekday with 1-hour lunch
@@ -390,8 +371,6 @@ export default function TimeCardLunchCalculator() {
     setAutoLunchDuration('60');
     setOvertimeThreshold('40');
     setHourlyRate('22');
-    setResult(null);
-    setError(null);
   };
 
   // ------ Render ------
@@ -438,7 +417,6 @@ export default function TimeCardLunchCalculator() {
             value={lunchMode}
             onValueChange={(v) => {
               setLunchMode(v as LunchMode);
-              setResult(null);
             }}
           >
             <SelectTrigger className="w-full">
@@ -494,7 +472,6 @@ export default function TimeCardLunchCalculator() {
               value={String(weeks)}
               onValueChange={(v) => {
                 setWeeks(Number(v));
-                setResult(null);
               }}
             >
               <SelectTrigger id="payPeriod" className="w-full">
@@ -520,7 +497,6 @@ export default function TimeCardLunchCalculator() {
               value={hourlyRate}
               onChange={(e) => {
                 setHourlyRate(e.target.value);
-                setResult(null);
               }}
             />
           </div>
@@ -763,7 +739,7 @@ export default function TimeCardLunchCalculator() {
             </Button>
           </div>
           <Button
-            onClick={handleCalculate}
+            onClick={() => document.querySelector('.result-display')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
             className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
             size="lg"
           >

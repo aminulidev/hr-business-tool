@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import TryExample from './TryExample';
 import { motion } from 'framer-motion';
 import {
@@ -91,6 +91,47 @@ const PERIOD_LABELS: Record<PayPeriod, string> = {
   monthly: 'Monthly',
 };
 
+// Live result; returns null while any row is incomplete or a multiplier is invalid
+function computeWages(
+  entries: WageEntry[],
+  overtimeMultiplier: string,
+  doubleTimeMultiplier: string,
+  payPeriod: PayPeriod,
+): WagesResult | null {
+  const otMult = parseFloat(overtimeMultiplier);
+  const dtMult = parseFloat(doubleTimeMultiplier);
+  if (isNaN(otMult) || otMult <= 0 || isNaN(dtMult) || dtMult <= 0) return null;
+
+  const calcEntries: WagesResult['entries'] = [];
+  let totalPeriod = 0;
+  for (const entry of entries) {
+    const rate = parseFloat(entry.hourlyRate);
+    const regHrs = parseFloat(entry.regularHours || '0');
+    const otHrs = parseFloat(entry.overtimeHours || '0');
+    const dtHrs = parseFloat(entry.doubleTimeHours || '0');
+    if (isNaN(rate) || rate <= 0 || regHrs < 0 || otHrs < 0 || dtHrs < 0) return null;
+    const regularPay = regHrs * rate;
+    const overtimePay = otHrs * rate * otMult;
+    const doubleTimePay = dtHrs * rate * dtMult;
+    const subtotal = regularPay + overtimePay + doubleTimePay;
+    calcEntries.push({ hourlyRate: rate, regularHours: regHrs, overtimeHours: otHrs, doubleTimeHours: dtHrs, regularPay, overtimePay, doubleTimePay, subtotal });
+    totalPeriod += subtotal;
+  }
+  const grossPerYear = totalPeriod * PERIOD_MULTIPLIERS[payPeriod];
+  return {
+    entries: calcEntries,
+    grossPerPeriod: totalPeriod,
+    grossPerWeek: grossPerYear / 52,
+    grossPerBiWeekly: grossPerYear / 26,
+    grossPerSemiMonthly: grossPerYear / 24,
+    grossPerMonth: grossPerYear / 12,
+    grossPerYear,
+    overtimeMultiplier: otMult,
+    doubleTimeMultiplier: dtMult,
+    payPeriod,
+  };
+}
+
 let nextId = 1;
 function createEntry(): WageEntry {
   return {
@@ -111,7 +152,6 @@ export default function WagesCalculator() {
   const [overtimeMultiplier, setOvertimeMultiplier] = useState('1.5');
   const [doubleTimeMultiplier, setDoubleTimeMultiplier] = useState('2');
   const [payPeriod, setPayPeriod] = useState<PayPeriod>('weekly');
-  const [result, setResult] = useState<WagesResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // Comparison State
@@ -120,59 +160,24 @@ export default function WagesCalculator() {
 
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ payPeriod: string; overtimeMultiplier: string; doubleTimeMultiplier: string; firstRate: string }>('wages-calculator');
 
-  useEffect(() => {
-    const otMult = parseFloat(overtimeMultiplier);
-    const dtMult = parseFloat(doubleTimeMultiplier);
-    if (isNaN(otMult) || otMult <= 0 || isNaN(dtMult) || dtMult <= 0) return;
-
-    const calcEntries: WagesResult['entries'] = [];
-    let totalPeriod = 0;
-    for (const entry of entries) {
-      const rate = parseFloat(entry.hourlyRate);
-      const regHrs = parseFloat(entry.regularHours || '0');
-      const otHrs = parseFloat(entry.overtimeHours || '0');
-      const dtHrs = parseFloat(entry.doubleTimeHours || '0');
-      if (isNaN(rate) || rate <= 0 || regHrs < 0 || otHrs < 0 || dtHrs < 0) return;
-      const regularPay = regHrs * rate;
-      const overtimePay = otHrs * rate * otMult;
-      const doubleTimePay = dtHrs * rate * dtMult;
-      const subtotal = regularPay + overtimePay + doubleTimePay;
-      calcEntries.push({ hourlyRate: rate, regularHours: regHrs, overtimeHours: otHrs, doubleTimeHours: dtHrs, regularPay, overtimePay, doubleTimePay, subtotal });
-      totalPeriod += subtotal;
-    }
-    const periodMultiplier = PERIOD_MULTIPLIERS[payPeriod];
-    const grossPerYear = totalPeriod * periodMultiplier;
-    setError(null);
-    setResult({
-      entries: calcEntries,
-      grossPerPeriod: totalPeriod,
-      grossPerWeek: grossPerYear / 52,
-      grossPerBiWeekly: grossPerYear / 26,
-      grossPerSemiMonthly: grossPerYear / 24,
-      grossPerMonth: grossPerYear / 12,
-      grossPerYear,
-      overtimeMultiplier: otMult,
-      doubleTimeMultiplier: dtMult,
-      payPeriod,
-    });
-  }, [entries, overtimeMultiplier, doubleTimeMultiplier, payPeriod]);
+  const result = useMemo(
+    () => computeWages(entries, overtimeMultiplier, doubleTimeMultiplier, payPeriod),
+    [entries, overtimeMultiplier, doubleTimeMultiplier, payPeriod],
+  );
 
   const updateEntry = (id: number, field: keyof WageEntry, value: string) => {
     setEntries((prev) =>
       prev.map((e) => (e.id === id ? { ...e, [field]: value } : e))
     );
-    setResult(null);
   };
 
   const addEntry = () => {
     setEntries((prev) => [...prev, createEntry()]);
-    setResult(null);
   };
 
   const removeEntry = (id: number) => {
     if (entries.length <= 1) return;
     setEntries((prev) => prev.filter((e) => e.id !== id));
-    setResult(null);
   };
 
     const handleTryExample = () => {
@@ -180,12 +185,10 @@ setEntries([{ id: 1, hourlyRate: '20', regularHours: '40', overtimeHours: '5', d
     setOvertimeMultiplier('1.5');
     setDoubleTimeMultiplier('2');
     setPayPeriod('weekly');
-    setResult(null);
   };
 
   const handleCalculate = () => {
     setError(null);
-    setResult(null);
 
     const otMult = parseFloat(overtimeMultiplier);
     const dtMult = parseFloat(doubleTimeMultiplier);
@@ -251,18 +254,6 @@ setEntries([{ id: 1, hourlyRate: '20', regularHours: '40', overtimeHours: '5', d
     const grossPerSemiMonthly = grossPerYear / 24;
     const grossPerMonth = grossPerYear / 12;
 
-    setResult({
-      entries: calcEntries,
-      grossPerPeriod: totalPeriod,
-      grossPerWeek,
-      grossPerBiWeekly,
-      grossPerSemiMonthly,
-      grossPerMonth,
-      grossPerYear,
-      overtimeMultiplier: otMult,
-      doubleTimeMultiplier: dtMult,
-      payPeriod,
-    });
     saveEntry(
       { payPeriod, overtimeMultiplier, doubleTimeMultiplier, firstRate: entries[0]?.hourlyRate ?? '' },
       `${PERIOD_LABELS[payPeriod]}: ${formatCurrency(totalPeriod)}/period — ${formatCurrency(grossPerYear)}/yr`
@@ -273,7 +264,6 @@ setEntries([{ id: 1, hourlyRate: '20', regularHours: '40', overtimeHours: '5', d
     setPayPeriod(inputs.payPeriod as PayPeriod);
     setOvertimeMultiplier(inputs.overtimeMultiplier);
     setDoubleTimeMultiplier(inputs.doubleTimeMultiplier);
-    setResult(null);
   };
 
   const handleReset = () => {
@@ -282,7 +272,6 @@ setEntries([{ id: 1, hourlyRate: '20', regularHours: '40', overtimeHours: '5', d
     setOvertimeMultiplier('1.5');
     setDoubleTimeMultiplier('2');
     setPayPeriod('weekly');
-    setResult(null);
     setError(null);
   };
 
@@ -301,7 +290,6 @@ setEntries([{ id: 1, hourlyRate: '20', regularHours: '40', overtimeHours: '5', d
             value={payPeriod}
             onValueChange={(v) => {
               setPayPeriod(v as PayPeriod);
-              setResult(null);
             }}
           >
             <SelectTrigger className="w-full">
@@ -330,7 +318,6 @@ setEntries([{ id: 1, hourlyRate: '20', regularHours: '40', overtimeHours: '5', d
               value={overtimeMultiplier}
               onChange={(e) => {
                 setOvertimeMultiplier(e.target.value);
-                setResult(null);
               }}
             />
             <p className="text-xs text-muted-foreground">
@@ -349,7 +336,6 @@ setEntries([{ id: 1, hourlyRate: '20', regularHours: '40', overtimeHours: '5', d
               value={doubleTimeMultiplier}
               onChange={(e) => {
                 setDoubleTimeMultiplier(e.target.value);
-                setResult(null);
               }}
             />
             <p className="text-xs text-muted-foreground">
@@ -482,8 +468,8 @@ setEntries([{ id: 1, hourlyRate: '20', regularHours: '40', overtimeHours: '5', d
           ))}
         </div>
 
-        {/* Error */}
-        {error && (
+        {/* Error — only while the live result is unavailable */}
+        {error && !result && (
           <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
