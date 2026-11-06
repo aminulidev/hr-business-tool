@@ -193,7 +193,7 @@ const seoData = {
     {
       question: 'My state is not listed. What rate should I use?',
       answer:
-        'Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas, Washington, and Wyoming do not tax wages, so choose "No state income tax". Flat-tax states can enter their rate directly: Colorado 4.4%, Michigan 4.25%, Pennsylvania 3.07%, Indiana 3.0%, Utah 4.5%, North Carolina 3.99%. ' +
+        'Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas, Washington, and Wyoming do not tax wages, so choose "No state income tax". Flat-tax states can enter their rate directly: Colorado 4.4%, Michigan 4.25%, Pennsylvania 3.07%, Indiana 2.95%, Utah 4.45%, North Carolina 3.99% (withheld at 4.09%). ' +
         `For states with brackets, use last year's effective state rate (state tax divided by state wages). Exact ${TAX_YEAR} tables are built in for ${exactStateNames}.`,
     },
     {

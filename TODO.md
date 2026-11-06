@@ -247,6 +247,8 @@ Audited, enriched with 2026 `benchmarkTables` & `deepDiveSections`, and publishe
   - [x] Illinois example state tax ($116.63) is not explained (allowance adjustment) → the example now states the $2,925-per-allowance subtraction (PR 2).
   - [x] "$18 an Hour, Another State" example retitled as a demonstration of the flat-rate option (PR 2).
   - [x] Hourly paycheck how-to no longer says "Click Calculate Paycheck" (PR 2). Remaining: 181 other SEO files say "Click Calculate" — audit each against whether its component calculates live (Phase 14.5 `useCalculatorState` migration is the natural moment).
+- [x] **Engine corrections found while building 15.3 (Nov 6 2026, verified against state DOR / EY payroll alerts):** KY 4.00% → 3.50% (H.B. 1), NC 4.25% → 3.99% tax / 4.09% withholding (S.L. 2023-134), GA 5.19% → 4.99% (H.B. 463, retroactive), UT 4.55% → 4.45% (S.B. 60), ID 5.695% → 5.30% (H.B. 40), OH 3.5% top bracket removed → flat 2.75% over $26,050 (H.B. 96), CO FAMLI 0.45% → 0.44%, WA PFML employee share 0.5714% → 0.8072% (1.13% premium × 71.43%). Minimum wages: MI $12.48 → $13.73, CO $15.20 → $15.16, OR tiers → $15.55/$16.80/$14.55 (July 2026), MD county tiers updated. Golden tests added for each. Registry meta text and the flat-rate lists in `payroll-calculator.ts` / `state-tax-calculator.ts` SEO corrected.
+- [ ] **Still stale (not fixed):** `StateTaxCalculator.tsx` carries its own 50-state rate table (NC 4.5%, UT 4.65%, ID 5.695%, KY 4.0%, old deductions) — migrate it to the engine or update it. WA HB 2345 (effective June 11 2026) re-splits the PFML premium between employer and employee; confirm the post-June employee share. Idaho may publish a 0% low-income band in its 2026 withholding schedule — check tax.idaho.gov.
 - [ ] Systematic pass, category by category: every worked example recomputed by code (Phase 14.3 test asserts text numbers == engine numbers where an engine exists); every FAQ number checked against the linked source; remove any "2025" figures still presented as current.
 - [ ] Remove filler: duplicated state lists, identical related-card subtitles, repeated disclaimers. One disclaimer component, rendered once.
 
@@ -297,19 +299,19 @@ Audited, enriched with 2026 `benchmarkTables` & `deepDiveSections`, and publishe
 ## Phase 15: Consolidate the index (recovery blocker #2 — "delete or merge, don't trim")
 
 ### 15.1 Thin published pages (9) — merge or rewrite, decide per page
-- [ ] Time & Attendance cluster: `hours-between-times`, `time-difference`, `clock-out`, `break` → fold into **`time-card-calculator`** as modes (tabs: Time card · Hours between · Break deduction · Clock-out time). 301 the old slugs.
-- [ ] `employee-schedule-calculator` + `shift-rotation-calculator` → one **Shift Schedule Planner** page with real content (rotation patterns, FLSA 7(k), Pitman/DuPont examples).
-- [ ] `sick-leave-calculator` → merge into `pto-accrual-calculator` as an accrual type (the state paid-sick-leave table is the unique content).
-- [ ] `holiday-countdown-calculator` → merge into `business-day-calculator` (it already generates federal holidays) or rewrite with multi-year + state holidays.
-- [ ] `headcount-calculator` → merge into the `workforce-planning` suite (Phase 17) or expand with FTE conversion + BLS benchmarks.
+- [x] `hours-between-times`, `time-difference`, `clock-out`, `break` → **`time-card-calculator`** tabs (Nov 6 2026): `TimeCardModes.tsx` holds Hours between (with an optional date span that replaces time-difference), Clock-out time (with hours-worked-this-week → 40-hour line) and Break rules (CA/OR/WA/CO/NY table with authorities). Old slugs are `merged` with `mergedQuery` so the 301 lands on the right tab (`?mode=hours-between|clock-out|breaks`). Their FAQs, examples and the state break table moved into the time-card SEO file.
+- [x] **Shift Schedule Planner** at `/calculators/shift-rotation-calculator` (Nov 6 2026): `ShiftSchedulePlanner.tsx` renders full-cycle crew grids for 2-2-3, DuPont, Pitman and 4-on-4-off (14/28/8-day cycles, day/night crews, coverage check, longest stretch, FLSA vs 7(k) overtime at 171/212 h per 28 days, pay at a rate) plus the weekly roster tab (shift ranges, OT column, on-duty row). SEO rewritten: pattern comparison table, fair-workweek table, 7(k) deep dive, 9 FAQs, sources incl. DOL Fact Sheet #8. `employee-schedule-calculator` is merged → `?mode=roster`.
+- [x] `sick-leave-calculator` → `pto-accrual-calculator` "Paid sick leave — state mandate" accrual type (Nov 6 2026): 18 states + DC with per-hour divisor, annual cap and notes (`SICK_LEAVE_MANDATES`), hours used → remaining balance; 301 with `?type=sick`. State table, 4 FAQs and 2 examples moved into the PTO SEO file; `SRC.dolSickLeave` added.
+- [x] `holiday-countdown-calculator` → `business-day-calculator` third mode "Federal Holidays & Countdown" (Nov 6 2026): any year, observed dates from the existing OPM-rule generator, days from today, next holiday highlighted; 301 with `?mode=holidays`. Two FAQs and a countdown example added to the business-day SEO.
+- [x] `headcount-calculator` → `fte-calculator` "Headcount projection" tab (Nov 6 2026): departures on average headcount, backfills-to-stand-still, result in FTE at average weekly hours; 301 with `?mode=headcount`. FAQs/example moved; `headcount-calculator` related-tool link replaced with employee-turnover. (Phase 17 workforce-planning suite can absorb this tab later.)
 
 ### 15.2 Fix merge chains
 - [x] 16 `merged` entries targeted drafts; repointed to published pages (PR 2): attendance→time-card, replacement-cost→employee-turnover, workforce-capacity→fte, net-profit→profit-margin, contribution→gross-margin, split-commission + sales-target→commission, lead-cost→roi, client-profit + proposal-price + quote + estimate→billable-hours, free-to-paid-conversion→mrr, fifo + lifo + weighted-average-cost→cogs. `DRAFT_TARGET_FALLBACK` removed from `next.config.ts`; registry test ratchet is now empty.
 
 ### 15.3 Make the 30 state pages un-templated (they are the exact pattern the spam update hit)
-- [ ] Extend `StatePaycheckPage` with per-state unique sections: city/county minimum-wage tiers table; state-specific payroll programs (SDI/PFML/FAMLI/SUI employee share) explained with the official rate link; that state's overtime law (daily OT, 7th-day rules); local income taxes where they exist (NY, PA, MD, OH, IN, MI); 2026 changes vs 2025; a "what changes if you move to {neighbor state}" comparison generated from the engine.
-- [ ] Generated worked examples: vary scenarios per state (use the state's actual median hourly wage from BLS OEWS rather than the same $25/$32 everywhere).
-- [ ] Each state page gets ≥2 state-specific FAQs that don't exist on any other state page (checked by a uniqueness test).
+- [x] `src/lib/payroll/state-details.ts` (new, Nov 6 2026) holds per-state `medianHourlyWage`, `neighbors`, `localMinimumWages` table or `localMinimumWageNote` (pre-emption), `payrollPrograms` (rates imported from the engine), `localIncomeTax` (NY, PA, MI, IN, CO head tax, KY, OH, MD, MO, OR, IA surtax, NJ employer-only), `overtimeDetail` and `changes2026` bullets. `buildStatePaycheckSeo` renders them as: local-wage table (9 states), engine-generated neighbour comparison table + "Moving across the state line" section + FAQ, "Employee-paid payroll programs" section (9 states), "Local income taxes" section (11 states), "What changed in 2026" section (all). Layout now renders deep-dive `bullets` and table `note`.
+- [x] Worked examples now use the state minimum wage, the BLS OEWS May 2025 all-occupations median (annual ÷ 2,080; relayed via wagedex.com because bls.gov blocks non-browser clients — spot-check against the oesm25st file) and 1.25× median with overtime; the reference table also gets a "(Median)" row. (Nov 6 2026)
+- [x] `state-pages.test.ts` now fails on any duplicated FAQ question/answer, 2026-change bullet, overtime bullet, tax summary, minimum-wage note, worked-example title or local-wage row across the 30 states, and checks the neighbour table against the engine (238 tests). The first run caught 6 shared bullets and a one-FAQ state (IN); all fixed. (Nov 6 2026)
 - [ ] Only after 15.3 is live: add the remaining 20 states + DC to reach the 51 that PaycheckCity/SmartAsset offer, by population: AL, OK, CT, AR, MS, KS, NM, NE, WV, HI, NH, ME, MT, RI, DE, SD, ND, AK, VT, WY, DC.
 
 ### 15.4 Salary tier pages (`/salary/[slug]`, 30 pages)
@@ -404,8 +406,8 @@ Audited, enriched with 2026 `benchmarkTables` & `deepDiveSections`, and publishe
 2. **13.3 known defects + 15.2 merge chains**
 3. **14.1 / 14.2 registry split + typed SEO data**
 4. ~~**13.1 / 13.2 author, review dates, linked sources**~~ — done Nov 6 2026 (organisation-level authorship by owner decision)
-5. **15.3 state-page differentiation**
-6. **15.1 thin-page merges**
+5. ~~**15.3 state-page differentiation**~~ — done Nov 6 2026 (remaining 20 states + DC deferred until these 30 are re-indexed)
+6. ~~**15.1 thin-page merges**~~ — done Nov 6 2026 (8 slugs merged into 5 pages; 94 published calculators)
 7. **14.4 cleanup**
 8. Request re-indexing in GSC; wait for data
 9. **16.1 flagship features**

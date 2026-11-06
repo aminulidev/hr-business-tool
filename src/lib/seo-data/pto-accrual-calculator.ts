@@ -10,7 +10,7 @@ const seoData = {
     { id: 'related-calculators', label: 'Related Calculators' },
   ],
   howToSteps: [
-    'Choose your accrual type: "per hour worked" (most common for hourly employees), "per pay period" (common for salaried), or "annual lump sum" (common for executive plans).',
+    'Choose what you are accruing: PTO per hour worked (most common for hourly employees), PTO per pay period (common for salaried), an annual lump sum, or state-mandated paid sick leave — which fills in your state\'s accrual rate and annual cap for you.',
     'Enter your accrual rate. For per-hour: 0.0192 = 2 weeks/year (80 hours), 0.0385 = 4 weeks/year (160 hours), 0.0577 = 6 weeks/year (240 hours). For per-pay-period: enter the hours accrued each paycheck.',
     'Enter hours worked per week (typically 40) and your pay periods per year (weekly=52, bi-weekly=26, semi-monthly=24, monthly=12).',
     'Enter your current PTO balance in hours if you want to project your year-end balance.',
@@ -24,6 +24,8 @@ const seoData = {
     { title: 'Generous Tech Employer: 4 Weeks/Year', description: 'A software engineer at a generous tech employer earns 4 weeks (160 hours) per year. Accrual rate = 160 / 2080 = 0.0769. Per bi-weekly paycheck: 160 / 26 = 6.15 hours. Over 5 years, balance grows to 800 hours (100 days) if unused. Cash value at $50/hr = $8,000/year in accrued PTO.' },
     { title: 'Annual Lump-Sum Plan: 3 Weeks Granted', description: 'An executive receives 120 hours (15 days) of PTO granted at the start of each calendar year. No accrual calculation needed — they have 120 hours available from January 1. If they leave mid-year, employer may claw back pro-rata unused PTO. Cash value at $100/hr loaded = $12,000.' },
     { title: 'Tiered Accrual by Tenure', description: 'Many employers increase accrual rate with tenure. Years 1-2: 0.0385 (2 weeks). Years 3-5: 0.0577 (3 weeks). Years 6-10: 0.0769 (4 weeks). Years 10+: 0.0962 (5 weeks). A 7-year employee earns 4 weeks (160 hours) per year, worth $4,000 at $25/hr.' },
+    { title: 'California Paid Sick Leave: Full-Time, 16 Hours Used', description: 'A full-time California employee works 2,080 hours. At 1 hour per 30 worked that is 69.3 hours, but the law only requires 40 hours (5 days) a year, so the calculator caps the year\'s accrual at 40. With 16 hours used the remaining balance is 24 hours. Unused hours carry over, and the employer may cap the total balance at 80 hours.' },
+    { title: 'Washington Paid Sick Leave: 30 Hours a Week', description: 'A part-time worker in Washington averages 30 hours a week — 1,560 hours a year. Washington accrues 1 hour per 40 worked with no cap, so the year\'s accrual is 1,560 ÷ 40 = 39 hours. After 8 hours used, 31 hours remain; at least 40 hours must carry over into the next year.' },
     { title: 'Part-Time Worker: 25 hrs/week, 0.0385 Rate', description: 'A part-time employee working 25 hours/week at 0.0385 accrual rate earns 0.0385 × 25 × 52 = 50 hours/year (6.25 days). Per bi-weekly paycheck: 50/26 = 1.92 hours. At $15/hr, cash value = $750/year. Part-time PTO is typically pro-rated from the full-time rate.' },
   ],
   faqs: [
@@ -34,8 +36,42 @@ const seoData = {
     { question: 'Can my employer cap PTO accrual?', answer: 'Yes. Many employers cap the maximum PTO balance an employee can carry — typically 1.5x to 2x the annual accrual. Once the cap is reached, the employee stops accruing until they use some PTO. This is legal in most states. However, in California, "use-it-or-lose-it" policies are illegal — employers must either pay out unused PTO at year-end or allow unlimited carryover.' },
     { question: 'Is unused PTO paid out when I leave?', answer: 'Depends on state law and employer policy. California, Colorado, Illinois, Massachusetts, and several other states REQUIRE payout of all accrued PTO at termination. Most other states allow employers to set their own policy — typically either paying out accrued PTO or forfeiting it. Check your state\'s labor code and your employer\'s employee handbook.' },
     { question: 'What is the difference between PTO and vacation?', answer: 'PTO (Paid Time Off) is a single bank of paid leave that can be used for any reason — vacation, sick, personal, etc. Vacation is a specific type of paid leave for leisure travel. PTO plans became popular in the 2000s as a simpler alternative to separate vacation + sick + personal banks. PTO gives employees more flexibility but typically results in less total leave (since sick and personal are bundled into one bank).' },
+    { question: 'Which states require paid sick leave in 2026?', answer: 'Eighteen states and the District of Columbia: Arizona, California, Colorado, Connecticut, Illinois, Maine, Maryland, Massachusetts, Michigan, Minnesota, Nevada, New Jersey, New Mexico, New York, Oregon, Rhode Island, Vermont and Washington, plus DC. Most accrue 1 hour per 30 hours worked (Washington, Illinois and Maine use 1 per 40; Nevada and Vermont 1 per 52) with an annual cap of 40 to 72 hours. Cities such as Seattle, San Francisco, Chicago, Philadelphia and New York City layer stricter rules on top. There is no federal paid sick leave law.' },
+    { question: 'How is state sick leave accrual calculated?', answer: 'Hours worked ÷ the state\'s accrual divisor, capped at the annual limit. A full-time California worker (2,080 hours) earns 2,080 ÷ 30 = 69.3 hours but is only guaranteed 40 (employers may cap accrual at 80 hours of balance). In Washington the same worker earns 2,080 ÷ 40 = 52 hours with no statutory accrual cap. Choose the sick leave option above and your state to see the capped figure and your remaining balance after hours used.' },
+    { question: 'Does unused sick leave roll over or get paid out?', answer: 'In every mandate state unused hours carry over to the next year, though employers may cap use at the annual limit and often cap the balance (for example 80 hours in California). Payout at termination is not required for sick leave in any state — unlike vacation or PTO, which must be paid out in California, Colorado, Illinois, Massachusetts and several others. Some employers choose to cash out sick balances voluntarily.' },
+    { question: 'Is paid sick leave the same as FMLA or state paid family leave?', answer: 'No. FMLA is federal, unpaid and job-protected for up to 12 weeks at employers with 50+ employees. State paid sick leave is paid, short (40–72 hours a year) and earned through work. State paid family and medical leave insurance (California SDI/PFL, New York PFL, Washington PFML, Colorado FAMLI, Massachusetts PFML, Oregon, New Jersey, Connecticut, Minnesota from 2026, Maryland from 2027) replaces part of your wages for weeks of leave and is funded by payroll deductions.' },
     { question: 'How does unlimited PTO work?', answer: 'Unlimited PTO policies give employees discretion to take as much paid time off as they want, subject to manager approval. Pros: no accrual tracking, no payout liability at termination, employees feel trusted. Cons: studies show employees take LESS time off under unlimited policies (averaging 13 days vs. 17 days under traditional plans), and there is no accrued PTO to cash out at termination. Unlimited PTO is most common at tech startups and professional services firms.' },
   ],
+  benchmarkTables: [
+    {
+      title: 'State Paid Sick Leave Accrual Rates and Annual Caps (2026)',
+      subtitle: 'Statutory minimums used by the sick-leave option. Employer policies may be more generous; cities may require more.',
+      headers: ['State', 'Accrual', 'Annual cap (hours)', 'Notes'],
+      rows: [
+        ['Arizona', '1 hr per 30 worked', '40', '24 hours at employers with fewer than 15 employees'],
+        ['California', '1 hr per 30 worked', '40 (5 days)', 'Balance may be capped at 80 hours; front-loading allowed'],
+        ['Colorado', '1 hr per 30 worked', '48', 'Healthy Families and Workplaces Act'],
+        ['Connecticut', '1 hr per 30 worked', '40', 'Employers with 25+ employees in 2026; all employers from 2027'],
+        ['Illinois', '1 hr per 40 worked', '40', 'Paid Leave for All Workers Act — any reason'],
+        ['Maine', '1 hr per 40 worked', '40', 'Earned Paid Leave, any reason, employers with 10+ employees'],
+        ['Maryland', '1 hr per 30 worked', '40', 'Paid at employers with 15+ employees'],
+        ['Massachusetts', '1 hr per 30 worked', '40', 'Unpaid at employers with fewer than 11 employees'],
+        ['Michigan', '1 hr per 30 worked', '72', 'Earned Sick Time Act (Feb 2025); 40 hours paid at employers with 10 or fewer'],
+        ['Minnesota', '1 hr per 30 worked', '48', 'Earned Sick and Safe Time; balance up to 80 hours'],
+        ['Nevada', '0.01923 hr per hour (≈1 per 52)', '40', 'Employers with 50+ employees'],
+        ['New Jersey', '1 hr per 30 worked', '40', 'All employers'],
+        ['New Mexico', '1 hr per 30 worked', '64', 'Healthy Workplaces Act'],
+        ['New York', '1 hr per 30 worked', '40 / 56', '40 hours at 5–99 employees; 56 at 100+; unpaid at under 5'],
+        ['Oregon', '1 hr per 30 worked', '40', 'Unpaid at employers with fewer than 10 employees (6 in Portland)'],
+        ['Rhode Island', '1 hr per 35 worked', '40', 'Employers with 18+ employees'],
+        ['Vermont', '1 hr per 52 worked', '40', 'Earned Sick Time Act'],
+        ['Washington', '1 hr per 40 worked', 'No cap', 'At least 40 hours carry over'],
+        ['District of Columbia', '1 hr per 37 worked', '56', 'Rates scale down for employers under 100 employees'],
+      ],
+      note: 'Statutory floors as of 2026 for private-sector employees; verify current figures with the state labor agency, since several states index caps or phase in coverage.',
+    },
+  ],
+
   relatedTools: [
     { slug: 'time-card-calculator-with-lunch', title: 'Time Card Calculator with Lunch', description: 'Weekly timesheet with overtime', icon: 'Clock' },
     { slug: 'hourly-paycheck-calculator', title: 'Hourly Paycheck Calculator', description: 'Net take-home after taxes', icon: 'Wallet' },
@@ -43,7 +79,7 @@ const seoData = {
     { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Employer-side payroll calculation', icon: 'CreditCard' },
     { slug: 'salary-converter', title: 'Salary Converter', description: 'Convert pay between periods', icon: 'ArrowLeftRight' },
   ],
-  sources: [SRC.dolVacation],
+  sources: [SRC.dolVacation, SRC.dolSickLeave],
 } satisfies CalculatorSeoData;
 
 export default seoData;

@@ -424,7 +424,7 @@ export const payrollTaxesCalculators = defineCalculators([
     shortDescription:
       'Take-home pay for hourly workers in Washington using 2026 federal withholding, 0% state income tax, WA PFML, and WA Cares.',
     metaDescription:
-      'Free Washington hourly paycheck calculator for 2026. Enter your wage ($17.13+ min wage) and hours to see take-home pay with 0% state income tax, WA Paid Family Leave (0.57%), and WA Cares (0.58%).',
+      'Free Washington hourly paycheck calculator for 2026. Enter your wage ($17.13+ min wage) and hours to see take-home pay with 0% state income tax, WA Paid Family Leave (0.81%), and WA Cares (0.58%).',
     keywords: [
       'washington hourly paycheck calculator',
       'washington paycheck calculator',
@@ -516,11 +516,11 @@ export const payrollTaxesCalculators = defineCalculators([
     lastReviewed: '2026-11-06',
     reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'North Carolina Hourly Paycheck Calculator',
-    metaTitle: 'North Carolina Hourly Paycheck Calculator 2026 — 4.25% Flat State Tax',
+    metaTitle: 'North Carolina Hourly Paycheck Calculator 2026 — 3.99% Flat State Tax',
     shortDescription:
-      'Take-home pay for hourly workers in North Carolina using 2026 federal withholding and the 4.25% flat NC state tax rate.',
+      'Take-home pay for hourly workers in North Carolina using 2026 federal withholding and the 3.99% flat NC state tax rate (withheld at 4.09%).',
     metaDescription:
-      'Free North Carolina hourly paycheck calculator for 2026. Enter your hourly wage and hours to see take-home pay after federal tax, FICA, and the 4.25% flat NC state tax ($12,750 standard deduction).',
+      'Free North Carolina hourly paycheck calculator for 2026. Enter your hourly wage and hours to see take-home pay after federal tax, FICA, and the 3.99% flat NC state tax, withheld at 4.09% ($12,750 standard deduction).',
     keywords: [
       'north carolina hourly paycheck calculator',
       'north carolina paycheck calculator',
@@ -540,11 +540,11 @@ export const payrollTaxesCalculators = defineCalculators([
     lastReviewed: '2026-11-06',
     reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Georgia Hourly Paycheck Calculator',
-    metaTitle: 'Georgia Hourly Paycheck Calculator 2026 — 5.19% Flat State Tax',
+    metaTitle: 'Georgia Hourly Paycheck Calculator 2026 — 4.99% Flat State Tax',
     shortDescription:
-      'Take-home pay for hourly workers in Georgia using 2026 federal withholding and the 5.19% flat Georgia state income tax.',
+      'Take-home pay for hourly workers in Georgia using 2026 federal withholding and the 4.99% flat Georgia state income tax.',
     metaDescription:
-      'Free Georgia hourly paycheck calculator for 2026. Calculate net take-home pay after federal tax, FICA, and Georgia 5.19% flat state tax ($12,000 Single / $24,000 Married standard deduction).',
+      'Free Georgia hourly paycheck calculator for 2026. Calculate net take-home pay after federal tax, FICA, and the 4.99% flat Georgia state tax ($12,000 Single / $24,000 Married standard deduction).',
     keywords: [
       'georgia hourly paycheck calculator',
       'georgia paycheck calculator',
@@ -638,9 +638,9 @@ export const payrollTaxesCalculators = defineCalculators([
     title: 'Colorado Hourly Paycheck Calculator',
     metaTitle: 'Colorado Hourly Paycheck Calculator 2026 — 4.40% Tax & CO FAMLI ($15.16 Min)',
     shortDescription:
-      'Take-home pay for hourly workers in Colorado using 2026 federal withholding, 4.40% flat CO tax, and 0.45% CO FAMLI.',
+      'Take-home pay for hourly workers in Colorado using 2026 federal withholding, 4.40% flat CO tax, and 0.44% CO FAMLI.',
     metaDescription:
-      'Free Colorado hourly paycheck calculator for 2026. Enter your hourly rate ($15.16+ min wage) and hours to see net take-home pay after federal tax, 4.40% CO state tax, and 0.45% CO FAMLI.',
+      'Free Colorado hourly paycheck calculator for 2026. Enter your hourly rate ($15.16+ min wage) and hours to see net take-home pay after federal tax, 4.40% CO state tax, and 0.44% CO FAMLI.',
     keywords: [
       'colorado hourly paycheck calculator',
       'colorado paycheck calculator',
@@ -660,11 +660,11 @@ export const payrollTaxesCalculators = defineCalculators([
     lastReviewed: '2026-11-06',
     reviewNotes: 'State withholding verified by the payroll engine tests; worked examples and benchmark tables are generated from the same engine (state-pages.test.ts).',
     title: 'Utah Hourly Paycheck Calculator',
-    metaTitle: 'Utah Hourly Paycheck Calculator 2026 — 4.50% Flat Tax & Credit',
+    metaTitle: 'Utah Hourly Paycheck Calculator 2026 — 4.45% Flat Tax & Credit',
     shortDescription:
-      'Take-home pay for hourly workers in Utah using 2026 federal withholding and the 4.50% flat Utah state income tax with Taxpayer Tax Credit.',
+      'Take-home pay for hourly workers in Utah using 2026 federal withholding and the 4.45% flat Utah state income tax with Taxpayer Tax Credit.',
     metaDescription:
-      'Free Utah hourly paycheck calculator for 2026. Enter your hourly wage and hours to see net take-home pay after federal tax, FICA, and Utah 4.50% flat state tax with the 6% Taxpayer Tax Credit.',
+      'Free Utah hourly paycheck calculator for 2026. Enter your hourly wage and hours to see net take-home pay after federal tax, FICA, and Utah 4.45% flat state tax with the Taxpayer Tax Credit.',
     keywords: [
       'utah hourly paycheck calculator',
       'utah paycheck calculator',
