@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'PTO Accrual Calculator' }],
   tableOfContents: [
@@ -42,6 +43,7 @@ const seoData = {
     { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Employer-side payroll calculation', icon: 'CreditCard' },
     { slug: 'salary-converter', title: 'Salary Converter', description: 'Convert pay between periods', icon: 'ArrowLeftRight' },
   ],
+  sources: [SRC.dolVacation],
 } satisfies CalculatorSeoData;
 
 export default seoData;

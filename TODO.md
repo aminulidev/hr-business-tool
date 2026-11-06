@@ -228,15 +228,16 @@ Audited, enriched with 2026 `benchmarkTables` & `deepDiveSections`, and publishe
 ## Phase 13: Trust, Accuracy & E-E-A-T (recovery blocker #1)
 
 ### 13.1 Real author & review layer
-- [ ] Create `src/lib/authors.ts` — one real author profile (name, role, bio, photo, LinkedIn/X URL). No invented credentials. If no CPA/HR credential exists, say "Founder & developer, QuickBizCalc" and lean on *sources* for authority.
-- [ ] Add `/authors/[slug]` page + link from every calculator, blog post, salary page, and `/about`.
-- [ ] Extend `CalculatorMeta` with `lastReviewed: 'YYYY-MM-DD'` and `reviewNotes?: string`. Set a **real** date per calculator when its math is actually verified (Phase 13.3) — not a bulk timestamp.
-- [ ] `CalculatorLayoutServer.tsx`: render "Written by {author} · Reviewed {lastReviewed} · Tax year {TAX_YEAR}" header under the H1; add `author` (Person), `dateModified`, and `reviewedBy` to `WebAppJsonLd`; add `datePublished/dateModified` to blog JSON-LD.
-- [ ] Add an `/editorial-policy` page (how numbers are sourced, how often updated, correction policy) and link it from the footer and every "Statutory Sources" block.
+- [x] `src/lib/authors.ts` created (Nov 6 2026). **Decision (owner, Nov 6 2026): organisation-level authorship.** The only entry is `editorial-team` (`kind: 'organization'`, "QuickBizCalc Editorial Team", links to the site LinkedIn/X); bylines say "By QuickBizCalc Editorial Team" and JSON-LD `author`/`reviewedBy` are an Organization. No named person, no invented credentials. Upgrade path: recruit a real CPA/EA/SHRM reviewer who agrees to appear, add them as `kind: 'person'` with licence details and profile link, and point the paycheck pages at them as reviewer.
+- [x] No `/authors/[slug]` page (removed with the organisation decision). Bylines, the blog author box and `/about` link to `/editorial-policy#who`, which carries the team description and contact links. Revisit if a real named reviewer is added.
+- [x] `CalculatorMetaInput` gained `lastReviewed?`, `reviewNotes?`, `author?` (Nov 6 2026). Set on the 32 engine-backed pages only (`hourly-paycheck-calculator`, `payroll-calculator`, 30 state pages) with date 2026-11-06, because those are the ones whose math the golden/generated-content tests verify. `registry.test.ts` rejects a future date or a date without a note. The other 70 published pages get a date as Phase 13.3 verifies each one.
+- [x] `src/components/seo/Byline.tsx` renders "Written by · Reviewed · Tax year" under the H1 of calculators (tax year only for Payroll & Taxes), salary pages and blog posts. `WebAppJsonLd` now carries `author` (Person), `publisher`, `dateModified` + `reviewedBy` (when reviewed) and `citation` (the sources). Blog JSON-LD: Person author, `dateModified` (new optional `updated` frontmatter, falls back to `date`). Salary JSON-LD: WebPage node with author/dateModified (`SALARY_PAGES_REVIEWED`). (Nov 6 2026)
+- [x] `/editorial-policy` page (who writes, how numbers are sourced, what "Reviewed" means, update cadence, corrections within two business days, limits, advertising independence, use of AI tools) linked from the footer, the About page, every Sources block, the sidebar trust card and each "Reviewed" byline. (Nov 6 2026)
 
 ### 13.2 Linked, specific sources
-- [ ] Change `CalculatorSeoData.sources` from `string[]` to `{ label: string; url: string; accessed?: string }[]`. Every published calculator links to the exact IRS Publication / DOL page / state revenue page it relies on. Unlinked sources become a test failure (Phase 14.3).
-- [ ] State pages: link each state's actual withholding publication and minimum-wage statute (`src/lib/payroll/state-pages.ts` `sources`).
+- [x] `CalculatorSeoData.sources?: SeoSource[]` (`{ label, url, publisher?, note? }`) with shared constants in `src/lib/seo-data/sources.ts` (`SRC.irsPub15T`, `SRC.dolOvertime`, …, 55 entries). 48 SEO files + 30 state pages cite specific publications; the hardcoded IRS/DOL/SSA block is gone and the Sources section is **not rendered** on the 24 pure business-math pages (margin, ROI, CAC, churn…) rather than decorating them with irrelevant statutes. Tests: every source has a label and an https URL, no duplicates per page, every published Payroll & Taxes page cites ≥1 source, the 32 engine pages cite Pub. 15-T and the SSA wage base. (Nov 6 2026)
+- [ ] Link check: `dol.gov`, `ssa.gov`, `bls.gov`, `mass.gov` and several state sites return 403 to non-browser clients, so the Nov 6 curl pass could verify 62 of the 129 candidate URLs; the rest are well-known agency pages used as-is. Re-check the 403/000 set in a browser (or add a monthly link-check job) before relying on them.
+- [x] `STATE_PAYCHECK_PAGES[code].sources` is now `SeoSource[]`: each state links its revenue department withholding publication, its labor agency minimum-wage page (DOL state table where the state has no law of its own) and any SDI/PFL/FAMLI program page; `buildStatePaycheckSeo` prepends `FEDERAL_PAYCHECK_SOURCES`. (Nov 6 2026)
 
 ### 13.3 Math & copy audit of every published page (102)
 - [ ] Known defects to fix first (found in competitor review of the live hourly paycheck page):
@@ -251,8 +252,8 @@ Audited, enriched with 2026 `benchmarkTables` & `deepDiveSections`, and publishe
 
 ### 13.4 Policy/approval hygiene
 - [ ] Confirm no invented reviewer names remain anywhere (grep for CPA/SPHR shows only generic mentions as of Nov 6 2026 — keep it that way).
-- [ ] Blog: every post has a real `date`; no auto-rotating dates. Add author + `dateModified` to blog frontmatter and JSON-LD.
-- [ ] `/about` and `/contact` describe a real operator, real email, real response policy.
+- [~] Blog: every post has a real `date` (frontmatter). JSON-LD now has a Person author and `dateModified` (Nov 6 2026). Remaining: the 39 posts' frontmatter `author: "QuickBizCalc Team"` is a display label only; add `updated:` when a post is revised.
+- [x] `/about` describes the team and links the editorial policy; `/contact` already describes the team, real email and 48-hour response policy (Nov 6 2026).
 
 ---
 
@@ -402,7 +403,7 @@ Audited, enriched with 2026 `benchmarkTables` & `deepDiveSections`, and publishe
 1. **14.3 tests + CI** (so everything after is checked)
 2. **13.3 known defects + 15.2 merge chains**
 3. **14.1 / 14.2 registry split + typed SEO data**
-4. **13.1 / 13.2 author, review dates, linked sources**
+4. ~~**13.1 / 13.2 author, review dates, linked sources**~~ — done Nov 6 2026 (organisation-level authorship by owner decision)
 5. **15.3 state-page differentiation**
 6. **15.1 thin-page merges**
 7. **14.4 cleanup**

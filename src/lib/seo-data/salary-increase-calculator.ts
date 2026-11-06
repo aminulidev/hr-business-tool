@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [
         { label: 'Calculators' },
@@ -86,6 +87,7 @@ const seoData = {
             'A raise could push you into a higher marginal tax bracket, but a common misconception is that your entire salary gets taxed at the new higher rate. In reality, only the income that falls above the bracket threshold is taxed at the higher rate, while income below it continues to be taxed at the lower rates. For example, if you earn $50,000 and get a raise to $55,000, only the $5,000 above the bracket threshold is taxed at the higher marginal rate, not the full $55,000.',
         },
       ],
+  sources: [SRC.blsEci],
 } satisfies CalculatorSeoData;
 
 export default seoData;

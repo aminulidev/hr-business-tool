@@ -13,6 +13,8 @@ import { getCategoryHubByName } from '@/lib/category-hubs';
 import CalculatorLayoutServer from '@/components/calculators/CalculatorLayoutServer';
 import { calculatorComponents } from '@/lib/registry/components';
 import type { CalculatorSeoData } from '@/lib/seo-data/types';
+import { getAuthor } from '@/lib/authors';
+import { TAX_YEAR } from '@/lib/payroll/withholding-2026';
 
 export function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -43,7 +45,7 @@ export function generateMetadata({
       title: title.length > 48 ? { absolute: title } : title,
       description: calc.metaDescription,
       keywords: calc.keywords,
-      authors: [{ name: SITE_NAME, url: SITE_URL }],
+      authors: [{ name: getAuthor(calc.author).name, url: `${SITE_URL}${getAuthor(calc.author).path}` }],
       creator: SITE_NAME,
       publisher: SITE_NAME,
       robots: {
@@ -113,6 +115,10 @@ export default async function CalculatorPage({
   }
   const relatedTools = getLiveRelatedTools(seoData?.relatedTools, slug);
   const categoryHub = getCategoryHubByName(calc.category);
+  const author = getAuthor(calc.author);
+  const hasSources = (seoData?.sources?.length ?? 0) > 0;
+  // Only tax/paycheck pages depend on a tax year; business math does not
+  const taxYear = calc.category === 'Payroll & Taxes' ? TAX_YEAR : undefined;
 
   return (
     <AppShell>
@@ -135,7 +141,7 @@ export default async function CalculatorPage({
             ...((seoData.benchmarkTables?.length ?? 0) > 0 ? [{ id: 'benchmarks-reference', label: 'Benchmarks & Tables' }] : []),
             ...((seoData.deepDiveSections?.length ?? 0) > 0 ? [{ id: 'in-depth-guide', label: 'In-Depth Guide' }] : []),
             ...(seoData.faqs?.length > 0 ? [{ id: 'frequently-asked-questions', label: 'FAQs' }] : []),
-            { id: 'statutory-sources', label: 'Statutory Sources' },
+            ...(hasSources ? [{ id: 'statutory-sources', label: 'Sources & References' }] : []),
             ...(relatedTools.length > 0 ? [{ id: 'related-calculators', label: 'Related Calculators' }] : []),
           ]}
           howToSteps={seoData.howToSteps}
@@ -147,6 +153,11 @@ export default async function CalculatorPage({
           deepDiveSections={seoData.deepDiveSections}
           faqs={seoData.faqs}
           relatedTools={relatedTools}
+          sources={seoData.sources}
+          author={author}
+          lastReviewed={calc.lastReviewed}
+          reviewNotes={calc.reviewNotes}
+          taxYear={taxYear}
         >
           <CalculatorComponent />
         </CalculatorLayoutServer>

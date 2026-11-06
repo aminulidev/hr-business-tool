@@ -11,6 +11,8 @@ import {
   type CalculatorMeta,
 } from './calculator-meta';
 import { iconMap } from './registry/icons';
+import { AUTHORS, type Author } from './authors';
+import { SRC } from './seo-data/sources';
 
 // ---------------------------------------------------------------------------
 // Registry invariants. `calculator-meta.ts` is the single source of truth and
@@ -172,5 +174,90 @@ describe('ratchets — known defects that must not grow (see TODO.md Roadmap v2)
     const badSlugs = bad.map((b) => b.split(' ')[0]);
     expectNone(bad.filter((b) => !KNOWN.has(b.split(' ')[0])), 'new merged→unpublished chains');
     expectNone([...KNOWN].filter((s) => !badSlugs.includes(s)), 'fixed chains still listed in KNOWN');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 13.1 / 13.2 — trust layer. Review dates must be real and backed by a
+// note; sources must be specific, linked publications; every tax/paycheck page
+// must cite at least one.
+// ---------------------------------------------------------------------------
+describe('trust layer (Phase 13)', () => {
+  const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+  it('lastReviewed is a real past date with a review note, and author is a known profile', () => {
+    const today = new Date().toISOString().slice(0, 10);
+    const problems: string[] = [];
+    for (const c of all) {
+      if (c.lastReviewed !== undefined) {
+        if (!ISO_DATE.test(c.lastReviewed) || Number.isNaN(new Date(c.lastReviewed).getTime())) problems.push(`${c.slug}: lastReviewed "${c.lastReviewed}" is not YYYY-MM-DD`);
+        if (c.lastReviewed > today) problems.push(`${c.slug}: lastReviewed ${c.lastReviewed} is in the future`);
+        if (!c.reviewNotes?.trim()) problems.push(`${c.slug}: lastReviewed without reviewNotes`);
+      }
+      if (c.author !== undefined && !(c.author in AUTHORS)) problems.push(`${c.slug}: unknown author "${c.author}"`);
+    }
+    expectNone(problems);
+  });
+
+  it('authorship is organisation-level until a real, named reviewer is added', () => {
+    // Option 2 chosen Nov 6 2026: no named persons, no invented credentials.
+    const authors: Author[] = Object.values(AUTHORS);
+    for (const a of authors) {
+      if (a.kind === 'person') {
+        expect(a.links.length, `${a.slug}: a named person needs a verifiable profile link`).toBeGreaterThan(0);
+        expect(/CPA|EA|SHRM|HRCI|PHR|JD|Esq/i.test(a.role) ? a.bio : 'ok', `${a.slug}: credentials must be explained in the bio`).toBeTruthy();
+      }
+    }
+    expect(AUTHORS['editorial-team'].kind).toBe('organization');
+  });
+
+  it('every source is a labelled https link to a specific publication', async () => {
+    const problems: string[] = [];
+    for (const c of published) {
+      const seo = await loadSeo(c.slug);
+      if (!seo?.sources) continue;
+      const seen = new Set<string>();
+      for (const s of seo.sources as { label?: string; url?: string }[]) {
+        if (!s.label?.trim()) problems.push(`${c.slug}: source without label`);
+        if (!s.url || !/^https:\/\/[^\s]+$/.test(s.url)) problems.push(`${c.slug}: "${s.label}" has no https url`);
+        else if (seen.has(s.url)) problems.push(`${c.slug}: duplicate source url ${s.url}`);
+        if (s.url) seen.add(s.url);
+      }
+    }
+    expectNone(problems);
+  });
+
+  it('every published Payroll & Taxes calculator cites at least one source', async () => {
+    const missing: string[] = [];
+    for (const c of published.filter((x) => x.category === 'Payroll & Taxes')) {
+      const seo = await loadSeo(c.slug);
+      if (!seo?.sources?.length) missing.push(c.slug);
+    }
+    expectNone(missing, 'tax pages without sources');
+  });
+
+  it('engine-backed paycheck pages carry a review date and cite the federal withholding sources', async () => {
+    const problems: string[] = [];
+    const engineSlugs = published.filter((c) => c.slug === 'hourly-paycheck-calculator' || c.slug === 'payroll-calculator' || /-hourly-paycheck-calculator$/.test(c.slug));
+    expect(engineSlugs.length).toBe(32);
+    for (const c of engineSlugs) {
+      if (!c.lastReviewed) problems.push(`${c.slug}: no lastReviewed`);
+      const seo = await loadSeo(c.slug);
+      const urls = new Set((seo?.sources ?? []).map((s: { url: string }) => s.url));
+      if (!urls.has(SRC.irsPub15T.url)) problems.push(`${c.slug}: does not cite IRS Pub. 15-T`);
+      if (!urls.has(SRC.ssaCola.url)) problems.push(`${c.slug}: does not cite the SSA wage base`);
+    }
+    expectNone(problems);
+  });
+
+  it('state paycheck pages cite their own state agency, not only federal sources', async () => {
+    const problems: string[] = [];
+    for (const c of published.filter((x) => /-hourly-paycheck-calculator$/.test(x.slug))) {
+      const seo = await loadSeo(c.slug);
+      const federal = new Set(Object.values(SRC).map((s) => s.url));
+      const stateSpecific = (seo?.sources ?? []).filter((s: { url: string }) => !federal.has(s.url));
+      if (stateSpecific.length === 0) problems.push(`${c.slug}: no state-specific source`);
+    }
+    expectNone(problems);
   });
 });

@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 import type { Category } from './site';
+import type { AuthorSlug } from '@/lib/authors';
 
 export type CalculatorStatus = 'published' | 'draft' | 'scheduled' | 'merged';
 export type CalculatorTier = 'tier1' | 'tier2' | 'tier3';
@@ -27,6 +28,16 @@ export interface CalculatorMetaInput {
   publishDate?: string;
   /** Required when status is 'merged' — the published page that absorbed this one */
   mergedInto?: string;
+  /**
+   * YYYY-MM-DD of the last time this calculator's math was actually verified
+   * against its sources (Phase 13.3). Leave unset until that happens — a bulk
+   * timestamp is worse than none. Rendered in the byline and as dateModified.
+   */
+  lastReviewed?: string;
+  /** What was checked on lastReviewed, one sentence */
+  reviewNotes?: string;
+  /** Defaults to DEFAULT_AUTHOR_SLUG in src/lib/authors.ts */
+  author?: AuthorSlug;
 }
 
 /**

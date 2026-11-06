@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Business Valuation Calculator' }],
   tableOfContents: [
@@ -88,6 +89,7 @@ const seoData = {
     { slug: 'net-revenue-retention-calculator', title: 'Net Revenue Retention Calculator', description: 'Measure cohort NRR to benchmark SaaS valuation multiples', icon: 'Activity' },
     { slug: 'depreciation-calculator', title: 'Depreciation Calculator', description: 'Calculate book and accelerated asset depreciation add-backs', icon: 'Layers' },
   ],
+  sources: [SRC.secNonGaap],
 } satisfies CalculatorSeoData;
 
 export default seoData;

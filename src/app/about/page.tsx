@@ -3,6 +3,7 @@ import LegalPageLayout from '@/components/layout/LegalPageLayout';
 import AppShell from '@/components/layout/AppShell';
 import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from '@/lib/calculator-meta';
 import Link from 'next/link';
+import { getAuthor } from '@/lib/authors';
 
 export const metadata: Metadata = {
   title: 'About Us',
@@ -44,9 +45,14 @@ export default function AboutPage() {
           <h2 className="text-xl font-semibold text-foreground pt-4">Who Runs QuickBizCalc</h2>
           <p>
             QuickBizCalc is an independent website built and maintained by a small team of software developers.
-            We are not accountants or lawyers, and we do not claim to be. What we do is read the primary sources,
-            such as IRS Publication 15-T, Department of Labor FLSA guidance, and state withholding publications,
-            and turn the published formulas into calculators you can run in your browser.
+            We are not accountants or lawyers, and we do not claim to be. What we do is read the
+            primary sources, such as IRS Publication 15-T, Department of Labor FLSA guidance, and state withholding
+            publications, and turn the published formulas into calculators you can run in your browser. How sources are
+            chosen, what a &ldquo;Reviewed&rdquo; date means and how errors are corrected is set out in our{' '}
+            <Link href="/editorial-policy" className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2">
+              editorial policy
+            </Link>
+            .
           </p>
           <p>
             Every calculator page lists the publications its formula comes from, and the worked examples on our
@@ -124,8 +130,13 @@ export default function AboutPage() {
 
           <h2 className="text-xl font-semibold text-foreground pt-4">Editorial Policy &amp; Independence</h2>
           <p>
-            Our educational articles, guides, and calculation notes are authored with editorial independence. We do not accept sponsored content 
-            or third-party compensation that compromises the accuracy or integrity of our calculations.
+            Our educational articles, guides, and calculation notes are authored with editorial independence. We do not accept sponsored content
+            or third-party compensation that compromises the accuracy or integrity of our calculations. The full policy, including
+            sourcing rules, review dates and the correction process, is published at{' '}
+            <Link href="/editorial-policy" className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2">
+              /editorial-policy
+            </Link>
+            .
           </p>
 
           <h2 className="text-xl font-semibold text-foreground pt-4">Privacy and Data Protection</h2>

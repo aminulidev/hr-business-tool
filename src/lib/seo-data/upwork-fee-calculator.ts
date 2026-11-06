@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Upwork Fee Calculator' }],
   tableOfContents: [
@@ -79,5 +80,6 @@ const seoData = {
     { slug: 'commission-calculator', title: 'Commission Calculator', description: 'Percentage fee & commission math', icon: 'BadgeDollarSign' },
     { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Net profit margin after platform fees', icon: 'BarChart3' },
   ],
+  sources: [SRC.upworkFees, SRC.irsSelfEmploymentTax],
 } satisfies CalculatorSeoData;
 export default seoData;

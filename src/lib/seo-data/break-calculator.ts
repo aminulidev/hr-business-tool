@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Break Calculator' }],
   tableOfContents: [
@@ -39,5 +40,6 @@ const seoData = {
     { slug: 'shift-hours-calculator', title: 'Shift Hours Calculator', description: '8/10/12 hour shift calc', icon: 'CalendarClock' },
     { slug: 'overtime-calculator', title: 'Overtime Calculator', description: 'OT triggered by long shifts', icon: 'Timer' },
   ],
+  sources: [SRC.dolBreaks, SRC.cfr785_18, SRC.dolStateMealBreaks],
 } satisfies CalculatorSeoData;
 export default seoData;

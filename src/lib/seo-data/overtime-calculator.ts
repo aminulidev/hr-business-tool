@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   // ---------------------------------------------------------------------------
 // How-to steps
@@ -94,7 +95,7 @@ faqs: [
       icon: 'Coffee',
     },
   ],
-
+  sources: [SRC.dolOvertime, SRC.dolFactSheet23, SRC.cfr778],
 } satisfies CalculatorSeoData;
 
 export default seoData;

@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Self-Employment Tax Calculator' }],
   tableOfContents: [
@@ -118,6 +119,7 @@ const seoData = {
     { slug: 'w-2-calculator', title: 'W-2 Paycheck Calculator', description: 'Itemize paycheck withholdings, federal tax, state tax, and net take-home pay', icon: 'FileText' },
     { slug: 'state-tax-calculator', title: 'State Tax Calculator', description: 'State income tax liabilities across all 50 US states with relocation comparisons', icon: 'MapPin' },
   ],
+  sources: [SRC.irsSelfEmploymentTax, SRC.irsScheduleSE, SRC.ssaCola, SRC.irsTopic560],
 } satisfies CalculatorSeoData;
 
 export default seoData;

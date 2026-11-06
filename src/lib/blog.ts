@@ -9,6 +9,8 @@ interface PostFrontmatter {
   title: string;
   /** Publish date from the markdown frontmatter, YYYY-MM-DD */
   date: string;
+  /** Optional revision date, YYYY-MM-DD; used as dateModified when present */
+  updated?: string;
   excerpt: string;
   author: string;
   category: string;

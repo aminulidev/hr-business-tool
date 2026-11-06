@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Workers Comp Calculator' }],
   tableOfContents: [
@@ -42,5 +43,6 @@ const seoData = {
     { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Evaluate return on safety programs', icon: 'BarChart3' },
     { slug: 'overtime-calculator', title: 'Overtime Calculator', description: 'Overtime adds to workers comp basis', icon: 'Timer' },
   ],
+  sources: [SRC.ncci, SRC.dolOwcp],
 } satisfies CalculatorSeoData;
 export default seoData;

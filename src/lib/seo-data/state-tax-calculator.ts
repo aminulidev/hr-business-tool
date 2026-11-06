@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'State Tax Calculator' }],
   tableOfContents: [
@@ -118,6 +119,7 @@ const seoData = {
       icon: 'Shield',
     },
   ],
+  sources: [SRC.taxFoundationStateIncome, SRC.ftaStateAgencies],
 } satisfies CalculatorSeoData;
 
 export default seoData;
