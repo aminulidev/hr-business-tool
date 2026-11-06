@@ -3,31 +3,15 @@ import { calculators, isCalculatorPublished, resolveMergedCalculator } from './s
 
 // ---------------------------------------------------------------------------
 // Redirects for calculators that were merged into another page.
+// Every `mergedInto` chain must end at a published page — enforced by
+// src/lib/registry.test.ts — so the homepage fallback below should never fire.
 // ---------------------------------------------------------------------------
-const DRAFT_TARGET_FALLBACK: Record<string, string> = {
-  'absenteeism-calculator': '/calculators/employee-hours-calculator',
-  'cost-of-turnover-calculator': '/calculators/employee-turnover-calculator',
-  'employee-cost-calculator': '/calculators/payroll-calculator',
-  'workforce-planning-calculator': '/calculators/employee-hours-calculator',
-  'net-margin-calculator': '/calculators/profit-margin-calculator',
-  'contribution-margin-calculator': '/calculators/gross-margin-calculator',
-  'commission-split-calculator': '/calculators/commission-calculator',
-  'quota-calculator': '/calculators/commission-calculator',
-  'cpl-calculator': '/calculators/roi-calculator',
-  'project-pricing-calculator': '/calculators/billable-hours-calculator',
-  'trial-conversion-calculator': '/calculators/roi-calculator',
-  'clock-out-calculator': '/calculators/time-card-calculator',
-  'profit-per-client-calculator': '/calculators/billable-hours-calculator',
-};
-
 function mergedCalculatorRedirects() {
   return calculators
     .filter((c) => c.status === 'merged')
     .map((c) => {
       const target = resolveMergedCalculator(c);
-      const destination = isCalculatorPublished(target)
-        ? target.path
-        : DRAFT_TARGET_FALLBACK[target.slug] ?? '/';
+      const destination = isCalculatorPublished(target) ? target.path : '/';
       return { source: c.path, destination, permanent: true };
     })
     .filter((r) => r.source !== r.destination);

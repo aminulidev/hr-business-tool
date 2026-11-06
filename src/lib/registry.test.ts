@@ -156,8 +156,8 @@ describe('ratchets — known defects that must not grow (see TODO.md Roadmap v2)
   };
 
   it('13.3 — metaTitle describes the same calculator as title/slug', () => {
-    // Known: commission-calculator ships a Churn Rate metaTitle (calculator-meta.ts ~L417)
-    const KNOWN = ['commission-calculator'];
+    // Empty since PR 2 (Nov 2026). Add a slug here only with a TODO.md item to fix it.
+    const KNOWN: string[] = [];
     const bad = published
       .filter((c) => c.metaTitle)
       .filter((c) => {
@@ -171,25 +171,9 @@ describe('ratchets — known defects that must not grow (see TODO.md Roadmap v2)
     expectNone(KNOWN.filter((s) => !badSlugs.includes(s)), 'fixed defects still listed in KNOWN');
   });
 
-  it('15.2 — merged slugs resolve to a PUBLISHED page (today they fall back to DRAFT_TARGET_FALLBACK)', () => {
-    const KNOWN = new Set([
-      'attendance-calculator',
-      'replacement-cost-calculator',
-      'workforce-capacity-calculator',
-      'net-profit-calculator',
-      'contribution-calculator',
-      'split-commission-calculator',
-      'sales-target-calculator',
-      'lead-cost-calculator',
-      'client-profit-calculator',
-      'proposal-price-calculator',
-      'quote-calculator',
-      'estimate-calculator',
-      'free-to-paid-conversion-calculator',
-      'fifo-calculator',
-      'lifo-calculator',
-      'weighted-average-cost-calculator',
-    ]);
+  it('15.2 — merged slugs resolve to a PUBLISHED page (next.config.ts redirects there)', () => {
+    // Empty since PR 2 (Nov 2026). A merged slug may only point at a published page.
+    const KNOWN = new Set<string>([]);
     const bad = merged
       .filter((c) => !isCalculatorPublished(resolveMergedCalculator(c)))
       .map((c) => `${c.slug} → ${resolveMergedCalculator(c).slug} (${resolveMergedCalculator(c).status})`);

@@ -414,10 +414,10 @@ export const calculators: CalculatorMeta[] = [
     slug: 'commission-calculator',
     status: 'published',
     title: 'Sales Commission Calculator',
-    metaTitle: 'Churn Rate Calculator (2026) — Customer Logo & MRR Revenue Churn',
+    metaTitle: 'Free Sales Commission Calculator 2026 — Flat, Tiered & Quota Plans',
     shortDescription:
       'Calculate take-home commission from flat rates, tiered structures, and quota-based plans with deductions and visual charts.',
-    metaDescription: 'Free SaaS & Subscription Churn Rate Calculator: calculate monthly and compound annual customer logo churn, gross MRR revenue churn, and retention rate.',
+    metaDescription: 'Free sales commission calculator for 2026: flat-rate, tiered, and quota-based plans with accelerators, splits, base salary, and deductions. See gross and net commission instantly with charts.',
     keywords: [
       'commission calculator',
       'sales commission calculator',
@@ -2628,7 +2628,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'attendance-calculator',
     status: 'merged',
-    mergedInto: 'absenteeism-calculator',
+    mergedInto: 'time-card-calculator',
     title: 'Attendance Calculator',
     metaTitle: 'Free Attendance Calculator 2026 — Track Attendance Rate & Absences',
     shortDescription:
@@ -3530,7 +3530,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'replacement-cost-calculator',
     status: 'merged',
-    mergedInto: 'cost-of-turnover-calculator',
+    mergedInto: 'employee-turnover-calculator',
     title: 'Replacement Cost Calculator',
     metaTitle: 'Free Replacement Cost Calculator 2026 — Cost to Replace Employee',
     shortDescription:
@@ -3728,7 +3728,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'workforce-capacity-calculator',
     status: 'merged',
-    mergedInto: 'workforce-planning-calculator',
+    mergedInto: 'fte-calculator',
     title: 'Workforce Capacity Calculator',
     metaTitle: 'Free Workforce Capacity Calculator 2026 — Max Output per FTE',
     shortDescription:
@@ -4120,7 +4120,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'net-profit-calculator',
     status: 'merged',
-    mergedInto: 'net-margin-calculator',
+    mergedInto: 'profit-margin-calculator',
     title: 'Net Profit Calculator',
     metaTitle: 'Free Net Profit Calculator 2026 — Net Income Calculation',
     shortDescription:
@@ -4807,7 +4807,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'contribution-calculator',
     status: 'merged',
-    mergedInto: 'contribution-margin-calculator',
+    mergedInto: 'gross-margin-calculator',
     title: 'Contribution Calculator',
     metaTitle: 'Free Contribution Calculator 2026 — Total Contribution Margin',
     shortDescription:
@@ -4864,7 +4864,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'split-commission-calculator',
     status: 'merged',
-    mergedInto: 'commission-split-calculator',
+    mergedInto: 'commission-calculator',
     title: 'Split Commission Calculator',
     metaTitle: 'Free Split Commission Calculator 2026 — Multi-Rep Deal Split',
     shortDescription:
@@ -4924,7 +4924,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'sales-target-calculator',
     status: 'merged',
-    mergedInto: 'quota-calculator',
+    mergedInto: 'commission-calculator',
     title: 'Sales Target Calculator',
     metaTitle: 'Free Sales Target Calculator 2026 — Revenue & Unit Goals',
     shortDescription:
@@ -5173,7 +5173,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'lead-cost-calculator',
     status: 'merged',
-    mergedInto: 'cpl-calculator',
+    mergedInto: 'roi-calculator',
     title: 'Lead Cost Calculator',
     metaTitle: 'Free Lead Cost Calculator 2026 — Cost Per Lead by Channel',
     shortDescription:
@@ -5655,7 +5655,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'client-profit-calculator',
     status: 'merged',
-    mergedInto: 'profit-per-client-calculator',
+    mergedInto: 'billable-hours-calculator',
     title: 'Client Profit Calculator',
     metaTitle: 'Free Client Profit Calculator 2026 — Profit Per Client Account',
     shortDescription:
@@ -5710,7 +5710,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'proposal-price-calculator',
     status: 'merged',
-    mergedInto: 'project-pricing-calculator',
+    mergedInto: 'billable-hours-calculator',
     title: 'Proposal Price Calculator',
     metaTitle: 'Free Proposal Price Calculator 2026 — RFP & Bid Pricing',
     shortDescription:
@@ -5933,7 +5933,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'quote-calculator',
     status: 'merged',
-    mergedInto: 'project-pricing-calculator',
+    mergedInto: 'billable-hours-calculator',
     title: 'Quote Calculator',
     metaTitle: 'Free Quote Calculator 2026 — Client Quote Generator',
     shortDescription:
@@ -5961,7 +5961,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'estimate-calculator',
     status: 'merged',
-    mergedInto: 'project-pricing-calculator',
+    mergedInto: 'billable-hours-calculator',
     title: 'Estimate Calculator',
     metaTitle: 'Free Estimate Calculator 2026 — Project Time & Cost Estimate',
     shortDescription:
@@ -6071,7 +6071,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'free-to-paid-conversion-calculator',
     status: 'merged',
-    mergedInto: 'trial-conversion-calculator',
+    mergedInto: 'mrr-calculator',
     title: 'Free-to-Paid Conversion Calculator',
     metaTitle: 'Free Free-to-Paid Conversion Calculator 2026 — Freemium',
     shortDescription: 'Calculate free-to-paid conversion rate for freemium SaaS. Benchmark: 2-5%.',
@@ -6308,7 +6308,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'fifo-calculator',
     status: 'merged',
-    mergedInto: 'inventory-valuation-calculator',
+    mergedInto: 'cogs-calculator',
     title: 'FIFO Calculator',
     metaTitle: 'Free FIFO Calculator 2026 — First In First Out Inventory',
     shortDescription: 'Calculate COGS and ending inventory using FIFO (first in, first out) method.',
@@ -6319,7 +6319,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'lifo-calculator',
     status: 'merged',
-    mergedInto: 'inventory-valuation-calculator',
+    mergedInto: 'cogs-calculator',
     title: 'LIFO Calculator',
     metaTitle: 'Free LIFO Calculator 2026 — Last In First Out Inventory',
     shortDescription: 'Calculate COGS and ending inventory using LIFO (last in, first out) method.',
@@ -6330,7 +6330,7 @@ export const calculators: CalculatorMeta[] = [
   {
     slug: 'weighted-average-cost-calculator',
     status: 'merged',
-    mergedInto: 'inventory-valuation-calculator',
+    mergedInto: 'cogs-calculator',
     title: 'Weighted Average Cost Calculator',
     metaTitle: 'Free Weighted Average Cost Calculator 2026 — WAC Inventory',
     shortDescription: 'Calculate weighted average cost per unit for inventory valuation.',
