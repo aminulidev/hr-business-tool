@@ -1,0 +1,85 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## What this is
+
+QuickBizCalc (`www.quickbizcalc.com`) — a Next.js 16 App Router site of ~100 published US business/HR/payroll calculators, built for SEO traffic and AdSense. There is no README; `TODO.md` is the running project log (phases completed, GSC metrics, what each phase touched) and is the best place to understand recent work and intent.
+
+## Commands
+
+```bash
+npm run dev      # next dev on :3000, output tee'd to dev.log (dev.log is tracked — don't commit noise from it)
+npm run build    # next build — TypeScript errors fail the build (ignoreBuildErrors: false)
+npm run lint     # eslint . (most rules are disabled in eslint.config.mjs; lint is not a meaningful gate)
+npm run start    # bun .next/standalone/server.js — production uses bun; note next.config.ts does NOT set output: 'standalone'
+```
+
+There are no tests and no test runner. `npm run build` is the real verification step: it runs `generateStaticParams` for every published calculator, category hub, and salary page, and type-checks everything. Three lockfiles exist (bun, pnpm, npm); any of them installs fine.
+
+Production sits behind Caddy (`Caddyfile`, port 81 → localhost:3000). `.env` holds `RESEND_API_KEY` (contact form) and `DATABASE_URL` (currently unused — there is no DB; feedback/newsletter append to `data/*.jsonl`).
+
+## Architecture: the calculator registry drives everything
+
+`src/lib/calculator-meta.ts` is the single source of truth. Every calculator is a `CalculatorMeta` entry in the `calculators` array with a `slug` (also a member of the `CalculatorSlug` union type), SEO fields, `category`, `tier`, and a `status`:
+
+- `published` — live, in sitemap, statically generated.
+- `draft` — exists in registry but returns 404 (`dynamicParams = false`, so unknown/draft slugs are real 404s).
+- `scheduled` — live once `publishDate` passes.
+- `merged` — absorbed into another page; `mergedInto` is required. `next.config.ts` auto-generates 301 redirects from merged slugs to their target (with a hardcoded `DRAFT_TARGET_FALLBACK` when the target itself is unpublished).
+
+Helpers `isCalculatorPublished`, `getPublishedCalculators`, `resolveMergedCalculator`, and `getLiveRelatedTools` are used by the sitemap, hub page, search, category hubs, and related-tools lists so nothing links to a dead page.
+
+### Adding or publishing a calculator — four places must agree
+
+1. **Registry**: add/flip the entry in `src/lib/calculator-meta.ts` (and the slug to `CalculatorSlug`).
+2. **Component**: `src/components/calculators/<Name>Calculator.tsx` (client component).
+3. **Component maps (two of them)**: `src/app/calculators/[slug]/page.tsx` `componentMap` AND `src/app/calculators/[slug]/embed/page.tsx` both map slug → `dynamic(() => import(...))`. They are maintained by hand and must stay in sync. A published slug missing from `componentMap` 404s.
+4. **SEO content**: `src/lib/seo-data/<slug>.ts` with a `default` export. The page does `await import(\`@/lib/seo-data/${slug}\`)` at render time; if the file is missing the calculator renders bare (no article, no FAQ schema, no breadcrumbs). Shape is `{ howToSteps, formula, formulaDescription, workedExamples, benchmarkTables, deepDiveSections, faqs, relatedTools }` — see `CalculatorLayoutProps` in `CalculatorLayoutServer.tsx`. `relatedTools[].icon` is a string lucide name resolved via `iconMap` in that file; a new icon must be added to that map (and the one in `CalculatorLayout.tsx`).
+
+### Page composition
+
+`/calculators/[slug]/page.tsx` → `AppShell` → `CalculatorLayoutServer` (server component: breadcrumbs, TOC, article sections, FAQ/HowTo/WebApplication/Breadcrumb JSON-LD, related tools) → `<CalculatorComponent />` (client). `CalculatorLayout.tsx` is the older client-side version of the same layout and is no longer imported anywhere; edit `CalculatorLayoutServer.tsx`.
+
+`generateMetadata` uses `metaTitle` when set; titles over 48 chars are emitted as `{ absolute }` so the root layout's `| QuickBizCalc` template isn't appended twice. Every page sets its own canonical; the root layout intentionally does not.
+
+### Calculator component conventions
+
+Nearly every calculator follows the same pattern (see `HolidayCountdownCalculator.tsx` for a minimal example):
+
+- `'use client'`, local `useState` inputs, `useMemo` result, framer-motion reveal.
+- `useCalcHistory(slug)` (localStorage, 15 entries) + `<CalcHistoryPanel>` at the bottom; `saveEntry(inputs, summary)` on calculate.
+- `<TryExample onClick>` button; many also use `<ComparePanel>`.
+- Result container carries class `result-display` — `MobileResultSheet` watches it for the floating "View Breakdown" bar and `ResultActions` (print/copy/share/embed) reads from `.calculator-form` / `.result-display`. Keep these classes.
+- Flagship calculators compute live on load rather than waiting for a Calculate click (TODO.md phases 1 & 4 list which ones); new work should follow that pattern.
+- Paycheck-type calculators read/write URL query params (`?rate=&hours=&ot=&state=&freq=&status=`) for shareable links.
+
+### Payroll engine (shared tax math)
+
+`src/lib/payroll/withholding-2026.ts` is the one place for federal brackets, standard deductions, FICA, and per-state withholding (`calculatePaycheck`, `StateCode`, `TAX_YEAR`). `HourlyPaycheckCalculator` (also rendered as `PayrollCalculator` in salary mode), `StatePaycheckCalculator` (one component, `state` prop, serves all 30 state slugs), and `/salary/[slug]` pages all use it. Only a few components import this engine; the standalone tax calculators (`AfterTaxIncome`, `SalaryTax`, `FederalTax`, `IncomeTax`, `Calculator1099`, `TaxRefund`) each carry their own copy of the 2026 brackets and standard deductions. When tax figures change, update the engine and grep those components for the same numbers.
+
+Adding a state: add withholding in `withholding-2026.ts` → add `STATE_PAYCHECK_PAGES[code]` in `state-pages.ts` → create `src/lib/seo-data/<state>-hourly-paycheck-calculator.ts` that just calls `buildStatePaycheckSeo(code)` (worked examples are generated from the real engine so article numbers always match the calculator) → register slug in `calculator-meta.ts` and both component maps as `() => <StatePaycheckCalculator state="XX" />`.
+
+### Other programmatic page families
+
+- `/category/[slug]` — pillar hubs from `src/lib/category-hubs.ts` (`CATEGORY_HUBS`); calculator breadcrumbs point here when a hub exists for the calculator's `category`.
+- `/salary/[slug]` — wage/salary breakdown pages from `src/lib/salary-pages.ts` (`HOURLY_TIERS`, `ANNUAL_TIERS`, `buildSalaryPageData`).
+- `/blog/[slug]` — markdown in `src/content/blog/*.md`, parsed with gray-matter + marked in `src/lib/blog.ts`; frontmatter `date` is the only `lastModified` the sitemap emits.
+- `/calculators/[slug]/embed` — chrome-less iframe version; `next.config.ts` gives it `frame-ancestors *` while every other route gets `SAMEORIGIN`.
+- `/api/og` — dynamic OG images used by calculator, category, and salary metadata.
+
+`src/app/sitemap.ts` and `src/app/robots.ts` are generated from the registries above; don't hand-edit URLs into them.
+
+## SEO/AdSense constraints that shape code decisions
+
+The site's purpose is organic ranking and AdSense approval, so changes that look cosmetic can matter:
+
+- Never add a root-level canonical, re-add `X-Frame-Options` to the embed route, or disallow `/_next/` in robots — each of these was a past GSC/AdSense blocker (see TODO.md).
+- Tax figures, holiday dates, and minimum wages are stated as 2026 facts in SEO copy; keep `TAX_YEAR` and article content consistent when updating numbers.
+- `CONFIG` in `src/lib/config.ts` only exposes GA/Clarity IDs in production; AdSense ID is always present for the verification meta tag.
+
+## Tooling notes
+
+- Path alias `@/*` → `src/*`. shadcn/ui (new-york style) components live in `src/components/ui`; Tailwind v4 via `@tailwindcss/postcss` with CSS variables in `src/app/globals.css`.
+- `calculator-meta.ts` is ~6,500 lines and `seo-data/` has ~240 files; grep by slug rather than reading whole files.
+- Work happens on branch `aminul` and is merged to `master` via PR.
