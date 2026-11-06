@@ -1,4 +1,4 @@
-import { calculators, getPublishedCalculators, type CalculatorMeta } from './calculator-meta';
+import { getCalculatorBySlug, getPublishedCalculators, type CalculatorMeta } from './calculator-meta';
 
 export interface SearchResult {
   calculator: CalculatorMeta;
@@ -165,5 +165,5 @@ export const popularCalculators: CalculatorMeta[] = [
   'overtime-calculator',
   'break-even-calculator',
 ]
-  .map((slug) => calculators.find((c) => c.slug === slug))
+  .map((slug) => getCalculatorBySlug(slug))
   .filter((c): c is CalculatorMeta => Boolean(c));

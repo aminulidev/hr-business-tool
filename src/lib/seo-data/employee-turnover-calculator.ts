@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Employee Turnover Rate Calculator' }],
   tableOfContents: [
@@ -41,5 +42,5 @@ const seoData = {
     { slug: 'salary-increase-calculator', title: 'Salary Increase Calculator', description: 'Model compensation improvements', icon: 'TrendingUp' },
     { slug: 'workers-comp-calculator', title: 'Workers Comp Calculator', description: 'Estimate insurance premiums', icon: 'ShieldCheck' },
   ],
-};
+} satisfies CalculatorSeoData;
 export default seoData;

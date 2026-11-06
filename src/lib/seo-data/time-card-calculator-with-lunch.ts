@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   howToSteps: [
     'Choose the time card period: 1 week, or 2 weeks for a biweekly timesheet. Overtime is still calculated separately for each week.',
@@ -112,6 +113,6 @@ const seoData = {
       icon: 'Clock',
     },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

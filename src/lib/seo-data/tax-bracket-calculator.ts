@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   // ---------------------------------------------------------------------------
 
@@ -100,6 +101,6 @@ const seoData = {
   // ---------------------------------------------------------------------------
   // Render
   
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

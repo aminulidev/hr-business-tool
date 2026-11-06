@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [
     { label: 'Calculators', href: '/calculators' },
@@ -162,6 +163,6 @@ const seoData = {
     { slug: 'wages-calculator', title: 'Wages Calculator', description: 'Calculate gross wages from hours and rate', icon: 'Banknote' },
     { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Analyze service & project profit margins', icon: 'Percent' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

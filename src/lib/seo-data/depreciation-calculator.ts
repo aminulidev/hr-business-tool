@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Depreciation Calculator' }],
   tableOfContents: [
@@ -80,13 +81,13 @@ const seoData = {
     },
   ],
   relatedTools: [
-    { slug: 'ebitda-calculator', title: 'EBITDA Calculator', description: 'Calculate EBITDA and operating margin by adding back D&A', icon: 'BarChart3' },
-    { slug: 'profit-loss-calculator', title: 'Profit & Loss (P&L) Calculator', description: 'Build a complete income statement with operating expenses and D&A', icon: 'FileSpreadsheet' },
+    { slug: 'ebitda-margin-calculator', title: 'EBITDA Calculator', description: 'Calculate EBITDA and operating margin by adding back D&A', icon: 'BarChart3' },
+    { slug: 'pnl-calculator', title: 'Profit & Loss (P&L) Calculator', description: 'Build a complete income statement with operating expenses and D&A', icon: 'FileSpreadsheet' },
     { slug: 'working-capital-calculator', title: 'Working Capital Calculator', description: 'Analyze short-term assets, liabilities, and current ratio', icon: 'Scale' },
     { slug: 'business-valuation-calculator', title: 'Business Valuation Calculator', description: 'Value your business using EBITDA, revenue, and net asset multiples', icon: 'Building2' },
     { slug: 'roi-calculator', title: 'Equipment ROI Calculator', description: 'Calculate return on investment for capital expenditures', icon: 'TrendingUp' },
     { slug: '1099-calculator', title: '1099 Tax & Deduction Calculator', description: 'Model Schedule C equipment write-offs and self-employment taxes', icon: 'FileText' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

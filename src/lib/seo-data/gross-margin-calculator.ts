@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   howToSteps: [
     'Choose your calculation mode: "From Revenue & COGS" for direct calculation, "From Revenue & Margin %" to find COGS, or "From COGS & Margin %" to find required revenue.',
@@ -34,5 +35,5 @@ const seoData = {
     { slug: 'discount-calculator', title: 'Discount Calculator', description: 'Calculate sale prices and savings amounts', icon: 'Tag' },
     { slug: 'commission-calculator', title: 'Sales Commission Calculator', description: 'Calculate commission earnings from sales revenue', icon: 'DollarSign' },
   ],
-};
+} satisfies CalculatorSeoData;
 export default seoData;

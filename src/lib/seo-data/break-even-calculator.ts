@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Break-Even Calculator' }],
   tableOfContents: [
@@ -41,6 +42,6 @@ const seoData = {
     { slug: 'cash-flow-forecast-calculator', title: 'Cash Flow Forecast Calculator', description: '12-month cash projection', icon: 'TrendingUp' },
     { slug: 'discount-calculator', title: 'Discount Calculator', description: 'Sale pricing impact on margin', icon: 'Tag' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

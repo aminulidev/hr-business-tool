@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [
         { label: 'Calculators' },
@@ -85,6 +86,6 @@ const seoData = {
             'Yes, pension and 401(k) contributions are typically calculated as a percentage of your salary, so a pro rata employee will contribute less in absolute dollar terms but the same percentage as a full-time employee. For example, if the employer matches 5% of salary, a pro rata employee earning $36,000 receives $1,800 in matching contributions compared to $3,000 for a full-time $60,000 employee. The contribution rate remains identical.',
         },
       ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

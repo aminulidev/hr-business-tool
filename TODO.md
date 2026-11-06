@@ -259,16 +259,16 @@ Audited, enriched with 2026 `benchmarkTables` & `deepDiveSections`, and publishe
 ## Phase 14: Architecture hardening (makes Phase 13 enforceable, removes the manual sync work)
 
 ### 14.1 Split the registry
-- [ ] `src/lib/calculator-meta.ts` (6,528 lines) → `src/lib/registry/`:
+- [x] `src/lib/calculator-meta.ts` (6,528 lines) → `src/lib/registry/` (PR 3, Nov 6 2026 — `calculator-meta.ts` is now a 4-line re-export shim; 9 category files under `registry/calculators/`, `define.ts`, `site.ts`, `index.ts`):
   - `types.ts` (`CalculatorMeta`; `CalculatorSlug` derived from the array instead of a hand-maintained union)
   - `site.ts` (SITE_URL, SITE_NAME, CONTACT_EMAIL, categoryOrder, categoryMeta)
   - `calculators/{payroll-taxes,salary,time-attendance,hr-analytics,business-finance,sales,freelancer,saas,accounting}.ts`
   - `index.ts` re-exporting the same names; `@/lib/calculator-meta` becomes a one-line re-export shim, deleted later.
-- [ ] Each entry gains `component: () => import('@/components/calculators/X')` and optional `props` (e.g. `{ state: 'CA' }`). **Delete** the two hand-maintained `componentMap`s in `calculators/[slug]/page.tsx` and `embed/page.tsx`; both read the registry. A published slug without a component becomes a type error.
+- [x] Both hand-maintained `componentMap`s deleted (PR 3). One map lives in `src/lib/registry/components.tsx`, typed `Partial<Record<CalculatorSlug, ComponentType>>` so a key that is not a registry slug is a type error; `registry.test.ts` asserts every published slug has an entry. Kept separate from the data files on purpose: the registry is imported by client code (hub, search), and dynamic-import thunks there would pull 240 chunk references into client bundles.
 
 ### 14.2 Typed SEO content
-- [ ] `src/lib/seo-data/types.ts`: `CalculatorSeoData` interface (howToSteps, formula, formulaDescription, workedExamples, benchmarkTables, deepDiveSections, faqs, relatedTools, sources, lastReviewed). Every file ends with `export default seoData satisfies CalculatorSeoData`. Remove `any` from the page route.
-- [ ] `relatedTools[].icon` typed as `keyof typeof iconMap`; single `iconMap` in `src/lib/registry/icons.ts` (delete the duplicates in `CalculatorLayoutServer.tsx` / `CalculatorLayout.tsx`).
+- [x] `src/lib/seo-data/types.ts` added (PR 3); all 244 SEO files use `satisfies CalculatorSeoData` on the object literal (31 state files get it via the typed return of `buildStatePaycheckSeo`). `relatedTools[].slug` is typed `CalculatorSlug` — this surfaced 12 dead related-tool links (ebitda, profit-loss, margin, product-pricing, salary-to-hourly, cash-flow, loan-payment) now repointed to real slugs. `any` removed from the page route. `sources` / `lastReviewed` fields still to add in Phase 13.
+- [x] `relatedTools[].icon` typed as `IconName = keyof typeof iconMap`; single `iconMap` in `src/lib/registry/icons.ts`; `CalculatorLayoutServer.tsx` imports it and `CalculatorLayout.tsx` (dead, 828 lines) is deleted (PR 3).
 
 ### 14.3 Tests + CI (there are none today)
 - [x] Add Vitest. `npm test` runs (PR 1, Nov 6 2026 — 190 tests):
@@ -280,7 +280,8 @@ Audited, enriched with 2026 `benchmarkTables` & `deepDiveSections`, and publishe
 
 ### 14.4 Dead code & config cleanup
 - [ ] Fix the 10 pre-existing lint errors (`react-hooks/set-state-in-render`, `react-hooks/preserve-manual-memoization`) in DiscountCalculator, FeedbackWidget, HourlyPaycheckCalculator, MarkupCalculator, OvertimeCalculator, ROICalculator, SalaryBreakdownInteractive, SalesCommissionCalculator, StatePaycheckCalculator, TimeCardCalculator, TimeCardLunchCalculator, WagesCalculator; then make the CI lint step blocking.
-- [ ] Delete `src/components/calculators/CalculatorLayout.tsx` (828 lines, zero imports), `src/app/api/route.ts` (hello world), `tailwind.config.ts` (Tailwind v4 is configured in `globals.css` `@theme`), two of the three lockfiles (keep the one matching production).
+- [x] `CalculatorLayout.tsx` deleted (PR 3).
+- [ ] Delete `src/app/api/route.ts` (hello world) and `tailwind.config.ts` (Tailwind v4 is configured in `globals.css` `@theme`). Lockfiles: keep all three in sync (`pnpm install --lockfile-only`, `bun install --lockfile-only`) until the owner confirms which package manager Vercel uses, then delete the other two.
 - [ ] `next.config.ts`: add `output: 'standalone'` (start script already expects it) or change the start script. Remove `DRAFT_TARGET_FALLBACK` once 14.3 forces valid merge targets.
 - [ ] `.env`: drop unused `DATABASE_URL` or adopt SQLite (see 18).
 

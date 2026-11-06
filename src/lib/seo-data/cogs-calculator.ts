@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'COGS Calculator' }],
   tableOfContents: [
@@ -80,13 +81,13 @@ const seoData = {
     },
   ],
   relatedTools: [
-    { slug: 'margin-calculator', title: 'Gross Margin Calculator', description: 'Calculate gross profit margin and dollar profit from revenue and COGS', icon: 'Percent' },
+    { slug: 'gross-margin-calculator', title: 'Gross Margin Calculator', description: 'Calculate gross profit margin and dollar profit from revenue and COGS', icon: 'Percent' },
     { slug: 'markup-calculator', title: 'Markup vs. Margin Calculator', description: 'Convert product cost into retail selling price using target markup or margin', icon: 'Tag' },
-    { slug: 'profit-loss-calculator', title: 'Profit & Loss (P&L) Calculator', description: 'Build a full income statement from revenue, COGS, and operating expenses', icon: 'FileSpreadsheet' },
+    { slug: 'pnl-calculator', title: 'Profit & Loss (P&L) Calculator', description: 'Build a full income statement from revenue, COGS, and operating expenses', icon: 'FileSpreadsheet' },
     { slug: 'break-even-calculator', title: 'Break-Even Calculator', description: 'Calculate unit sales and revenue needed to cover fixed overhead', icon: 'Scale' },
     { slug: 'working-capital-calculator', title: 'Working Capital Calculator', description: 'Measure how inventory and payables impact short-term liquidity', icon: 'DollarSign' },
-    { slug: 'product-pricing-calculator', title: 'Product Pricing Calculator', description: 'Set profitable wholesale and retail prices from unit COGS', icon: 'ShoppingBag' },
+    { slug: 'markup-calculator', title: 'Product Pricing Calculator', description: 'Set profitable wholesale and retail prices from unit COGS', icon: 'ShoppingBag' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

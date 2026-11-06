@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Time-and-a-Half Calculator' }],
   tableOfContents: [
@@ -40,5 +41,5 @@ const seoData = {
     { slug: 'time-card-calculator-with-lunch', title: 'Time Card Calculator with Lunch', description: 'Weekly timesheet with overtime', icon: 'Clock' },
     { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Employer-side payroll calculation', icon: 'CreditCard' },
   ],
-};
+} satisfies CalculatorSeoData;
 export default seoData;

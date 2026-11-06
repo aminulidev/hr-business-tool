@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Post-Round Ownership' }],
   tableOfContents: [
@@ -26,5 +27,5 @@ const seoData = {
     { slug: 'ltv-cac-ratio-calculator', title: 'LTV:CAC Ratio', description: 'Unit economics', icon: 'BarChart3' },
     { slug: 'startup-valuation-calculator', title: 'Startup Valuation', description: 'Company valuation', icon: 'Building' },
   ],
-};
+} satisfies CalculatorSeoData;
 export default seoData;

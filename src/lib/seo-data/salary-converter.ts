@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [
     { label: 'Calculators', href: '/calculators' },
@@ -170,6 +171,6 @@ const seoData = {
     { slug: 'pro-rata-calculator', title: 'Pro Rata Salary Calculator', description: 'Calculate part-time & partial-year prorated pay', icon: 'CalendarClock' },
     { slug: 'after-tax-income-calculator', title: 'After-Tax Income Calculator', description: 'Full-year net income after 2026 tax brackets', icon: 'Wallet' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

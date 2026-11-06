@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [
     { label: 'Calculators', href: '/calculators' },
@@ -155,6 +156,6 @@ const seoData = {
     { slug: 'payroll-deduction-calculator', title: 'Payroll Deduction Calculator', description: 'See how Section 125 & 401(k) affect FICA', icon: 'FileMinus' },
     { slug: 'tax-bracket-calculator', title: 'Tax Bracket Calculator', description: '2026 IRS marginal & effective tax brackets', icon: 'Landmark' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

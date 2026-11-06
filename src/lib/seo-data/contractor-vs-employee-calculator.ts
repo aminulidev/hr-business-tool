@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: '1099 vs W-2 Calculator' }],
   tableOfContents: [
@@ -40,6 +41,6 @@ const seoData = {
     { slug: 'hourly-paycheck-calculator', title: 'Hourly Paycheck Calculator', description: 'Full paycheck with taxes', icon: 'Wallet' },
     { slug: 'tax-bracket-calculator', title: 'Tax Bracket Calculator', description: 'Federal marginal & effective rate', icon: 'FileText' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

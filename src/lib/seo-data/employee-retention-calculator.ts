@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Employee Retention Calculator' }],
   tableOfContents: [
@@ -38,5 +39,5 @@ const seoData = {
     { slug: 'employee-engagement-score-calculator', title: 'Engagement Score', description: 'Engagement drives retention', icon: 'Activity' },
     { slug: 'internal-mobility-calculator', title: 'Internal Mobility', description: 'Mobility = 2x retention', icon: 'ArrowLeftRight' },
   ],
-};
+} satisfies CalculatorSeoData;
 export default seoData;

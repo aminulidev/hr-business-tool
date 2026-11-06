@@ -10,6 +10,7 @@ import {
   resolveMergedCalculator,
   type CalculatorMeta,
 } from './calculator-meta';
+import { iconMap } from './registry/icons';
 
 // ---------------------------------------------------------------------------
 // Registry invariants. `calculator-meta.ts` is the single source of truth and
@@ -24,24 +25,17 @@ import {
 const ROOT = path.resolve(__dirname, '../..');
 const read = (p: string) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 
-const pageSrc = read('src/app/calculators/[slug]/page.tsx');
-const embedSrc = read('src/app/calculators/[slug]/embed/page.tsx');
-const layoutSrc = read('src/components/calculators/CalculatorLayoutServer.tsx');
+// One shared slug → component map, used by both the page and embed routes
+const componentsSrc = read('src/lib/registry/components.tsx');
 
+const all: CalculatorMeta[] = calculators;
 const published = getPublishedCalculators();
-const merged = calculators.filter((c) => c.status === 'merged');
+const merged = all.filter((c) => c.status === 'merged');
 
 /** Fail with the whole list visible, not a truncated array diff. */
 const expectNone = (problems: string[], label?: string) => expect(problems.join('\n'), label).toBe('');
 
-// Keys of `iconMap` in CalculatorLayoutServer.tsx (handles `Map: MapIcon` aliases)
-const iconMapKeys = (() => {
-  const start = layoutSrc.indexOf('const iconMap');
-  const body = layoutSrc.slice(start, layoutSrc.indexOf('};', start));
-  return new Set(
-    [...body.matchAll(/^\s*([A-Za-z0-9]+)\s*[,:]/gm)].map((m) => m[1]).filter((k) => k !== 'const'),
-  );
-})();
+const iconMapKeys = new Set(Object.keys(iconMap));
 
 async function loadSeo(slug: string): Promise<any | null> {
   try {
@@ -54,9 +48,9 @@ async function loadSeo(slug: string): Promise<any | null> {
 
 describe('registry shape', () => {
   it('slugs and paths are unique and consistent', () => {
-    const slugs = calculators.map((c) => c.slug);
+    const slugs = all.map((c) => c.slug);
     expect(new Set(slugs).size).toBe(slugs.length);
-    for (const c of calculators) {
+    for (const c of all) {
       expect(c.path, c.slug).toBe(`/calculators/${c.slug}`);
       expect(categoryOrder as readonly string[], `${c.slug} category`).toContain(c.category);
       expect(['tier1', 'tier2', 'tier3'], `${c.slug} tier`).toContain(c.tier);
@@ -65,7 +59,7 @@ describe('registry shape', () => {
   });
 
   it('scheduled entries carry a parseable publishDate', () => {
-    for (const c of calculators.filter((x) => x.status === 'scheduled')) {
+    for (const c of all.filter((x) => x.status === 'scheduled')) {
       expect(c.publishDate, c.slug).toBeTruthy();
       expect(Number.isNaN(new Date(c.publishDate!).getTime()), c.slug).toBe(false);
     }
@@ -74,7 +68,7 @@ describe('registry shape', () => {
   it('merged entries name a target that exists and does not loop', () => {
     for (const c of merged) {
       expect(c.mergedInto, `${c.slug} has no mergedInto`).toBeTruthy();
-      expect(calculators.some((x) => x.slug === c.mergedInto), `${c.slug} → ${c.mergedInto} missing`).toBe(true);
+      expect(all.some((x) => x.slug === c.mergedInto), `${c.slug} → ${c.mergedInto} missing`).toBe(true);
       const target = resolveMergedCalculator(c);
       expect(target.slug).not.toBe(c.slug);
     }
@@ -82,11 +76,9 @@ describe('registry shape', () => {
 });
 
 describe('every published calculator', () => {
-  it('has a component in BOTH the page and embed maps', () => {
-    const missingPage = published.filter((c) => !pageSrc.includes(`'${c.slug}':`)).map((c) => c.slug);
-    const missingEmbed = published.filter((c) => !embedSrc.includes(`'${c.slug}'`)).map((c) => c.slug);
-    expectNone(missingPage, 'missing from calculators/[slug]/page.tsx componentMap');
-    expectNone(missingEmbed, 'missing from embed/page.tsx');
+  it('has a component in src/lib/registry/components.tsx', () => {
+    const missing = published.filter((c) => !componentsSrc.includes(`'${c.slug}':`)).map((c) => c.slug);
+    expectNone(missing, 'missing from calculatorComponents');
   });
 
   it('has SEO data with the sections the layout renders', async () => {
@@ -115,7 +107,7 @@ describe('every published calculator', () => {
       const live = getLiveRelatedTools(seo.relatedTools, c.slug);
       if (live.length === 0) problems.push(`${c.slug}: no live related tools`);
       for (const t of seo.relatedTools ?? []) {
-        if (!iconMapKeys.has(t.icon)) problems.push(`${c.slug}: icon "${t.icon}" not in CalculatorLayoutServer iconMap`);
+        if (!iconMapKeys.has(t.icon)) problems.push(`${c.slug}: icon "${t.icon}" not in registry/icons.ts iconMap`);
       }
     }
     expectNone(problems);

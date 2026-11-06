@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Holiday Countdown Calculator' }],
   tableOfContents: [
@@ -37,5 +38,5 @@ const seoData = {
     { slug: 'leave-calculator', title: 'Leave Calculator', description: 'PTO and leave balance', icon: 'CalendarRange' },
     { slug: 'time-difference-calculator', title: 'Time Difference Calculator', description: 'Days between two dates', icon: 'Clock3' },
   ],
-};
+} satisfies CalculatorSeoData;
 export default seoData;

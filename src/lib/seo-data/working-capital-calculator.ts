@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Working Capital Calculator' }],
   tableOfContents: [
@@ -79,13 +80,13 @@ const seoData = {
     },
   ],
   relatedTools: [
-    { slug: 'cash-flow-calculator', title: 'Cash Flow Calculator', description: 'Analyze operating, investing, and financing cash flows', icon: 'DollarSign' },
+    { slug: 'cash-flow-forecast-calculator', title: 'Cash Flow Calculator', description: 'Analyze operating, investing, and financing cash flows', icon: 'DollarSign' },
     { slug: 'burn-rate-calculator', title: 'Burn Rate & Runway Calculator', description: 'Calculate monthly cash burn and months of cash runway', icon: 'Flame' },
     { slug: 'cogs-calculator', title: 'COGS Calculator', description: 'Compute Cost of Goods Sold from beginning and ending inventory', icon: 'Package' },
     { slug: 'business-valuation-calculator', title: 'Business Valuation Calculator', description: 'Value your business using revenue, EBITDA, and asset multiples', icon: 'Building2' },
-    { slug: 'profit-loss-calculator', title: 'Profit & Loss (P&L) Calculator', description: 'Generate an itemized income statement and operating margin breakdown', icon: 'FileSpreadsheet' },
-    { slug: 'loan-payment-calculator', title: 'Business Loan Calculator', description: 'Model working capital loan payments and interest amortization', icon: 'Landmark' },
+    { slug: 'pnl-calculator', title: 'Profit & Loss (P&L) Calculator', description: 'Generate an itemized income statement and operating margin breakdown', icon: 'FileSpreadsheet' },
+    { slug: 'amortization-calculator', title: 'Business Loan Calculator', description: 'Model working capital loan payments and interest amortization', icon: 'Landmark' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Churn Rate Calculator' }],
   tableOfContents: [
@@ -75,5 +76,5 @@ const seoData = {
     { slug: 'burn-rate-calculator', title: 'Burn Rate Calculator', description: 'Startup cash burn & runway', icon: 'Clock' },
     { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Gross & net margin analysis', icon: 'Percent' },
   ],
-};
+} satisfies CalculatorSeoData;
 export default seoData;

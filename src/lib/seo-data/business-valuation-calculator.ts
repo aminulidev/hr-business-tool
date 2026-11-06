@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Business Valuation Calculator' }],
   tableOfContents: [
@@ -80,13 +81,13 @@ const seoData = {
     },
   ],
   relatedTools: [
-    { slug: 'ebitda-calculator', title: 'EBITDA Calculator', description: 'Calculate EBITDA and EBITDA margin from operating income or net profit', icon: 'BarChart3' },
+    { slug: 'ebitda-margin-calculator', title: 'EBITDA Calculator', description: 'Calculate EBITDA and EBITDA margin from operating income or net profit', icon: 'BarChart3' },
     { slug: 'working-capital-calculator', title: 'Working Capital Calculator', description: 'Compute Net Working Capital and Current Ratio for M&A readiness', icon: 'Scale' },
-    { slug: 'profit-loss-calculator', title: 'Profit & Loss (P&L) Calculator', description: 'Model revenue, COGS, operating expenses, and net profit margins', icon: 'FileSpreadsheet' },
+    { slug: 'pnl-calculator', title: 'Profit & Loss (P&L) Calculator', description: 'Model revenue, COGS, operating expenses, and net profit margins', icon: 'FileSpreadsheet' },
     { slug: 'mrr-calculator', title: 'MRR & ARR Calculator', description: 'Calculate Monthly and Annual Recurring Revenue for subscription valuations', icon: 'TrendingUp' },
     { slug: 'net-revenue-retention-calculator', title: 'Net Revenue Retention Calculator', description: 'Measure cohort NRR to benchmark SaaS valuation multiples', icon: 'Activity' },
     { slug: 'depreciation-calculator', title: 'Depreciation Calculator', description: 'Calculate book and accelerated asset depreciation add-backs', icon: 'Layers' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'ROAS Calculator' }],
   tableOfContents: [
@@ -82,9 +83,9 @@ const seoData = {
     { slug: 'cac-payback-calculator', title: 'CAC Payback Period Calculator', description: 'Measure months needed to recover customer acquisition spend', icon: 'Clock' },
     { slug: 'customer-lifetime-value-calculator', title: 'Customer Lifetime Value (LTV) Calculator', description: 'Compute customer lifetime value and LTV:CAC efficiency', icon: 'Users' },
     { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Calculate net return on investment and annualized ROI', icon: 'TrendingUp' },
-    { slug: 'margin-calculator', title: 'Gross Profit Margin Calculator', description: 'Find your gross margin to establish your break-even ROAS', icon: 'Percent' },
+    { slug: 'profit-margin-calculator', title: 'Gross Profit Margin Calculator', description: 'Find your gross margin to establish your break-even ROAS', icon: 'Percent' },
     { slug: 'break-even-calculator', title: 'Break-Even Calculator', description: 'Determine exact unit and revenue break-even thresholds', icon: 'Scale' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

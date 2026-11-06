@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Net Revenue Retention Calculator' }],
   tableOfContents: [
@@ -85,6 +86,6 @@ const seoData = {
     { slug: 'customer-acquisition-cost-calculator', title: 'CAC Calculator', description: 'Compute blended and paid customer acquisition cost', icon: 'Target' },
     { slug: 'business-valuation-calculator', title: 'Business Valuation Calculator', description: 'Estimate company value using revenue and EBITDA multiples', icon: 'Building2' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Social Security Estimator' }],
   tableOfContents: [
@@ -41,6 +42,6 @@ const seoData = {
     { slug: 'salary-tax-calculator', title: 'Salary Tax Calculator', description: 'Annual salary tax', icon: 'FileText' },
     { slug: 'tax-refund-estimator', title: 'Tax Refund Estimator', description: 'Federal refund or balance due', icon: 'FileText' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

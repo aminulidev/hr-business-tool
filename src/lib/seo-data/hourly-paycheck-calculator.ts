@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 // ---------------------------------------------------------------------------
 // Hourly Paycheck Calculator — SEO content
 // ---------------------------------------------------------------------------
@@ -220,7 +221,7 @@ const seoData = {
       slug: STATE_PAYCHECK_PAGES[code].slug,
       title: `${STATE_PAYCHECK_PAGES[code].name} Hourly Paycheck Calculator`,
       description: `${TAX_YEAR} take-home pay with exact ${STATE_PAYCHECK_PAGES[code].name} withholding`,
-      icon: 'Map',
+      icon: 'Map' as const,
     })),
     {
       slug: 'payroll-calculator',
@@ -259,6 +260,6 @@ const seoData = {
       icon: 'Wallet',
     },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

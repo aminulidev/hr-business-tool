@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   howToSteps: [
     'Enter your gross pay per pay period — this is your total earnings before any taxes or deductions are taken out.',
@@ -103,6 +104,6 @@ const seoData = {
   ],
 
   
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;
