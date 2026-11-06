@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Sick Leave Calculator' }],
   tableOfContents: [
@@ -39,5 +40,6 @@ const seoData = {
     { slug: 'holiday-countdown-calculator', title: 'Holiday Countdown', description: 'Days until next federal holiday', icon: 'CalendarClock' },
     { slug: 'workers-comp-calculator', title: 'Workers Comp Calculator', description: 'WC insurance premium', icon: 'ShieldCheck' },
   ],
+  sources: [SRC.dolSickLeave],
 } satisfies CalculatorSeoData;
 export default seoData;

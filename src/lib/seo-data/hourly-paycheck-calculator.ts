@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 // ---------------------------------------------------------------------------
 // Hourly Paycheck Calculator — SEO content
 // ---------------------------------------------------------------------------
@@ -260,6 +261,7 @@ const seoData = {
       icon: 'Wallet',
     },
   ],
+  sources: [SRC.irsPub15T, SRC.irsRevProc2025_32, SRC.irsTopic751, SRC.ssaCola, SRC.dolOvertime, SRC.dolStateMinWage],
 } satisfies CalculatorSeoData;
 
 export default seoData;

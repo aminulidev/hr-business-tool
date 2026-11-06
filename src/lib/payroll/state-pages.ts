@@ -12,7 +12,8 @@ import {
   TAX_YEAR,
 } from './withholding-2026';
 import type { CalculatorSlug } from '@/lib/registry';
-import type { CalculatorSeoData } from '@/lib/seo-data/types';
+import type { CalculatorSeoData, SeoSource } from '@/lib/seo-data/types';
+import { FEDERAL_PAYCHECK_SOURCES } from '@/lib/seo-data/sources';
 
 const usd = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
@@ -40,7 +41,8 @@ export interface StatePaycheckPage {
   overtimeRule: string;
   stateTaxSummary: string;
   extraFaqs: { question: string; answer: string }[];
-  sources: string[];
+  /** State-specific primary sources; federal ones are added by buildStatePaycheckSeo */
+  sources: SeoSource[];
 }
 
 export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
@@ -79,9 +81,9 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'California EDD, 2026 Withholding Schedules — Method B',
-      'California EDD, 2026 SDI withholding rate (1.3%)',
-      'California Labor Code §510 (daily overtime)',
+      { label: 'California EDD, Rates and Withholding (2026 Withholding Schedules, Method B, and SDI rate)', url: 'https://edd.ca.gov/en/payroll_taxes/rates_and_withholding/', publisher: 'California Employment Development Department', note: 'State income tax withholding formula and the 1.3% SDI employee rate' },
+      { label: 'California DIR, Minimum Wage FAQ', url: 'https://www.dir.ca.gov/dlse/faq_minimumwage.htm', publisher: 'California Department of Industrial Relations', note: '2026 statewide minimum wage' },
+      { label: 'California Labor Code § 510 (daily overtime)', url: 'https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=510', publisher: 'California Legislative Information', note: 'Overtime after 8 hours in a day and double time after 12' },
     ],
   },
   TX: {
@@ -108,7 +110,10 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
           'No. No Texas city or county levies an income tax on wages, so your take-home pay is the same whether you work in Houston, Dallas, Austin, or a rural county.',
       },
     ],
-    sources: ['Texas Workforce Commission, Texas Minimum Wage Act', 'U.S. DOL, Fair Labor Standards Act'],
+    sources: [
+      { label: 'Texas Workforce Commission, Texas Minimum Wage Law', url: 'https://www.twc.texas.gov/programs/wage-and-hour/texas-minimum-wage-law', publisher: 'Texas Workforce Commission', note: 'Texas adopts the federal $7.25 minimum wage' },
+      { label: 'Texas Comptroller, Texas Taxes', url: 'https://comptroller.texas.gov/taxes/', publisher: 'Texas Comptroller of Public Accounts', note: 'Texas levies no personal income tax' },
+    ],
   },
   FL: {
     code: 'FL',
@@ -137,9 +142,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Florida Constitution, Article X §24 (minimum wage)',
-      'Florida Department of Revenue',
-      'U.S. DOL, Fair Labor Standards Act',
+      { label: 'Florida Department of Revenue, Florida Taxes and Fees', url: 'https://floridarevenue.com/taxes/taxesfees/Pages/default.aspx', publisher: 'Florida Department of Revenue', note: 'Florida levies no personal income tax' },
+      { label: 'DOL, State Minimum Wage Laws (Florida)', url: 'https://www.dol.gov/agencies/whd/minimum-wage/state', publisher: 'U.S. Department of Labor, Wage and Hour Division', note: 'Florida minimum wage under Florida Constitution Article X § 24' },
     ],
   },
   NY: {
@@ -177,10 +181,10 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'NYS Department of Taxation and Finance, NYS-50-T-NYS (1/26)',
-      'NYS Department of Taxation and Finance, NYS-50-T-NYC (1/26)',
-      'NY Department of Financial Services, 2026 Paid Family Leave rate',
-      'NY Department of Labor, minimum wage',
+      { label: 'NYS Department of Taxation and Finance, Publication NYS-50-T-NYS (New York State withholding tables)', url: 'https://www.tax.ny.gov/pdf/publications/withholding/nys50_t_nys.pdf', publisher: 'New York State Department of Taxation and Finance', note: 'State withholding formula' },
+      { label: 'NYS Department of Taxation and Finance, Publication NYS-50-T-NYC (New York City withholding tables)', url: 'https://www.tax.ny.gov/pdf/publications/withholding/nys50_t_nyc.pdf', publisher: 'New York State Department of Taxation and Finance', note: 'NYC resident withholding' },
+      { label: 'New York State Paid Family Leave, 2026 rates', url: 'https://paidfamilyleave.ny.gov/2026', publisher: 'New York State', note: '2026 PFL employee contribution rate' },
+      { label: 'New York State Department of Labor, Minimum Wage', url: 'https://dol.ny.gov/minimum-wage-0', publisher: 'New York State Department of Labor', note: 'Regional minimum wage rates' },
     ],
   },
   IL: {
@@ -213,9 +217,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Illinois Department of Revenue, Booklet IL-700-T',
-      'Illinois Comptroller, Payroll Bulletin 1-26 (2026 exemption $2,925)',
-      'Illinois Department of Labor, minimum wage',
+      { label: 'Illinois Department of Revenue, Withholding Income Tax forms (Booklet IL-700-T)', url: 'https://tax.illinois.gov/forms/withholding.html', publisher: 'Illinois Department of Revenue', note: '4.95% flat rate and the $2,925 per-allowance exemption' },
+      { label: 'Illinois Department of Labor, Minimum Wage Law', url: 'https://labor.illinois.gov/laws-rules/fls/minimum-wage-law.html', publisher: 'Illinois Department of Labor', note: 'Statewide minimum wage' },
     ],
   },
   WA: {
@@ -243,8 +246,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Washington Department of Labor & Industries, 2026 Minimum Wage Announcement',
-      'Washington Employment Security Department, 2026 PFML & WA Cares Premium Rates',
+      { label: 'Washington L&I, Minimum Wage', url: 'https://lni.wa.gov/workers-rights/wages/minimum-wage/', publisher: 'Washington State Department of Labor & Industries', note: '2026 statewide minimum wage' },
+      { label: 'Washington Paid Family & Medical Leave', url: 'https://paidleave.wa.gov/', publisher: 'Washington Employment Security Department', note: '2026 PFML premium rate and employee share; WA Cares premium' },
     ],
   },
   TN: {
@@ -274,9 +277,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Tennessee Department of Labor and Workforce Development',
-      'Tennessee Department of Revenue',
-      'U.S. DOL, Fair Labor Standards Act',
+      { label: 'Tennessee Department of Labor and Workforce Development, Labor Laws', url: 'https://www.tn.gov/workforce/employees/labor-laws.html', publisher: 'Tennessee Department of Labor and Workforce Development', note: 'Tennessee has no state minimum wage law; the federal rate applies' },
+      { label: 'Tennessee Department of Revenue', url: 'https://www.tn.gov/revenue.html', publisher: 'Tennessee Department of Revenue', note: 'Tennessee levies no tax on wages' },
     ],
   },
   NV: {
@@ -304,8 +306,7 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Office of the Nevada Labor Commissioner, Minimum Wage & Daily Overtime Bulletins',
-      'Nevada Constitution, Article 10 §1',
+      { label: 'Office of the Nevada Labor Commissioner, Minimum Wage', url: 'https://labor.nv.gov/Wages/Minimum_Wage/', publisher: 'Nevada Office of the Labor Commissioner', note: 'Minimum wage and daily overtime bulletins (Nevada Constitution Article 15 § 16)' },
     ],
   },
   PA: {
@@ -333,8 +334,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Pennsylvania Department of Revenue, REV-415 Employer Withholding Information Guide (3.07% rate)',
-      'Pennsylvania Department of Labor & Industry, Employee UC Withholding Rate (0.07%)',
+      { label: 'Pennsylvania Department of Revenue, Employer Withholding', url: 'https://www.pa.gov/agencies/revenue/resources/tax-types-and-information/employer-withholding.html', publisher: 'Pennsylvania Department of Revenue', note: '3.07% flat personal income tax withholding' },
+      { label: 'Pennsylvania Department of Labor & Industry', url: 'https://www.pa.gov/agencies/dli/', publisher: 'Pennsylvania Department of Labor & Industry', note: 'Employee unemployment compensation withholding rate (0.07%) and minimum wage' },
     ],
   },
   NC: {
@@ -367,8 +368,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'North Carolina Department of Revenue, NC-30 Income Tax Withholding Tables and Instructions (2026)',
-      'North Carolina Department of Labor, Wage and Hour Act',
+      { label: 'North Carolina Department of Revenue, Withholding Tax (Form NC-30)', url: 'https://www.ncdor.gov/taxes-forms/withholding-tax', publisher: 'North Carolina Department of Revenue', note: '2026 withholding tables and instructions' },
+      { label: 'North Carolina Department of Labor, Time Worked and Wages Earned', url: 'https://www.labor.nc.gov/workplace-rights/employee-rights-regarding-time-worked-and-wages-earned', publisher: 'North Carolina Department of Labor', note: 'Wage and Hour Act minimum wage' },
     ],
   },
   GA: {
@@ -401,8 +402,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Georgia Department of Revenue, Employer Tax Guide (2026 Withholding Formulas)',
-      'U.S. DOL, Fair Labor Standards Act',
+      { label: 'Georgia Department of Revenue, Employer\'s Tax Guide', url: 'https://dor.georgia.gov/employers-tax-guide', publisher: 'Georgia Department of Revenue', note: '2026 withholding formulas' },
+      { label: 'DOL, State Minimum Wage Laws (Georgia)', url: 'https://www.dol.gov/agencies/whd/minimum-wage/state', publisher: 'U.S. Department of Labor, Wage and Hour Division', note: 'Georgia employers covered by the FLSA pay the federal $7.25' },
     ],
   },
   MI: {
@@ -435,8 +436,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Michigan Department of Treasury, 2026 Income Tax Withholding Guide (4.25% rate)',
-      'Michigan Department of Labor and Economic Opportunity, Minimum Wage Schedule',
+      { label: 'Michigan Department of Treasury, Withholding Tax', url: 'https://www.michigan.gov/taxes/business-taxes/withholding', publisher: 'Michigan Department of Treasury', note: '4.25% flat rate and the personal exemption amount' },
+      { label: 'Michigan LEO, Minimum Wage', url: 'https://www.michigan.gov/leo/bureaus-agencies/ber/wage-and-hour/minimum-wage', publisher: 'Michigan Department of Labor and Economic Opportunity', note: 'Minimum wage schedule' },
     ],
   },
   IN: {
@@ -464,8 +465,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Indiana Department of Revenue, Departmental Notice #1 (2026 Withholding Instructions, 2.95% state rate)',
-      'Indiana Department of Labor',
+      { label: 'Indiana Department of Revenue, Withholding Income Tax (Departmental Notice #1)', url: 'https://www.in.gov/dor/business-tax/withholding-income-tax/', publisher: 'Indiana Department of Revenue', note: '2026 state rate and county rates' },
+      { label: 'Indiana Department of Labor, Wage and Hour', url: 'https://www.in.gov/dol/wage-and-hour/', publisher: 'Indiana Department of Labor', note: 'Minimum wage' },
     ],
   },
   AZ: {
@@ -498,8 +499,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Arizona Department of Revenue, Form A-4 & 2026 Individual Income Tax Rate (2.5% flat rate)',
-      'Industrial Commission of Arizona, 2026 Minimum Wage',
+      { label: 'Arizona Department of Revenue, Withholding Tax (Form A-4)', url: 'https://azdor.gov/business/withholding-tax', publisher: 'Arizona Department of Revenue', note: 'Employee-elected withholding percentage under the 2.5% flat tax' },
+      { label: 'Industrial Commission of Arizona, Minimum Wage', url: 'https://www.azica.gov/labor-minimum-wage-main-page', publisher: 'Industrial Commission of Arizona', note: '2026 minimum wage' },
     ],
   },
   CO: {
@@ -532,8 +533,9 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Colorado Department of Revenue, DR 1098 Colorado Income Tax Withholding Worksheet (4.40% rate)',
-      'Colorado Department of Labor and Employment, FAMLI Division (0.45% employee rate) & COMPS Order',
+      { label: 'Colorado Department of Revenue, Withholding Tax (DR 1098)', url: 'https://tax.colorado.gov/withholding-tax', publisher: 'Colorado Department of Revenue', note: '4.40% withholding worksheet' },
+      { label: 'Colorado FAMLI Division', url: 'https://famli.colorado.gov/', publisher: 'Colorado Department of Labor and Employment', note: '0.45% employee premium' },
+      { label: 'Colorado CDLE, Minimum Wage', url: 'https://cdle.colorado.gov/minimum-wage', publisher: 'Colorado Department of Labor and Employment', note: 'Statewide minimum wage (COMPS Order)' },
     ],
   },
   UT: {
@@ -566,8 +568,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Utah State Tax Commission, Publication 14 — Withholding Tax Guide (2026)',
-      'Utah Labor Commission, Wage Claim & Minimum Wage',
+      { label: 'Utah State Tax Commission, Withholding Tax (Publication 14)', url: 'https://tax.utah.gov/withholding', publisher: 'Utah State Tax Commission', note: '2026 withholding guide' },
+      { label: 'DOL, State Minimum Wage Laws (Utah)', url: 'https://www.dol.gov/agencies/whd/minimum-wage/state', publisher: 'U.S. Department of Labor, Wage and Hour Division', note: 'Utah follows the federal $7.25 minimum wage' },
     ],
   },
   KY: {
@@ -595,8 +597,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Kentucky Department of Revenue, 2026 Withholding Tax Computer Formula (3.50% rate, $3,270 standard deduction)',
-      'Kentucky Education and Labor Cabinet, Wages and Hours',
+      { label: 'Kentucky Department of Revenue, Employer Payroll Withholding', url: 'https://revenue.ky.gov/Business/Pages/Employer-Payroll-Withholding.aspx', publisher: 'Kentucky Department of Revenue', note: '2026 computer formula: 3.50% rate and $3,270 standard deduction' },
+      { label: 'Kentucky Education and Labor Cabinet, Wages and Hours', url: 'https://labor.ky.gov/standards/Pages/default.aspx', publisher: 'Kentucky Education and Labor Cabinet', note: 'Minimum wage' },
     ],
   },
   LA: {
@@ -629,8 +631,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Louisiana Department of Revenue, Form L-4 & 2026 Withholding Tables (3.00% flat rate)',
-      'U.S. DOL, Fair Labor Standards Act',
+      { label: 'Louisiana Department of Revenue, Withholding Tax (Form L-4)', url: 'https://revenue.louisiana.gov/WithholdingTax', publisher: 'Louisiana Department of Revenue', note: '2026 withholding tables (3.00% flat rate)' },
+      { label: 'DOL, State Minimum Wage Laws (Louisiana)', url: 'https://www.dol.gov/agencies/whd/minimum-wage/state', publisher: 'U.S. Department of Labor, Wage and Hour Division', note: 'Louisiana has no state minimum wage law; the federal rate applies' },
     ],
   },
   IA: {
@@ -663,8 +665,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Iowa Department of Revenue, 2026 Iowa Withholding Formula and Instructions (3.80% flat rate)',
-      'Iowa Workforce Development, Wage FAQs',
+      { label: 'Iowa Department of Revenue, Iowa Withholding Tax Information', url: 'https://revenue.iowa.gov/taxes/tax-guidance/withholding-tax/iowa-withholding-tax-information', publisher: 'Iowa Department of Revenue', note: '2026 withholding formula (3.80% flat rate)' },
+      { label: 'Iowa Division of Labor, Wage FAQs', url: 'https://www.iowadivisionoflabor.gov/wage-faqs', publisher: 'Iowa Division of Labor', note: 'Minimum wage' },
     ],
   },
   ID: {
@@ -697,8 +699,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Idaho State Tax Commission, A Guide to Idaho Income Tax Withholding (2026)',
-      'Idaho Department of Labor, Wage and Hour',
+      { label: 'Idaho State Tax Commission, Withholding', url: 'https://tax.idaho.gov/taxes/withholding/', publisher: 'Idaho State Tax Commission', note: 'A Guide to Idaho Income Tax Withholding (2026)' },
+      { label: 'Idaho Department of Labor', url: 'https://www.labor.idaho.gov/', publisher: 'Idaho Department of Labor', note: 'Wage and hour rules; Idaho follows the federal minimum wage' },
     ],
   },
   OH: {
@@ -731,8 +733,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Ohio Department of Taxation, 2026 Employer Withholding Tables (0% up to $26,050; 2.75% flat bracket)',
-      'Ohio Department of Commerce, 2026 Minimum Wage Poster',
+      { label: 'Ohio Department of Taxation, Employer Withholding', url: 'https://tax.ohio.gov/business/ohio-business-taxes/employer-withholding/employer-withholding', publisher: 'Ohio Department of Taxation', note: '2026 employer withholding tables' },
+      { label: 'Ohio Department of Commerce, Minimum Wage', url: 'https://com.ohio.gov/divisions-and-programs/industrial-compliance/bureau-of-wage-and-hour-administration/minimum-wage', publisher: 'Ohio Department of Commerce', note: '2026 minimum wage' },
     ],
   },
   VA: {
@@ -765,8 +767,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Virginia Tax, Employer Income Tax Withholding Formula (2026)',
-      'Virginia Department of Labor and Industry, Virginia Minimum Wage Act',
+      { label: 'Virginia Tax, Withholding Tax', url: 'https://www.tax.virginia.gov/withholding-tax', publisher: 'Virginia Department of Taxation', note: 'Employer income tax withholding formula' },
+      { label: 'Virginia DOLI, Minimum Wage', url: 'https://www.doli.virginia.gov/labor-law/minimum-wage/', publisher: 'Virginia Department of Labor and Industry', note: 'Virginia Minimum Wage Act' },
     ],
   },
   NJ: {
@@ -799,8 +801,9 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'New Jersey Division of Taxation, NJ-WT Income Tax Withholding Instructions (2026)',
-      'New Jersey Department of Labor & Workforce Development, 2026 Minimum Wage & SUI/FLI/TDI Rates',
+      { label: 'New Jersey Division of Taxation, Employer Payroll Tax (NJ-WT)', url: 'https://www.nj.gov/treasury/taxation/businesses/payroll/index.shtml', publisher: 'New Jersey Division of Taxation', note: 'Income tax withholding instructions' },
+      { label: 'New Jersey Department of Labor, Wage and Hour Laws', url: 'https://www.nj.gov/labor/wageandhour/tools-resources/laws/wageandhourlaws.shtml', publisher: 'New Jersey Department of Labor & Workforce Development', note: '2026 minimum wage' },
+      { label: 'New Jersey myLeaveBenefits', url: 'https://www.nj.gov/labor/myleavebenefits/', publisher: 'New Jersey Department of Labor & Workforce Development', note: 'SUI, FLI and TDI employee rates' },
     ],
   },
   MA: {
@@ -833,8 +836,9 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Massachusetts Department of Revenue, Circular M — 2026 Income Tax Withholding Tables (5.0% rate)',
-      'Massachusetts Department of Family and Medical Leave, 2026 PFML Contribution Rates',
+      { label: 'Massachusetts DOR, Withholding Taxes on Wages (Circular M)', url: 'https://www.mass.gov/info-details/withholding-taxes-on-wages', publisher: 'Massachusetts Department of Revenue', note: '5.0% withholding tables' },
+      { label: 'Massachusetts law about minimum wage', url: 'https://www.mass.gov/info-details/massachusetts-law-about-minimum-wage', publisher: 'Commonwealth of Massachusetts', note: 'Statewide minimum wage' },
+      { label: 'Massachusetts Department of Family and Medical Leave', url: 'https://www.mass.gov/orgs/department-of-family-and-medical-leave', publisher: 'Commonwealth of Massachusetts', note: '2026 PFML contribution rates' },
     ],
   },
   MD: {
@@ -867,8 +871,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Comptroller of Maryland, 2026 Maryland Employer Withholding Guide (Form MW507 & County Rates)',
-      'Maryland Department of Labor, Minimum Wage and Overtime Law',
+      { label: 'Comptroller of Maryland, Employer Withholding', url: 'https://www.marylandtaxes.gov/business/income/withholding/index.php', publisher: 'Comptroller of Maryland', note: '2026 withholding guide, Form MW507 and county rates' },
+      { label: 'Maryland Department of Labor, Wage and Hour Facts', url: 'https://labor.maryland.gov/labor/wages/wagehrfacts.shtml', publisher: 'Maryland Department of Labor', note: 'Minimum wage and overtime law' },
     ],
   },
   MN: {
@@ -901,8 +905,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Minnesota Department of Revenue, 2026 Income Tax Withholding Instruction Booklet',
-      'Minnesota Department of Employment and Economic Development (DEED), Paid Leave 2026 Premium Rates (0.44% employee share)',
+      { label: 'Minnesota Department of Revenue, Withholding Tax', url: 'https://www.revenue.state.mn.us/withholding-tax', publisher: 'Minnesota Department of Revenue', note: '2026 withholding instruction booklet' },
+      { label: 'Minnesota Paid Leave', url: 'https://paidleave.mn.gov/', publisher: 'Minnesota Department of Employment and Economic Development', note: '2026 premium rate and 0.44% employee share' },
     ],
   },
   MO: {
@@ -930,8 +934,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Missouri Department of Revenue, 2026 Employer’s Tax Guide & Withholding Formula (4.70% top rate)',
-      'Missouri Department of Labor and Industrial Relations, 2026 Minimum Wage ($15.00/hr)',
+      { label: 'Missouri Department of Revenue, Withholding Tax', url: 'https://dor.mo.gov/taxation/business/tax-types/withholding/', publisher: 'Missouri Department of Revenue', note: '2026 Employer\'s Tax Guide and withholding formula' },
+      { label: 'Missouri Department of Labor, Minimum Wage', url: 'https://labor.mo.gov/dls/minimum-wage', publisher: 'Missouri Department of Labor and Industrial Relations', note: '2026 minimum wage' },
     ],
   },
   WI: {
@@ -964,8 +968,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Wisconsin Department of Revenue, Publication W-166 Withholding Tax Guide (Alternate Method A)',
-      'Wisconsin Department of Workforce Development, Minimum Wage & Overtime',
+      { label: 'Wisconsin Department of Revenue, Withholding Tax (Publication W-166)', url: 'https://www.revenue.wi.gov/Pages/Withholding/home.aspx', publisher: 'Wisconsin Department of Revenue', note: 'Withholding Tax Guide, Alternate Method A' },
+      { label: 'Wisconsin DWD, Minimum Wage', url: 'https://dwd.wisconsin.gov/er/laborstandards/minimumwage.htm', publisher: 'Wisconsin Department of Workforce Development', note: 'Minimum wage and overtime' },
     ],
   },
   OR: {
@@ -998,8 +1002,9 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'Oregon Department of Revenue, 2026 Oregon Withholding Tax Formulas',
-      'Oregon Employment Department, Paid Leave Oregon (0.60% employee rate) & BOLI Minimum Wage',
+      { label: 'Oregon Department of Revenue, Withholding and Payroll Tax', url: 'https://www.oregon.gov/dor/programs/businesses/Pages/withholding-and-payroll-tax.aspx', publisher: 'Oregon Department of Revenue', note: '2026 Oregon withholding tax formulas' },
+      { label: 'Paid Leave Oregon', url: 'https://paidleave.oregon.gov/', publisher: 'Oregon Employment Department', note: '0.60% employee contribution rate' },
+      { label: 'Oregon BOLI, Minimum Wage', url: 'https://www.oregon.gov/boli/workers/pages/minimum-wage.aspx', publisher: 'Oregon Bureau of Labor and Industries', note: 'Regional minimum wage rates' },
     ],
   },
   SC: {
@@ -1032,8 +1037,8 @@ export const STATE_PAYCHECK_PAGES: Record<StateCode, StatePaycheckPage> = {
       },
     ],
     sources: [
-      'South Carolina Department of Revenue, WH-1603F Withholding Tax Formula (2026)',
-      'South Carolina Department of Labor, Licensing and Regulation, Wages & Payment',
+      { label: 'South Carolina Department of Revenue, Withholding (WH-1603F)', url: 'https://dor.sc.gov/tax/withholding', publisher: 'South Carolina Department of Revenue', note: '2026 withholding tax formula' },
+      { label: 'South Carolina LLR, Wages', url: 'https://llr.sc.gov/wage/', publisher: 'South Carolina Department of Labor, Licensing and Regulation', note: 'South Carolina has no state minimum wage law; the federal rate applies' },
     ],
   },
 };
@@ -1249,7 +1254,7 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
         answer:
           `It uses the official ${TAX_YEAR} withholding formulas, so for a standard W-4${page.allowances ? ` and ${page.allowances.label}` : ''} with no other deductions it should be within a few dollars of your actual paycheck. ` +
           'Your real check will be lower if you have pre-tax deductions like 401(k) contributions or health insurance premiums (those also reduce your income tax), or extra withholding on your W-4. ' +
-          `Sources: IRS Rev. Proc. 2025-32, Social Security Administration ${TAX_YEAR} wage base, ${page.sources.join('; ')}.`,
+          `Sources: IRS Rev. Proc. 2025-32, Social Security Administration ${TAX_YEAR} wage base, ${page.sources.map((src) => src.label).join('; ')}.`,
       },
     ],
 
@@ -1273,5 +1278,6 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
         icon: 'Clock',
       },
     ],
+    sources: [...FEDERAL_PAYCHECK_SOURCES, ...page.sources],
   };
 }

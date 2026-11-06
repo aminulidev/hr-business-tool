@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [
     { label: 'Calculators', href: '/calculators' },
@@ -155,6 +156,7 @@ const seoData = {
     { slug: 'employee-turnover-calculator', title: 'Employee Turnover Calculator', description: 'Calculate organizational turnover rate & cost', icon: 'Users' },
     { slug: 'pto-accrual-calculator', title: 'PTO Accrual Calculator', description: 'Calculate accrued vacation hours & cash-out value', icon: 'CalendarCheck' },
   ],
+  sources: [SRC.dolSeverance, SRC.dolWarn, SRC.irsPub15],
 } satisfies CalculatorSeoData;
 
 export default seoData;

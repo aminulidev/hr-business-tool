@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 // ---------------------------------------------------------------------------
 // Payroll & Paycheck Calculator — SEO content
 // ---------------------------------------------------------------------------
@@ -241,6 +242,7 @@ const seoData = {
       icon: 'Banknote',
     },
   ],
+  sources: [SRC.irsPub15T, SRC.irsPub15, SRC.irsRevProc2025_32, SRC.irsTopic751, SRC.ssaCola, SRC.dolOvertime],
 } satisfies CalculatorSeoData;
 
 export default seoData;

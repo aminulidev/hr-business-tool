@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Clock Out Calculator' }],
   tableOfContents: [
@@ -39,5 +40,6 @@ const seoData = {
     { slug: 'break-calculator', title: 'Break Calculator', description: 'Required meal and rest breaks', icon: 'PauseCircle' },
     { slug: 'hours-between-times-calculator', title: 'Hours Between Two Times', description: 'Duration between times', icon: 'Clock3' },
   ],
+  sources: [SRC.dolFactSheet21, SRC.cfr785_48],
 } satisfies CalculatorSeoData;
 export default seoData;

@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   howToSteps: [
     'Choose the time card period: 1 week, or 2 weeks for a biweekly timesheet. Overtime is still calculated separately for each week.',
@@ -113,6 +114,7 @@ const seoData = {
       icon: 'Clock',
     },
   ],
+  sources: [SRC.dolBreaks, SRC.dolStateMealBreaks, SRC.cfr785_48, SRC.dolFactSheet21],
 } satisfies CalculatorSeoData;
 
 export default seoData;

@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'W-2 Calculator' }],
   tableOfContents: [
@@ -114,6 +115,7 @@ const seoData = {
       icon: 'FileCheck',
     },
   ],
+  sources: [SRC.irsW2Instructions, SRC.irsPub15T, SRC.irsTopic751],
 } satisfies CalculatorSeoData;
 
 export default seoData;

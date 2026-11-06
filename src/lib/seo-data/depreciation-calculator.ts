@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Depreciation Calculator' }],
   tableOfContents: [
@@ -88,6 +89,7 @@ const seoData = {
     { slug: 'roi-calculator', title: 'Equipment ROI Calculator', description: 'Calculate return on investment for capital expenditures', icon: 'TrendingUp' },
     { slug: '1099-calculator', title: '1099 Tax & Deduction Calculator', description: 'Model Schedule C equipment write-offs and self-employment taxes', icon: 'FileText' },
   ],
+  sources: [SRC.irsPub946],
 } satisfies CalculatorSeoData;
 
 export default seoData;

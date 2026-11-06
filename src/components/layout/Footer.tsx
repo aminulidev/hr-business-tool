@@ -134,6 +134,9 @@ export default function Footer() {
             <Link href="/about" className={linkClass('/about')}>
               About Us
             </Link>
+            <Link href="/editorial-policy" className={linkClass('/editorial-policy')}>
+              Editorial Policy
+            </Link>
             <Link href="/contact" className={linkClass('/contact')}>
               Contact
             </Link>

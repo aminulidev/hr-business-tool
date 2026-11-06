@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'FTE Calculator' }],
   tableOfContents: [
@@ -80,5 +81,6 @@ const seoData = {
     { slug: 'headcount-calculator', title: 'Headcount Calculator', description: 'Project year-end headcount', icon: 'Users' },
     { slug: 'workforce-planning-calculator', title: 'Workforce Planning', description: 'Project future hiring needs', icon: 'CalendarRange' },
   ],
+  sources: [SRC.irsAleFte],
 } satisfies CalculatorSeoData;
 export default seoData;

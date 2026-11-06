@@ -1,4 +1,5 @@
 import type { CalculatorSeoData } from './types';
+import { SRC } from './sources';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'COGS Calculator' }],
   tableOfContents: [
@@ -88,6 +89,7 @@ const seoData = {
     { slug: 'working-capital-calculator', title: 'Working Capital Calculator', description: 'Measure how inventory and payables impact short-term liquidity', icon: 'DollarSign' },
     { slug: 'markup-calculator', title: 'Product Pricing Calculator', description: 'Set profitable wholesale and retail prices from unit COGS', icon: 'ShoppingBag' },
   ],
+  sources: [SRC.irsPub334, SRC.irsPub538],
 } satisfies CalculatorSeoData;
 
 export default seoData;

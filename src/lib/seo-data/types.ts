@@ -41,6 +41,21 @@ export interface SeoBenchmarkTable {
   note?: string;
 }
 
+/**
+ * A primary source the page relies on. Rendered as a link in the
+ * "Sources & References" section and listed in the page's JSON-LD.
+ * Prefer the exact publication (IRS Pub. 15-T, a state withholding guide,
+ * a CFR section) over an agency home page. Shared constants live in ./sources.ts.
+ */
+export interface SeoSource {
+  label: string;
+  url: string;
+  /** Issuing agency or organisation, e.g. "Internal Revenue Service" */
+  publisher?: string;
+  /** What this page takes from the source, one short clause */
+  note?: string;
+}
+
 export interface SeoDeepDiveSection {
   id?: string;
   title: string;
@@ -60,6 +75,12 @@ export interface CalculatorSeoData {
   deepDiveSections?: SeoDeepDiveSection[];
   faqs: SeoFaq[];
   relatedTools: SeoRelatedTool[];
+  /**
+   * Primary sources this page's numbers come from. Required (by registry.test.ts)
+   * for every published Payroll & Taxes calculator; optional for pure business-math
+   * pages, where the sources section is simply not rendered.
+   */
+  sources?: SeoSource[];
   /** @deprecated The page route builds the table of contents; this is ignored. */
   tableOfContents?: { id: string; label: string }[];
   /** @deprecated The page route builds breadcrumbs from the registry; this is ignored. */

@@ -4,6 +4,7 @@ import robots from './robots';
 import { calculators, getPublishedCalculators, isCalculatorPublished, SITE_URL } from '@/lib/calculator-meta';
 import { CATEGORY_HUBS } from '@/lib/category-hubs';
 import { SALARY_TIERS } from '@/lib/salary-pages';
+import { getAllAuthors } from '@/lib/authors';
 
 describe('sitemap.xml', () => {
   it('lists every published calculator and nothing that 404s or redirects', async () => {
@@ -31,6 +32,12 @@ describe('sitemap.xml', () => {
     const urls = new Set((await sitemap()).map((e) => e.url));
     for (const hub of CATEGORY_HUBS) expect(urls.has(`${SITE_URL}/category/${hub.slug}`), hub.slug).toBe(true);
     for (const tier of SALARY_TIERS) expect(urls.has(`${SITE_URL}/salary/${tier.slug}`), tier.slug).toBe(true);
+  });
+
+  it('includes the editorial policy and no personal author pages (Phase 13.1)', async () => {
+    const urls = new Set((await sitemap()).map((e) => e.url));
+    expect(urls.has(`${SITE_URL}/editorial-policy`)).toBe(true);
+    expect([...urls].some((u) => u.includes('/authors/')), 'no personal author pages').toBe(false);
   });
 });
 

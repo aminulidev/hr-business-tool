@@ -10,10 +10,14 @@ import {
   HelpCircle,
   Calculator,
   ArrowRight,
+  ExternalLink,
 } from 'lucide-react';
 import ResultActions from './ResultActions';
 import FeedbackWidget from './FeedbackWidget';
 import { iconMap, type IconName } from '@/lib/registry/icons';
+import Byline from '@/components/seo/Byline';
+import { authorJsonLd, publisherJsonLd, type Author } from '@/lib/authors';
+import type { SeoSource } from '@/lib/seo-data/types';
 import MobileResultSheet from './MobileResultSheet';
 import {
   DollarSign,
@@ -133,6 +137,14 @@ interface CalculatorLayoutProps {
   faqs?: FAQItem[];
   relatedTools?: RelatedTool[];
   adContent?: React.ReactNode;
+  /** Primary sources the page's numbers come from; the Sources section is hidden when empty */
+  sources?: SeoSource[];
+  author: Author;
+  /** YYYY-MM-DD the math was last verified against the sources (registry lastReviewed) */
+  lastReviewed?: string;
+  reviewNotes?: string;
+  /** Rendered as "Tax year 2026" in the byline for tax-dependent pages */
+  taxYear?: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -183,11 +195,18 @@ function WebAppJsonLd({
   title,
   description,
   url,
+  author,
+  lastReviewed,
+  sources,
 }: {
   title: string;
   description: string;
   url: string;
+  author: Author;
+  lastReviewed?: string;
+  sources?: SeoSource[];
 }) {
+  const person = authorJsonLd(author);
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
@@ -201,6 +220,20 @@ function WebAppJsonLd({
       priceCurrency: 'USD',
     },
     url,
+    isAccessibleForFree: true,
+    author: person,
+    publisher: publisherJsonLd(),
+    ...(lastReviewed ? { dateModified: lastReviewed, reviewedBy: person } : {}),
+    ...(sources && sources.length > 0
+      ? {
+          citation: sources.map((s) => ({
+            '@type': 'CreativeWork',
+            name: s.label,
+            url: s.url,
+            ...(s.publisher ? { publisher: { '@type': 'Organization', name: s.publisher } } : {}),
+          })),
+        }
+      : {}),
   };
 
   return (
@@ -297,6 +330,11 @@ export default function CalculatorLayoutServer({
   faqs,
   relatedTools,
   adContent,
+  sources,
+  author,
+  lastReviewed,
+  reviewNotes,
+  taxYear,
 }: CalculatorLayoutProps) {
   // ---- Determine which SEO sections are present ----
   const hasHowTo = howToSteps && howToSteps.length > 0;
@@ -308,6 +346,24 @@ export default function CalculatorLayoutServer({
   const hasBenchmarkTables = benchmarkTables && benchmarkTables.length > 0;
   const hasDeepDiveSections = deepDiveSections && deepDiveSections.length > 0;
   const hasRelatedTools = relatedTools && relatedTools.length > 0;
+  const hasSources = !!sources && sources.length > 0;
+  // "IRS, SSA, DOL" — distinct publishers, shortened, for the hero pill
+  const sourcePublishers = hasSources
+    ? Array.from(
+        new Set(
+          sources!.map((s) => {
+            const p = s.publisher ?? s.label;
+            if (/Internal Revenue Service/i.test(p)) return 'IRS';
+            if (/Social Security Administration/i.test(p)) return 'SSA';
+            if (/Department of Labor/i.test(p)) return 'DOL';
+            if (/Code of Federal Regulations/i.test(p)) return 'CFR';
+            if (/Office of Personnel Management/i.test(p)) return 'OPM';
+            if (/Bureau of Labor Statistics/i.test(p)) return 'BLS';
+            return p.split(',')[0];
+          }),
+        ),
+      ).slice(0, 4)
+    : [];
 
   // Derive current URL from breadcrumbs (last item's href) or use title slug
   const lastCrumb = breadcrumbs?.[breadcrumbs.length - 1];
@@ -321,6 +377,9 @@ export default function CalculatorLayoutServer({
         title={title}
         description={description}
         url={`${SITE_URL}${currentPath}`}
+        author={author}
+        lastReviewed={lastReviewed}
+        sources={sources}
       />
       <HowToJsonLd title={title} steps={howToSteps ?? []} />
       <BreadcrumbJsonLd items={breadcrumbs ?? []} />
@@ -412,15 +471,18 @@ export default function CalculatorLayoutServer({
                   {description}
                 </p>
                 
-                {/* Source attribution */}
-                <div className="flex items-center gap-2 sm:gap-3 mt-3 text-xs sm:text-sm text-muted-foreground flex-wrap">
-                  <a
-                    href="#statutory-sources"
-                    className="flex items-center gap-1.5 bg-muted/60 rounded-full px-2.5 py-1 border border-border/50 hover:text-foreground transition-colors"
-                  >
-                    <Shield className="size-3.5 text-emerald-600" />
-                    <span>Sources: IRS Pub. 15-T, DOL FLSA, SSA</span>
-                  </a>
+                {/* Byline + source attribution (Phase 13.1 / 13.2) */}
+                <div className="flex items-center gap-2 sm:gap-3 mt-3 flex-wrap">
+                  <Byline author={author} lastReviewed={lastReviewed} taxYear={taxYear} />
+                  {hasSources && (
+                    <a
+                      href="#statutory-sources"
+                      className="flex items-center gap-1.5 bg-muted/60 rounded-full px-2.5 py-1 border border-border/50 text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <Shield className="size-3.5 text-emerald-600" />
+                      <span>Sources: {sourcePublishers.join(', ')}</span>
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -670,60 +732,59 @@ export default function CalculatorLayoutServer({
             )}
 
             {/* ============================================================= */}
-            {/* Regulatory & Statutory Sources section                         */}
+            {/* Sources & References — only when the page cites something       */}
             {/* ============================================================= */}
-            <section
-              id="statutory-sources"
-              className="scroll-mt-24 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 sm:p-6"
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <Shield className="size-5 text-emerald-600 shrink-0" />
-                <h2 className="text-base sm:text-lg font-bold text-foreground">
-                  Statutory Sources &amp; Regulatory References
-                </h2>
-              </div>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-4">
-                Calculations and computational models on QuickBizCalc are verified against published regulatory standards and statutory tax tables:
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="p-3 rounded-xl bg-card border border-border/50 space-y-1">
-                  <div className="font-semibold text-foreground flex items-center gap-1.5">
-                    <FileText className="size-3.5 text-emerald-600" />
-                    Internal Revenue Service (IRS)
-                  </div>
-                  <p className="text-muted-foreground">
-                    Publication 15-T (Federal Income Tax Withholding Methods) &amp; Publication 15 (Employer&apos;s Tax Guide).
-                  </p>
+            {hasSources && (
+              <section
+                id="statutory-sources"
+                className="scroll-mt-24 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 sm:p-6"
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <Shield className="size-5 text-emerald-600 shrink-0" />
+                  <h2 className="text-base sm:text-lg font-bold text-foreground">
+                    Sources &amp; References
+                  </h2>
                 </div>
-                <div className="p-3 rounded-xl bg-card border border-border/50 space-y-1">
-                  <div className="font-semibold text-foreground flex items-center gap-1.5">
-                    <FileText className="size-3.5 text-blue-600" />
-                    U.S. Department of Labor (DOL)
-                  </div>
-                  <p className="text-muted-foreground">
-                    Fair Labor Standards Act (FLSA 29 U.S.C. &sect; 207) regulations on overtime hours, recordkeeping, and minimum wage.
-                  </p>
-                </div>
-                <div className="p-3 rounded-xl bg-card border border-border/50 space-y-1">
-                  <div className="font-semibold text-foreground flex items-center gap-1.5">
-                    <FileText className="size-3.5 text-purple-600" />
-                    Social Security Administration (SSA)
-                  </div>
-                  <p className="text-muted-foreground">
-                    OASDI taxable maximum wage base limits and statutory FICA tax rates (6.2% Social Security + 1.45% Medicare).
-                  </p>
-                </div>
-                <div className="p-3 rounded-xl bg-card border border-border/50 space-y-1">
-                  <div className="font-semibold text-foreground flex items-center gap-1.5">
-                    <FileText className="size-3.5 text-amber-600" />
-                    Editorial Review Standards
-                  </div>
-                  <p className="text-muted-foreground">
-                    Formulas and worked examples are checked against the sources above before publishing. For advice on your own situation, consult a licensed tax professional or accountant.
-                  </p>
-                </div>
-              </div>
-            </section>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-4">
+                  The figures and rules behind this calculator come from the publications below. Each link goes to the
+                  issuing agency, so you can check the current rate yourself.
+                  {lastReviewed && reviewNotes ? <> Last review: {reviewNotes}</> : null}
+                </p>
+                <ol className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs list-none p-0 m-0">
+                  {sources!.map((src) => (
+                    <li key={src.url} className="p-3 rounded-xl bg-card border border-border/50 space-y-1">
+                      <a
+                        href={src.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-semibold text-foreground inline-flex items-start gap-1.5 hover:text-emerald-700 hover:underline"
+                      >
+                        <FileText className="size-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                        <span>
+                          {src.label}
+                          <ExternalLink className="size-3 inline ml-1 align-text-top text-muted-foreground" aria-hidden />
+                        </span>
+                      </a>
+                      {(src.publisher || src.note) && (
+                        <p className="text-muted-foreground">
+                          {src.publisher}
+                          {src.publisher && src.note ? ' — ' : ''}
+                          {src.note}
+                        </p>
+                      )}
+                    </li>
+                  ))}
+                </ol>
+                <p className="text-[11px] sm:text-xs text-muted-foreground leading-relaxed mt-4">
+                  Results are estimates for planning and double-checking, not tax, legal or payroll advice. How we choose
+                  sources, how often rates are updated and how to report an error:{' '}
+                  <Link href="/editorial-policy" className="text-emerald-600 hover:underline">
+                    editorial policy
+                  </Link>
+                  .
+                </p>
+              </section>
+            )}
 
             {/* ============================================================= */}
             {/* Related Tools section                                          */}
@@ -831,11 +892,13 @@ export default function CalculatorLayoutServer({
                   Trust & Accuracy
                 </div>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Every formula is sourced from IRS Publication 15-T, Department of Labor FLSA rules, or state agency tables, and each page cites the publication it is based on.
+                  {hasSources
+                    ? 'Where a rate or rule is set by law, this page links to the IRS, Department of Labor or state agency publication it comes from, so you can verify every number.'
+                    : 'This calculator applies standard business formulas rather than a statute, so there is no regulatory source to cite. The formula and a worked example are shown above.'}
                 </p>
                 <div className="pt-2 border-t border-border/40 flex items-center justify-between text-xs text-muted-foreground">
-                  <Link href="/about" className="text-emerald-600 hover:underline">
-                    Our Methodology
+                  <Link href="/editorial-policy" className="text-emerald-600 hover:underline">
+                    Editorial Policy
                   </Link>
                   <span>•</span>
                   <Link href="/glossary" className="text-emerald-600 hover:underline">

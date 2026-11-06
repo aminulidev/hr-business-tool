@@ -9,7 +9,10 @@ import {
   ANNUAL_TIERS,
   getSalaryTierBySlug,
   buildSalaryPageData,
+  SALARY_PAGES_REVIEWED,
 } from '@/lib/salary-pages';
+import Byline from '@/components/seo/Byline';
+import { authorJsonLd, getAuthor, publisherJsonLd } from '@/lib/authors';
 import { SITE_URL, SITE_NAME } from '@/lib/calculator-meta';
 import { TAX_YEAR } from '@/lib/payroll/withholding-2026';
 import {
@@ -96,9 +99,20 @@ export default async function SalaryBreakdownPage({ params }: PageProps) {
       ? `${tier.label} Is How Much a Year? (${TAX_YEAR} Before & After Taxes)`
       : `${tier.label} Is How Much an Hour? (${TAX_YEAR} Paycheck & Tax Breakdown)`;
 
+  const author = getAuthor();
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': pageUrl,
+        url: pageUrl,
+        name: h1Title,
+        author: authorJsonLd(author),
+        publisher: publisherJsonLd(),
+        dateModified: SALARY_PAGES_REVIEWED,
+        reviewedBy: authorJsonLd(author),
+      },
       {
         '@type': 'BreadcrumbList',
         itemListElement: [
@@ -183,6 +197,8 @@ export default async function SalaryBreakdownPage({ params }: PageProps) {
           <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground mb-3">
             {h1Title}
           </h1>
+
+          <Byline author={author} lastReviewed={SALARY_PAGES_REVIEWED} taxYear={TAX_YEAR} className="mb-4" />
 
           <p className="text-sm sm:text-base text-muted-foreground max-w-3xl leading-relaxed mb-6">
             {tier.type === 'hourly' ? (
