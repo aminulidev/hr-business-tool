@@ -212,3 +212,200 @@ Audited, enriched with 2026 `benchmarkTables` & `deepDiveSections`, and publishe
 - [x] `depreciation-calculator` (`DepreciationCalculator.tsx` + `src/lib/seo-data/depreciation-calculator.ts` — Straight-line & 200% Double-Declining Balance + IRS Pub 946 MACRS recovery table & Section 179 / Bonus Depreciation guide)
 - [x] `cogs-calculator` (`CogsCalculator.tsx` + `src/lib/seo-data/cogs-calculator.ts` — Cost of Goods Sold formula, industry COGS & gross margin benchmarks, and FIFO vs. LIFO inventory valuation guide)
 - [x] `business-valuation-calculator` (`BusinessValuationCalculator.tsx` + `src/lib/seo-data/business-valuation-calculator.ts` — Revenue, EBITDA & Net Asset valuation + 2026 private M&A SDE/EBITDA multiples by industry)
+
+
+---
+
+# 🚀 Roadmap v2 — From "many calculators" to "the most trusted business calculator site"
+
+> **Written**: November 6, 2026
+> **Situation**: 102 published / 101 draft / 40 merged calculators. Traffic fell ~90% on Oct 1 2026 after Google's Sept 24 spam update (targets templated programmatic pages). AdSense not approved. Competitor review (PaycheckCity, SmartAsset, Omni, Calculator.net) shows we already lead on *tool features* (live calc, share URL, embed, history, PDF, mobile result bar) and trail badly on *trust* (no author, no review date, unlinked sources, small math errors, templated state pages).
+> **Strategy**: Fewer, deeper, verifiably-correct pages with real E-E-A-T, on a codebase that can enforce correctness automatically. Expansion only after that.
+> **Order matters**: Phases 13 → 14 → 15 are the recovery path and must ship together before the next GSC re-crawl request. 16–20 are growth.
+
+---
+
+## Phase 13: Trust, Accuracy & E-E-A-T (recovery blocker #1)
+
+### 13.1 Real author & review layer
+- [ ] Create `src/lib/authors.ts` — one real author profile (name, role, bio, photo, LinkedIn/X URL). No invented credentials. If no CPA/HR credential exists, say "Founder & developer, QuickBizCalc" and lean on *sources* for authority.
+- [ ] Add `/authors/[slug]` page + link from every calculator, blog post, salary page, and `/about`.
+- [ ] Extend `CalculatorMeta` with `lastReviewed: 'YYYY-MM-DD'` and `reviewNotes?: string`. Set a **real** date per calculator when its math is actually verified (Phase 13.3) — not a bulk timestamp.
+- [ ] `CalculatorLayoutServer.tsx`: render "Written by {author} · Reviewed {lastReviewed} · Tax year {TAX_YEAR}" header under the H1; add `author` (Person), `dateModified`, and `reviewedBy` to `WebAppJsonLd`; add `datePublished/dateModified` to blog JSON-LD.
+- [ ] Add an `/editorial-policy` page (how numbers are sourced, how often updated, correction policy) and link it from the footer and every "Statutory Sources" block.
+
+### 13.2 Linked, specific sources
+- [ ] Change `CalculatorSeoData.sources` from `string[]` to `{ label: string; url: string; accessed?: string }[]`. Every published calculator links to the exact IRS Publication / DOL page / state revenue page it relies on. Unlinked sources become a test failure (Phase 14.3).
+- [ ] State pages: link each state's actual withholding publication and minimum-wage statute (`src/lib/payroll/state-pages.ts` `sources`).
+
+### 13.3 Math & copy audit of every published page (102)
+- [ ] Known defects to fix first (found in competitor review of the live hourly paycheck page):
+  - [ ] `commission-calculator` has `metaTitle: 'Churn Rate Calculator (2026)…'` and a churn `metaDescription` — wrong page title in SERPs for a tier-1 page (`calculator-meta.ts:417`).
+  - [ ] Hourly paycheck Step 4 lists "no state income tax" states but omits FL and TX, then lists FL/TX under "exact withholding tables".
+  - [ ] Texas worked example: $1,048.05 × 26 shown as $27,249.20 (should be $27,249.30); other annual figures off by cents → generate examples from `calculatePaycheck()` output, never hand-typed.
+  - [ ] Illinois example state tax ($116.63) is not explained (allowance adjustment) → add one sentence.
+  - [ ] "$18 an Hour, Another State" example names no state → name it.
+  - [ ] Live-calc pages whose `howToSteps` still say "Click Calculate".
+- [ ] Systematic pass, category by category: every worked example recomputed by code (Phase 14.3 test asserts text numbers == engine numbers where an engine exists); every FAQ number checked against the linked source; remove any "2025" figures still presented as current.
+- [ ] Remove filler: duplicated state lists, identical related-card subtitles, repeated disclaimers. One disclaimer component, rendered once.
+
+### 13.4 Policy/approval hygiene
+- [ ] Confirm no invented reviewer names remain anywhere (grep for CPA/SPHR shows only generic mentions as of Nov 6 2026 — keep it that way).
+- [ ] Blog: every post has a real `date`; no auto-rotating dates. Add author + `dateModified` to blog frontmatter and JSON-LD.
+- [ ] `/about` and `/contact` describe a real operator, real email, real response policy.
+
+---
+
+## Phase 14: Architecture hardening (makes Phase 13 enforceable, removes the manual sync work)
+
+### 14.1 Split the registry
+- [ ] `src/lib/calculator-meta.ts` (6,528 lines) → `src/lib/registry/`:
+  - `types.ts` (`CalculatorMeta`; `CalculatorSlug` derived from the array instead of a hand-maintained union)
+  - `site.ts` (SITE_URL, SITE_NAME, CONTACT_EMAIL, categoryOrder, categoryMeta)
+  - `calculators/{payroll-taxes,salary,time-attendance,hr-analytics,business-finance,sales,freelancer,saas,accounting}.ts`
+  - `index.ts` re-exporting the same names; `@/lib/calculator-meta` becomes a one-line re-export shim, deleted later.
+- [ ] Each entry gains `component: () => import('@/components/calculators/X')` and optional `props` (e.g. `{ state: 'CA' }`). **Delete** the two hand-maintained `componentMap`s in `calculators/[slug]/page.tsx` and `embed/page.tsx`; both read the registry. A published slug without a component becomes a type error.
+
+### 14.2 Typed SEO content
+- [ ] `src/lib/seo-data/types.ts`: `CalculatorSeoData` interface (howToSteps, formula, formulaDescription, workedExamples, benchmarkTables, deepDiveSections, faqs, relatedTools, sources, lastReviewed). Every file ends with `export default seoData satisfies CalculatorSeoData`. Remove `any` from the page route.
+- [ ] `relatedTools[].icon` typed as `keyof typeof iconMap`; single `iconMap` in `src/lib/registry/icons.ts` (delete the duplicates in `CalculatorLayoutServer.tsx` / `CalculatorLayout.tsx`).
+
+### 14.3 Tests + CI (there are none today)
+- [x] Add Vitest. `npm test` runs (PR 1, Nov 6 2026 — 190 tests):
+  - **Payroll engine golden tests** (`withholding-2026.test.ts`): federal withholding vs IRS Pub 15-T percentage-method examples; FICA caps; each state's flat-rate/allowance formula vs its published table; no-income-tax states return 0.
+  - **Registry invariants** (`registry.test.ts`): every published slug has component + seo file + ≥3 FAQs + ≥2 linked sources + `lastReviewed`; no duplicate `metaTitle`/`metaDescription`/`path`; `merged` → target resolves to a **published** page (today 17 merged slugs point at drafts or other merged slugs and rely on `DRAFT_TARGET_FALLBACK`); `metaTitle` must share its first noun with `title` (catches the churn/commission bug class); title ≤ 60 chars.
+  - **Content/engine agreement**: for paycheck/salary pages, every `$` figure in generated worked examples equals `calculatePaycheck()` output.
+  - **Sitemap/robots** emit only published URLs.
+- [x] `.github/workflows/ci.yml`: `npm ci && npm test && npm run build` on every PR to `master` (lint runs advisory until the 10 pre-existing `react-hooks/set-state-in-render` / `preserve-manual-memoization` errors in 12 calculator components are fixed — then make it blocking).
+
+### 14.4 Dead code & config cleanup
+- [ ] Fix the 10 pre-existing lint errors (`react-hooks/set-state-in-render`, `react-hooks/preserve-manual-memoization`) in DiscountCalculator, FeedbackWidget, HourlyPaycheckCalculator, MarkupCalculator, OvertimeCalculator, ROICalculator, SalaryBreakdownInteractive, SalesCommissionCalculator, StatePaycheckCalculator, TimeCardCalculator, TimeCardLunchCalculator, WagesCalculator; then make the CI lint step blocking.
+- [ ] Delete `src/components/calculators/CalculatorLayout.tsx` (828 lines, zero imports), `src/app/api/route.ts` (hello world), `tailwind.config.ts` (Tailwind v4 is configured in `globals.css` `@theme`), two of the three lockfiles (keep the one matching production).
+- [ ] `next.config.ts`: add `output: 'standalone'` (start script already expects it) or change the start script. Remove `DRAFT_TARGET_FALLBACK` once 14.3 forces valid merge targets.
+- [ ] `.env`: drop unused `DATABASE_URL` or adopt SQLite (see 18).
+
+### 14.5 Shared calculator primitives (adopt incrementally — only when a component is touched)
+- [ ] `useCalculatorState<T>(slug, defaults)` — one hook owning inputs, URL query sync (today only 4 components do this), `useCalcHistory`, and live `result` via `useMemo`. Replaces the per-component copy-paste.
+- [ ] `<CalculatorShell>` rendering `.calculator-form`, `<TryExample>`, Reset, `.result-display`, `<ResultActions>`, `<CalcHistoryPanel>` in a fixed order so `MobileResultSheet`/share/print always find their hooks.
+- [ ] `<MoneyInput>`, `<PercentInput>`, `<HoursInput>` with formatting, min/max, and `aria-describedby` help text.
+- [ ] `HubPage.tsx` (710-line client component): render the category grid on the server; keep only the search box as a client island. Measure LCP before/after.
+
+---
+
+## Phase 15: Consolidate the index (recovery blocker #2 — "delete or merge, don't trim")
+
+### 15.1 Thin published pages (9) — merge or rewrite, decide per page
+- [ ] Time & Attendance cluster: `hours-between-times`, `time-difference`, `clock-out`, `break` → fold into **`time-card-calculator`** as modes (tabs: Time card · Hours between · Break deduction · Clock-out time). 301 the old slugs.
+- [ ] `employee-schedule-calculator` + `shift-rotation-calculator` → one **Shift Schedule Planner** page with real content (rotation patterns, FLSA 7(k), Pitman/DuPont examples).
+- [ ] `sick-leave-calculator` → merge into `pto-accrual-calculator` as an accrual type (the state paid-sick-leave table is the unique content).
+- [ ] `holiday-countdown-calculator` → merge into `business-day-calculator` (it already generates federal holidays) or rewrite with multi-year + state holidays.
+- [ ] `headcount-calculator` → merge into the `workforce-planning` suite (Phase 17) or expand with FTE conversion + BLS benchmarks.
+
+### 15.2 Fix merge chains
+- [ ] 17 `merged` entries target drafts or other merged pages (`working-hours → work-hours → time-card`). Repoint each to a **published** final target; the registry test enforces it.
+
+### 15.3 Make the 30 state pages un-templated (they are the exact pattern the spam update hit)
+- [ ] Extend `StatePaycheckPage` with per-state unique sections: city/county minimum-wage tiers table; state-specific payroll programs (SDI/PFML/FAMLI/SUI employee share) explained with the official rate link; that state's overtime law (daily OT, 7th-day rules); local income taxes where they exist (NY, PA, MD, OH, IN, MI); 2026 changes vs 2025; a "what changes if you move to {neighbor state}" comparison generated from the engine.
+- [ ] Generated worked examples: vary scenarios per state (use the state's actual median hourly wage from BLS OEWS rather than the same $25/$32 everywhere).
+- [ ] Each state page gets ≥2 state-specific FAQs that don't exist on any other state page (checked by a uniqueness test).
+- [ ] Only after 15.3 is live: add the remaining 20 states + DC to reach the 51 that PaycheckCity/SmartAsset offer, by population: AL, OK, CT, AR, MS, KS, NM, NE, WV, HI, NH, ME, MT, RI, DE, SD, ND, AK, VT, WY, DC.
+
+### 15.4 Salary tier pages (`/salary/[slug]`, 30 pages)
+- [ ] Same treatment: each tier page needs content a template can't produce — which occupations pay that wage (BLS OEWS), how it compares to state/city minimum wage and median rent (HUD FMR), a budget split example. If this can't be done well, cut to the 10 highest-traffic tiers.
+
+---
+
+## Phase 16: Product depth — be the best tool, not just a correct one
+
+### 16.1 Flagship paycheck/payroll (60% of impressions live here)
+- [ ] **Employee ↔ Employer toggle**: show employer-side cost (FICA match, FUTA, SUI at the state new-employer rate) — no major free competitor shows both sides on one screen.
+- [ ] **Pay stub preview + PDF** that looks like a real stub (YTD columns, employer/employee sections). Print-ready. The #1 useful artifact for small employers and job seekers.
+- [ ] **Scenario compare** (A/B): two paychecks side by side (raise, move state, change 401k %). Reuse `ComparePanel`, persist both in the URL.
+- [ ] **Reverse solver**: "I need $X take-home → what gross?" via bisection on `calculatePaycheck`.
+- [ ] W-4 2026 Step 2/3/4 inputs (multiple jobs, dependents credit, other income) — PaycheckCity has these; we don't.
+- [ ] Bulk mode: paste up to 25 employees (CSV) → gross-to-net table + CSV download. Small-business hook; no competitor offers it free.
+
+### 16.2 Cross-site features
+- [ ] **Bidirectional inputs on all ratio calculators** (margin, markup, ROI, break-even): enter any two of three fields (Omni's signature UX).
+- [ ] **Saved scenarios** with names, in localStorage + export/import JSON (no accounts needed yet).
+- [ ] **Explain-this-number**: each result line expands to show the exact formula with the user's values substituted. Doubles as live worked-example content.
+- [ ] Keyboard-first: Enter calculates, sane Tab order, Esc resets; `aria-live` on results. Run axe on 10 flagship pages.
+- [ ] Dark mode audit (next-themes is installed; verify every result panel is legible).
+- [ ] PWA: `manifest.json` exists — add offline caching of the 20 most-used calculators.
+
+### 16.3 Content formats that earn links
+- [ ] Downloadables behind a soft email ask: Excel timesheet template, 2026 payroll calendar (bi-weekly/semi-monthly pay dates), 2026 federal + state withholding cheat-sheet PDF, commission plan template. Hosted under `/resources/`.
+- [ ] Yearly "What changes in {next year} payroll" page updated the day the IRS/SSA announce (brackets, SS wage base, 401k limits, state min wages). Evergreen URL, dated sections.
+
+---
+
+## Phase 17: Draft triage (101 drafts → ~18 strong suites, rest deleted)
+
+> Rule: publish only as **suites** with tabs/modes and one deep article; never one thin page per formula. Verify demand in Keyword Planner/GSC before building. Delete what isn't listed.
+
+| Suite (new or existing page) | Drafts absorbed | Decision |
+|---|---|---|
+| `financial-ratio-calculator` (new) | roe, roa, debt-ratio, current-ratio, quick-ratio, interest-coverage, asset-turnover, financial-ratio | One page, tabs by ratio family, benchmark table by industry |
+| `inventory-planning-calculator` (new) | inventory-turnover, holding-cost, eoq, safety-stock, reorder-point, cash-conversion-cycle | One suite |
+| `inventory-valuation-calculator` | fifo, lifo, weighted-average (already merged in) | Publish — fixes 3 broken merge targets |
+| `profit-margin-calculator` (exists) | net-margin, operating-margin, contribution-margin, selling-price, wholesale-price | Add as modes; delete drafts; repoint merges |
+| `marketing-cost-calculator` (new) | cpl, cpa, cpm, cpc, marketing-roi, conversion-rate | One page, tabs; strong B2B CPC |
+| `sales-forecast-calculator` (new) | revenue-forecast, sales-forecast, pipeline, win-rate, revenue-growth, customer-retention | One page |
+| `commission-calculator` (exists) | tiered-commission, commission-split, quota, sales-bonus, incentive | Already has tiered/quota modes — add split & bonus; delete drafts |
+| `startup-equity-calculator` (new) | startup-valuation, equity-dilution, cap-table, safe-note, option-pool, founder-equity-split | One suite — high-value niche with few good free tools |
+| SaaS metrics (existing mrr/churn/ltv pages) | arr, expansion-mrr, ltv-cac-ratio, arpu, acv, gross-revenue-retention, mau-value, trial-conversion, saas-pricing | Fold into existing pages as modes; delete drafts |
+| `labor-cost-calculator` (new, standalone) | labor-cost, team-cost, hr-budget, employee-cost (merge target) | Publish — pairs with the employer-side paycheck view (16.1) |
+| `workforce-planning-calculator` (new) | workforce-planning, headcount (15.1), absenteeism, span-of-control, labor-efficiency | Suite; fixes 3 merge targets |
+| `hiring-metrics-calculator` (new) | time-to-hire, time-to-fill, recruiting-roi, cost-of-turnover (merge target), training-cost | Suite |
+| `freelance-pricing-calculator` (new) | project-pricing, consultant-fee, retainer, profit-per-client, time-value, monthly-revenue, agency-margin | Suite; fixes 4 merge targets |
+| `fiverr-fee-calculator` | — | Publish standalone (branded query with real demand); add Upwork mode |
+| `invoice-calculator` → **Invoice Generator** | — | Publish as a real tool (line items, tax, PDF) — genuinely useful, link-worthy |
+| **Financial Statements** suite (new) | journal-entry, trial-balance, balance-sheet, cash-flow-statement, pnl | One suite for students/bookkeepers |
+| `vat-calculator` + `gst-calculator` | — | One page with country presets; US sales-tax page already exists |
+| Hold as drafts | amortization, runway, budget, unit-economics, operating-cash-flow | Publish only with a differentiated angle |
+| **Delete** | compensation-ratio, engagement-score, hr-roi, salary-benchmark (no data source), diversity-ratio, promotion-rate, internal-mobility, employee-lifetime-value | Remove from registry; never indexed, no redirect needed |
+| **Re-evaluate after 90 days of GSC data** | Phase 12 accounting pages: book-value, fixed-asset, cost-allocation, overhead-rate, manufacturing-cost, operating-expense-ratio, accounts-receivable-days, accounts-payable-days | Cut or merge into the Financial Statements suite if zero impressions |
+
+---
+
+## Phase 18: Distribution & monetization groundwork
+
+- [ ] **Embed that earns links**: `EmbedModal` snippet includes a visible, non-iframe `<a href="…">Calculator by QuickBizCalc</a>` under the iframe; "white-label without link" becomes a paid option later. Track embeds via `?ref=embed` + referrer.
+- [ ] Outreach list (50): HR blogs, bookkeeping firms, staffing agencies, community-college business programs — offer the embed + a co-branded template from 16.3.
+- [ ] Reddit/Quora: answer with a **pre-filled result URL** (Phase 11 feature), never a bare link. r/personalfinance, r/smallbusiness, r/humanresources, r/Payroll.
+- [ ] Newsletter: `api/newsletter` writes JSONL only — wire a Resend audience + a monthly "payroll changes" issue so the list has a reason to exist.
+- [ ] `data/*.jsonl` → SQLite (`bun:sqlite` since production runs bun) so feedback/newsletter survive redeploys and can be queried. Add a private `/admin/feedback` view (basic auth) to actually read calculator feedback.
+- [ ] AdSense: re-apply only after Phases 13–15 are live for ≥4 weeks and GSC shows re-indexing. Keep ad slots out of the embed route and the above-the-fold calculator area (CLS).
+
+---
+
+## Phase 19: Measurement loop
+
+- [ ] GSC API pull (weekly script → `data/gsc/*.json`): impressions/clicks/position per URL. Drive 15.1/17 "cut or keep" decisions from this, not guesses.
+- [ ] Microsoft Clarity ID is a placeholder (`XXXXXXXXXX`) — set it or remove the script.
+- [ ] Event tracking on: calculate, share, embed-copy, PDF, history-restore, feedback. Know which features people use before building more.
+- [ ] Core Web Vitals budget in CI (Lighthouse CI on 5 flagship URLs; fail on mobile LCP > 2.5s).
+
+---
+
+## Phase 20: Later / only if 13–19 show recovery
+
+- [ ] Accounts (save scenarios across devices, employer dashboards) — needs the SQLite/Postgres step first.
+- [ ] Paid tier: white-label embed, bulk payroll CSV > 25 rows, API access to `calculatePaycheck`.
+- [ ] 2027 tax year: `withholding-2026.ts` → `withholding/{year}.ts` with a `TAX_YEAR` switch so both years coexist in January.
+
+---
+
+## Suggested execution order (one PR each, build + tests green)
+
+1. **14.3 tests + CI** (so everything after is checked)
+2. **13.3 known defects + 15.2 merge chains**
+3. **14.1 / 14.2 registry split + typed SEO data**
+4. **13.1 / 13.2 author, review dates, linked sources**
+5. **15.3 state-page differentiation**
+6. **15.1 thin-page merges**
+7. **14.4 cleanup**
+8. Request re-indexing in GSC; wait for data
+9. **16.1 flagship features**
+10. **17 suites**, one per PR, demand-checked
+11. **18 / 19**

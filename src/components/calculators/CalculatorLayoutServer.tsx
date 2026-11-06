@@ -75,6 +75,11 @@ import {
   LineChart,
   Scale,
   Warehouse,
+  MapPin,
+  SunMedium,
+  Flame,
+  Layers,
+  ShoppingBag,
 } from 'lucide-react';
 
 // ---------------------------------------------------------------------------
@@ -199,6 +204,12 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   LineChart,
   Scale,
   Warehouse,
+  // Phase 12 additions: icons referenced by SEO relatedTools (enforced by registry.test.ts)
+  MapPin,
+  SunMedium,
+  Flame,
+  Layers,
+  ShoppingBag,
 };
 
 function RelatedToolIcon({
