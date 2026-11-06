@@ -240,12 +240,12 @@ Audited, enriched with 2026 `benchmarkTables` & `deepDiveSections`, and publishe
 
 ### 13.3 Math & copy audit of every published page (102)
 - [ ] Known defects to fix first (found in competitor review of the live hourly paycheck page):
-  - [ ] `commission-calculator` has `metaTitle: 'Churn Rate Calculator (2026)…'` and a churn `metaDescription` — wrong page title in SERPs for a tier-1 page (`calculator-meta.ts:417`).
-  - [ ] Hourly paycheck Step 4 lists "no state income tax" states but omits FL and TX, then lists FL/TX under "exact withholding tables".
-  - [ ] Texas worked example: $1,048.05 × 26 shown as $27,249.20 (should be $27,249.30); other annual figures off by cents → generate examples from `calculatePaycheck()` output, never hand-typed.
-  - [ ] Illinois example state tax ($116.63) is not explained (allowance adjustment) → add one sentence.
-  - [ ] "$18 an Hour, Another State" example names no state → name it.
-  - [ ] Live-calc pages whose `howToSteps` still say "Click Calculate".
+  - [x] `commission-calculator` has `metaTitle: 'Churn Rate Calculator (2026)…'` and a churn `metaDescription` — wrong page title in SERPs for a tier-1 page (`calculator-meta.ts:417`) — fixed in PR 2.
+  - [x] Hourly paycheck Step 4 and the "state not in the list" FAQ now say FL/NV/TN/TX/WA are in the list and only AK/NH/SD/WY use the "No state income tax" option (PR 2).
+  - [x] Texas worked example cents: examples are already engine-generated; the gap is per-paycheck rounding vs exact annual, not an error. No change (PR 2).
+  - [x] Illinois example state tax ($116.63) is not explained (allowance adjustment) → the example now states the $2,925-per-allowance subtraction (PR 2).
+  - [x] "$18 an Hour, Another State" example retitled as a demonstration of the flat-rate option (PR 2).
+  - [x] Hourly paycheck how-to no longer says "Click Calculate Paycheck" (PR 2). Remaining: 181 other SEO files say "Click Calculate" — audit each against whether its component calculates live (Phase 14.5 `useCalculatorState` migration is the natural moment).
 - [ ] Systematic pass, category by category: every worked example recomputed by code (Phase 14.3 test asserts text numbers == engine numbers where an engine exists); every FAQ number checked against the linked source; remove any "2025" figures still presented as current.
 - [ ] Remove filler: duplicated state lists, identical related-card subtitles, repeated disclaimers. One disclaimer component, rendered once.
 
@@ -302,7 +302,7 @@ Audited, enriched with 2026 `benchmarkTables` & `deepDiveSections`, and publishe
 - [ ] `headcount-calculator` → merge into the `workforce-planning` suite (Phase 17) or expand with FTE conversion + BLS benchmarks.
 
 ### 15.2 Fix merge chains
-- [ ] 17 `merged` entries target drafts or other merged pages (`working-hours → work-hours → time-card`). Repoint each to a **published** final target; the registry test enforces it.
+- [x] 16 `merged` entries targeted drafts; repointed to published pages (PR 2): attendance→time-card, replacement-cost→employee-turnover, workforce-capacity→fte, net-profit→profit-margin, contribution→gross-margin, split-commission + sales-target→commission, lead-cost→roi, client-profit + proposal-price + quote + estimate→billable-hours, free-to-paid-conversion→mrr, fifo + lifo + weighted-average-cost→cogs. `DRAFT_TARGET_FALLBACK` removed from `next.config.ts`; registry test ratchet is now empty.
 
 ### 15.3 Make the 30 state pages un-templated (they are the exact pattern the spam update hit)
 - [ ] Extend `StatePaycheckPage` with per-state unique sections: city/county minimum-wage tiers table; state-specific payroll programs (SDI/PFML/FAMLI/SUI employee share) explained with the official rate link; that state's overtime law (daily OT, 7th-day rules); local income taxes where they exist (NY, PA, MD, OH, IN, MI); 2026 changes vs 2025; a "what changes if you move to {neighbor state}" comparison generated from the engine.
