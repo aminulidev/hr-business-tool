@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildStatePaycheckSeo, STATE_CODES, STATE_PAYCHECK_PAGES } from './state-pages';
+import { STATE_DETAILS } from './state-details';
 import { calculatePaycheck, PERIODS_PER_YEAR, type StateCode } from './withholding-2026';
 
 // The state pages' article text is generated from the engine. These tests make
@@ -102,5 +103,104 @@ describe('state slugs', () => {
       expect(page.slug).toBe(`${page.name.toLowerCase().replace(/\s+/g, '-')}-hourly-paycheck-calculator`);
       expect(page.code).toBe(code);
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 15.3 — every state page must differ from every other state page in the
+// parts a template could otherwise stamp out: FAQs, 2026 changes, overtime
+// details, local wage tables. The neighbour comparison is engine-generated, so
+// it is checked against the engine like the other tables.
+// ---------------------------------------------------------------------------
+describe('state pages are not templated (Phase 15.3)', () => {
+  const seos = Object.fromEntries(STATE_CODES.map((c) => [c, buildStatePaycheckSeo(c)])) as Record<
+    StateCode,
+    ReturnType<typeof buildStatePaycheckSeo>
+  >;
+
+  const duplicates = (items: { code: StateCode; text: string }[]) => {
+    const seen = new Map<string, StateCode>();
+    const out: string[] = [];
+    for (const { code, text } of items) {
+      const key = text.trim().toLowerCase();
+      if (seen.has(key) && seen.get(key) !== code) out.push(`${seen.get(key)} & ${code}: "${text.slice(0, 70)}"`);
+      seen.set(key, code);
+    }
+    return out;
+  };
+
+  it('each state has at least two hand-written FAQs that appear on no other state page', () => {
+    for (const code of STATE_CODES) {
+      expect(STATE_PAYCHECK_PAGES[code].extraFaqs.length, `${code} extraFaqs`).toBeGreaterThanOrEqual(2);
+    }
+    const qs = STATE_CODES.flatMap((code) => STATE_PAYCHECK_PAGES[code].extraFaqs.map((f) => ({ code, text: f.question })));
+    const as = STATE_CODES.flatMap((code) => STATE_PAYCHECK_PAGES[code].extraFaqs.map((f) => ({ code, text: f.answer })));
+    expect([...duplicates(qs), ...duplicates(as)].join('\n')).toBe('');
+  });
+
+  it('2026 change bullets, overtime details and tax summaries are unique per state', () => {
+    const changes = STATE_CODES.flatMap((code) => STATE_DETAILS[code].changes2026.map((text) => ({ code, text })));
+    const overtime = STATE_CODES.flatMap((code) => STATE_DETAILS[code].overtimeDetail.map((text) => ({ code, text })));
+    const summaries = STATE_CODES.map((code) => ({ code, text: STATE_PAYCHECK_PAGES[code].stateTaxSummary }));
+    const minWage = STATE_CODES.map((code) => ({ code, text: STATE_PAYCHECK_PAGES[code].minimumWageNote }));
+    for (const code of STATE_CODES) {
+      expect(STATE_DETAILS[code].changes2026.length, `${code} changes2026`).toBeGreaterThanOrEqual(2);
+      expect(STATE_DETAILS[code].overtimeDetail.length, `${code} overtimeDetail`).toBeGreaterThanOrEqual(1);
+      expect(STATE_DETAILS[code].neighbors.length, `${code} neighbors`).toBeGreaterThanOrEqual(1);
+      for (const n of STATE_DETAILS[code].neighbors) expect(STATE_CODES, `${code} neighbour ${n}`).toContain(n);
+    }
+    expect([...duplicates(changes), ...duplicates(overtime), ...duplicates(summaries), ...duplicates(minWage)].join('\n')).toBe('');
+  });
+
+  it('worked examples use the state median wage, so no two states share a scenario', () => {
+    const titles = STATE_CODES.flatMap((code) => seos[code].workedExamples.map((e) => ({ code, text: e.title })));
+    expect(duplicates(titles).join('\n')).toBe('');
+    for (const code of STATE_CODES) {
+      const { medianHourlyWage } = STATE_DETAILS[code];
+      expect(medianHourlyWage, code).toBeGreaterThan(STATE_PAYCHECK_PAGES[code].minimumWage);
+      expect(medianHourlyWage, code).toBeLessThan(45);
+      expect(JSON.stringify(seos[code].workedExamples)).toContain(medianHourlyWage.toFixed(2));
+    }
+  });
+
+  it('local minimum wage tables never repeat a row across states; every state has a table or a pre-emption note', () => {
+    const rows = STATE_CODES.flatMap((code) =>
+      (STATE_DETAILS[code].localMinimumWages ?? []).map((l) => ({ code, text: `${l.jurisdiction} ${l.rate}` })),
+    );
+    expect(duplicates(rows).join('\n')).toBe('');
+    for (const code of STATE_CODES) {
+      const d = STATE_DETAILS[code];
+      expect(!!d.localMinimumWages !== !!d.localMinimumWageNote, `${code}: either a local table or a pre-emption note`).toBe(true);
+    }
+  });
+
+  it.each(STATE_CODES)('%s neighbour comparison table balances against the engine', (code) => {
+    const table = seos[code].benchmarkTables!.find((t) => t.title.includes('Neighboring States'))!;
+    expect(table).toBeDefined();
+    const median = STATE_DETAILS[code].medianHourlyWage;
+    for (const row of table.rows) {
+      const [name, statePer, netPer, netAnnual] = row;
+      const rowCode = STATE_CODES.find((c) => STATE_PAYCHECK_PAGES[c].name === name)!;
+      expect(rowCode, `${code}: row "${name}"`).toBeDefined();
+      const r = calculatePaycheck({
+        state: rowCode,
+        hourlyRate: median,
+        regularHoursPerWeek: 40,
+        overtimeHoursPerWeek: 0,
+        overtimeMultiplier: 1.5,
+        payFrequency: 'bi-weekly',
+        filingStatus: 'single',
+        stateAllowances: STATE_PAYCHECK_PAGES[rowCode].allowances?.defaultSingle ?? 0,
+      });
+      const expectedState = r.deductions
+        .filter((d) => !['federal', 'social-security', 'medicare'].includes(d.key))
+        .reduce((s, d) => s + d.perPeriod, 0);
+      expect(money(statePer), `${code}/${name} state column`).toBeCloseTo(expectedState, 1);
+      expect(money(netPer), `${code}/${name} net per period`).toBeCloseTo(r.netPerPeriod, 1);
+      expect(money(netAnnual), `${code}/${name} net annual`).toBeCloseTo(r.netAnnual, 0);
+    }
+    // first row is the state itself, every other row a declared neighbour
+    expect(table.rows[0][0]).toBe(STATE_PAYCHECK_PAGES[code].name);
+    expect(table.rows.length).toBe(STATE_DETAILS[code].neighbors.length + 1);
   });
 });

@@ -67,6 +67,15 @@ describe('registry shape', () => {
     }
   });
 
+  it('mergedQuery is only set on merged entries and is a bare query string', () => {
+    for (const c of all) {
+      if (c.mergedQuery !== undefined) {
+        expect(c.status, `${c.slug} has mergedQuery but is ${c.status}`).toBe('merged');
+        expect(c.mergedQuery, `${c.slug} mergedQuery`).toMatch(/^[a-z]+=[a-z-]+$/);
+      }
+    }
+  });
+
   it('merged entries name a target that exists and does not loop', () => {
     for (const c of merged) {
       expect(c.mergedInto, `${c.slug} has no mergedInto`).toBeTruthy();

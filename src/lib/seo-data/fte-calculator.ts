@@ -16,6 +16,7 @@ const seoData = {
     'Enter the combined weekly hours worked by all part-time employees.',
     'Select your standard full-time workweek hours (40 hours for standard HR budgeting, or 30 hours for IRS/ACA compliance).',
     'Review both your Standard Budgeting FTE and your ACA Applicable Large Employer (ALE) FTE count immediately.',
+    'Switch to the Headcount projection tab to forecast year-end headcount from planned hires and your attrition rate, including the backfill hires needed just to stand still, and see the result as FTE.',
   ],
   formula: 'Part-Time FTE = Total Weekly Part-Time Hours ÷ Standard Full-Time Weekly Hours (40)\nTotal Standard FTE = Full-Time Headcount + Part-Time FTE\nACA FTE = Full-Time Headcount (30+ hrs/wk) + (Total Monthly PT Hours ÷ 120 [or Weekly PT Hours ÷ 30])',
   formulaDescription: 'Full-Time Equivalent (FTE) converts your combined full-time and part-time workforce into standardized full-time units. Standard financial planning uses a 40-hour workweek (2,080 hours/year = 1.0 FTE), whereas the Affordable Care Act (ACA) uses a 30-hour workweek (130 hours/month) to determine the 50-FTE Applicable Large Employer (ALE) mandate.',
@@ -65,6 +66,7 @@ const seoData = {
   workedExamples: [
     { title: 'Small Business Below ACA Threshold', description: '10 full-time employees (40h/wk) + 6 part-time employees working 20h/wk each (120 PT hours total). Standard FTE = 10 + (120 ÷ 40) = 13.0 FTE. ACA FTE = 10 + (120 ÷ 30) = 14.0 ACA FTE (well below the 50-FTE mandate).' },
     { title: 'Hospitality Group Crossing the 50 ACA FTE Line', description: '30 full-time staff + 30 part-time servers working 20h/wk each (600 PT hours total). Standard FTE = 30 + (600 ÷ 40) = 45.0 FTE. However, ACA FTE = 30 + (600 ÷ 30) = 50.0 ACA FTE — triggering the ACA Employer Shared Responsibility Mandate.' },
+    { title: 'Headcount Projection: 100 People, 20 Hires, 15% Attrition', description: 'Start the year at 100 employees with 20 planned hires and 15% annual attrition. Departures over 12 months ≈ (100 + 20 ÷ 2) × 15% = 17 (rounded). Year-end headcount = 100 + 20 − 17 = 103, a net gain of only 3 despite 20 hires. At an average of 38 hours a week that is 97.9 FTE. To end the year at 120 the plan needs about 37 hires.' },
     { title: 'SaaS Company Workforce Planning', description: '50 full-time engineers/marketers + 5 part-time specialists working 20h/wk (100 PT hours). Total Budgeting FTE = 52.5 FTE. At $10M ARR, Revenue per FTE = $190,476.' },
   ],
   faqs: [
@@ -72,15 +74,17 @@ const seoData = {
     { question: 'How do you calculate FTE from part-time hours?', answer: 'Sum all weekly hours worked by part-time employees and divide by your company\'s standard full-time weekly hours (usually 40). For example, if 5 part-time employees work 18, 20, 22, 15, and 25 hours per week (totaling 100 hours), they equal 100 ÷ 40 = 2.5 FTE.' },
     { question: 'How does the IRS calculate FTE for the ACA 50-employee mandate?', answer: 'For each calendar month, count every employee who worked at least 30 hours per week (or 130 hours per month) as 1.0 full-time employee. Then, sum all monthly hours worked by part-time employees (up to 120 hours per person) and divide that total by 120. Add your full-time count and part-time FTE fraction together, then average the 12 monthly totals across the calendar year.' },
     { question: 'What is the difference between headcount and FTE?', answer: 'Headcount is the literal number of individuals on your payroll, regardless of their schedule. FTE normalizes those individuals by hours worked. A company with 40 full-time workers and 20 half-time (20 hr/wk) workers has a headcount of 60, but an FTE of 50.0.' },
+    { question: 'What is headcount and does it include contractors?', answer: 'Headcount is the number of people on payroll at a point in time — full-time, part-time and temporary W-2 employees. Independent contractors paid on a 1099 are not employees and are excluded, as are agency temps on the agency\'s payroll. Employees on leave usually stay in headcount; some reports split "active" from "on leave". Report headcount monthly and reconcile it to payroll.' },
+    { question: 'How do you project year-end headcount?', answer: 'Projected headcount = current + planned hires − expected departures. Expected departures = average headcount over the period × annual attrition rate × (months ÷ 12). With 100 employees, 20 planned hires and 15% attrition over 12 months: departures ≈ (100 + 10) × 15% = 17, so year-end headcount ≈ 103, not 120. To actually grow by 20 you need about 37 hires — the extra 17 are backfills. The Headcount projection tab does this and converts the result to FTE at your average weekly hours.' },
     { question: 'What is 0.5 FTE or 0.75 FTE in hours?', answer: 'Based on a standard 40-hour workweek, 0.5 FTE equals 20 hours per week (1,040 hours/year), 0.75 FTE equals 30 hours per week (1,560 hours/year), and 0.8 FTE equals 32 hours per week (a standard 4-day workweek).' },
   ],
   relatedTools: [
     { slug: 'revenue-per-employee-calculator', title: 'Revenue Per Employee', description: 'ARR & profit per FTE benchmarks', icon: 'BarChart3' },
     { slug: 'employee-cost-calculator', title: 'Employee Cost Calculator', description: 'True loaded cost per FTE', icon: 'DollarSign' },
     { slug: 'labor-cost-calculator', title: 'Labor Cost Calculator', description: 'Total labor cost as % of revenue', icon: 'Wallet' },
-    { slug: 'headcount-calculator', title: 'Headcount Calculator', description: 'Project year-end headcount', icon: 'Users' },
+    { slug: 'employee-turnover-calculator', title: 'Employee Turnover Calculator', description: 'The attrition rate to feed the headcount projection', icon: 'Users' },
     { slug: 'workforce-planning-calculator', title: 'Workforce Planning', description: 'Project future hiring needs', icon: 'CalendarRange' },
   ],
-  sources: [SRC.irsAleFte],
+  sources: [SRC.irsAleFte, SRC.blsJolts],
 } satisfies CalculatorSeoData;
 export default seoData;

@@ -132,8 +132,8 @@ interface CalculatorLayoutProps {
   formulaDescription?: string;
   workedExamples?: WorkedExample[];
   commissionStructures?: CommissionStructure[];
-  benchmarkTables?: { title: string; subtitle?: string; headers: string[]; rows: string[][] }[];
-  deepDiveSections?: { title: string; paragraphs: string[] }[];
+  benchmarkTables?: { title: string; subtitle?: string; headers: string[]; rows: string[][]; note?: string }[];
+  deepDiveSections?: { title: string; paragraphs: string[]; bullets?: string[] }[];
   faqs?: FAQItem[];
   relatedTools?: RelatedTool[];
   adContent?: React.ReactNode;
@@ -677,6 +677,9 @@ export default function CalculatorLayoutServer({
                         </tbody>
                       </table>
                     </div>
+                    {tbl.note && (
+                      <p className="text-xs text-muted-foreground leading-relaxed">{tbl.note}</p>
+                    )}
                   </div>
                 ))}
               </section>
@@ -692,6 +695,13 @@ export default function CalculatorLayoutServer({
                         {p}
                       </p>
                     ))}
+                    {sec.bullets && sec.bullets.length > 0 && (
+                      <ul className="list-disc pl-5 space-y-1.5 text-sm sm:text-base text-muted-foreground leading-relaxed">
+                        {sec.bullets.map((b, bIdx) => (
+                          <li key={bIdx}>{b}</li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 ))}
               </section>

@@ -9,20 +9,20 @@
 // - New York City: NYS-50-T-NYC (1/26), Method II exact calculation
 // - New York PFL: 0.432% up to $411.91/yr; NY DBL (SDI): 0.5% up to $0.60/week
 // - Illinois: 4.95% flat, $2,925 per IL-W-4 allowance (IL Comptroller bulletin 1-26)
-// - Washington: 0% income tax; WA PFML employee share 0.5714% (up to $184,500); WA Cares 0.58%
+// - Washington: 0% income tax; WA PFML 2026 premium 1.13%, employee share 71.43% = 0.8072% (up to $184,500); WA Cares 0.58%
 // - Pennsylvania: 3.07% flat state tax; PA UC employee withholding 0.07%
-// - North Carolina: 4.25% flat state tax after NC-4 standard deduction & $2,500/allowance
-// - Georgia: 5.19% flat state tax after G-4 standard deduction ($12k/$24k) & $4,000/allowance
+// - North Carolina: 3.99% flat tax for 2026 (S.L. 2023-134); NC-30 withholds at 4.09% after NC-4 standard deduction & $2,500/allowance
+// - Georgia: 4.99% flat tax for 2026 (H.B. 463, retroactive to Jan 1; withholding guide rev. June 2026) after G-4 standard deduction ($12k/$24k) & $4,000/allowance
 // - Michigan: 4.25% flat state tax after $5,800 per MI-W4 exemption
 // - Indiana: 2.95% flat state tax after $1,000 per WH-4 exemption
 // - Arizona: 2.50% flat state tax after standard deduction & $100/allowance credit
-// - Colorado: 4.40% flat state tax after standard deduction; CO FAMLI employee share 0.45% (capped at $184,500)
-// - Utah: 4.55% flat state tax with UT taxpayer tax credit phaseout (Publication 14)
-// - Kentucky: 4.00% flat state tax after $3,270 standard deduction
+// - Colorado: 4.40% flat state tax after standard deduction; CO FAMLI 2026 premium 0.88%, employee share 0.44% (capped at $184,500)
+// - Utah: 4.45% flat tax for 2026 (S.B. 60, retroactive to Jan 1; Publication 14 rev. June 2026) with UT taxpayer tax credit phaseout
+// - Kentucky: 3.50% flat tax for 2026 (H.B. 1 of 2025) after $3,270 standard deduction
 // - Louisiana: 3.00% flat state tax after $12,500 Single / $25,000 Married standard deduction
 // - Iowa: 3.80% flat state tax after standard deduction & $40 per IA W-4 allowance credit
-// - Idaho: 5.695% flat state tax after standard deduction
-// - Ohio: 0% up to $26,050, 2.75% up to $100k, 3.50% over $100k after $2,400/exemption
+// - Idaho: 5.30% flat tax (H.B. 40 of 2025) after standard deduction
+// - Ohio: 0% up to $26,050, then a flat 2.75% for 2026 (H.B. 96 budget) after $2,400/exemption
 // - Virginia: 2%–5.75% progressive brackets after $8,500/$17,000 standard deduction & $930/exemption
 // - New Jersey: 1.4%–10.75% progressive schedules + 0.515% NJ SUI/SDI/FLI employee payroll deductions
 // - Massachusetts: 5.00% flat tax after M-4 exemption (+4% over $1M) + 0.46% MA PFML
@@ -278,16 +278,17 @@ function illinoisIncomeTax(annualWages: number, allowances: number): number {
 // Phase 3 State Withholding Engines (WA, PA, NC, GA, MI, IN, AZ, CO)
 // ---------------------------------------------------------------------------
 
-// Washington: 0% income tax, WA PFML employee share ~0.5714% (up to SS cap), WA Cares 0.58%
-export const WA_PFML_EMPLOYEE_RATE = 0.005714;
+// Washington: 0% income tax. WA PFML 2026 total premium 1.13% (ESD), employee share 71.43% → 0.8072% up to the SS cap; WA Cares 0.58%
+export const WA_PFML_EMPLOYEE_RATE = 0.008072;
 export const WA_CARES_RATE = 0.0058;
 
 // Pennsylvania: 3.07% flat income tax + 0.07% PA UC employee withholding
 export const PA_INCOME_TAX_RATE = 0.0307;
 export const PA_UC_EMPLOYEE_RATE = 0.0007;
 
-// North Carolina: 4.25% flat tax in 2026 after NC-4 standard deduction & $2,500 per allowance
-export const NC_RATE = 0.0425;
+// North Carolina: 3.99% flat tax for 2026; by statute NC-30 withholding uses the rate + 0.10 = 4.09%, after NC-4 standard deduction & $2,500 per allowance
+export const NC_TAX_RATE = 0.0399;
+export const NC_RATE = 0.0409;
 export const NC_STD_DEDUCTION: Record<FilingStatus, number> = {
   single: 12750,
   married: 25500,
@@ -300,8 +301,8 @@ function northCarolinaIncomeTax(annualWages: number, status: FilingStatus, allow
   return Math.max(0, annualWages - deduction) * NC_RATE;
 }
 
-// Georgia: 5.19% flat tax in 2026 after G-4 standard deduction ($12k single/hoh, $24k married) & $4,000 per allowance
-export const GA_RATE = 0.0519;
+// Georgia: 4.99% flat tax for 2026 (H.B. 463, retroactive to Jan 1, 2026) after G-4 standard deduction ($12k single/hoh, $24k married) & $4,000 per allowance
+export const GA_RATE = 0.0499;
 export const GA_STD_DEDUCTION: Record<FilingStatus, number> = {
   single: 12000,
   married: 24000,
@@ -339,9 +340,9 @@ function arizonaIncomeTax(annualWages: number, status: FilingStatus, allowances:
   return Math.max(0, taxable * AZ_RATE - allowances * AZ_DEPENDENT_CREDIT);
 }
 
-// Colorado: 4.40% flat state tax after federal standard deduction; CO FAMLI employee share 0.45% up to SS wage cap
+// Colorado: 4.40% flat state tax after federal standard deduction; CO FAMLI 2026 premium 0.88%, employee share 0.44% up to SS wage cap
 export const CO_RATE = 0.044;
-export const CO_FAMLI_RATE = 0.0045;
+export const CO_FAMLI_RATE = 0.0044;
 
 function coloradoIncomeTax(annualWages: number, status: FilingStatus, allowances: number): number {
   const taxable = Math.max(0, annualWages - FEDERAL_STANDARD_DEDUCTION[status] - allowances * 1000);
@@ -352,8 +353,8 @@ function coloradoIncomeTax(annualWages: number, status: FilingStatus, allowances
 // Phase 9 State Withholding Engines (UT, KY, LA, IA, ID, OH, VA, NJ, MA, MD, MN, MO, WI, OR, SC)
 // ---------------------------------------------------------------------------
 
-// Utah: 4.55% flat tax with Utah Publication 14 withholding credit phaseout (1.3% phaseout above threshold)
-export const UT_RATE = 0.0455;
+// Utah: 4.45% flat tax for 2026 (S.B. 60) with Utah Publication 14 withholding credit phaseout (1.3% phaseout above threshold)
+export const UT_RATE = 0.0445;
 function utahIncomeTax(annualWages: number, status: FilingStatus): number {
   const baseTax = Math.max(0, annualWages) * UT_RATE;
   const baseAllowance = status === 'married' ? 892 : 446;
@@ -363,8 +364,8 @@ function utahIncomeTax(annualWages: number, status: FilingStatus): number {
   return Math.max(0, baseTax - credit);
 }
 
-// Kentucky: 4.00% flat tax in 2026 after $3,270 Kentucky standard deduction
-export const KY_RATE = 0.04;
+// Kentucky: 3.50% flat tax for 2026 (H.B. 1 of 2025, down from 4.00%) after $3,270 Kentucky standard deduction
+export const KY_RATE = 0.035;
 export const KY_STD_DEDUCTION = 3270;
 function kentuckyIncomeTax(annualWages: number): number {
   return Math.max(0, annualWages - KY_STD_DEDUCTION) * KY_RATE;
@@ -389,15 +390,15 @@ function iowaIncomeTax(annualWages: number, status: FilingStatus, allowances: nu
   return Math.max(0, taxable * IA_RATE - allowances * IA_ALLOWANCE_CREDIT);
 }
 
-// Idaho: 5.695% flat state income tax above standard deduction & $3,600 per ID W-4 child allowance
-export const ID_RATE = 0.05695;
+// Idaho: 5.30% flat state income tax (H.B. 40 of 2025, down from 5.695%) above standard deduction & $3,600 per ID W-4 child allowance
+export const ID_RATE = 0.053;
 function idahoIncomeTax(annualWages: number, status: FilingStatus, allowances: number): number {
   const taxable = Math.max(0, annualWages - FEDERAL_STANDARD_DEDUCTION[status] - allowances * 3600);
   return taxable * ID_RATE;
 }
 
-// Ohio: 0% up to $26,050, 2.75% up to $100,000, 3.50% over $100,000 after $2,400 per OH IT 4 exemption
-const OH_SCHEDULE = scheduleFromBrackets([26050, 100000], [0, 0.0275, 0.035]);
+// Ohio: 0% up to $26,050, then a flat 2.75% for 2026 (H.B. 96 removed the 3.5% bracket) after $2,400 per OH IT 4 exemption
+const OH_SCHEDULE = scheduleFromBrackets([26050], [0, 0.0275]);
 function ohioIncomeTax(annualWages: number, exemptions: number): number {
   const taxable = Math.max(0, annualWages - exemptions * 2400);
   return taxFromSchedule(taxable, OH_SCHEDULE);
@@ -659,7 +660,7 @@ export function calculatePaycheck(input: PaycheckInput): PaycheckResult {
       lines.push(
         {
           key: 'pfl',
-          label: 'WA Paid Family & Medical Leave (0.57%)',
+          label: 'WA Paid Family & Medical Leave (0.81%)',
           annual: Math.min(ficaWages, SOCIAL_SECURITY_WAGE_BASE) * WA_PFML_EMPLOYEE_RATE,
         },
         {
@@ -686,14 +687,14 @@ export function calculatePaycheck(input: PaycheckInput): PaycheckResult {
     case 'NC':
       lines.push({
         key: 'state',
-        label: 'North Carolina income tax (4.25%)',
+        label: 'North Carolina income tax (4.09% withholding)',
         annual: northCarolinaIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
       });
       break;
     case 'GA':
       lines.push({
         key: 'state',
-        label: 'Georgia income tax (5.19%)',
+        label: 'Georgia income tax (4.99%)',
         annual: georgiaIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
       });
       break;
@@ -727,7 +728,7 @@ export function calculatePaycheck(input: PaycheckInput): PaycheckResult {
         },
         {
           key: 'pfl',
-          label: 'CO FAMLI Paid Leave (0.45%)',
+          label: 'CO FAMLI Paid Leave (0.44%)',
           annual: Math.min(ficaWages, SOCIAL_SECURITY_WAGE_BASE) * CO_FAMLI_RATE,
         },
       );
@@ -735,14 +736,14 @@ export function calculatePaycheck(input: PaycheckInput): PaycheckResult {
     case 'UT':
       lines.push({
         key: 'state',
-        label: 'Utah income tax (4.55%)',
+        label: 'Utah income tax (4.45%)',
         annual: utahIncomeTax(taxableWages, input.filingStatus),
       });
       break;
     case 'KY':
       lines.push({
         key: 'state',
-        label: 'Kentucky income tax (4.00%)',
+        label: 'Kentucky income tax (3.50%)',
         annual: kentuckyIncomeTax(taxableWages),
       });
       break;
@@ -763,14 +764,14 @@ export function calculatePaycheck(input: PaycheckInput): PaycheckResult {
     case 'ID':
       lines.push({
         key: 'state',
-        label: 'Idaho income tax (5.695%)',
+        label: 'Idaho income tax (5.30%)',
         annual: idahoIncomeTax(taxableWages, input.filingStatus, input.stateAllowances),
       });
       break;
     case 'OH':
       lines.push({
         key: 'state',
-        label: 'Ohio state income tax',
+        label: 'Ohio state income tax (2.75% over $26,050)',
         annual: ohioIncomeTax(taxableWages, input.stateAllowances),
       });
       break;

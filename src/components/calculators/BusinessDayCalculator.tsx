@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useSearchParam } from '@/hooks/useSearchParam';
 import { motion } from 'framer-motion';
 import {
   CalendarDays,
@@ -259,13 +260,26 @@ function addBusinessDays(
 // Component
 // ---------------------------------------------------------------------------
 
-type Mode = 'count' | 'add';
+type Mode = 'count' | 'add' | 'holidays';
 type HolidayOption = 'weekends-only' | 'weekends-holidays';
 
 const ADD_DAY_PRESETS = ['5', '10', '15', '20', '30', '45', '60', '90'];
 
 export default function BusinessDayCalculator() {
-  const [mode, setMode] = useState<Mode>('count');
+  // Holiday countdown (Phase 15.1): the former holiday-countdown page 301s here with ?mode=holidays
+  const urlMode = useSearchParam('mode');
+  const [modeOverride, setMode] = useState<Mode | null>(null);
+  const mode: Mode = modeOverride ?? (urlMode === 'holidays' || urlMode === 'add' ? urlMode : 'count');
+  const [holidayYear, setHolidayYear] = useState(() => new Date().getFullYear());
+  const holidayRows = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return getUSFederalHolidaysForYear(holidayYear).map((h) => {
+      const days = Math.round((h.date.getTime() - today.getTime()) / 86_400_000);
+      return { name: h.name.replace(/ \(\d{4}\)$/, ''), date: h.date, days, dow: h.date.toLocaleDateString('en-US', { weekday: 'long' }) };
+    });
+  }, [holidayYear]);
+  const nextHoliday = holidayRows.find((h) => h.days >= 0);
 
   // Dynamic 2026+ defaults
   const [countStart, setCountStart] = useState('2026-01-01');
@@ -387,6 +401,18 @@ export default function BusinessDayCalculator() {
           >
             <ArrowRight className="h-4 w-4" />
             Add / Subtract Business Days
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode('holidays')}
+            className={`flex-1 flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              mode === 'holidays'
+                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/25'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <Calendar className="h-4 w-4" />
+            Federal Holidays &amp; Countdown
           </button>
         </div>
 
@@ -765,6 +791,73 @@ export default function BusinessDayCalculator() {
                   </ul>
                 </div>
               )}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Mode 3: Federal holidays for a year with a countdown from today */}
+        {mode === 'holidays' && (
+          <motion.div
+            key="holidays"
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.25 }}
+            className="space-y-5"
+          >
+            <div className="flex flex-col sm:flex-row sm:items-end gap-4">
+              <div className="space-y-2 w-full sm:w-48">
+                <Label htmlFor="holidayYear">Year</Label>
+                <Select value={String(holidayYear)} onValueChange={(v) => setHolidayYear(parseInt(v, 10))}>
+                  <SelectTrigger id="holidayYear"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - 1 + i).map((y) => (
+                      <SelectItem key={y} value={String(y)}>{y}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <p className="text-xs text-muted-foreground flex-1">
+                The 11 federal holidays under 5 U.S.C. § 6103, with the observed date when the holiday falls on a weekend (Saturday → Friday, Sunday → Monday). These are the days the business-day modes skip.
+              </p>
+            </div>
+
+            <div className="result-display rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 sm:p-6 space-y-5" aria-live="polite">
+              {nextHoliday ? (
+                <div className="text-center space-y-1">
+                  <p className="text-sm text-muted-foreground font-medium">Next federal holiday</p>
+                  <p className="text-3xl sm:text-4xl font-extrabold text-emerald-600" data-result-primary>{nextHoliday.name}</p>
+                  <p className="text-lg font-semibold">
+                    {nextHoliday.days === 0 ? 'Today' : `in ${nextHoliday.days} day${nextHoliday.days === 1 ? '' : 's'}`} — {nextHoliday.dow}, {formatDateLong(nextHoliday.date)}
+                  </p>
+                </div>
+              ) : (
+                <p className="text-center text-sm text-muted-foreground">All {holidayYear} federal holidays have passed. Pick the next year to see the countdown.</p>
+              )}
+              <div className="rounded-xl bg-background border border-border/50 overflow-hidden">
+                <table className="w-full text-xs sm:text-sm">
+                  <thead className="bg-muted/40 text-muted-foreground">
+                    <tr>
+                      <th className="px-3 py-2 text-left font-semibold">Holiday</th>
+                      <th className="px-3 py-2 text-left font-semibold">Observed</th>
+                      <th className="px-3 py-2 text-right font-semibold">From today</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/40">
+                    {holidayRows.map((h) => (
+                      <tr key={h.name} className={h.name === nextHoliday?.name ? 'bg-emerald-500/10' : h.days < 0 ? 'opacity-60' : ''}>
+                        <td className="px-3 py-2 font-medium">{h.name}</td>
+                        <td className="px-3 py-2 text-muted-foreground">{h.dow}, {formatDateShort(h.date)}</td>
+                        <td className="px-3 py-2 text-right tabular-nums">
+                          {h.days < 0 ? `${-h.days} days ago` : h.days === 0 ? 'today' : `${h.days} days`}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Private employers are not required to give paid holidays; about 8 paid holidays a year is typical. States add their own (Cesar Chavez Day in California, Patriots&apos; Day in Massachusetts, Pioneer Day in Utah), which the business-day modes do not skip.
+              </p>
             </div>
           </motion.div>
         )}

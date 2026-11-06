@@ -28,6 +28,8 @@ export interface CalculatorMetaInput {
   publishDate?: string;
   /** Required when status is 'merged' — the published page that absorbed this one */
   mergedInto?: string;
+  /** Optional query string (without '?') appended to the redirect so the visitor lands on the right tab, e.g. 'mode=breaks' */
+  mergedQuery?: string;
   /**
    * YYYY-MM-DD of the last time this calculator's math was actually verified
    * against its sources (Phase 13.3). Leave unset until that happens — a bulk

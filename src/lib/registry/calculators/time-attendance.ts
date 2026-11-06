@@ -345,7 +345,9 @@ export const timeAttendanceCalculators = defineCalculators([
   },
   {
     slug: 'sick-leave-calculator',
-    status: 'published',
+    status: 'merged',
+    mergedInto: 'pto-accrual-calculator',
+    mergedQuery: 'type=sick',
     title: 'Sick Leave Calculator',
     metaTitle: 'Free Sick Leave Calculator 2026 — Accrual, Usage & FMLA Tracking',
     shortDescription:
@@ -371,7 +373,9 @@ export const timeAttendanceCalculators = defineCalculators([
   },
   {
     slug: 'holiday-countdown-calculator',
-    status: 'published',
+    status: 'merged',
+    mergedInto: 'business-day-calculator',
+    mergedQuery: 'mode=holidays',
     title: 'Holiday Countdown Calculator',
     metaTitle: 'Free Holiday Countdown Calculator 2026 — Days Until Next Holiday',
     shortDescription:
@@ -505,7 +509,9 @@ export const timeAttendanceCalculators = defineCalculators([
   },
   {
     slug: 'clock-out-calculator',
-    status: 'published',
+    status: 'merged',
+    mergedInto: 'time-card-calculator',
+    mergedQuery: 'mode=clock-out',
     title: 'Clock Out Calculator',
     metaTitle: 'Free Clock Out Calculator 2026 — Hit Your Target Hours',
     shortDescription:
@@ -536,7 +542,9 @@ export const timeAttendanceCalculators = defineCalculators([
   },
   {
     slug: 'hours-between-times-calculator',
-    status: 'published',
+    status: 'merged',
+    mergedInto: 'time-card-calculator',
+    mergedQuery: 'mode=hours-between',
     title: 'Hours Between Two Times Calculator',
     metaTitle: 'Free Hours Between Two Times Calculator 2026 — Duration Calc',
     shortDescription:
@@ -589,7 +597,9 @@ export const timeAttendanceCalculators = defineCalculators([
   },
   {
     slug: 'employee-schedule-calculator',
-    status: 'published',
+    status: 'merged',
+    mergedInto: 'shift-rotation-calculator',
+    mergedQuery: 'mode=roster',
     title: 'Employee Schedule Calculator',
     metaTitle: 'Free Employee Schedule Calculator 2026 — Build Weekly Schedules',
     shortDescription:
@@ -616,8 +626,8 @@ export const timeAttendanceCalculators = defineCalculators([
   {
     slug: 'shift-rotation-calculator',
     status: 'published',
-    title: 'Shift Rotation Calculator',
-    metaTitle: 'Free Shift Rotation Calculator 2026 — 2-2-3, DuPont, Pitman',
+    title: 'Shift Schedule Planner',
+    metaTitle: 'Free Shift Schedule Planner 2026 — 2-2-3, DuPont, Pitman & Weekly Rosters',
     shortDescription:
       'Generate 2-2-3, DuPont, Pitman, and 4-on-4-off rotating shift schedules with team coverage and rest days.',
     metaDescription:
@@ -641,7 +651,9 @@ export const timeAttendanceCalculators = defineCalculators([
   },
   {
     slug: 'time-difference-calculator',
-    status: 'published',
+    status: 'merged',
+    mergedInto: 'time-card-calculator',
+    mergedQuery: 'mode=hours-between',
     title: 'Time Difference Calculator',
     metaTitle: 'Free Time Difference Calculator 2026 — Between Dates & Times',
     shortDescription:
@@ -667,7 +679,9 @@ export const timeAttendanceCalculators = defineCalculators([
   },
   {
     slug: 'break-calculator',
-    status: 'published',
+    status: 'merged',
+    mergedInto: 'time-card-calculator',
+    mergedQuery: 'mode=breaks',
     title: 'Break Calculator',
     metaTitle: 'Free Break Calculator 2026 — Meal & Rest Break Compliance',
     shortDescription:

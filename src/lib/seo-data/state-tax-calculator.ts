@@ -58,7 +58,7 @@ const seoData = {
     },
     {
       question: 'Which states currently utilize a flat income tax rate?',
-      answer: 'Thirteen states enforce a single flat tax rate across all taxable income tiers: Arizona (2.5%), Pennsylvania (3.07%), Indiana (3.05%), Kentucky (4.0%), Michigan (4.25%), Colorado (4.4%), Arkansas (4.4%), Mississippi (4.4%), North Carolina (4.5%), Utah (4.65%), Illinois (4.95%), Massachusetts (5.0%), and Georgia (5.39%). In recent years, states have increasingly shifted from multi-bracket progressive systems to uniform flat rate structures.',
+      answer: 'Thirteen states enforce a single flat tax rate across all taxable income tiers: Arizona (2.5%), Indiana (2.95%), Louisiana (3.0%), Pennsylvania (3.07%), Kentucky (3.5%), Iowa (3.8%), North Carolina (3.99%), Michigan (4.25%), Colorado (4.4%), Utah (4.45%), Illinois (4.95%), Georgia (4.99%), and Massachusetts (5.0%), with Idaho (5.3%) and Mississippi and Arkansas also on flat schedules. In recent years, states have increasingly shifted from multi-bracket progressive systems to uniform flat rate structures.',
     },
     {
       question: 'Do I pay state income tax where I reside or where I physically work?',
