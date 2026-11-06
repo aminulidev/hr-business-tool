@@ -6,6 +6,8 @@ import {
   PERIODS_PER_YEAR,
   SOCIAL_SECURITY_WAGE_BASE,
   TAX_YEAR,
+  W4_CHILD_CREDIT,
+  W4_OTHER_DEPENDENT_CREDIT,
   type FilingStatus,
   type PaycheckInput,
   type StateCode,
@@ -70,6 +72,42 @@ describe(`federal income tax (${TAX_YEAR} percentage method, standard W-4)`, () 
         prev = t;
       }
     }
+  });
+});
+
+describe(`W-4 Steps 2–4 (${TAX_YEAR} Pub. 15-T Worksheet 1A)`, () => {
+  it('Step 2 checkbox uses the half-width schedule: $52,000 single → $7,025 (table: 2,900 + 22% over 33,250)', () => {
+    expect(__test.federalIncomeTax(52000, 'single', { multipleJobs: true })).toBeCloseTo(7025, 2);
+    // $100,000 married, box checked → 5,800 + (100,000 − 66,500) × 22% = 13,170
+    expect(__test.federalIncomeTax(100000, 'married', { multipleJobs: true })).toBeCloseTo(13170, 2);
+    // the checkbox 0% band is half the standard deduction: $8,050 single, $16,100 married
+    expect(__test.federalIncomeTax(8050, 'single', { multipleJobs: true })).toBe(0);
+    expect(__test.federalIncomeTax(8060, 'single', { multipleJobs: true })).toBeCloseTo(1, 2);
+    expect(__test.federalIncomeTax(16100, 'married', { multipleJobs: true })).toBe(0);
+  });
+
+  it('Step 3 credits reduce annual withholding but never below zero', () => {
+    expect(W4_CHILD_CREDIT).toBe(2200);
+    expect(W4_OTHER_DEPENDENT_CREDIT).toBe(500);
+    expect(__test.federalIncomeTax(52000, 'single', { dependentsCredit: 2200 })).toBeCloseTo(1860, 2); // 4,060 − 2,200
+    expect(__test.federalIncomeTax(52000, 'single', { dependentsCredit: 4400 })).toBe(0);
+  });
+
+  it('Step 4(a) other income and 4(b) deductions move the taxable amount', () => {
+    // 52,000 + 10,000 − 16,100 = 45,900 → 1,240 + 33,500 × 12% = 5,260
+    expect(__test.federalIncomeTax(52000, 'single', { otherIncome: 10000 })).toBeCloseTo(5260, 2);
+    // 52,000 − 5,000 − 16,100 = 30,900 → 1,240 + 18,500 × 12% = 3,460
+    expect(__test.federalIncomeTax(52000, 'single', { deductions: 5000 })).toBeCloseTo(3460, 2);
+  });
+
+  it('Step 4(c) adds the flat amount every paycheck and flows through calculatePaycheck', () => {
+    expect(__test.federalIncomeTax(52000, 'single', { extraWithholdingPerPeriod: 50 }, 26)).toBeCloseTo(4060 + 1300, 2);
+    const plain = calculatePaycheck(base());
+    const withW4 = calculatePaycheck(base({ w4: { multipleJobs: true, dependentsCredit: 2200, extraWithholdingPerPeriod: 50 } }));
+    expect(line(plain, 'federal')?.annual).toBe(4060);
+    expect(line(withW4, 'federal')?.annual).toBe(7025 - 2200 + 1300);
+    expect(line(withW4, 'federal')?.label).toContain('W-4 Steps 2–4');
+    expect(line(withW4, 'social-security')?.annual).toBe(line(plain, 'social-security')?.annual);
   });
 });
 

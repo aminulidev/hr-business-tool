@@ -113,8 +113,14 @@ function scheduleFromBrackets(tops: number[], rates: number[]): ScheduleRow[] {
 }
 
 // ---------------------------------------------------------------------------
-// Federal (W-4 2020 or later, no Step 2–4 adjustments)
+// Federal (W-4 2020 or later), Pub. 15-T Worksheet 1A, annual payroll period
 // ---------------------------------------------------------------------------
+// Standard schedule: tax on (wages + Step 4(a) − Step 4(b) − standard deduction).
+// Step 2 checkbox schedule: the same brackets at half width with a 0% band of
+// half the standard deduction — identical to Pub. 15-T's "Form W-4, Step 2,
+// Checkbox" table — which is ½ × tax(2 × adjusted wages − standard deduction).
+// Step 3 credits come off the annual tax (not below zero); Step 4(c) is added
+// per paycheck.
 
 const FEDERAL_RATES = [0.1, 0.12, 0.22, 0.24, 0.32, 0.35, 0.37];
 
@@ -137,8 +143,35 @@ export const ADDITIONAL_MEDICARE_RATE = 0.009;
 // Employers must withhold Additional Medicare on wages over $200,000 regardless of filing status
 export const ADDITIONAL_MEDICARE_THRESHOLD = 200000;
 
-function federalIncomeTax(annualWages: number, status: FilingStatus): number {
-  return taxFromSchedule(annualWages - FEDERAL_STANDARD_DEDUCTION[status], FEDERAL_SCHEDULES[status]);
+/** 2026 Form W-4 Step 3 amounts: $2,200 per qualifying child under 17 (OBBBA), $500 per other dependent */
+export const W4_CHILD_CREDIT = 2200;
+export const W4_OTHER_DEPENDENT_CREDIT = 500;
+
+/** Steps 2–4 of a 2020-or-later Form W-4 (all optional; omit for a standard W-4) */
+export interface W4Adjustments {
+  /** Step 2(c) checkbox: two jobs total, or a working spouse */
+  multipleJobs?: boolean;
+  /** Step 3: total annual credit (children × $2,200 + other dependents × $500) */
+  dependentsCredit?: number;
+  /** Step 4(a): other annual income not from jobs */
+  otherIncome?: number;
+  /** Step 4(b): annual deductions beyond the standard deduction */
+  deductions?: number;
+  /** Step 4(c): extra withholding per paycheck */
+  extraWithholdingPerPeriod?: number;
+}
+
+export function hasW4Adjustments(w4?: W4Adjustments): boolean {
+  return !!w4 && (!!w4.multipleJobs || (w4.dependentsCredit ?? 0) > 0 || (w4.otherIncome ?? 0) > 0 || (w4.deductions ?? 0) > 0 || (w4.extraWithholdingPerPeriod ?? 0) > 0);
+}
+
+function federalIncomeTax(annualWages: number, status: FilingStatus, w4?: W4Adjustments, periodsPerYear = 1): number {
+  const schedule = FEDERAL_SCHEDULES[status];
+  const std = FEDERAL_STANDARD_DEDUCTION[status];
+  const adjusted = annualWages + Math.max(0, w4?.otherIncome ?? 0) - Math.max(0, w4?.deductions ?? 0);
+  let tax = w4?.multipleJobs ? taxFromSchedule(2 * adjusted - std, schedule) / 2 : taxFromSchedule(adjusted - std, schedule);
+  tax = Math.max(0, tax - Math.max(0, w4?.dependentsCredit ?? 0));
+  return tax + Math.max(0, w4?.extraWithholdingPerPeriod ?? 0) * periodsPerYear;
 }
 
 // ---------------------------------------------------------------------------
@@ -552,6 +585,8 @@ export interface PaycheckInput {
   stateAllowances: number;
   /** New York only: employee lives in New York City */
   nycResident?: boolean;
+  /** Form W-4 Steps 2–4; omit for a standard W-4 */
+  w4?: W4Adjustments;
 }
 
 export interface PaycheckLine {
@@ -573,6 +608,10 @@ export interface PaycheckResult {
   netPerHour: number;
   /** Total deductions as a share of gross pay */
   effectiveRate: number;
+  /** Gross minus Section 125 benefits: the FICA (and employer FUTA/SUI) wage figure */
+  ficaWagesAnnual: number;
+  /** FICA wages minus pre-tax retirement: the income-tax wage figure */
+  taxableWagesAnnual: number;
 }
 
 const round2 = (n: number) => Math.round(n * 100) / 100;
@@ -597,7 +636,11 @@ export function calculatePaycheck(input: PaycheckInput): PaycheckResult {
     lines.push({ key: 'benefits', label: 'Health & Section 125 benefits (pre-tax)', annual: benefits });
   }
   lines.push(
-    { key: 'federal', label: 'Federal income tax', annual: federalIncomeTax(taxableWages, input.filingStatus) },
+    {
+      key: 'federal',
+      label: hasW4Adjustments(input.w4) ? 'Federal income tax (W-4 Steps 2–4)' : 'Federal income tax',
+      annual: federalIncomeTax(taxableWages, input.filingStatus, input.w4, periodsPerYear),
+    },
     {
       key: 'social-security',
       label: 'Social Security (6.2%)',
@@ -925,6 +968,8 @@ export function calculatePaycheck(input: PaycheckInput): PaycheckResult {
     netPerPeriod: round2(netAnnual / periodsPerYear),
     netPerHour: hoursPerYear > 0 ? round2(netAnnual / hoursPerYear) : 0,
     effectiveRate: grossAnnual > 0 ? totalDeductionsAnnual / grossAnnual : 0,
+    ficaWagesAnnual: round2(ficaWages),
+    taxableWagesAnnual: round2(taxableWages),
   };
 }
 

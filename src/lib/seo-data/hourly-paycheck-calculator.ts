@@ -16,6 +16,8 @@ import {
   type PayFrequency,
 } from '@/lib/payroll/withholding-2026';
 import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
+import { buildEmployerCostContent } from '@/lib/payroll/employer-cost-content';
+import { solveHourlyRateForNet } from '@/lib/payroll/reverse-solver';
 
 const usd = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 const pct = (n: number) => `${(n * 100).toFixed(1)}%`;
@@ -133,6 +135,37 @@ const scenarios: Scenario[] = [
 
 const exactStateNames = STATE_CODES.map((c) => STATE_PAYCHECK_PAGES[c].name).sort().join(', ');
 
+// Employer-side content (Phase 16.1): a $25/hr full-time worker, the calculator's default
+const employer = buildEmployerCostContent({ hourlyRate: 25, hoursPerWeek: 40, payFrequency: 'bi-weekly' });
+
+// Reverse solver example (Phase 16.1): the hourly rate behind a $2,000 bi-weekly take-home
+const REVERSE_TARGET = 2000;
+const reverseFor = (state: 'TX' | 'CA' | 'NY', stateAllowances = 0) =>
+  solveHourlyRateForNet(
+    (hourlyRate) => ({ state, hourlyRate, regularHoursPerWeek: 40, overtimeHoursPerWeek: 0, overtimeMultiplier: 1.5, payFrequency: 'bi-weekly', filingStatus: 'single', stateAllowances }),
+    REVERSE_TARGET,
+  )!;
+const reverse = { TX: reverseFor('TX'), CA: reverseFor('CA', 1), NY: reverseFor('NY', 1) };
+
+// Scenario compare example (Phase 16.1): $25/hr in California vs. a 10% raise vs. the same job in Texas
+const compareBase: PaycheckInput = { state: 'CA', hourlyRate: 25, regularHoursPerWeek: 40, overtimeHoursPerWeek: 0, overtimeMultiplier: 1.5, payFrequency: 'bi-weekly', filingStatus: 'single', stateAllowances: 1 };
+// W-4 Steps 2–4 examples (Phase 16.1): $52,000 single in Texas
+const w4Base: PaycheckInput = { state: 'TX', hourlyRate: 25, regularHoursPerWeek: 40, overtimeHoursPerWeek: 0, overtimeMultiplier: 1.5, payFrequency: 'bi-weekly', filingStatus: 'single', stateAllowances: 0 };
+const w4 = {
+  plain: calculatePaycheck(w4Base),
+  checkbox: calculatePaycheck({ ...w4Base, w4: { multipleJobs: true } }),
+  oneChild: calculatePaycheck({ ...w4Base, w4: { dependentsCredit: 2200 } }),
+  extra: calculatePaycheck({ ...w4Base, w4: { extraWithholdingPerPeriod: 50 } }),
+};
+const fed = (r: ReturnType<typeof calculatePaycheck>) => r.deductions.find((d) => d.key === 'federal')!;
+
+const compare = {
+  base: calculatePaycheck(compareBase),
+  raise: calculatePaycheck({ ...compareBase, hourlyRate: 27.5 }),
+  texas: calculatePaycheck({ ...compareBase, state: 'TX', stateAllowances: 0 }),
+  retirement: calculatePaycheck({ ...compareBase, preTaxRetirementAnnual: 52000 * 0.06 }),
+};
+
 const seoData = {
   howToSteps: [
     'Enter your hourly rate, your regular hours per week (40 for full time), and any overtime hours. Overtime is paid at 1.5× your rate.',
@@ -142,28 +175,68 @@ const seoData = {
     `Select your state. ${exactStateNames} use their exact ${TAX_YEAR} withholding rules, including states with no wage tax (Florida, Nevada, Tennessee, Texas) and state payroll programs such as California SDI, New York PFL, and Washington PFML. ` +
       'Pick "No state income tax" if you work in Alaska, New Hampshire, South Dakota, or Wyoming. For any other state, enter your flat or effective rate as an estimate.',
     'Optionally add your deductions: a 401(k) percentage (pre-tax, lowers income tax only), health or other Section 125 premiums per paycheck (pre-tax, lowers income tax and FICA), and after-tax deductions such as union dues. Results update as you type: gross pay, each tax line, take-home pay per paycheck and per year, and your take-home pay per hour worked.',
+    `Working backwards from a budget? Type the take-home pay you need (per paycheck, per month or per year) into "Work backwards" and the calculator solves for the gross hourly rate that produces it under the same state, filing status and deductions; "Use this rate" copies it into the form.`,
+    'Filled in Steps 2 to 4 of your W-4? Open "W-4 Steps 2–4": tick the box if you hold two jobs or your spouse works, enter children under 17 and other dependents (Step 3), other income and extra deductions (Step 4(a) and 4(b)), and any extra withholding per paycheck (Step 4(c)). Federal withholding updates immediately and the entries travel with the share link.',
+    'Need it on paper? "Pay stub preview" turns the live paycheck into a print-ready earnings statement with hours, rate, every deduction, year-to-date columns and the employer contributions; add a name, pay date and period number, then print or save it as a PDF from the browser dialog. It is marked as an estimate, not an official pay record.',
+    'Several employees? "Bulk payroll" at the top of the calculator takes up to 25 employees as CSV and returns gross-to-net, employer taxes and a downloadable CSV; the payroll calculator page documents the columns.',
+    'Comparing options? "Compare a second scenario" opens a scenario B beneath the result — a raise, another state, a bigger 401(k) contribution, a different filing status or pay schedule — and lists every line of both paychecks side by side with the difference. Scenario B is written into the share link, so a saved or shared URL reopens the comparison.',
+    `Employers: switch the result to "Employer cost" to see the same paycheck from the other side: the 7.65% FICA match, federal unemployment tax (FUTA), state unemployment insurance at the ${TAX_YEAR} new-employer rate (editable, so experience-rated employers can enter their own), and the employer share of state paid-leave programs. The total cost to employ and the cost per hour worked update with every input.`,
   ],
 
   formula: 'Take-Home Pay = Gross Pay − Federal Income Tax − Social Security − Medicare − State Taxes − Other Deductions',
 
   formulaDescription:
     'Gross pay is your hourly rate × regular hours, plus overtime hours × rate × 1.5, converted to your pay period (weekly pay × 52 ÷ paychecks per year). ' +
-    `Federal income tax uses the IRS ${TAX_YEAR} percentage method for a W-4 with no Step 2 to 4 adjustments: annual wages minus the standard deduction ` +
+    `Federal income tax uses the IRS ${TAX_YEAR} percentage method (Publication 15-T, Worksheet 1A): annual wages, plus any Step 4(a) other income and minus Step 4(b) deductions, minus the standard deduction ` +
     `(${usd(FEDERAL_STANDARD_DEDUCTION.single)} single, ${usd(FEDERAL_STANDARD_DEDUCTION.married)} married filing jointly, ${usd(FEDERAL_STANDARD_DEDUCTION.hoh)} head of household), ` +
     `taxed at the ${TAX_YEAR} brackets from 10% to 37%, then divided by the number of paychecks. ` +
     `Social Security is 6.2% of wages up to ${usd(SOCIAL_SECURITY_WAGE_BASE)}, and Medicare is 1.45% of all wages plus 0.9% above $200,000. ` +
+    'With the Step 2 checkbox the "Step 2, Checkbox" table applies instead: a 0% band of half the standard deduction and half-width brackets. Step 3 credits ($2,200 per child under 17, $500 per other dependent) come off the annual tax, and Step 4(c) extra withholding is added to every paycheck. ' +
     'State tax is calculated from the selected state\'s own tables where available, or from the flat rate you enter. ' +
     'Take-home pay per hour is annual take-home pay divided by total hours worked in a year, which is the number to use when comparing job offers or deciding whether overtime is worth it.',
 
   workedExamples: scenarios.map(describe),
 
+  benchmarkTables: [employer.table],
+
+  deepDiveSections: [employer.deepDive],
+
   faqs: [
+    {
+      question: `How much do I need to earn per hour to take home ${usd(REVERSE_TARGET)} every two weeks?`,
+      answer:
+        `Working 40 hours a week as a single filer with a standard W-4 and no other deductions, it takes ${usd(reverse.TX.hourlyRate)} an hour in Texas (gross ${usd(reverse.TX.result.grossPerPeriod)} per paycheck, ${usd(reverse.TX.result.grossAnnual)} a year), ` +
+        `${usd(reverse.CA.hourlyRate)} an hour in California with one DE 4 allowance (gross ${usd(reverse.CA.result.grossPerPeriod)}), and ${usd(reverse.NY.hourlyRate)} an hour in New York State outside the city with one allowance (gross ${usd(reverse.NY.result.grossPerPeriod)}). ` +
+        `Those figures come from running the ${TAX_YEAR} withholding engine backwards; use the "Work backwards" box to solve for any target, pay frequency or set of deductions. A 401(k) percentage or health premium raises the gross you need by more than its own amount, because the paycheck has to cover the deduction and the tax on the extra gross.`,
+    },
+    {
+      question: 'How do W-4 Steps 2, 3 and 4 change my paycheck?',
+      answer:
+        `Take a single worker earning ${usd(25)} an hour in Texas, ${usd(w4.plain.grossAnnual)} a year. With a plain W-4 the employer withholds ${usd(fed(w4.plain).perPeriod)} of federal income tax every two weeks (${usd(fed(w4.plain).annual)} a year). ` +
+        `Ticking the Step 2(c) box for two jobs or a working spouse moves the job to the "Step 2, Checkbox" table, which starts taxing at half the standard deduction and uses half-width brackets, so withholding rises to ${usd(fed(w4.checkbox).perPeriod)} per paycheck (${usd(fed(w4.checkbox).annual)} a year). ` +
+        `One qualifying child under 17 on Step 3 is a ${usd(2200)} annual credit, which cuts the plain withholding to ${usd(fed(w4.oneChild).perPeriod)} per paycheck. Step 4(a) other income is added to wages and 4(b) deductions are subtracted before the tables are applied, and Step 4(c) adds a flat amount to every check: ${usd(50)} extra makes the federal line ${usd(fed(w4.extra).perPeriod)}. ` +
+        `Enter your own entries in the "W-4 Steps 2–4" section; FICA and state tax do not change (except in states whose withholding keys off federal tax).`,
+    },
+    {
+      question: 'Can I print a pay stub or save it as a PDF?',
+      answer:
+        'Yes. "Pay stub preview" under the result lays the paycheck out as an earnings statement: regular and overtime hours with their rates, gross pay, pre-tax deductions, every tax withheld, post-tax deductions, net pay, and a year-to-date column that multiplies each line by the pay period number you enter (so it assumes the same pay every period). ' +
+        'The employer section lists the FICA match, FUTA and state unemployment at the new-employer rate. Print it or choose "Save as PDF" in the browser print dialog, or download the HTML. The stub is an estimate for planning, budgeting or checking a real stub line by line; it is not proof of income and should not be presented as an official payroll document.',
+    },
+    {
+      question: 'Can I compare two paychecks side by side, like a raise or a move to another state?',
+      answer:
+        `Yes. Open "Compare a second scenario" under the result and pick a preset or build scenario B yourself. For a single worker earning ${usd(25)} an hour in California (take-home ${usd(compare.base.netPerPeriod)} every two weeks), a 10% raise to ${usd(27.5)} lifts take-home to ${usd(compare.raise.netPerPeriod)}, or ${usd(compare.raise.netAnnual - compare.base.netAnnual)} more a year; ` +
+        `the same job in Texas pays ${usd(compare.texas.netPerPeriod)} per paycheck (${usd(compare.texas.netAnnual - compare.base.netAnnual)} more a year with no state income tax); and putting 6% into a 401(k) drops the paycheck to ${usd(compare.retirement.netPerPeriod)} while setting aside ${usd(52000 * 0.06)} a year, so the contribution costs only ${usd(compare.base.netAnnual - compare.retirement.netAnnual)} of take-home. ` +
+        'Every row — gross, each tax, each deduction, take-home per paycheck, month, year and hour — shows both scenarios and the percentage difference, and the comparison travels with the share link.',
+    },
+    ...employer.faqs,
     {
       question: 'How is federal income tax taken out of an hourly paycheck?',
       answer:
         `Your employer uses the IRS percentage method from Publication 15-T. Your pay for the period is annualized, the ${TAX_YEAR} standard deduction for your filing status is subtracted, ` +
         'the result is run through the federal brackets (10%, 12%, 22%, 24%, 32%, 35%, 37%), and the annual tax is divided back down to one paycheck. ' +
-        'That is exactly what this calculator does. If you entered dependents, other income, or extra withholding on Steps 2 to 4 of your W-4, your real withholding will differ.',
+        'That is exactly what this calculator does. If you filled in Steps 2 to 4 of your W-4, open the "W-4 Steps 2–4" section and enter the same figures: the checkbox for two jobs, children and other dependents, other income, deductions and extra withholding are all applied the way Publication 15-T describes.',
     },
     {
       question: 'What is FICA and why is it on my paycheck?',
@@ -261,7 +334,7 @@ const seoData = {
       icon: 'Wallet',
     },
   ],
-  sources: [SRC.irsPub15T, SRC.irsRevProc2025_32, SRC.irsTopic751, SRC.ssaCola, SRC.dolOvertime, SRC.dolStateMinWage],
+  sources: [SRC.irsPub15T, SRC.irsRevProc2025_32, SRC.irsTopic751, SRC.ssaCola, SRC.dolOvertime, SRC.dolStateMinWage, ...employer.sources],
 } satisfies CalculatorSeoData;
 
 export default seoData;

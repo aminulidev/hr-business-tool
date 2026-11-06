@@ -17,6 +17,9 @@ import {
   type PayFrequency,
 } from '@/lib/payroll/withholding-2026';
 import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
+import { buildEmployerCostContent } from '@/lib/payroll/employer-cost-content';
+import { solveSalaryForNet, targetPerPeriod } from '@/lib/payroll/reverse-solver';
+import { BULK_COLUMNS, BULK_EXAMPLE_CSV, BULK_MAX_ROWS, parseBulkCsv, runBulkPayroll } from '@/lib/payroll/bulk-payroll';
 
 const usd = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 const pct = (n: number) => `${(n * 100).toFixed(1)}%`;
@@ -131,13 +134,44 @@ const scenarios: Scenario[] = [
 
 const exactStateNames = STATE_CODES.map((c) => STATE_PAYCHECK_PAGES[c].name).sort().join(', ');
 
+// Employer-side content (Phase 16.1): the calculator's default $65,000 salary
+const employer = buildEmployerCostContent({ hourlyRate: 65000 / 2080, hoursPerWeek: 40, payFrequency: 'bi-weekly', salary: 65000 });
+
+// Reverse solver example (Phase 16.1): the salary behind a $5,000-a-month take-home, paid bi-weekly
+const REVERSE_MONTHLY = 5000;
+const salaryFor = (state: 'TX' | 'CA' | 'NY', stateAllowances = 0) =>
+  solveSalaryForNet(
+    (hourlyRate) => ({ state, hourlyRate, regularHoursPerWeek: 40, overtimeHoursPerWeek: 0, overtimeMultiplier: 1.5, payFrequency: 'bi-weekly', filingStatus: 'single', stateAllowances }),
+    targetPerPeriod(REVERSE_MONTHLY, 'month', 26),
+  )!;
+const reverse = { TX: salaryFor('TX'), CA: salaryFor('CA', 1), NY: salaryFor('NY', 1) };
+
+// Scenario compare example (Phase 16.1): $65,000 in Illinois vs. a $70,000 offer in Texas
+// W-4 Steps 2–4 examples (Phase 16.1): $65,000 single in Texas, bi-weekly
+const w4Base: PaycheckInput = { state: 'TX', hourlyRate: 65000 / 2080, regularHoursPerWeek: 40, overtimeHoursPerWeek: 0, overtimeMultiplier: 1.5, payFrequency: 'bi-weekly', filingStatus: 'single', stateAllowances: 0 };
+const w4 = {
+  plain: calculatePaycheck(w4Base),
+  checkbox: calculatePaycheck({ ...w4Base, w4: { multipleJobs: true } }),
+  twoKids: calculatePaycheck({ ...w4Base, w4: { dependentsCredit: 4400 } }),
+};
+const fed = (r: ReturnType<typeof calculatePaycheck>) => r.deductions.find((d) => d.key === 'federal')!;
+
+const compareIl = calculatePaycheck({ state: 'IL', hourlyRate: 65000 / 2080, regularHoursPerWeek: 40, overtimeHoursPerWeek: 0, overtimeMultiplier: 1.5, payFrequency: 'bi-weekly', filingStatus: 'single', stateAllowances: 1 });
+const compareTx = calculatePaycheck({ state: 'TX', hourlyRate: 70000 / 2080, regularHoursPerWeek: 40, overtimeHoursPerWeek: 0, overtimeMultiplier: 1.5, payFrequency: 'bi-weekly', filingStatus: 'single', stateAllowances: 0 });
+
+// Bulk payroll example (Phase 16.1): the three-employee sample roster the calculator ships with
+const bulk = runBulkPayroll(parseBulkCsv(BULK_EXAMPLE_CSV).rows, 'bi-weekly');
+const bulkNet = bulk.reduce((s, r) => s + r.paycheck.netPerPeriod, 0);
+const bulkCost = bulk.reduce((s, r) => s + r.employer.totalCostPerPeriod, 0);
+
 const seoData = {
   howToSteps: [
     'Enter your gross annual salary, the amount in your offer letter before any taxes or deductions.',
     'Choose how often you are paid: weekly, every two weeks, twice a month, or monthly. This sets the size of each paycheck.',
     `Pick your federal filing status from Step 1 of your W-4. The calculator applies the matching ${TAX_YEAR} standard deduction and brackets.`,
     `Select your state. ${exactStateNames} use their exact ${TAX_YEAR} withholding tables. Choose "No state income tax" for the nine states that do not tax wages, or enter a flat rate for any other state.`,
-    'Add your deductions if you have them: a 401(k) percentage (pre-tax, lowers income tax only), health and other Section 125 premiums per paycheck (pre-tax, lowers income tax and FICA), and any after-tax deductions. Click "Calculate Take-Home Pay" to see every line of your paycheck.',
+    'Add your deductions if you have them: a 401(k) percentage (pre-tax, lowers income tax only), health and other Section 125 premiums per paycheck (pre-tax, lowers income tax and FICA), and any after-tax deductions. Every line of the paycheck updates as you type.',
+    `Running payroll for a team? Switch to "Bulk payroll", paste up to ${BULK_MAX_ROWS} employees as CSV (one per line, columns ${BULK_COLUMNS.map((c) => c.label).join(', ')}), choose the pay frequency and download the gross-to-net table with employer taxes as CSV. The roster stays in your browser.`,
   ],
 
   formula:
@@ -146,14 +180,61 @@ const seoData = {
   formulaDescription:
     'Gross pay per paycheck is your annual salary divided by the number of paychecks in the year (52, 26, 24, or 12). ' +
     'Section 125 benefits such as health insurance come out first and are not subject to any payroll tax. 401(k) contributions come out next and are exempt from income tax but not from Social Security and Medicare. ' +
-    `Federal income tax uses the IRS ${TAX_YEAR} percentage method for a W-4 with no Step 2 to 4 adjustments: annual taxable wages minus the standard deduction ` +
+    `Federal income tax uses the IRS ${TAX_YEAR} percentage method (Publication 15-T, Worksheet 1A) with any W-4 Step 2 to 4 entries you add: annual taxable wages, plus Step 4(a) other income and minus Step 4(b) deductions, minus the standard deduction ` +
     `(${usd(FEDERAL_STANDARD_DEDUCTION.single)} single, ${usd(FEDERAL_STANDARD_DEDUCTION.married)} married filing jointly, ${usd(FEDERAL_STANDARD_DEDUCTION.hoh)} head of household), taxed at the ${TAX_YEAR} brackets from 10% to 37%, then divided by the number of paychecks. ` +
     `Social Security is 6.2% of FICA wages up to ${usd(SOCIAL_SECURITY_WAGE_BASE)}, and Medicare is 1.45% plus 0.9% above $200,000. ` +
     'State tax comes from the selected state\'s own tables where available, or from the flat rate you enter.',
 
   workedExamples: scenarios.map(describe),
 
+  benchmarkTables: [
+    employer.table,
+    {
+      title: 'Bulk Payroll CSV Columns (Up to 25 Employees)',
+      subtitle: 'Paste one employee per line in this order, or start with a header row using these names to reorder or omit columns',
+      headers: ['Column', 'What to enter'],
+      rows: BULK_COLUMNS.map((c) => [c.label, c.help]),
+      note: `Example: ${BULK_EXAMPLE_CSV.split('\n').slice(0, 2).join(' / ')}. The output CSV adds gross and net per paycheck and per year, each tax line, pre-tax deductions, employer taxes and total cost per employee.`,
+    },
+  ],
+
+  deepDiveSections: [employer.deepDive],
+
   faqs: [
+    {
+      question: `What salary do I need to take home ${usd(REVERSE_MONTHLY)} a month?`,
+      answer:
+        `For a single filer with a standard W-4, paid every two weeks with no pre-tax deductions, about ${usd(reverse.TX.salary)} a year in Texas (${usd(reverse.TX.result.netPerPeriod)} per paycheck, 26 paychecks), ` +
+        `${usd(reverse.CA.salary)} in California with one DE 4 allowance, and ${usd(reverse.NY.salary)} in New York State outside New York City. ` +
+        `The calculator's "Work backwards" box runs the ${TAX_YEAR} withholding engine in reverse for any target per paycheck, month or year, and copies the answer into the salary field; add your 401(k) percentage and health premiums first so the gross covers them too.`,
+    },
+    {
+      question: 'Can I run payroll for several employees at once?',
+      answer:
+        `Yes, up to ${BULK_MAX_ROWS} at a time. Switch to "Bulk payroll", paste one employee per line (${BULK_COLUMNS.map((c) => c.label).join(', ')}) or start from the sample roster, pick the pay frequency, and the table shows gross, federal tax, FICA, state tax and programs, pre-tax deductions and net pay for every employee, with totals for the pay run and the employer taxes and total cost per row. ` +
+        `The sample roster — an hourly worker in Texas with overtime, a salaried married employee in California and a part-time head of household in Florida — comes to ${usd(bulkNet)} of net pay and ${usd(bulkCost)} of total employer cost per bi-weekly run. ` +
+        'Download or copy the result as CSV for your records or to check payroll software output. Everything runs in your browser; the roster is never uploaded. Each row uses a standard W-4; open an employee in the single calculator for W-4 Steps 2–4 or a pay stub.',
+    },
+    {
+      question: 'Can I create a pay stub from this calculator?',
+      answer:
+        'Yes, as a preview. "Pay stub preview" under the result produces a print-ready earnings statement for the salary and settings entered: gross pay, each pre-tax deduction, every tax line, post-tax deductions, net pay, year-to-date totals for the pay period number you choose, and the employer-paid taxes (FICA match, FUTA, state unemployment). ' +
+        'Add the employee and employer names and the pay date, then print or save as PDF from the browser dialog. It is clearly marked as an estimate: small employers can use it to sanity-check payroll software output, but it is not a legal pay statement and does not replace one.',
+    },
+    {
+      question: 'Does the payroll calculator handle W-4 Steps 2, 3 and 4?',
+      answer:
+        `Yes. Open "W-4 Steps 2–4" under the deductions. The Step 2(c) checkbox (two jobs or a working spouse) switches federal withholding to Publication 15-T's "Step 2, Checkbox" table, which uses half the standard deduction and half-width brackets; on a ${usd(65000)} single salary that raises federal withholding from ${usd(fed(w4.plain).perPeriod)} to ${usd(fed(w4.checkbox).perPeriod)} every two weeks. ` +
+        `Step 3 enters ${usd(2200)} per child under 17 and ${usd(500)} per other dependent as an annual credit against the tax (two children bring the plain withholding to ${usd(fed(w4.twoKids).perPeriod)}), Step 4(a) and 4(b) adjust the wages the tables see, and Step 4(c) is added to every paycheck. ` +
+        'Employers running a quick check can type the employee\'s W-4 straight in; the entries are kept in the share link.',
+    },
+    {
+      question: 'How do I compare two salary offers in different states?',
+      answer:
+        `Enter the first offer above, then open "Compare a second scenario" and set scenario B to the other salary and state. A ${usd(65000)} salary in Illinois with one IL-W-4 allowance takes home ${usd(compareIl.netPerPeriod)} every two weeks (${usd(compareIl.netAnnual)} a year); a ${usd(70000)} offer in Texas takes home ${usd(compareTx.netPerPeriod)} (${usd(compareTx.netAnnual)} a year), so the Texas offer is worth ${usd(compareTx.netAnnual - compareIl.netAnnual)} more after tax, not just ${usd(5000)} more before it. ` +
+        'The panel lists gross, every tax line, take-home per paycheck, month, year and hour for both, and the comparison is saved in the share link. Cost of living, benefits and local taxes are not included; the job offer comparison tool covers those.',
+    },
+    ...employer.faqs,
     {
       question: 'How does this payroll calculator figure federal income tax?',
       answer:
@@ -199,8 +280,8 @@ const seoData = {
     {
       question: 'Is this calculator for employers running payroll or for employees?',
       answer:
-        'Both can use it. Employees get an estimate of take-home pay for budgeting or comparing offers. Employers get a quick check of what an employee\'s net pay should be for a given gross and W-4, but it does not replace payroll software: it does not file taxes, track year-to-date wage bases, or handle garnishment orders. ' +
-        'Remember that the employer also owes a matching 7.65% in FICA plus federal and state unemployment tax on top of the gross salary shown here.',
+        'Both can use it. Employees get an estimate of take-home pay for budgeting or comparing offers. Employers get a quick check of what an employee\'s net pay should be for a given gross and W-4, and the "Employer cost" view adds the matching 7.65% FICA, federal and state unemployment tax, and the employer share of state paid-leave programs to show the total cost to employ. ' +
+        'It does not replace payroll software: it does not file taxes, track year-to-date wage bases, or handle garnishment orders.',
     },
   ],
 
@@ -242,7 +323,7 @@ const seoData = {
       icon: 'Banknote',
     },
   ],
-  sources: [SRC.irsPub15T, SRC.irsPub15, SRC.irsRevProc2025_32, SRC.irsTopic751, SRC.ssaCola, SRC.dolOvertime],
+  sources: [SRC.irsPub15T, SRC.irsPub15, SRC.irsRevProc2025_32, SRC.irsTopic751, SRC.ssaCola, SRC.dolOvertime, ...employer.sources.filter((src) => src.url !== SRC.irsPub15.url)],
 } satisfies CalculatorSeoData;
 
 export default seoData;

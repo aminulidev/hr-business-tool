@@ -66,6 +66,18 @@ export const SRC = {
     publisher: IRS,
     note: '6.0% FUTA rate on the first $7,000 of wages and the 5.4% state credit',
   },
+  dolFutaCreditReduction: {
+    label: 'U.S. Department of Labor ETA, FUTA Credit Reductions',
+    url: 'https://oui.doleta.gov/unemploy/futa_credit.asp',
+    publisher: 'U.S. Department of Labor, Employment and Training Administration',
+    note: 'States with outstanding federal UI loans whose employers lose part of the 5.4% FUTA credit',
+  },
+  dolStateUiLaws: {
+    label: 'U.S. Department of Labor ETA, Significant Provisions of State Unemployment Insurance Laws',
+    url: 'https://oui.doleta.gov/unemploy/statelaws.asp',
+    publisher: 'U.S. Department of Labor, Employment and Training Administration',
+    note: 'Taxable wage base and new-employer tax rate for every state',
+  },
   irsW2Instructions: {
     label: 'IRS General Instructions for Forms W-2 and W-3',
     url: 'https://www.irs.gov/instructions/iw2w3',
