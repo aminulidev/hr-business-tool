@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Timer, DollarSign, Clock, Info, TrendingUp } from 'lucide-react';
 import TryExample from './TryExample';
@@ -50,6 +50,43 @@ const formatCurrency = (value: number): string =>
 const formatNumber = (value: number, decimals: number = 2): string =>
   value.toFixed(decimals);
 
+function computeOvertime(
+  hourlyRateInput: string,
+  regularHoursInput: string,
+  overtimeHoursInput: string,
+  multiplierPreset: OvertimeMultiplierPreset,
+  customMultiplierInput: string,
+  weeklyHoursInput: string,
+): OvertimeResult {
+  const rRate = parseFloat(hourlyRateInput) || 0;
+  const rHrs = parseFloat(regularHoursInput) || 0;
+
+  // A weekly total above the regular hours overrides the typed overtime hours
+  let otHrs = parseFloat(overtimeHoursInput) || 0;
+  const wHrs = parseFloat(weeklyHoursInput);
+  if (!isNaN(wHrs) && wHrs > rHrs) otHrs = wHrs - rHrs;
+
+  const mult = multiplierPreset === 'custom' ? (parseFloat(customMultiplierInput) || 1.5) : parseFloat(multiplierPreset);
+
+  const regPay = rHrs * rRate;
+  const otPay = otHrs * (rRate * mult);
+  const totalPay = regPay + otPay;
+  const totHrs = rHrs + otHrs;
+
+  return {
+    regularPay: regPay,
+    overtimePay: otPay,
+    totalPay,
+    overtimePremium: otPay - otHrs * rRate,
+    effectiveHourlyRate: totHrs > 0 ? totalPay / totHrs : 0,
+    regularHours: rHrs,
+    overtimeHours: otHrs,
+    totalHours: totHrs,
+    hourlyRate: rRate,
+    multiplier: mult,
+  };
+}
+
 export default function OvertimeCalculator() {
   const [hourlyRateInput, setHourlyRateInput] = useState<string>('22');
   const [regularHoursInput, setRegularHoursInput] = useState<string>('40');
@@ -58,71 +95,34 @@ export default function OvertimeCalculator() {
   const [customMultiplierInput, setCustomMultiplierInput] = useState<string>('1.5');
   const [weeklyHoursInput, setWeeklyHoursInput] = useState<string>('');
   
-  const [result, setResult] = useState<OvertimeResult | null>(null);
-  const [autoOvertimeHint, setAutoOvertimeHint] = useState<number | null>(null);
+  // Live result: recomputed whenever an input changes
+  const result = useMemo(
+    () => computeOvertime(hourlyRateInput, regularHoursInput, overtimeHoursInput, multiplierPreset, customMultiplierInput, weeklyHoursInput),
+    [hourlyRateInput, regularHoursInput, overtimeHoursInput, multiplierPreset, customMultiplierInput, weeklyHoursInput],
+  );
+  const weeklyTotal = parseFloat(weeklyHoursInput);
+  const autoOvertimeHint = !isNaN(weeklyTotal) ? Math.max(0, weeklyTotal - (parseFloat(regularHoursInput) || 40)) : null;
   
   const [compareA, setCompareA] = useState<{ result: OvertimeResult; label: string } | null>(null);
   const [compareB, setCompareB] = useState<{ result: OvertimeResult; label: string } | null>(null);
   
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<any>('overtime-calculator');
 
-  // Auto overtime hint logic
-  useEffect(() => {
-    const w = parseFloat(weeklyHoursInput);
-    const r = parseFloat(regularHoursInput) || 40;
-    if (!isNaN(w) && !isNaN(r)) {
-      setAutoOvertimeHint(Math.max(0, w - r));
-    } else {
-      setAutoOvertimeHint(null);
-    }
-  }, [weeklyHoursInput, regularHoursInput]);
+  const handleCalculate = () => {
+    // Mirror a weekly-total override into the overtime field so the saved inputs match the result
+    if (result.overtimeHours !== (parseFloat(overtimeHoursInput) || 0)) setOvertimeHoursInput(result.overtimeHours.toString());
+    saveEntry(
+      { hourlyRateInput, regularHoursInput, overtimeHoursInput: result.overtimeHours.toString(), multiplierPreset, customMultiplierInput, weeklyHoursInput },
+      `${formatCurrency(result.totalPay)} (${result.totalHours}h)`
+    );
+  };
 
     const handleTryExample = () => {
     setHourlyRateInput('20');
     setRegularHoursInput('40');
     setOvertimeHoursInput('10');
-    setResult(null);
   };
 
-  const handleCalculate = (saveToHistory = true) => {
-    const rRate = parseFloat(hourlyRateInput) || 0;
-    const rHrs = parseFloat(regularHoursInput) || 0;
-    
-    let otHrs = parseFloat(overtimeHoursInput) || 0;
-    const wHrs = parseFloat(weeklyHoursInput);
-    
-    if (!isNaN(wHrs) && wHrs > rHrs) {
-      otHrs = wHrs - rHrs;
-      setOvertimeHoursInput(otHrs.toString());
-    }
-    
-    const mult = multiplierPreset === 'custom' ? (parseFloat(customMultiplierInput) || 1.5) : parseFloat(multiplierPreset);
-    
-    const regPay = rHrs * rRate;
-    const otPay = otHrs * (rRate * mult);
-    const totalPay = regPay + otPay;
-    const totHrs = rHrs + otHrs;
-    
-    setResult({
-      regularPay: regPay,
-      overtimePay: otPay,
-      totalPay: totalPay,
-      overtimePremium: otPay - (otHrs * rRate),
-      effectiveHourlyRate: totHrs > 0 ? totalPay / totHrs : 0,
-      regularHours: rHrs,
-      overtimeHours: otHrs,
-      totalHours: totHrs,
-      hourlyRate: rRate,
-      multiplier: mult
-    });
-    
-    if (saveToHistory) saveEntry({ hourlyRateInput, regularHoursInput, overtimeHoursInput, multiplierPreset, customMultiplierInput, weeklyHoursInput }, `${formatCurrency(totalPay)} (${totHrs}h)`);
-  };
-
-  useEffect(() => {
-    handleCalculate(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hourlyRateInput, regularHoursInput, overtimeHoursInput, multiplierPreset, customMultiplierInput, weeklyHoursInput]);
 
   const handleReset = () => {
     setHourlyRateInput('');
@@ -131,8 +131,6 @@ export default function OvertimeCalculator() {
     setMultiplierPreset('1.5');
     setCustomMultiplierInput('1.5');
     setWeeklyHoursInput('');
-    setResult(null);
-    setAutoOvertimeHint(null);
   };
 
   const handleRestore = (item: any) => {
@@ -142,7 +140,6 @@ export default function OvertimeCalculator() {
     setMultiplierPreset(item.multiplierPreset || '1.5');
     setCustomMultiplierInput(item.customMultiplierInput || '1.5');
     setWeeklyHoursInput(item.weeklyHoursInput || '');
-    setResult(null);
   };
 
 return (
@@ -207,7 +204,7 @@ return (
             {autoOvertimeHint !== null && (
               <p className="text-xs text-amber-600 mt-1">
                 {autoOvertimeHint > 0
-                  ? `Weekly total suggests ${formatNumber(autoOvertimeHint)} OT hrs (will be used on calculate)`
+                  ? `Weekly total suggests ${formatNumber(autoOvertimeHint)} OT hrs (used in the result)`
                   : 'Weekly total does not exceed regular hours'
                 }
               </p>
@@ -299,7 +296,7 @@ return (
           <TryExample onClick={handleTryExample} />
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <Button
-              onClick={() => handleCalculate(true)}
+              onClick={handleCalculate}
               className="flex-1 sm:flex-none bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
               size="lg"
             >

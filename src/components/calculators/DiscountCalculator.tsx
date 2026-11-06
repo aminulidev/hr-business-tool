@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Tag, DollarSign, Percent, Info } from 'lucide-react';
 import TryExample from './TryExample';
@@ -42,143 +42,132 @@ interface DiscountResult {
 const formatCurrency = (value: number): string =>
   value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
+type DiscountComputation = { result: DiscountResult | null; error: string | null };
+
+function computeDiscount(
+  originalPrice: string,
+  discountType: DiscountType,
+  discountValue: string,
+  enableSecondDiscount: boolean,
+  secondDiscountValue: string,
+): DiscountComputation {
+  const price = parseFloat(originalPrice);
+  if (isNaN(price) || price <= 0) {
+    return { result: null, error: 'Please enter a valid original price greater than zero.' };
+  }
+
+  const disc = parseFloat(discountValue);
+  if (isNaN(disc) || disc < 0) {
+    return { result: null, error: 'Please enter a valid discount value (zero or greater).' };
+  }
+
+  if (discountType === 'percentage' && disc > 100) {
+    return { result: null, error: 'Percentage discount cannot exceed 100%.' };
+  }
+
+  if (discountType === 'fixed' && disc > price) {
+    return { result: null, error: 'Fixed discount cannot exceed the original price.' };
+  }
+
+  const steps: DiscountStep[] = [];
+
+  // Step 1: Apply first discount
+  let firstDiscountAmount: number;
+  let priceAfterFirst: number;
+
+  if (discountType === 'percentage') {
+    firstDiscountAmount = price * (disc / 100);
+    priceAfterFirst = price - firstDiscountAmount;
+  } else {
+    firstDiscountAmount = disc;
+    priceAfterFirst = price - disc;
+  }
+
+  steps.push({
+    label: discountType === 'percentage' ? `${disc}% off` : `${formatCurrency(disc)} off`,
+    originalPrice: price,
+    discountAmount: firstDiscountAmount,
+    discountedPrice: priceAfterFirst,
+    rate: price > 0 ? (firstDiscountAmount / price) * 100 : 0,
+  });
+
+  // Step 2: Apply second (chained) discount if enabled
+  if (enableSecondDiscount) {
+    const secondDisc = parseFloat(secondDiscountValue);
+    if (isNaN(secondDisc) || secondDisc < 0) {
+      return { result: null, error: 'Please enter a valid second discount value.' };
+    }
+    if (secondDisc > 100) {
+      return { result: null, error: 'Second discount percentage cannot exceed 100%.' };
+    }
+
+    const secondDiscountAmount = priceAfterFirst * (secondDisc / 100);
+    const priceAfterSecond = priceAfterFirst - secondDiscountAmount;
+
+    steps.push({
+      label: `Extra ${secondDisc}% off`,
+      originalPrice: priceAfterFirst,
+      discountAmount: secondDiscountAmount,
+      discountedPrice: priceAfterSecond,
+      rate: priceAfterFirst > 0 ? (secondDiscountAmount / priceAfterFirst) * 100 : 0,
+    });
+
+    const totalSaved = price - priceAfterSecond;
+    const savingsPercent = price > 0 ? (totalSaved / price) * 100 : 0;
+
+    return { error: null, result: {
+      originalPrice: price,
+      totalSaved,
+      finalPrice: priceAfterSecond,
+      savingsPercent,
+      steps,
+      isChained: true,
+    } };
+  } else {
+    const totalSaved = firstDiscountAmount;
+    const savingsPercent = discountType === 'percentage' ? disc : (price > 0 ? (totalSaved / price) * 100 : 0);
+
+    return { error: null, result: {
+      originalPrice: price,
+      totalSaved,
+      finalPrice: priceAfterFirst,
+      savingsPercent,
+      steps,
+      isChained: false,
+    } };
+  }
+}
+
 export default function DiscountCalculator() {
   const [originalPrice, setOriginalPrice] = useState('120');
   const [discountType, setDiscountType] = useState<DiscountType>('percentage');
   const [discountValue, setDiscountValue] = useState('25');
   const [enableSecondDiscount, setEnableSecondDiscount] = useState(false);
   const [secondDiscountValue, setSecondDiscountValue] = useState('10');
-  const [result, setResult] = useState<DiscountResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  // Live result: recomputed whenever an input changes
+  const { result, error } = useMemo(
+    () => computeDiscount(originalPrice, discountType, discountValue, enableSecondDiscount, secondDiscountValue),
+    [originalPrice, discountType, discountValue, enableSecondDiscount, secondDiscountValue],
+  );
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ originalPrice: string; discountType: string; discountValue: string; enableSecondDiscount: boolean; secondDiscountValue: string }>('discount-calculator');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: DiscountResult; label: string } | null>(null);
   const [compareB, setCompareB] = useState<{ result: DiscountResult; label: string } | null>(null);
 
-    const handleTryExample = () => {
-    setOriginalPrice('150');
-    setDiscountValue('20');
-    setResult(null);
-  };
-
-  const handleCalculate = (saveToHistory = true) => {
-    setResult(null);
-    setError(null);
-
-    const price = parseFloat(originalPrice);
-    if (isNaN(price) || price <= 0) {
-      setError('Please enter a valid original price greater than zero.');
-      return;
-    }
-
-    const disc = parseFloat(discountValue);
-    if (isNaN(disc) || disc < 0) {
-      setError('Please enter a valid discount value (zero or greater).');
-      return;
-    }
-
-    if (discountType === 'percentage' && disc > 100) {
-      setError('Percentage discount cannot exceed 100%.');
-      return;
-    }
-
-    if (discountType === 'fixed' && disc > price) {
-      setError('Fixed discount cannot exceed the original price.');
-      return;
-    }
-
-    const steps: DiscountStep[] = [];
-
-    // Step 1: Apply first discount
-    let firstDiscountAmount: number;
-    let priceAfterFirst: number;
-
-    if (discountType === 'percentage') {
-      firstDiscountAmount = price * (disc / 100);
-      priceAfterFirst = price - firstDiscountAmount;
-    } else {
-      firstDiscountAmount = disc;
-      priceAfterFirst = price - disc;
-    }
-
-    steps.push({
-      label: discountType === 'percentage' ? `${disc}% off` : `${formatCurrency(disc)} off`,
-      originalPrice: price,
-      discountAmount: firstDiscountAmount,
-      discountedPrice: priceAfterFirst,
-      rate: price > 0 ? (firstDiscountAmount / price) * 100 : 0,
-    });
-
-    // Step 2: Apply second (chained) discount if enabled
-    if (enableSecondDiscount) {
-      const secondDisc = parseFloat(secondDiscountValue);
-      if (isNaN(secondDisc) || secondDisc < 0) {
-        setError('Please enter a valid second discount value.');
-        return;
-      }
-      if (secondDisc > 100) {
-        setError('Second discount percentage cannot exceed 100%.');
-        return;
-      }
-
-      const secondDiscountAmount = priceAfterFirst * (secondDisc / 100);
-      const priceAfterSecond = priceAfterFirst - secondDiscountAmount;
-
-      steps.push({
-        label: `Extra ${secondDisc}% off`,
-        originalPrice: priceAfterFirst,
-        discountAmount: secondDiscountAmount,
-        discountedPrice: priceAfterSecond,
-        rate: priceAfterFirst > 0 ? (secondDiscountAmount / priceAfterFirst) * 100 : 0,
-      });
-
-      const totalSaved = price - priceAfterSecond;
-      const savingsPercent = price > 0 ? (totalSaved / price) * 100 : 0;
-
-      setResult({
-        originalPrice: price,
-        totalSaved,
-        finalPrice: priceAfterSecond,
-        savingsPercent,
-        steps,
-        isChained: true,
-      });
-    } else {
-      const totalSaved = firstDiscountAmount;
-      const savingsPercent = discountType === 'percentage' ? disc : (price > 0 ? (totalSaved / price) * 100 : 0);
-
-      setResult({
-        originalPrice: price,
-        totalSaved,
-        finalPrice: priceAfterFirst,
-        savingsPercent,
-        steps,
-        isChained: false,
-      });
-    }
-      const computedFinal = enableSecondDiscount
-        ? priceAfterFirst - priceAfterFirst * ((parseFloat(secondDiscountValue) || 0) / 100)
-        : priceAfterFirst;
-      const computedSaved = price - computedFinal;
-      if (saveToHistory) {
-        saveEntry(
-          { originalPrice, discountType, discountValue, enableSecondDiscount, secondDiscountValue },
-          `${formatCurrency(price)} → ${formatCurrency(computedFinal)} (saved ${formatCurrency(computedSaved)})`
-        );
-      }
-      return;
-    // eslint-disable-next-line no-unreachable
+  const handleCalculate = () => {
+    if (!result) return;
     saveEntry(
       { originalPrice, discountType, discountValue, enableSecondDiscount, secondDiscountValue },
-      `${formatCurrency(parseFloat(originalPrice))} → ${formatCurrency(computedFinal)} (saved ${formatCurrency(computedSaved)})`
+      `${formatCurrency(result.originalPrice)} → ${formatCurrency(result.finalPrice)} (saved ${formatCurrency(result.totalSaved)})`
     );
   };
 
-  useEffect(() => {
-    handleCalculate(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [originalPrice, discountType, discountValue, enableSecondDiscount, secondDiscountValue]);
+    const handleTryExample = () => {
+    setOriginalPrice('150');
+    setDiscountValue('20');
+  };
+
 
   const handleRestore = (inputs: { originalPrice: string; discountType: string; discountValue: string; enableSecondDiscount: boolean; secondDiscountValue: string }) => {
     setOriginalPrice(inputs.originalPrice);
@@ -186,7 +175,6 @@ export default function DiscountCalculator() {
     setDiscountValue(inputs.discountValue);
     setEnableSecondDiscount(inputs.enableSecondDiscount);
     setSecondDiscountValue(inputs.secondDiscountValue);
-    setResult(null);
   };
 
   const handleReset = () => {
@@ -195,8 +183,6 @@ export default function DiscountCalculator() {
     setDiscountValue('');
     setEnableSecondDiscount(false);
     setSecondDiscountValue('');
-    setResult(null);
-    setError(null);
   };
 
   return (
@@ -229,7 +215,6 @@ export default function DiscountCalculator() {
             value={discountType}
             onValueChange={(val) => {
               setDiscountType(val as DiscountType);
-              setResult(null);
             }}
           >
             <SelectTrigger className="w-full">
@@ -296,7 +281,6 @@ export default function DiscountCalculator() {
             aria-checked={enableSecondDiscount}
             onClick={() => {
               setEnableSecondDiscount(!enableSecondDiscount);
-              setResult(null);
             }}
             className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
               enableSecondDiscount
@@ -357,7 +341,7 @@ export default function DiscountCalculator() {
           <TryExample onClick={handleTryExample} />
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <Button
-              onClick={() => handleCalculate(true)}
+              onClick={handleCalculate}
               className="flex-1 sm:flex-none bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
               size="lg"
             >

@@ -11,13 +11,13 @@ QuickBizCalc (`www.quickbizcalc.com`) — a Next.js 16 App Router site of ~100 p
 ```bash
 npm run dev      # next dev on :3000, output tee'd to dev.log (dev.log is tracked — don't commit noise from it)
 npm run build    # next build — TypeScript errors fail the build (ignoreBuildErrors: false)
-npm run lint     # eslint . (most rules are disabled in eslint.config.mjs; 10 pre-existing react-hooks errors remain)
+npm run lint     # eslint . — clean and blocking in CI; the react-hooks compiler rules (set-state-in-effect, preserve-manual-memoization) are enforced
 npm test         # vitest run — ~190 tests, ~3s
 npm run test:watch
-npm run start    # bun .next/standalone/server.js — production uses bun; note next.config.ts does NOT set output: 'standalone'
+npm run start    # next start (production is Vercel, which ignores this script)
 ```
 
-`npm test` runs Vitest (payroll engine golden tests, registry invariants, generated-content agreement, sitemap). `npm run build` is the second gate: it runs `generateStaticParams` for every published calculator, category hub, and salary page, and type-checks everything including test files. CI (`.github/workflows/ci.yml`) runs both on every PR; lint is advisory there because of pre-existing react-hooks errors. Three lockfiles exist (bun, pnpm, npm) and must be kept in sync after dependency changes (`pnpm install --lockfile-only`, `bun install --lockfile-only`) — production deploys on Vercel and a stale lockfile breaks the install.
+`npm test` runs Vitest (payroll engine golden tests, registry invariants, generated-content agreement, sitemap). `npm run build` is the second gate: it runs `generateStaticParams` for every published calculator, category hub, and salary page, and type-checks everything including test files. CI (`.github/workflows/ci.yml`) runs tests, lint and build on every PR, all blocking. Three lockfiles exist (bun, pnpm, npm) and must be kept in sync after dependency changes (`pnpm install --lockfile-only`, `bun install --lockfile-only`) — production deploys on Vercel and a stale lockfile breaks the install.
 
 Production sits behind Caddy (`Caddyfile`, port 81 → localhost:3000). `.env` holds `RESEND_API_KEY` (contact form) and `DATABASE_URL` (currently unused — there is no DB; feedback/newsletter append to `data/*.jsonl`).
 
@@ -60,7 +60,7 @@ Nearly every calculator follows the same pattern (see `HolidayCountdownCalculato
 - `<TryExample onClick>` button; many also use `<ComparePanel>`.
 - Result container carries class `result-display` — `MobileResultSheet` watches it for the floating "View Breakdown" bar and `ResultActions` (print/copy/share/embed) reads from `.calculator-form` / `.result-display`. Keep these classes.
 - Flagship calculators compute live on load rather than waiting for a Calculate click (TODO.md phases 1 & 4 list which ones); new work should follow that pattern.
-- Paycheck-type calculators read/write URL query params (`?rate=&hours=&ot=&state=&freq=&status=`) for shareable links.
+- Paycheck-type calculators read/write URL query params (`?rate=&hours=&ot=&state=&freq=&status=`) for shareable links. Never copy the URL into state inside a `useEffect` (the `react-hooks/set-state-in-effect` rule fails lint): the default export calls `useInitialQuery()` from `src/hooks/useSearchParam.ts` and renders the form keyed on the query string with pre-computed `defaults`; a single tab/mode param uses `useSearchParam('mode')` with an `override ?? urlValue` pattern. Results are derived with `useMemo` from a pure `computeX()` function, never set in an effect.
 
 ### Payroll engine (shared tax math)
 

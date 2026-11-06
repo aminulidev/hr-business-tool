@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Clock, Plus, Trash2, DollarSign, Timer, AlertCircle, BarChart as BarChartIcon, Copy, Check, Printer } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
@@ -66,6 +66,89 @@ const defaultDays: WorkDay[] = DAY_LABELS.slice(0, 5).map((label) => ({
   lunchBreak: '30',
 }));
 
+type TimeCardComputation = { result: TimeCardResult | null; error: string | null };
+
+function computeTimeCard(
+  days: WorkDay[],
+  hourlyRate: string,
+  overtimeThreshold: string,
+  overtimeMultiplier: string,
+  rounding: string,
+): TimeCardComputation {
+  const rate = parseFloat(hourlyRate) || 0;
+  const threshold = parseFloat(overtimeThreshold) || 40;
+  const multiplier = parseFloat(overtimeMultiplier) || 1.5;
+  const roundingIncrement = parseInt(rounding, 10) || 0;
+
+  const parsedDays: TimeCardResult['days'] = [];
+  let totalHours = 0;
+
+  for (const day of days) {
+    const rawIn = parseTimeToMinutes(day.clockIn);
+    const rawOut = parseTimeToMinutes(day.clockOut);
+    const lunchMinutes = parseFloat(day.lunchBreak) || 0;
+
+    if (rawIn < 0) {
+      return { result: null, error: `Invalid clock-in time for ${day.label}. Try formats like ${TIME_FORMAT_EXAMPLES}` };
+    }
+    if (rawOut < 0) {
+      return { result: null, error: `Invalid clock-out time for ${day.label}. Try formats like ${TIME_FORMAT_EXAMPLES}` };
+    }
+    if (rawOut === rawIn) {
+      return { result: null, error: `Clock-in and clock-out are the same time for ${day.label}.` };
+    }
+
+    const inMinutes = roundPunch(rawIn, roundingIncrement);
+    // A clock-out earlier than clock-in is an overnight shift ending the next day
+    let outMinutes = roundPunch(rawOut < rawIn ? rawOut + MINUTES_PER_DAY : rawOut, roundingIncrement);
+    if (outMinutes <= inMinutes) outMinutes = inMinutes;
+
+    const workedMinutes = outMinutes - inMinutes - lunchMinutes;
+    if (workedMinutes < 0) {
+      return { result: null, error: `Lunch break exceeds total work time for ${day.label}.` };
+    }
+
+    const totalMins = workedMinutes;
+    const decimalHours = minutesToDecimal(totalMins);
+    const displayHours = totalMins / 60;
+
+    parsedDays.push({
+      label: day.label,
+      clockIn: day.clockIn,
+      clockOut: day.clockOut,
+      lunchBreak: lunchMinutes,
+      totalHours: displayHours,
+      decimalHours,
+    });
+
+    totalHours += displayHours;
+  }
+
+  const regularHours = Math.min(totalHours, threshold);
+  const overtimeHours = Math.max(totalHours - threshold, 0);
+
+  const regularPay = rate * regularHours;
+  const overtimePay = rate * overtimeHours * multiplier;
+  const totalPay = regularPay + overtimePay;
+
+  return {
+    error: null,
+    result: {
+    days: parsedDays,
+    totalRegularHours: regularHours,
+    totalOvertimeHours: overtimeHours,
+    totalDecimalHours: minutesToDecimal(Math.round(totalHours * 60)),
+    regularPay,
+    overtimePay,
+    totalPay,
+    hourlyRate: rate,
+    overtimeThreshold: threshold,
+    overtimeMultiplier: multiplier,
+    },
+  };
+}
+
+
 export default function TimeCardCalculator() {
   // Phase 15.1: hours-between, clock-out and break pages were folded in as modes;
   // their old URLs 301 here with ?mode=…
@@ -80,8 +163,11 @@ export default function TimeCardCalculator() {
   const [overtimeThreshold, setOvertimeThreshold] = useState('40');
   const [overtimeMultiplier, setOvertimeMultiplier] = useState('1.5');
   const [rounding, setRounding] = useState('0');
-  const [result, setResult] = useState<TimeCardResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  // Live result: recomputed whenever a punch, the rate or a rule changes
+  const { result, error } = useMemo(
+    () => computeTimeCard(days, hourlyRate, overtimeThreshold, overtimeMultiplier, rounding),
+    [days, hourlyRate, overtimeThreshold, overtimeMultiplier, rounding],
+  );
 
   const addDay = useCallback(() => {
     const dayIndex = days.length % 7;
@@ -135,92 +221,8 @@ export default function TimeCardCalculator() {
     setHourlyRate('25');
     setOvertimeThreshold('40');
     setOvertimeMultiplier('1.5');
-    setError(null);
-    setResult(null);
   };
 
-  const handleCalculate = () => {
-    setError(null);
-    setResult(null);
-
-    const rate = parseFloat(hourlyRate) || 0;
-    const threshold = parseFloat(overtimeThreshold) || 40;
-    const multiplier = parseFloat(overtimeMultiplier) || 1.5;
-    const roundingIncrement = parseInt(rounding, 10) || 0;
-
-    const parsedDays: TimeCardResult['days'] = [];
-    let totalHours = 0;
-
-    for (const day of days) {
-      const rawIn = parseTimeToMinutes(day.clockIn);
-      const rawOut = parseTimeToMinutes(day.clockOut);
-      const lunchMinutes = parseFloat(day.lunchBreak) || 0;
-
-      if (rawIn < 0) {
-        setError(`Invalid clock-in time for ${day.label}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
-        return;
-      }
-      if (rawOut < 0) {
-        setError(`Invalid clock-out time for ${day.label}. Try formats like ${TIME_FORMAT_EXAMPLES}`);
-        return;
-      }
-      if (rawOut === rawIn) {
-        setError(`Clock-in and clock-out are the same time for ${day.label}.`);
-        return;
-      }
-
-      const inMinutes = roundPunch(rawIn, roundingIncrement);
-      // A clock-out earlier than clock-in is an overnight shift ending the next day
-      let outMinutes = roundPunch(rawOut < rawIn ? rawOut + MINUTES_PER_DAY : rawOut, roundingIncrement);
-      if (outMinutes <= inMinutes) outMinutes = inMinutes;
-
-      const workedMinutes = outMinutes - inMinutes - lunchMinutes;
-      if (workedMinutes < 0) {
-        setError(`Lunch break exceeds total work time for ${day.label}.`);
-        return;
-      }
-
-      const totalMins = workedMinutes;
-      const decimalHours = minutesToDecimal(totalMins);
-      const displayHours = totalMins / 60;
-
-      parsedDays.push({
-        label: day.label,
-        clockIn: day.clockIn,
-        clockOut: day.clockOut,
-        lunchBreak: lunchMinutes,
-        totalHours: displayHours,
-        decimalHours,
-      });
-
-      totalHours += displayHours;
-    }
-
-    const regularHours = Math.min(totalHours, threshold);
-    const overtimeHours = Math.max(totalHours - threshold, 0);
-
-    const regularPay = rate * regularHours;
-    const overtimePay = rate * overtimeHours * multiplier;
-    const totalPay = regularPay + overtimePay;
-
-    setResult({
-      days: parsedDays,
-      totalRegularHours: regularHours,
-      totalOvertimeHours: overtimeHours,
-      totalDecimalHours: minutesToDecimal(Math.round(totalHours * 60)),
-      regularPay,
-      overtimePay,
-      totalPay,
-      hourlyRate: rate,
-      overtimeThreshold: threshold,
-      overtimeMultiplier: multiplier,
-    });
-  };
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    handleCalculate();
-  }, [days, hourlyRate, overtimeThreshold, overtimeMultiplier, rounding]);
 
   const handleCopySummary = () => {
     if (!result) return;
@@ -471,7 +473,7 @@ export default function TimeCardCalculator() {
         <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <TryExample onClick={handleTryExample} />
           <Button
-            onClick={handleCalculate}
+            onClick={() => document.querySelector('.result-display')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
             className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"
             size="lg"
           >

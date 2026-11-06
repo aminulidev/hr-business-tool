@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
+import { useInitialQuery } from '@/hooks/useSearchParam';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
@@ -99,63 +100,96 @@ interface HistoryInputs {
 
 export type PaycheckMode = 'hourly' | 'salary';
 
+interface PaycheckDefaults {
+  hourlyRate: string;
+  regularHours: string;
+  overtimeHours: string;
+  annualSalary: string;
+  payFrequency: PayFrequency;
+  filingStatus: FilingStatus;
+  state: PaycheckState;
+  allowances: string;
+  retirementPct: string;
+  benefitsPerPeriod: string;
+  otherDeductions: string;
+  nycResident: boolean;
+}
+
+// Pre-filled sensible defaults for instant live calculation on page load, overridden by the
+// shareable URL query params (?rate=28&hours=40&ot=5&state=CA&freq=bi-weekly&status=single)
+function readDefaults(params: URLSearchParams | null): PaycheckDefaults {
+  const d: PaycheckDefaults = {
+    hourlyRate: '25',
+    regularHours: '40',
+    overtimeHours: '0',
+    annualSalary: '65000',
+    payFrequency: 'bi-weekly',
+    filingStatus: 'single',
+    state: 'CA',
+    allowances: defaultAllowances('CA', 'single'),
+    retirementPct: '',
+    benefitsPerPeriod: '',
+    otherDeductions: '',
+    nycResident: false,
+  };
+  if (!params || !params.toString()) return d;
+  const qRate = params.get('rate');
+  const qHours = params.get('hours');
+  const qOt = params.get('ot');
+  const qSalary = params.get('salary');
+  const qFreq = params.get('freq') as PayFrequency | null;
+  const qStatus = params.get('status') as FilingStatus | null;
+  const qState = params.get('state') as PaycheckState | null;
+  const qAllow = params.get('allowances');
+  const qRet = params.get('ret');
+  const qBen = params.get('benefits');
+  const qOther = params.get('other');
+  const qNyc = params.get('nyc');
+
+  if (qRate) d.hourlyRate = qRate;
+  if (qHours) d.regularHours = qHours;
+  if (qOt) d.overtimeHours = qOt;
+  if (qSalary) d.annualSalary = qSalary;
+  if (qFreq && qFreq in FREQ_LABELS) d.payFrequency = qFreq;
+  if (qStatus && qStatus in FILING_LABELS) d.filingStatus = qStatus;
+  if (qState && (qState === 'none' || qState === 'other' || STATE_CODES.includes(qState as StateCode))) {
+    d.state = qState;
+    if (!qAllow) d.allowances = defaultAllowances(qState, d.filingStatus);
+  }
+  if (qAllow) d.allowances = qAllow;
+  if (qRet) d.retirementPct = qRet;
+  if (qBen) d.benefitsPerPeriod = qBen;
+  if (qOther) d.otherDeductions = qOther;
+  if (qNyc === '1') d.nycResident = true;
+  return d;
+}
+
 export default function HourlyPaycheckCalculator({ mode = 'hourly' }: { mode?: PaycheckMode }) {
+  // The server renders the defaults; once the client knows the query string the form is
+  // keyed on it and mounts again with the shared values (no setState inside an effect).
+  const query = useInitialQuery();
+  return <HourlyPaycheckForm key={query?.toString() ?? ''} mode={mode} defaults={readDefaults(query)} />;
+}
+
+function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: PaycheckDefaults }) {
   const isSalary = mode === 'salary';
   const historySlug = isSalary ? 'payroll-calculator' : 'hourly-paycheck-calculator';
 
-  // Pre-filled sensible defaults for instant live calculation on page load
-  const [hourlyRate, setHourlyRate] = useState('25');
-  const [regularHours, setRegularHours] = useState('40');
-  const [overtimeHours, setOvertimeHours] = useState('0');
-  const [annualSalary, setAnnualSalary] = useState('65000');
-  const [payFrequency, setPayFrequency] = useState<PayFrequency>('bi-weekly');
-  const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
-  const [state, setState] = useState<PaycheckState>('CA');
-  const [allowances, setAllowances] = useState(() => defaultAllowances('CA', 'single'));
+  const [hourlyRate, setHourlyRate] = useState(defaults.hourlyRate);
+  const [regularHours, setRegularHours] = useState(defaults.regularHours);
+  const [overtimeHours, setOvertimeHours] = useState(defaults.overtimeHours);
+  const [annualSalary, setAnnualSalary] = useState(defaults.annualSalary);
+  const [payFrequency, setPayFrequency] = useState<PayFrequency>(defaults.payFrequency);
+  const [filingStatus, setFilingStatus] = useState<FilingStatus>(defaults.filingStatus);
+  const [state, setState] = useState<PaycheckState>(defaults.state);
+  const [allowances, setAllowances] = useState(defaults.allowances);
   const [customStateRate, setCustomStateRate] = useState('5');
-  const [nycResident, setNycResident] = useState(false);
-  const [retirementPct, setRetirementPct] = useState('');
-  const [benefitsPerPeriod, setBenefitsPerPeriod] = useState('');
-  const [otherDeductions, setOtherDeductions] = useState('');
+  const [nycResident, setNycResident] = useState(defaults.nycResident);
+  const [retirementPct, setRetirementPct] = useState(defaults.retirementPct);
+  const [benefitsPerPeriod, setBenefitsPerPeriod] = useState(defaults.benefitsPerPeriod);
+  const [otherDeductions, setOtherDeductions] = useState(defaults.otherDeductions);
   const [copied, setCopied] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
-
-  // Sync from shareable URL query params (?rate=28&hours=40&ot=5&state=CA&freq=bi-weekly&status=single)
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const params = new URLSearchParams(window.location.search);
-    if (!params.toString()) return;
-    const qRate = params.get('rate');
-    const qHours = params.get('hours');
-    const qOt = params.get('ot');
-    const qSalary = params.get('salary');
-    const qFreq = params.get('freq') as PayFrequency | null;
-    const qStatus = params.get('status') as FilingStatus | null;
-    const qState = params.get('state') as PaycheckState | null;
-    const qAllow = params.get('allowances');
-    const qRet = params.get('ret');
-    const qBen = params.get('benefits');
-    const qOther = params.get('other');
-    const qNyc = params.get('nyc');
-
-    if (qRate) setHourlyRate(qRate);
-    if (qHours) setRegularHours(qHours);
-    if (qOt) setOvertimeHours(qOt);
-    if (qSalary) setAnnualSalary(qSalary);
-    if (qFreq && qFreq in FREQ_LABELS) setPayFrequency(qFreq);
-    if (qStatus && qStatus in FILING_LABELS) setFilingStatus(qStatus);
-    if (qState && (qState === 'none' || qState === 'other' || STATE_CODES.includes(qState as StateCode))) {
-      setState(qState);
-      if (!qAllow) {
-        setAllowances(defaultAllowances(qState, (qStatus && qStatus in FILING_LABELS) ? qStatus : 'single'));
-      }
-    }
-    if (qAllow) setAllowances(qAllow);
-    if (qRet) setRetirementPct(qRet);
-    if (qBen) setBenefitsPerPeriod(qBen);
-    if (qOther) setOtherDeductions(qOther);
-    if (qNyc === '1') setNycResident(true);
-  }, []);
 
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<HistoryInputs>(historySlug);
 

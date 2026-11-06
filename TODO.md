@@ -282,11 +282,16 @@ Audited, enriched with 2026 `benchmarkTables` & `deepDiveSections`, and publishe
 - [x] `.github/workflows/ci.yml`: `npm ci && npm test && npm run build` on every PR to `master` (lint runs advisory until the 10 pre-existing `react-hooks/set-state-in-render` / `preserve-manual-memoization` errors in 12 calculator components are fixed — then make it blocking).
 
 ### 14.4 Dead code & config cleanup
-- [ ] Fix the 10 pre-existing lint errors (`react-hooks/set-state-in-render`, `react-hooks/preserve-manual-memoization`) in DiscountCalculator, FeedbackWidget, HourlyPaycheckCalculator, MarkupCalculator, OvertimeCalculator, ROICalculator, SalaryBreakdownInteractive, SalesCommissionCalculator, StatePaycheckCalculator, TimeCardCalculator, TimeCardLunchCalculator, WagesCalculator; then make the CI lint step blocking.
+- [x] `npm run lint` is clean and the CI lint step is blocking (Nov 6 2026). The 10 reported errors plus 5 more that an unrelated `eslint-disable` comment had been hiding were fixed for real, no suppressions left:
+  - **URL → state in an effect** (HourlyPaycheckCalculator, StatePaycheckCalculator, SalaryBreakdownInteractive): new `useInitialQuery()` in `src/hooks/useSearchParam.ts` (useSyncExternalStore; null on the server, the first client query string after) — the default export reads it and renders the form keyed on the query string with `defaults` computed by a pure `readDefaults()`. Server HTML is unchanged; shared links still pre-fill.
+  - **FeedbackWidget**: slug from `usePathname()`; the recent vote is read from localStorage through `useSyncExternalStore` (storage event) instead of an effect.
+  - **Result computed in an effect** (ROI, Wages, TimeCard, TimeCardLunch, Discount, Markup, Overtime): each got a pure module-level `computeX()` returning `{ result, error }` and a `useMemo`; the Calculate button now only saves history (or scrolls to the result where there is no history panel). Overtime's weekly-total override is applied live instead of mutating the OT input inside the effect.
+  - **preserve-manual-memoization**: WorkHoursCalculator's `applyRounding`/`computeDay` moved to module scope (`computeDay(d, rounding)`); SalesCommissionCalculator's `getSnapshot` moved below the three memos it reads.
 - [x] `CalculatorLayout.tsx` deleted (PR 3).
-- [ ] Delete `src/app/api/route.ts` (hello world) and `tailwind.config.ts` (Tailwind v4 is configured in `globals.css` `@theme`). Lockfiles: keep all three in sync (`pnpm install --lockfile-only`, `bun install --lockfile-only`) until the owner confirms which package manager Vercel uses, then delete the other two.
-- [ ] `next.config.ts`: add `output: 'standalone'` (start script already expects it) or change the start script. Remove `DRAFT_TARGET_FALLBACK` once 14.3 forces valid merge targets.
-- [ ] `.env`: drop unused `DATABASE_URL` or adopt SQLite (see 18).
+- [x] `src/app/api/route.ts` (hello world) and `tailwind.config.ts` deleted (Nov 6 2026; `globals.css` has no `@config`, so the file was never loaded). `tailwindcss-animate` in package.json is therefore dead too — remove it together with the lockfile decision below, not before.
+- [ ] **Lockfiles (owner decision)**: Vercel documents no tie-break when several lockfiles exist (bun.lock, pnpm-lock.yaml, package-lock.json are all committed). Pick one: keep the lockfile of the package manager you want Vercel to use and delete the other two, or set `installCommand` in `vercel.json` / `packageManager` in package.json. Until then every dependency change must still run `pnpm install --lockfile-only` and `bun install --lockfile-only`.
+- [x] `npm run start` is now `next start` (Nov 6 2026) — the old `bun .next/standalone/server.js` pointed at a directory that `next build` never produced because `output: 'standalone'` is not set; Vercel ignores the start script anyway. `DRAFT_TARGET_FALLBACK` is already gone from `next.config.ts`.
+- [ ] `.env` (untracked, owner's machine): drop unused `DATABASE_URL` or adopt SQLite — decide with Phase 18.
 
 ### 14.5 Shared calculator primitives (adopt incrementally — only when a component is touched)
 - [ ] `useCalculatorState<T>(slug, defaults)` — one hook owning inputs, URL query sync (today only 4 components do this), `useCalcHistory`, and live `result` via `useMemo`. Replaces the per-component copy-paste.
@@ -408,7 +413,7 @@ Audited, enriched with 2026 `benchmarkTables` & `deepDiveSections`, and publishe
 4. ~~**13.1 / 13.2 author, review dates, linked sources**~~ — done Nov 6 2026 (organisation-level authorship by owner decision)
 5. ~~**15.3 state-page differentiation**~~ — done Nov 6 2026 (remaining 20 states + DC deferred until these 30 are re-indexed)
 6. ~~**15.1 thin-page merges**~~ — done Nov 6 2026 (8 slugs merged into 5 pages; 94 published calculators)
-7. **14.4 cleanup**
+7. ~~**14.4 cleanup**~~ — done Nov 6 2026 (lint clean + blocking in CI, dead files removed; lockfile choice still with the owner)
 8. Request re-indexing in GSC; wait for data
 9. **16.1 flagship features**
 10. **17 suites**, one per PR, demand-checked

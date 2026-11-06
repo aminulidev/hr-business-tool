@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState, useSyncExternalStore } from 'react';
+import { usePathname } from 'next/navigation';
 import { ThumbsUp, ThumbsDown, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -19,26 +20,32 @@ function writeStore(entries: FeedbackEntry[]) {
   if (typeof window === 'undefined') return;
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(entries.slice(-200))); } catch {}
 }
-function getSlugFromPath() {
-  if (typeof window === 'undefined') return 'unknown';
-  const parts = window.location.pathname.split('/');
+function slugFromPath(pathname: string | null) {
+  const parts = (pathname ?? '').split('/');
   const idx = parts.indexOf('calculators');
   return idx !== -1 && parts[idx + 1] ? parts[idx + 1] : 'unknown';
 }
 
+const subscribeStorage = (onChange: () => void) => {
+  window.addEventListener('storage', onChange);
+  return () => window.removeEventListener('storage', onChange);
+};
+
+/** The vote already recorded for this page inside the cooldown window, or null. */
+function readRecentFeedback(slug: string): boolean | null {
+  const recent = readStore().find((e) => e.slug === slug && Date.now() - e.ts < COOLDOWN_MINUTES * 60 * 1000);
+  return recent ? recent.helpful : null;
+}
+
 export default function FeedbackWidget() {
-  const [submitted, setSubmitted] = useState<boolean | null>(null);
+  const slug = slugFromPath(usePathname());
+  // Server render and hydration show the buttons; the client then reads any recent vote
+  // from localStorage. A click or dismiss overrides the stored value for this visit.
+  const storedVote = useSyncExternalStore(subscribeStorage, () => readRecentFeedback(slug), () => null);
+  const [submittedOverride, setSubmitted] = useState<boolean | null | undefined>(undefined);
+  const submitted = submittedOverride === undefined ? storedVote : submittedOverride;
   const [showTextarea, setShowTextarea] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
-  const [slug, setSlug] = useState('');
-
-  useEffect(() => {
-    const s = getSlugFromPath();
-    setSlug(s);
-    const entries = readStore();
-    const recent = entries.find((e) => e.slug === s && Date.now() - e.ts < COOLDOWN_MINUTES * 60 * 1000);
-    if (recent) setSubmitted(recent.helpful);
-  }, []);
 
   const submit = useCallback(async (helpful: boolean | null, message?: string) => {
     const entry: FeedbackEntry = { slug, helpful, message: message?.trim() || undefined, ts: Date.now() };
