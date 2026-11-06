@@ -16,6 +16,7 @@ import {
   ArrowRight,
   Link2,
   Check,
+  Receipt,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -29,10 +30,17 @@ import {
   TAX_YEAR,
   type FilingStatus,
   type PayFrequency,
+  type PaycheckInput,
   type PaycheckResult,
   type StateCode,
 } from '@/lib/payroll/withholding-2026';
 import { STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
+import EmployerCostPanel, { ResultViewToggle, type ResultView } from './EmployerCostPanel';
+import ReverseSolverCard from './ReverseSolverCard';
+import PaycheckScenarioCompare from './PaycheckScenarioCompare';
+import PayStubDialog from './PayStubDialog';
+import { calculateEmployerCost } from '@/lib/payroll/employer-cost-2026';
+import { parseScenarioParams, writeScenarioParams, type CompareScenario } from '@/lib/payroll/scenario-params';
 
 const FREQ_LABELS: Record<PayFrequency, string> = {
   weekly: 'Weekly (52 paychecks)',
@@ -55,7 +63,22 @@ interface StateDefaults {
   filingStatus: FilingStatus;
   allowances: string;
   nycResident: boolean;
+  /** ?view=employer opens the employer-cost side of the result */
+  view: ResultView;
+  /** Scenario B from b_* params, or null */
+  compare: CompareScenario | null;
 }
+
+const scenarioOf = (d: StateDefaults, state: StateCode): CompareScenario => ({
+  state,
+  hourlyRate: d.hourlyRate,
+  regularHours: d.regularHours,
+  overtimeHours: d.overtimeHours,
+  annualSalary: '',
+  filingStatus: d.filingStatus,
+  payFrequency: d.payFrequency,
+  retirementPct: '',
+});
 
 // Pre-fill $25/hr for instant live calculation on load, overridden by the shareable URL
 // query params (?rate=28&hours=40&ot=5&freq=bi-weekly&status=single)
@@ -68,6 +91,8 @@ function readDefaults(params: URLSearchParams | null, state: StateCode): StateDe
     filingStatus: 'single',
     allowances: String(STATE_PAYCHECK_PAGES[state].allowances?.defaultSingle ?? 0),
     nycResident: false,
+    view: 'employee',
+    compare: null,
   };
   if (!params || !params.toString()) return d;
   const qRate = params.get('rate');
@@ -85,6 +110,8 @@ function readDefaults(params: URLSearchParams | null, state: StateCode): StateDe
   if (qStatus && qStatus in FILING_LABELS) d.filingStatus = qStatus;
   if (qAllow) d.allowances = qAllow;
   if (qNyc === '1') d.nycResident = true;
+  if (params.get('view') === 'employer') d.view = 'employer';
+  d.compare = parseScenarioParams(params, scenarioOf(d, state));
   return d;
 }
 
@@ -108,6 +135,9 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
   const [allowances, setAllowances] = useState(defaults.allowances);
   const [nycResident, setNycResident] = useState(defaults.nycResident);
   const [linkCopied, setLinkCopied] = useState(false);
+  const [view, setView] = useState<ResultView>(defaults.view);
+  const [stubOpen, setStubOpen] = useState(false);
+  const [scenario, setScenario] = useState<CompareScenario | null>(defaults.compare);
 
   const handleShareLink = () => {
     if (typeof window === 'undefined') return;
@@ -120,6 +150,8 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
     url.searchParams.set('status', filingStatus);
     if (page.allowances && allowances) url.searchParams.set('allowances', allowances);
     if (state === 'NY' && nycResident) url.searchParams.set('nyc', '1');
+    if (view === 'employer') url.searchParams.set('view', 'employer');
+    writeScenarioParams(url, scenario, 'hourly');
 
     const shareUrl = url.toString();
     window.history.replaceState({}, '', shareUrl);
@@ -175,6 +207,26 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
     };
   }, [state, hourlyRate, regularHours, overtimeHours, payFrequency, filingStatus, allowances, nycResident, page]);
 
+  // Reverse solver (Phase 16.1): the current settings applied to any candidate hourly rate
+  const inputForRate = (rate: number): PaycheckInput | null => {
+    if (error) return null;
+    return {
+      state,
+      hourlyRate: rate,
+      regularHoursPerWeek: parseFloat(regularHours) || 0,
+      overtimeHoursPerWeek: parseFloat(overtimeHours || '0') || 0,
+      overtimeMultiplier: 1.5,
+      payFrequency,
+      filingStatus,
+      stateAllowances: page.allowances ? parseInt(allowances || '0', 10) || 0 : 0,
+      nycResident: state === 'NY' && nycResident,
+    };
+  };
+
+  // Scenario compare (Phase 16.1): B may be another state, which is the point on a state page
+  const currentScenario: CompareScenario = { state, hourlyRate, regularHours, overtimeHours, annualSalary: '', filingStatus, payFrequency, retirementPct: '' };
+  const scenarioBase = result ? inputForRate(parseFloat(hourlyRate) || 0) : null;
+
   const handleTryExample = () => {
     setHourlyRate('28');
     setRegularHours('40');
@@ -197,6 +249,23 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
 
   const totalWeeklyHours = Math.max(1, (parseFloat(regularHours) || 0) + (parseFloat(overtimeHours) || 0));
   const totalAnnualHours = totalWeeklyHours * 52;
+
+  // Pay stub preview (Phase 16.1)
+  const stubData = result
+    ? {
+        payFrequency,
+        payFrequencyLabel: FREQ_LABELS[payFrequency].replace(/ \(.*\)$/, ''),
+        stateName: page.name,
+        taxYear: TAX_YEAR,
+        isSalary: false,
+        hourlyRate: parseFloat(hourlyRate) || 0,
+        regularHoursPerWeek: parseFloat(regularHours) || 0,
+        overtimeHoursPerWeek: parseFloat(overtimeHours || '0') || 0,
+        result,
+        employer: calculateEmployerCost({ state, grossAnnual: result.grossAnnual, ficaWagesAnnual: result.ficaWagesAnnual, payFrequency, hoursPerYear: totalAnnualHours }),
+        sourceUrl: `https://www.quickbizcalc.com/calculators/${page.slug}`,
+      }
+    : null;
 
   return (
     <div className="w-full">
@@ -371,6 +440,11 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
         </div>
       </div>
 
+      {/* Reverse solver: take-home target → required hourly rate (Phase 16.1) */}
+      <div className="mt-4 px-4 sm:px-6">
+        <ReverseSolverCard mode="hourly" buildInput={inputForRate} payFrequency={payFrequency} onApply={(rate) => setHourlyRate(rate.toFixed(2))} />
+      </div>
+
       {/* Live Results */}
       {result && (
         <motion.div
@@ -380,6 +454,19 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
           className="mt-4 px-4 sm:px-6 result-display"
           aria-live="polite"
         >
+          {/* Phase 16.1: the same paycheck from the employer's side */}
+          <ResultViewToggle view={view} onChange={setView} />
+          {view === 'employer' && (
+            <EmployerCostPanel
+              state={state}
+              stateName={page.name}
+              paycheck={result}
+              payFrequency={payFrequency}
+              hoursPerYear={totalAnnualHours}
+              frequencyLabel={FREQ_LABELS[payFrequency]}
+            />
+          )}
+          {view === 'employee' && (
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 sm:p-6 space-y-6">
             <div className="text-center space-y-1">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-semibold mb-1">
@@ -501,18 +588,34 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
                   change your actual paycheck.
                 </p>
               </div>
-              <Button
-                onClick={handleShareLink}
-                variant="outline"
-                size="sm"
-                className="shrink-0 border-emerald-500/30 hover:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
-              >
-                {linkCopied ? <Check className="h-4 w-4 mr-1.5 text-emerald-600" /> : <Link2 className="h-4 w-4 mr-1.5" />}
-                {linkCopied ? 'Share Link Copied!' : 'Share Calculation Link'}
-              </Button>
+              <div className="flex flex-wrap gap-2 shrink-0">
+                <Button
+                  onClick={handleShareLink}
+                  variant="outline"
+                  size="sm"
+                  className="border-emerald-500/30 hover:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                >
+                  {linkCopied ? <Check className="h-4 w-4 mr-1.5 text-emerald-600" /> : <Link2 className="h-4 w-4 mr-1.5" />}
+                  {linkCopied ? 'Share Link Copied!' : 'Share Calculation Link'}
+                </Button>
+                <Button onClick={() => setStubOpen(true)} variant="outline" size="sm">
+                  <Receipt className="h-4 w-4 mr-1.5" />
+                  Pay stub preview
+                </Button>
+              </div>
             </div>
           </div>
+          )}
         </motion.div>
+      )}
+
+      {stubData && <PayStubDialog open={stubOpen} onOpenChange={setStubOpen} data={stubData} />}
+
+      {/* Scenario compare: this state vs. a raise, another state or a different schedule (Phase 16.1) */}
+      {result && (
+        <div className="mt-4 px-4 sm:px-6">
+          <PaycheckScenarioCompare mode="hourly" base={scenarioBase} baseScenario={currentScenario} scenario={scenario} onChange={setScenario} />
+        </div>
       )}
     </div>
   );

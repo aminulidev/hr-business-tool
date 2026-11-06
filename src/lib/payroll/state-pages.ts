@@ -15,6 +15,8 @@ import type { CalculatorSlug } from '@/lib/registry';
 import type { CalculatorSeoData, SeoSource } from '@/lib/seo-data/types';
 import { FEDERAL_PAYCHECK_SOURCES, SRC } from '@/lib/seo-data/sources';
 import { STATE_DETAILS } from './state-details';
+import { calculateEmployerCost, EMPLOYER_COST_SOURCES, STATE_EMPLOYER_TAXES } from './employer-cost-2026';
+import { solveHourlyRateForNet } from './reverse-solver';
 
 const usd = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
@@ -1201,6 +1203,30 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
 
   // Neighbour comparison, generated from the engine at this state's median wage
   const here = singleFullTime(code, median, defaultSingleAllowance);
+  // Reverse solver example (Phase 16.1): the hourly rate behind a $2,000 bi-weekly take-home here
+  const reverseTarget = 2000;
+  const reverse = solveHourlyRateForNet(
+    (hourlyRate) => ({
+      state: code,
+      hourlyRate,
+      regularHoursPerWeek: 40,
+      overtimeHoursPerWeek: 0,
+      overtimeMultiplier: 1.5,
+      payFrequency: 'bi-weekly',
+      filingStatus: 'single',
+      stateAllowances: defaultSingleAllowance,
+    }),
+    reverseTarget,
+  )!;
+  const employerProfile = STATE_EMPLOYER_TAXES[code];
+  const employerCost = calculateEmployerCost({
+    state: code,
+    grossAnnual: here.grossAnnual,
+    ficaWagesAnnual: here.ficaWagesAnnual,
+    payFrequency: 'bi-weekly',
+    hoursPerYear: 2080,
+  });
+
   const neighborRows = details.neighbors.map((n) => {
     const np = STATE_PAYCHECK_PAGES[n];
     const r = singleFullTime(n, median, np.allowances?.defaultSingle ?? 0);
@@ -1337,6 +1363,15 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
         bullets: details.changes2026,
       },
       {
+        title: `What It Costs an Employer to Pay the ${page.name} Median Wage`,
+        paragraphs: [
+          `Flip the calculator to "Employer cost" and the same ${usd(median)}-an-hour paycheck looks different: on ${usd(here.grossAnnual)} of annual wages, a ${page.name} employer paying the ${TAX_YEAR} new-employer unemployment rate adds ${usd(employerCost.employerTaxesAnnual)} in payroll taxes (${(employerCost.loadRate * 100).toFixed(1)}% on top of wages), for a total cost to employ of ${usd(employerCost.totalCostAnnual)} a year, or ${usd(employerCost.totalCostPerHour)} per hour worked.`,
+          `The pieces: ${employerCost.lines.map((l) => `${l.label} ${usd(l.annual)}`).join('; ')}${employerProfile.sui.rate === null ? `; state unemployment insurance is not included because ${page.name} assigns new employers an industry rate — enter yours in the calculator` : ''}. ${employerProfile.sui.note}`,
+          ...employerProfile.extras.filter((e) => e.note).map((e) => `${e.label.replace(/ \(.*\)$/, '')}: ${e.note}`),
+          `Not included: workers' compensation insurance, health benefits, retirement match and local employer payroll taxes. Experience-rated employers should enter the rate from their ${TAX_YEAR} rate notice; the SUI line and totals update immediately.`,
+        ],
+      },
+      {
         title: `Moving Across the State Line? ${page.name} vs. ${neighborRows.map((n) => n.name).join(', ')}`,
         paragraphs: [
           `A single worker earning the ${page.name} median of ${usd(median)} an hour full time takes home ${usd(here.netAnnual)} a year here (${usd(here.netPerPeriod)} every two weeks).`,
@@ -1380,6 +1415,19 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
               : '') +
             `The difference is entirely state income tax and state payroll programs, because federal withholding is the same everywhere. Local taxes and living costs are not included.`,
       },
+      {
+        question: `What hourly wage do I need to take home ${usd(reverseTarget)} every two weeks in ${page.name}?`,
+        answer:
+          `${usd(reverse.hourlyRate)} an hour at 40 hours a week for a single filer with a standard W-4${page.allowances ? ` and ${defaultSingleAllowance} ${page.allowances.label}` : ''}: gross pay of ${usd(reverse.result.grossPerPeriod)} per paycheck (${usd(reverse.result.grossAnnual)} a year) leaves ${usd(reverse.result.netPerPeriod)} after federal tax, FICA${hasIncomeTax ? ` and ${page.name} deductions` : ` (and no ${page.name} income tax)`}. ` +
+          `That is ${usd(reverse.hourlyRate - page.minimumWage)} above the ${page.name} minimum wage of ${usd(page.minimumWage)}${reverse.hourlyRate > median ? ` and ${usd(reverse.hourlyRate - median)} above the state median` : ` and ${usd(median - reverse.hourlyRate)} below the state median`}. The "Work backwards" box on the calculator solves for any take-home target per paycheck, month or year.`,
+      },
+      {
+        question: `How much does it cost an employer to pay ${usd(median)} an hour in ${page.name}?`,
+        answer:
+          `About ${usd(employerCost.totalCostAnnual)} a year for a full-time worker, or ${usd(employerCost.totalCostPerHour)} per hour worked: ${usd(here.grossAnnual)} in wages plus ${usd(employerCost.employerTaxesAnnual)} of employer payroll taxes at the ${TAX_YEAR} ${page.name} new-employer rates. ` +
+          `That is the Social Security and Medicare match (7.65%), federal unemployment tax (FUTA at ${(employerCost.futaRateApplied * 100).toFixed(1)}% of the first $7,000)${employerProfile.sui.rate !== null ? `, state unemployment insurance at ${employerProfile.sui.rateText} on the first ${employerProfile.sui.wageBase.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}` : ''}${employerProfile.extras.length ? ` and ${employerProfile.extras.map((e) => e.label.replace(/ \(.*\)$/, '')).join(' and ')}` : ''}. ` +
+          `Use the "Employer cost" toggle on the calculator to see the split for any wage, and enter your own SUI rate if you are experience-rated.`,
+      },
       ...page.extraFaqs,
       {
         question: 'How accurate is this paycheck estimate?',
@@ -1420,6 +1468,12 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
         icon: 'Clock',
       },
     ],
-    sources: [...FEDERAL_PAYCHECK_SOURCES, ...page.sources, SRC.blsOews],
+    sources: dedupeSources([...FEDERAL_PAYCHECK_SOURCES, ...page.sources, SRC.blsOews, ...EMPLOYER_COST_SOURCES, employerProfile.source]),
   };
+}
+
+/** Keep the first source for each URL so a state agency page cited twice appears once */
+function dedupeSources(list: SeoSource[]): SeoSource[] {
+  const seen = new Set<string>();
+  return list.filter((s) => (seen.has(s.url) ? false : (seen.add(s.url), true)));
 }
