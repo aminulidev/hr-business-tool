@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Total Manufacturing Cost' }],
   tableOfContents: [
@@ -26,5 +27,5 @@ const seoData = {
     { slug: 'depreciation-calculator', title: 'Depreciation Calculator', description: 'Asset depreciation', icon: 'TrendingDown' },
     { slug: 'balance-sheet-calculator', title: 'Balance Sheet', description: 'Financial position', icon: 'FileText' },
   ],
-};
+} satisfies CalculatorSeoData;
 export default seoData;

@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   howToSteps: [
     'Enter your annual gross salary before any deductions. This is the total amount shown on your employment offer or W-2 form.',
@@ -110,6 +111,6 @@ const seoData = {
   ],
 
   
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

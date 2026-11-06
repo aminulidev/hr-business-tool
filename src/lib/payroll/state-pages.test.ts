@@ -20,7 +20,7 @@ describe.each(STATE_CODES)('%s state paycheck page', (code) => {
     expect(seo.howToSteps.length).toBeGreaterThanOrEqual(4);
     expect(seo.workedExamples.length).toBeGreaterThanOrEqual(3);
     expect(seo.faqs.length).toBeGreaterThanOrEqual(5);
-    expect(seo.benchmarkTables[0].rows.length).toBeGreaterThanOrEqual(8);
+    expect(seo.benchmarkTables![0].rows.length).toBeGreaterThanOrEqual(8);
     expect(seo.relatedTools.length).toBeGreaterThanOrEqual(3);
     expect(page.sources.length).toBeGreaterThanOrEqual(1);
   });
@@ -53,7 +53,7 @@ describe.each(STATE_CODES)('%s state paycheck page', (code) => {
   });
 
   it('benchmark table: each row balances and the state column is only state money', () => {
-    const table = seo.benchmarkTables[0];
+    const table = seo.benchmarkTables![0];
     expect(table.headers).toHaveLength(7);
     for (const row of table.rows) {
       const [label, grossAnnual, grossPer, fedFica, stateTax, netPer, netAnnual] = row.map((c, i) =>

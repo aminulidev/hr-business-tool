@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   howToSteps: [
     'Enter the clock-in and clock-out time for each workday. Both 12-hour (9:00 AM, 5:30 PM, 9am) and 24-hour (09:00, 17:30) formats work. For a night shift, enter the real times — a clock-out earlier than the clock-in (e.g. 10:00 PM to 6:30 AM) is counted as ending the next morning.',
@@ -115,6 +116,6 @@ const seoData = {
       icon: 'Clock',
     },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

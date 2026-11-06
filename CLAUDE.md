@@ -11,17 +11,19 @@ QuickBizCalc (`www.quickbizcalc.com`) — a Next.js 16 App Router site of ~100 p
 ```bash
 npm run dev      # next dev on :3000, output tee'd to dev.log (dev.log is tracked — don't commit noise from it)
 npm run build    # next build — TypeScript errors fail the build (ignoreBuildErrors: false)
-npm run lint     # eslint . (most rules are disabled in eslint.config.mjs; lint is not a meaningful gate)
+npm run lint     # eslint . (most rules are disabled in eslint.config.mjs; 10 pre-existing react-hooks errors remain)
+npm test         # vitest run — ~190 tests, ~3s
+npm run test:watch
 npm run start    # bun .next/standalone/server.js — production uses bun; note next.config.ts does NOT set output: 'standalone'
 ```
 
-There are no tests and no test runner. `npm run build` is the real verification step: it runs `generateStaticParams` for every published calculator, category hub, and salary page, and type-checks everything. Three lockfiles exist (bun, pnpm, npm); any of them installs fine.
+`npm test` runs Vitest (payroll engine golden tests, registry invariants, generated-content agreement, sitemap). `npm run build` is the second gate: it runs `generateStaticParams` for every published calculator, category hub, and salary page, and type-checks everything including test files. CI (`.github/workflows/ci.yml`) runs both on every PR; lint is advisory there because of pre-existing react-hooks errors. Three lockfiles exist (bun, pnpm, npm) and must be kept in sync after dependency changes (`pnpm install --lockfile-only`, `bun install --lockfile-only`) — production deploys on Vercel and a stale lockfile breaks the install.
 
 Production sits behind Caddy (`Caddyfile`, port 81 → localhost:3000). `.env` holds `RESEND_API_KEY` (contact form) and `DATABASE_URL` (currently unused — there is no DB; feedback/newsletter append to `data/*.jsonl`).
 
 ## Architecture: the calculator registry drives everything
 
-`src/lib/calculator-meta.ts` is the single source of truth. Every calculator is a `CalculatorMeta` entry in the `calculators` array with a `slug` (also a member of the `CalculatorSlug` union type), SEO fields, `category`, `tier`, and a `status`:
+`src/lib/registry/` is the single source of truth (`src/lib/calculator-meta.ts` is a re-export shim kept for the 30-odd existing importers). Entries live in `registry/calculators/<category>.ts`, wrapped in `defineCalculators([...])` so each `slug` keeps its literal type; `registry/index.ts` concatenates them and derives `CalculatorSlug` from the data, so there is no hand-maintained slug union. Every entry has SEO fields, `category` (must be in `categoryOrder`), `tier`, and a `status`:
 
 - `published` — live, in sitemap, statically generated.
 - `draft` — exists in registry but returns 404 (`dynamicParams = false`, so unknown/draft slugs are real 404s).
@@ -32,14 +34,16 @@ Helpers `isCalculatorPublished`, `getPublishedCalculators`, `resolveMergedCalcul
 
 ### Adding or publishing a calculator — four places must agree
 
-1. **Registry**: add/flip the entry in `src/lib/calculator-meta.ts` (and the slug to `CalculatorSlug`).
+1. **Registry**: add/flip the entry in the matching `src/lib/registry/calculators/<category>.ts`. The slug type updates automatically.
 2. **Component**: `src/components/calculators/<Name>Calculator.tsx` (client component).
-3. **Component maps (two of them)**: `src/app/calculators/[slug]/page.tsx` `componentMap` AND `src/app/calculators/[slug]/embed/page.tsx` both map slug → `dynamic(() => import(...))`. They are maintained by hand and must stay in sync. A published slug missing from `componentMap` 404s.
-4. **SEO content**: `src/lib/seo-data/<slug>.ts` with a `default` export. The page does `await import(\`@/lib/seo-data/${slug}\`)` at render time; if the file is missing the calculator renders bare (no article, no FAQ schema, no breadcrumbs). Shape is `{ howToSteps, formula, formulaDescription, workedExamples, benchmarkTables, deepDiveSections, faqs, relatedTools }` — see `CalculatorLayoutProps` in `CalculatorLayoutServer.tsx`. `relatedTools[].icon` is a string lucide name resolved via `iconMap` in that file; a new icon must be added to that map (and the one in `CalculatorLayout.tsx`).
+3. **Component map**: add `slug → dynamic(() => import(...))` to `src/lib/registry/components.tsx`. It is the only map; both the page and embed routes read it. Keys are type-checked against `CalculatorSlug`, and `registry.test.ts` fails if a published slug has no entry.
+4. **SEO content**: `src/lib/seo-data/<slug>.ts` ending in `} satisfies CalculatorSeoData;` (type in `seo-data/types.ts`). The page does `await import(\`@/lib/seo-data/${slug}\`)` at render time; if the file is missing the calculator renders bare. `relatedTools[].slug` must be a registry slug and `relatedTools[].icon` an `IconName` from `src/lib/registry/icons.ts`; add new icons there.
+
+`npm test` checks all four agree. `npx tsc --noEmit` catches slug/icon typos before the build does.
 
 ### Page composition
 
-`/calculators/[slug]/page.tsx` → `AppShell` → `CalculatorLayoutServer` (server component: breadcrumbs, TOC, article sections, FAQ/HowTo/WebApplication/Breadcrumb JSON-LD, related tools) → `<CalculatorComponent />` (client). `CalculatorLayout.tsx` is the older client-side version of the same layout and is no longer imported anywhere; edit `CalculatorLayoutServer.tsx`.
+`/calculators/[slug]/page.tsx` → `AppShell` → `CalculatorLayoutServer` (server component: breadcrumbs, TOC, article sections, FAQ/HowTo/WebApplication/Breadcrumb JSON-LD, related tools) → `<CalculatorComponent />` (client). `CalculatorLayoutServer.tsx` is the only layout (the old client-side `CalculatorLayout.tsx` was deleted).
 
 `generateMetadata` uses `metaTitle` when set; titles over 48 chars are emitted as `{ absolute }` so the root layout's `| QuickBizCalc` template isn't appended twice. Every page sets its own canonical; the root layout intentionally does not.
 
@@ -81,5 +85,5 @@ The site's purpose is organic ranking and AdSense approval, so changes that look
 ## Tooling notes
 
 - Path alias `@/*` → `src/*`. shadcn/ui (new-york style) components live in `src/components/ui`; Tailwind v4 via `@tailwindcss/postcss` with CSS variables in `src/app/globals.css`.
-- `calculator-meta.ts` is ~6,500 lines and `seo-data/` has ~240 files; grep by slug rather than reading whole files.
+- The registry category files run 200–1,200 lines each and `seo-data/` has ~245 files; grep by slug rather than reading whole files.
 - Work happens on branch `aminul` and is merged to `master` via PR.

@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Freelance Hourly Rate Calculator' }],
   tableOfContents: [
@@ -73,8 +74,8 @@ const seoData = {
     { slug: 'upwork-fee-calculator', title: 'Upwork Fee Calculator', description: 'Upwork take-home & reverse bid calculator', icon: 'DollarSign' },
     { slug: 'billable-hours-calculator', title: 'Billable Hours Calculator', description: 'Utilization rate & agency pricing', icon: 'Clock' },
     { slug: 'fica-tax-calculator', title: 'FICA & SECA Tax Calculator', description: 'Self-employment vs W-2 tax breakdown', icon: 'Percent' },
-    { slug: 'salary-to-hourly-calculator', title: 'Salary to Hourly Calculator', description: 'Convert annual salary to hourly pay', icon: 'BadgeDollarSign' },
+    { slug: 'salary-converter', title: 'Salary to Hourly Calculator', description: 'Convert annual salary to hourly pay', icon: 'BadgeDollarSign' },
     { slug: 'hourly-paycheck-calculator', title: 'Hourly Paycheck Calculator', description: 'W-2 take-home paycheck comparison', icon: 'Wallet' },
   ],
-};
+} satisfies CalculatorSeoData;
 export default seoData;

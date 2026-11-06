@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Employee Hours Calculator' }],
   tableOfContents: [
@@ -84,6 +85,6 @@ const seoData = {
     { slug: 'double-time-calculator', title: 'Double Time Calculator', description: 'California 2.0x double-time and 7th-consecutive-day premium wages', icon: 'Clock' },
     { slug: 'shift-pay-calculator', title: 'Shift Pay Calculator', description: 'Hourly pay calculations with night, weekend, and hazard shift differentials', icon: 'SunMedium' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

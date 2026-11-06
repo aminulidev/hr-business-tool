@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'PTO Accrual Calculator' }],
   tableOfContents: [
@@ -41,6 +42,6 @@ const seoData = {
     { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Employer-side payroll calculation', icon: 'CreditCard' },
     { slug: 'salary-converter', title: 'Salary Converter', description: 'Convert pay between periods', icon: 'ArrowLeftRight' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

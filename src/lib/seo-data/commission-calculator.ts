@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   howToSteps: [
     'Determine your commission structure — flat rate, tiered, or base + commission',
@@ -107,6 +108,6 @@ Quota Attainment = (Actual Sales / Quota) × 100%`,
     { slug: 'bonus-tax-calculator' as const, title: 'Bonus Tax Calculator', description: 'Calculate net bonus after tax withholding', icon: 'Gift' },
     { slug: 'roi-calculator' as const, title: 'ROI Calculator', description: 'Calculate return on investment for business decisions', icon: 'BarChart3' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

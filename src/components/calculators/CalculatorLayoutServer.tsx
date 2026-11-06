@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import ResultActions from './ResultActions';
 import FeedbackWidget from './FeedbackWidget';
+import { iconMap, type IconName } from '@/lib/registry/icons';
 import MobileResultSheet from './MobileResultSheet';
 import {
   DollarSign,
@@ -138,79 +139,6 @@ interface CalculatorLayoutProps {
 // Icon mapping – resolves a string name to a lucide component
 // ---------------------------------------------------------------------------
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  DollarSign,
-  Percent,
-  CalendarClock,
-  TrendingUp,
-  CreditCard,
-  Clock,
-  Gift,
-  BarChart3,
-  Calculator,
-  ArrowLeftRight,
-  Timer,
-  Tag,
-  FileText,
-  Wallet,
-  CalendarDays,
-  Building2,
-  PieChart,
-  Package,
-  Receipt,
-  Hash,
-  Banknote,
-  FileMinus,
-  Shield,
-  Coffee,
-  BadgeDollarSign,
-  // Phase 4 additions: cover all icons referenced in SEO relatedTools
-  UserMinus,
-  ShieldCheck,
-  Landmark,
-  AlarmClock,
-  Users,
-  Briefcase,
-  Hourglass,
-  Activity,
-  Target,
-  Moon,
-  PartyPopper,
-  Zap,
-  AlertTriangle,
-  FileCheck,
-  FileSpreadsheet,
-  UserCog,
-  Map: MapIcon,
-  // Phase 5 additions: Time & Attendance icons
-  CalendarCheck,
-  CalendarRange,
-  HeartPulse,
-  LogIn,
-  LogOut,
-  Clock3,
-  Gauge,
-  RefreshCw,
-  GitCompareArrows,
-  PauseCircle,
-  Utensils,
-  // Phase 6 additions: HR Analytics icons
-  GraduationCap,
-  TrendingDown,
-  // Phase 7 additions: Business Finance icons
-  Building,
-  Boxes,
-  PiggyBank,
-  LineChart,
-  Scale,
-  Warehouse,
-  // Phase 12 additions: icons referenced by SEO relatedTools (enforced by registry.test.ts)
-  MapPin,
-  SunMedium,
-  Flame,
-  Layers,
-  ShoppingBag,
-};
 
 function RelatedToolIcon({
   name,
@@ -219,7 +147,7 @@ function RelatedToolIcon({
   name: string;
   className?: string;
 }) {
-  const Icon = iconMap[name] ?? Calculator;
+  const Icon = iconMap[name as IconName] ?? Calculator;
   return <Icon className={className} />;
 }
 

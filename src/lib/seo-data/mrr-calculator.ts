@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'MRR Calculator' }],
   tableOfContents: [
@@ -85,6 +86,6 @@ const seoData = {
     { slug: 'churn-rate-calculator', title: 'Churn Rate Calculator', description: 'Track monthly and annual customer and revenue churn rates', icon: 'Activity' },
     { slug: 'burn-rate-calculator', title: 'Burn Rate & Runway Calculator', description: 'Model gross burn, net burn, and startup cash runway', icon: 'Flame' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

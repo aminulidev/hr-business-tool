@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   howToSteps: [
     'Choose your calculation mode: "Cost & Selling Price" if you know the individual item cost and its selling price, or "Cost & Revenue" if you know total costs and total revenue for a batch or period.',
@@ -35,5 +36,5 @@ const seoData = {
     { slug: 'discount-calculator', title: 'Discount Calculator', description: 'Calculate sale prices and savings', icon: 'Tag' },
     { slug: 'commission-calculator', title: 'Sales Commission Calculator', description: 'Calculate commission earnings from sales revenue', icon: 'DollarSign' },
   ],
-};
+} satisfies CalculatorSeoData;
 export default seoData;

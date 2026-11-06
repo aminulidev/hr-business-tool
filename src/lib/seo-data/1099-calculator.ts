@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: '1099 Calculator' }],
   tableOfContents: [
@@ -144,6 +145,6 @@ const seoData = {
       icon: 'Shield',
     },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

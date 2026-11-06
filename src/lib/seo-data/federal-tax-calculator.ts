@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Federal Tax Calculator' }],
   tableOfContents: [
@@ -117,6 +118,6 @@ const seoData = {
       icon: 'DollarSign',
     },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

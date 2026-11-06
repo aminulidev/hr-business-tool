@@ -11,6 +11,8 @@ import {
   type StateCode,
   TAX_YEAR,
 } from './withholding-2026';
+import type { CalculatorSlug } from '@/lib/registry';
+import type { CalculatorSeoData } from '@/lib/seo-data/types';
 
 const usd = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
@@ -30,7 +32,7 @@ function singleFullTime(state: StateCode, hourlyRate: number, stateAllowances = 
 export interface StatePaycheckPage {
   code: StateCode;
   name: string;
-  slug: string;
+  slug: CalculatorSlug;
   /** Label and default for the state withholding form input; null if the state has no allowance input */
   allowances: { label: string; help: string; defaultSingle: number; defaultMarried: number } | null;
   minimumWage: number;
@@ -1090,7 +1092,7 @@ function describeScenario(page: StatePaycheckPage, s: Scenario) {
   };
 }
 
-export function buildStatePaycheckSeo(code: StateCode) {
+export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
   const page = STATE_PAYCHECK_PAGES[code];
   const hasIncomeTax = code !== 'TX' && code !== 'FL' && code !== 'TN' && code !== 'NV';
 
@@ -1262,7 +1264,7 @@ export function buildStatePaycheckSeo(code: StateCode) {
         slug: s.slug,
         title: `${s.name} Hourly Paycheck Calculator`,
         description: `${TAX_YEAR} take-home pay after ${s.name} and federal taxes`,
-        icon: 'Map',
+        icon: 'Map' as const,
       })),
       {
         slug: 'time-card-calculator',

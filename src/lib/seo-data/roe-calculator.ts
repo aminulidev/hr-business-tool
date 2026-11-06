@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Return on Equity (ROE) Calculator' }],
   tableOfContents: [
@@ -36,5 +37,5 @@ const seoData = {
     { slug: 'gross-margin-calculator', title: 'Gross Margin Calculator', description: 'Gross profit margin', icon: 'PieChart' },
     { slug: 'cash-flow-forecast-calculator', title: 'Cash Flow Forecast', description: '12-month cash projection', icon: 'TrendingUp' },
   ],
-};
+} satisfies CalculatorSeoData;
 export default seoData;

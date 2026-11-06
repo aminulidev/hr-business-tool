@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   // ------ SEO content ------
 
@@ -73,6 +74,6 @@ const seoData = {
   ],
 
   
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

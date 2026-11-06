@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [
         { label: 'Calculators' },
@@ -85,6 +86,6 @@ const seoData = {
             'A signing bonus is a one-time payment given when you join a company, while regular bonuses are periodic (annual, quarterly, or performance-based). Both are taxed as supplemental income at the 22% flat rate. Signing bonuses may have repayment clauses if you leave within a certain period.',
         },
       ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

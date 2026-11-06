@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Working Hours Calculator' }],
   tableOfContents: [
@@ -38,5 +39,5 @@ const seoData = {
     { slug: 'business-day-calculator', title: 'Business Day Calculator', description: 'Working days between dates', icon: 'CalendarDays' },
     { slug: 'overtime-calculator', title: 'Overtime Calculator', description: 'OT pay after 40h/week', icon: 'Timer' },
   ],
-};
+} satisfies CalculatorSeoData;
 export default seoData;

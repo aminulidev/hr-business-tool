@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'CAC Payback Calculator' }],
   tableOfContents: [
@@ -85,6 +86,6 @@ const seoData = {
     { slug: 'burn-rate-calculator', title: 'Burn Rate & Runway Calculator', description: 'Calculate monthly cash burn and startup runway', icon: 'Flame' },
     { slug: 'roas-calculator', title: 'ROAS Calculator', description: 'Measure return on ad spend and break-even ad efficiency', icon: 'DollarSign' },
   ],
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

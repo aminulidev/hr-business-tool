@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Time to Fill Calculator' }],
   tableOfContents: [
@@ -36,5 +37,5 @@ const seoData = {
     { slug: 'employee-cost-calculator', title: 'Employee Cost Calculator', description: 'True cost per employee', icon: 'DollarSign' },
     { slug: 'labor-cost-calculator', title: 'Labor Cost Calculator', description: 'Total labor as % of revenue', icon: 'Wallet' },
   ],
-};
+} satisfies CalculatorSeoData;
 export default seoData;

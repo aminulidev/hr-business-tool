@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   howToSteps: [
     'Enter the original price of the item or service before any discounts. This is the listed retail price or sticker price.',
@@ -71,6 +72,6 @@ const seoData = {
   ],
 
   
-};
+} satisfies CalculatorSeoData;
 
 export default seoData;

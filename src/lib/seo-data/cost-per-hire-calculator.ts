@@ -1,3 +1,4 @@
+import type { CalculatorSeoData } from './types';
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'Cost per Hire Calculator' }],
   tableOfContents: [
@@ -42,5 +43,5 @@ const seoData = {
     { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Measure return on HR investment', icon: 'BarChart3' },
     { slug: 'salary-increase-calculator', title: 'Salary Increase Calculator', description: 'Model compensation improvements', icon: 'TrendingUp' },
   ],
-};
+} satisfies CalculatorSeoData;
 export default seoData;
