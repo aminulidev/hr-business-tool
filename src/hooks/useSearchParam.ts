@@ -22,3 +22,26 @@ export function useSearchParam(name: string): string | null {
     () => null,
   );
 }
+
+let initialQuery: URLSearchParams | null = null;
+const noopSubscribe = () => () => {};
+
+/**
+ * The query string as it was when the page first rendered on the client; null on
+ * the server and during hydration. The snapshot is taken once, so a later
+ * history.replaceState() (share links) never changes it.
+ *
+ * Paycheck-type calculators key their form on `useInitialQuery()?.toString()`:
+ * the server renders defaults, then the client mounts the form a second time
+ * with the shared values — instead of copying the URL into state in an effect.
+ */
+export function useInitialQuery(): URLSearchParams | null {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => {
+      if (initialQuery === null) initialQuery = new URLSearchParams(window.location.search);
+      return initialQuery;
+    },
+    () => null,
+  );
+}

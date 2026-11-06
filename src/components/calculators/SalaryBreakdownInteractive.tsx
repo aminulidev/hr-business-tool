@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
+import { useInitialQuery } from '@/hooks/useSearchParam';
 import Link from 'next/link';
 import {
   calculatePaycheck,
@@ -25,38 +26,70 @@ const usd = (n: number, decimals = 2) =>
     maximumFractionDigits: decimals,
   });
 
-export default function SalaryBreakdownInteractive({
+interface BreakdownDefaults {
+  hourlyRate: number;
+  state: StateCode;
+  filingStatus: FilingStatus;
+  regularHours: number;
+  overtimeHours: number;
+  payFrequency: PayFrequency;
+}
+
+// Defaults for the page's wage, overridden by the shareable URL query params
+function readDefaults(params: URLSearchParams | null, initialHourlyRate: number): BreakdownDefaults {
+  const d: BreakdownDefaults = {
+    hourlyRate: initialHourlyRate,
+    state: 'TX',
+    filingStatus: 'single',
+    regularHours: 40,
+    overtimeHours: 0,
+    payFrequency: 'bi-weekly',
+  };
+  if (!params || !params.toString()) return d;
+  const qRate = parseFloat(params.get('rate') || '');
+  const qHours = parseFloat(params.get('hours') || '');
+  const qOt = parseFloat(params.get('ot') || '');
+  const qState = params.get('state') as StateCode | null;
+  const qStatus = params.get('status') as FilingStatus | null;
+  const qFreq = params.get('freq') as PayFrequency | null;
+
+  if (!isNaN(qRate) && qRate > 0) d.hourlyRate = qRate;
+  if (!isNaN(qHours) && qHours >= 0) d.regularHours = qHours;
+  if (!isNaN(qOt) && qOt >= 0) d.overtimeHours = qOt;
+  if (qState && STATE_CODES.includes(qState)) d.state = qState;
+  if (qStatus && (qStatus === 'single' || qStatus === 'married' || qStatus === 'hoh')) d.filingStatus = qStatus;
+  if (qFreq && (qFreq === 'weekly' || qFreq === 'bi-weekly' || qFreq === 'semi-monthly' || qFreq === 'monthly')) {
+    d.payFrequency = qFreq;
+  }
+  return d;
+}
+
+export default function SalaryBreakdownInteractive({ initialHourlyRate, label }: SalaryBreakdownInteractiveProps) {
+  // The server renders the defaults; once the client knows the query string the form is
+  // keyed on it and mounts again with the shared values (no setState inside an effect).
+  const query = useInitialQuery();
+  return (
+    <SalaryBreakdownForm
+      key={query?.toString() ?? ''}
+      initialHourlyRate={initialHourlyRate}
+      label={label}
+      defaults={readDefaults(query, initialHourlyRate)}
+    />
+  );
+}
+
+function SalaryBreakdownForm({
   initialHourlyRate,
   label,
-}: SalaryBreakdownInteractiveProps) {
-  const [hourlyRate, setHourlyRate] = useState<number>(initialHourlyRate);
-  const [state, setState] = useState<StateCode>('TX');
-  const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
-  const [regularHours, setRegularHours] = useState<number>(40);
-  const [overtimeHours, setOvertimeHours] = useState<number>(0);
-  const [payFrequency, setPayFrequency] = useState<PayFrequency>('bi-weekly');
+  defaults,
+}: SalaryBreakdownInteractiveProps & { defaults: BreakdownDefaults }) {
+  const [hourlyRate, setHourlyRate] = useState<number>(defaults.hourlyRate);
+  const [state, setState] = useState<StateCode>(defaults.state);
+  const [filingStatus, setFilingStatus] = useState<FilingStatus>(defaults.filingStatus);
+  const [regularHours, setRegularHours] = useState<number>(defaults.regularHours);
+  const [overtimeHours, setOvertimeHours] = useState<number>(defaults.overtimeHours);
+  const [payFrequency, setPayFrequency] = useState<PayFrequency>(defaults.payFrequency);
   const [linkCopied, setLinkCopied] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const params = new URLSearchParams(window.location.search);
-    if (!params.toString()) return;
-    const qRate = parseFloat(params.get('rate') || '');
-    const qHours = parseFloat(params.get('hours') || '');
-    const qOt = parseFloat(params.get('ot') || '');
-    const qState = params.get('state') as StateCode | null;
-    const qStatus = params.get('status') as FilingStatus | null;
-    const qFreq = params.get('freq') as PayFrequency | null;
-
-    if (!isNaN(qRate) && qRate > 0) setHourlyRate(qRate);
-    if (!isNaN(qHours) && qHours >= 0) setRegularHours(qHours);
-    if (!isNaN(qOt) && qOt >= 0) setOvertimeHours(qOt);
-    if (qState && STATE_CODES.includes(qState)) setState(qState);
-    if (qStatus && (qStatus === 'single' || qStatus === 'married' || qStatus === 'hoh')) setFilingStatus(qStatus);
-    if (qFreq && (qFreq === 'weekly' || qFreq === 'bi-weekly' || qFreq === 'semi-monthly' || qFreq === 'monthly')) {
-      setPayFrequency(qFreq);
-    }
-  }, []);
 
   const handleShareLink = () => {
     if (typeof window === 'undefined') return;

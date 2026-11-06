@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart3, ArrowRight, DollarSign, TrendingUp, Clock, Wallet } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend } from 'recharts';
@@ -22,6 +22,36 @@ interface ROIResult {
   roi: number;
   annualizedROI: number;
   years: number;
+}
+
+function computeROI(
+  initialInvestment: string,
+  finalValue: string,
+  duration: string,
+  additionalContributions: string,
+): ROIResult | null {
+  const initial = parseFloat(initialInvestment) || 0;
+  const final = parseFloat(finalValue) || 0;
+  const years = parseFloat(duration) || 0;
+  const additional = parseFloat(additionalContributions) || 0;
+  if (initial <= 0 || final <= 0 || years <= 0) return null;
+  const totalCost = initial + additional;
+  const totalProfit = final - totalCost;
+  const roi = totalCost > 0 ? (totalProfit / totalCost) * 100 : 0;
+  const annualizedROI =
+    totalCost > 0 && final > 0 && years > 0
+      ? (Math.pow(final / totalCost, 1 / years) - 1) * 100
+      : 0;
+  return {
+    initialInvestment: initial,
+    additionalContributions: additional,
+    totalInvested: totalCost,
+    finalValue: final,
+    totalProfit,
+    roi,
+    annualizedROI,
+    years,
+  };
 }
 
 const formatCurrency = (value: number): string =>
@@ -77,82 +107,30 @@ export default function ROICalculator() {
   const [finalValue, setFinalValue] = useState<string>('15000');
   const [duration, setDuration] = useState<string>('5');
   const [additionalContributions, setAdditionalContributions] = useState<string>('0');
-  const [result, setResult] = useState<ROIResult | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ initialInvestment: string; finalValue: string; duration: string; additionalContributions: string }>('roi-calculator');
 
   // ---- Comparison state ----
   const [compareA, setCompareA] = useState<{ result: ROIResult; label: string } | null>(null);
   const [compareB, setCompareB] = useState<{ result: ROIResult; label: string } | null>(null);
 
+  // Live result: recomputed whenever an input changes
+  const result = useMemo(
+    () => computeROI(initialInvestment, finalValue, duration, additionalContributions),
+    [initialInvestment, finalValue, duration, additionalContributions],
+  );
+
   const handleTryExample = () => {
     setInitialInvestment('10000');
     setFinalValue('15000');
     setDuration('5');
     setAdditionalContributions('0');
-    setResult(null);
   };
 
-  useEffect(() => {
-    const initial = parseFloat(initialInvestment) || 0;
-    const final = parseFloat(finalValue) || 0;
-    const years = parseFloat(duration) || 0;
-    const additional = parseFloat(additionalContributions) || 0;
-    if (initial <= 0 || final <= 0 || years <= 0) {
-      setResult(null);
-      return;
-    }
-    const totalCost = initial + additional;
-    const totalProfit = final - totalCost;
-    const roi = totalCost > 0 ? (totalProfit / totalCost) * 100 : 0;
-    const annualizedROI =
-      totalCost > 0 && final > 0 && years > 0
-        ? (Math.pow(final / totalCost, 1 / years) - 1) * 100
-        : 0;
-    setResult({
-      initialInvestment: initial,
-      additionalContributions: additional,
-      totalInvested: totalCost,
-      finalValue: final,
-      totalProfit,
-      roi,
-      annualizedROI,
-      years,
-    });
-  }, [initialInvestment, finalValue, duration, additionalContributions]);
-
   const handleCalculate = () => {
-    const initial = parseFloat(initialInvestment) || 0;
-    const final = parseFloat(finalValue) || 0;
-    const years = parseFloat(duration) || 0;
-    const additional = parseFloat(additionalContributions) || 0;
-
-    if (initial <= 0 || final <= 0 || years <= 0) {
-      setResult(null);
-      return;
-    }
-
-    const totalCost = initial + additional;
-    const totalProfit = final - totalCost;
-    const roi = totalCost > 0 ? (totalProfit / totalCost) * 100 : 0;
-
-    let annualizedROI = 0;
-    if (totalCost > 0 && final > 0 && years > 0) {
-      annualizedROI = (Math.pow(final / totalCost, 1 / years) - 1) * 100;
-    }
-
-    setResult({
-      initialInvestment: initial,
-      additionalContributions: additional,
-      totalInvested: totalCost,
-      finalValue: final,
-      totalProfit,
-      roi,
-      annualizedROI,
-      years,
-    });
+    if (!result) return;
     saveEntry(
       { initialInvestment, finalValue, duration, additionalContributions },
-      `ROI ${roi.toFixed(1)}% (${formatCurrency(totalProfit)} profit on ${formatCurrency(totalCost)} invested)`
+      `ROI ${result.roi.toFixed(1)}% (${formatCurrency(result.totalProfit)} profit on ${formatCurrency(result.totalInvested)} invested)`
     );
   };
 
@@ -161,7 +139,6 @@ export default function ROICalculator() {
     setFinalValue(inputs.finalValue);
     setDuration(inputs.duration);
     setAdditionalContributions(inputs.additionalContributions);
-    setResult(null);
   };
 
   const health = result ? getHealthLabel(result.roi) : null;

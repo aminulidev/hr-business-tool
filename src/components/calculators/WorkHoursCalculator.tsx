@@ -34,6 +34,42 @@ type RoundingOption = 'exact' | '15min' | '6min' | '5min';
 
 const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
+// FLSA 7/8 minute 15-min rounding or other intervals
+function applyRounding(minutes: number, rule: RoundingOption): number {
+  if (rule === 'exact' || minutes <= 0) return minutes;
+  if (rule === '15min') {
+    // 15-minute rounding (FLSA standard: 1-7 min rounds down, 8-14 rounds up)
+    const remainder = minutes % 15;
+    if (remainder >= 8) return minutes + (15 - remainder);
+    return minutes - remainder;
+  }
+  if (rule === '6min') {
+    // 6-minute rounding (1/10th of an hour)
+    return Math.round(minutes / 6) * 6;
+  }
+  if (rule === '5min') {
+    return Math.round(minutes / 5) * 5;
+  }
+  return minutes;
+}
+
+function computeDay(d: DayEntry, rounding: RoundingOption) {
+  const inMin = parseTimeToMinutes(d.clockIn);
+  const outMin = parseTimeToMinutes(d.clockOut);
+  if (inMin < 0 || outMin < 0) return { gross: 0, net: 0, brk: 0, roundedNet: 0, isOvernight: false };
+  
+  let gross = outMin - inMin;
+  let isOvernight = false;
+  if (gross < 0) {
+    gross += 24 * 60; // overnight shift crossed midnight
+    isOvernight = true;
+  }
+  const brk = Math.min(parseFloat(d.breakMin) || 0, gross);
+  const rawNet = Math.max(0, gross - brk);
+  const roundedNet = applyRounding(rawNet, rounding);
+  return { gross, net: rawNet, brk, roundedNet, isOvernight };
+}
+
 export default function WorkHoursCalculator() {
   const [days, setDays] = useState<DayEntry[]>(
     DAY_LABELS.map(() => ({ clockIn: '', clockOut: '', breakMin: '30' })),
@@ -47,42 +83,6 @@ export default function WorkHoursCalculator() {
   const [compareB, setCompareB] = useState<WorkHoursSnapshot | null>(null);
 
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<Record<string, string>>('work-hours-calculator');
-
-  // FLSA 7/8 minute 15-min rounding or other intervals
-  const applyRounding = (minutes: number, rule: RoundingOption) => {
-    if (rule === 'exact' || minutes <= 0) return minutes;
-    if (rule === '15min') {
-      // 15-minute rounding (FLSA standard: 1-7 min rounds down, 8-14 rounds up)
-      const remainder = minutes % 15;
-      if (remainder >= 8) return minutes + (15 - remainder);
-      return minutes - remainder;
-    }
-    if (rule === '6min') {
-      // 6-minute rounding (1/10th of an hour)
-      return Math.round(minutes / 6) * 6;
-    }
-    if (rule === '5min') {
-      return Math.round(minutes / 5) * 5;
-    }
-    return minutes;
-  };
-
-  const computeDay = (d: DayEntry) => {
-    const inMin = parseTimeToMinutes(d.clockIn);
-    const outMin = parseTimeToMinutes(d.clockOut);
-    if (inMin < 0 || outMin < 0) return { gross: 0, net: 0, brk: 0, roundedNet: 0, isOvernight: false };
-    
-    let gross = outMin - inMin;
-    let isOvernight = false;
-    if (gross < 0) {
-      gross += 24 * 60; // overnight shift crossed midnight
-      isOvernight = true;
-    }
-    const brk = Math.min(parseFloat(d.breakMin) || 0, gross);
-    const rawNet = Math.max(0, gross - brk);
-    const roundedNet = applyRounding(rawNet, rounding);
-    return { gross, net: rawNet, brk, roundedNet, isOvernight };
-  };
 
   // Preset schedules
   const applyPreset = (preset: 'standard' | 'fourTen' | 'eightFourThirty' | 'clear') => {
@@ -133,7 +133,7 @@ export default function WorkHoursCalculator() {
     let dailyOTMinutes = 0;
 
     days.forEach((d) => {
-      const r = computeDay(d);
+      const r = computeDay(d, rounding);
       gross += r.gross;
       net += r.net;
       brk += r.brk;
@@ -234,7 +234,7 @@ export default function WorkHoursCalculator() {
       'WEEKLY WORK HOURS SUMMARY',
       '------------------------',
       ...days.map((d, i) => {
-        const r = computeDay(d);
+        const r = computeDay(d, rounding);
         if (r.net <= 0) return `${DAY_LABELS[i]}: Off`;
         return `${DAY_LABELS[i]}: ${d.clockIn} - ${d.clockOut} (Break: ${d.breakMin}m) -> ${formatHHMM(r.roundedNet)} (${(r.roundedNet / 60).toFixed(2)}h)`;
       }),
@@ -261,7 +261,7 @@ export default function WorkHoursCalculator() {
   });
 
   const chartData = days.map((d, i) => {
-    const r = computeDay(d);
+    const r = computeDay(d, rounding);
     const hrs = r.roundedNet / 60;
     return {
       name: DAY_LABELS[i],
@@ -342,7 +342,7 @@ export default function WorkHoursCalculator() {
           </Label>
           <div className="space-y-2">
             {days.map((d, i) => {
-              const r = computeDay(d);
+              const r = computeDay(d, rounding);
               return (
                 <div
                   key={i}
