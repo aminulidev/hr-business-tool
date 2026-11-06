@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Unit tests (payroll engine, registry invariants, generated content, sitemap)
+        run: npm test
+
+      # Non-blocking until the 10 pre-existing react-hooks errors are fixed
+      # (TODO.md Roadmap v2, Phase 14.4). Flip to blocking once `npm run lint` is clean.
+      - name: Lint (advisory)
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Build (type-checks and statically generates every published page)
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1

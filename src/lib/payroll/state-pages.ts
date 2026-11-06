@@ -1148,10 +1148,10 @@ export function buildStatePaycheckSeo(code: StateCode) {
   const benchmarkRows = sampleRates.map((rate) => {
     const r = singleFullTime(code, rate, defaultSingleAllowance);
     const fedAndFicaPerPeriod = r.deductions
-      .filter((d) => d.key === 'federal' || d.key === 'ss' || d.key === 'medicare')
+      .filter((d) => d.key === 'federal' || d.key === 'social-security' || d.key === 'medicare')
       .reduce((sum, d) => sum + d.perPeriod, 0);
     const statePerPeriod = r.deductions
-      .filter((d) => d.key !== 'federal' && d.key !== 'ss' && d.key !== 'medicare')
+      .filter((d) => d.key !== 'federal' && d.key !== 'social-security' && d.key !== 'medicare')
       .reduce((sum, d) => sum + d.perPeriod, 0);
     const label =
       rate === page.minimumWage ? `${usd(rate)}/hr (Min Wage)` : `${usd(rate)}/hr`;

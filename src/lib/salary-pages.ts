@@ -203,10 +203,10 @@ export function buildSalaryPageData(tier: SalaryTierConfig) {
       stateAllowances: defaultAllowances,
     });
     const fedAndFicaAnnual = res.deductions
-      .filter((d) => d.key === 'federal' || d.key === 'ss' || d.key === 'medicare')
+      .filter((d) => d.key === 'federal' || d.key === 'social-security' || d.key === 'medicare')
       .reduce((sum, d) => sum + d.annual, 0);
     const stateTaxAnnual = res.deductions
-      .filter((d) => d.key !== 'federal' && d.key !== 'ss' && d.key !== 'medicare')
+      .filter((d) => d.key !== 'federal' && d.key !== 'social-security' && d.key !== 'medicare')
       .reduce((sum, d) => sum + d.annual, 0);
 
     return {

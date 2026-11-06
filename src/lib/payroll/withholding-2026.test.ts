@@ -1,0 +1,226 @@
+import { describe, expect, it } from 'vitest';
+import {
+  __test,
+  calculatePaycheck,
+  FEDERAL_STANDARD_DEDUCTION,
+  PERIODS_PER_YEAR,
+  SOCIAL_SECURITY_WAGE_BASE,
+  TAX_YEAR,
+  type FilingStatus,
+  type PaycheckInput,
+  type StateCode,
+} from './withholding-2026';
+import { STATE_CODES } from './state-pages';
+
+// ---------------------------------------------------------------------------
+// Golden values below are computed BY HAND from the published 2026 tables
+// (IRS Rev. Proc. 2025-32 brackets, SSA 2026 wage base, state publications
+// cited at the top of withholding-2026.ts). They deliberately do not reuse the
+// engine's schedule helpers, so a wrong constant or a broken bracket walk
+// fails here instead of on the live site.
+// ---------------------------------------------------------------------------
+
+const base = (over: Partial<PaycheckInput> = {}): PaycheckInput => ({
+  state: 'TX',
+  hourlyRate: 25,
+  regularHoursPerWeek: 40,
+  overtimeHoursPerWeek: 0,
+  overtimeMultiplier: 1.5,
+  payFrequency: 'bi-weekly',
+  filingStatus: 'single',
+  stateAllowances: 0,
+  ...over,
+});
+
+const line = (r: ReturnType<typeof calculatePaycheck>, key: string) =>
+  r.deductions.find((d) => d.key === key);
+
+describe(`federal income tax (${TAX_YEAR} percentage method, standard W-4)`, () => {
+  it('uses the 2026 standard deductions', () => {
+    expect(FEDERAL_STANDARD_DEDUCTION).toEqual({ single: 16100, married: 32200, hoh: 24150 });
+  });
+
+  it.each<[number, FilingStatus, number]>([
+    // $52,000 single: taxable 35,900 → 1,240 + (35,900 − 12,400) × 12% = 4,060
+    [52000, 'single', 4060],
+    // $31,200 single ($15/hr): taxable 15,100 → 1,240 + 2,700 × 12% = 1,564
+    [31200, 'single', 1564],
+    // $120,000 single: taxable 103,900 → 5,800 + (103,900 − 50,400) × 22% = 17,570
+    [120000, 'single', 17570],
+    // $100,000 married: taxable 67,800 → 2,480 + (67,800 − 24,800) × 12% = 7,640
+    [100000, 'married', 7640],
+    // $60,000 head of household: taxable 35,850 → 1,770 + (35,850 − 17,700) × 12% = 3,948
+    [60000, 'hoh', 3948],
+  ])('withholds the hand-computed amount for $%i (%s)', (wages, status, expected) => {
+    expect(__test.federalIncomeTax(wages, status)).toBeCloseTo(expected, 2);
+  });
+
+  it('withholds nothing at or below the standard deduction', () => {
+    expect(__test.federalIncomeTax(16100, 'single')).toBe(0);
+    expect(__test.federalIncomeTax(15000, 'single')).toBe(0);
+    expect(__test.federalIncomeTax(0, 'married')).toBe(0);
+  });
+
+  it('is monotonic in wages for every filing status', () => {
+    for (const status of ['single', 'married', 'hoh'] as FilingStatus[]) {
+      let prev = -1;
+      for (let w = 0; w <= 800000; w += 2500) {
+        const t = __test.federalIncomeTax(w, status);
+        expect(t).toBeGreaterThanOrEqual(prev);
+        prev = t;
+      }
+    }
+  });
+});
+
+describe('FICA', () => {
+  it('caps Social Security at the 2026 wage base and adds 0.9% Medicare above $200k', () => {
+    // $100/hr × 40 × 52 = $208,000
+    const r = calculatePaycheck(base({ hourlyRate: 100 }));
+    expect(SOCIAL_SECURITY_WAGE_BASE).toBe(184500);
+    expect(line(r, 'social-security')!.annual).toBeCloseTo(184500 * 0.062, 2); // 11,439.00
+    // 208,000 × 1.45% + (208,000 − 200,000) × 0.9% = 3,016 + 72
+    expect(line(r, 'medicare')!.annual).toBeCloseTo(3088, 2);
+  });
+
+  it('applies the full 6.2% + 1.45% below the caps', () => {
+    const r = calculatePaycheck(base());
+    expect(line(r, 'social-security')!.annual).toBeCloseTo(3224, 2);
+    expect(line(r, 'medicare')!.annual).toBeCloseTo(754, 2);
+  });
+});
+
+describe('calculatePaycheck — full paycheck, Texas $25/hr bi-weekly single', () => {
+  const r = calculatePaycheck(base());
+
+  it('has only federal + FICA lines in a no-income-tax state', () => {
+    expect(r.deductions.map((d) => d.key)).toEqual(['federal', 'social-security', 'medicare']);
+  });
+
+  it('matches hand-computed gross, deductions and net', () => {
+    expect(r.grossAnnual).toBe(52000);
+    expect(r.grossPerPeriod).toBe(2000);
+    expect(line(r, 'federal')!.annual).toBeCloseTo(4060, 2);
+    expect(r.totalDeductionsAnnual).toBeCloseTo(8038, 2);
+    expect(r.netAnnual).toBeCloseTo(43962, 2);
+    expect(r.netPerPeriod).toBeCloseTo(1690.85, 2);
+    expect(r.netPerHour).toBeCloseTo(43962 / 2080, 2);
+    expect(r.effectiveRate).toBeCloseTo(8038 / 52000, 6);
+  });
+});
+
+describe('pre-tax deductions', () => {
+  it('401(k) lowers income tax but not FICA', () => {
+    const r = calculatePaycheck(base({ preTaxRetirementAnnual: 5200 }));
+    // federal on 46,800: taxable 30,700 → 1,240 + 18,300 × 12% = 3,436
+    expect(line(r, 'federal')!.annual).toBeCloseTo(3436, 2);
+    expect(line(r, 'social-security')!.annual).toBeCloseTo(3224, 2);
+    expect(line(r, 'retirement')!.annual).toBe(5200);
+  });
+
+  it('Section 125 benefits lower both income tax and FICA', () => {
+    const r = calculatePaycheck(base({ preTaxBenefitsAnnual: 2600 }));
+    // federal on 49,400: taxable 33,300 → 1,240 + 20,900 × 12% = 3,748
+    expect(line(r, 'federal')!.annual).toBeCloseTo(3748, 2);
+    expect(line(r, 'social-security')!.annual).toBeCloseTo(49400 * 0.062, 2);
+    expect(line(r, 'medicare')!.annual).toBeCloseTo(49400 * 0.0145, 2);
+  });
+
+  it('never lets pre-tax amounts exceed gross', () => {
+    const r = calculatePaycheck(base({ preTaxRetirementAnnual: 1e9, preTaxBenefitsAnnual: 1e9 }));
+    expect(line(r, 'federal')!.annual).toBe(0);
+    expect(line(r, 'social-security')!.annual).toBe(0);
+    expect(r.netAnnual).toBeGreaterThanOrEqual(0);
+  });
+});
+
+describe('overtime and pay frequency', () => {
+  it('pays overtime at the multiplier on top of regular hours', () => {
+    const r = calculatePaycheck(base({ hourlyRate: 32, overtimeHoursPerWeek: 5, payFrequency: 'weekly' }));
+    // (32 × 40) + (32 × 1.5 × 5) = 1,280 + 240 = 1,520 / week
+    expect(r.grossPerPeriod).toBe(1520);
+    expect(r.grossAnnual).toBe(1520 * 52);
+  });
+
+  it('annual totals do not depend on pay frequency', () => {
+    const annuals = (Object.keys(PERIODS_PER_YEAR) as PaycheckInput['payFrequency'][]).map(
+      (payFrequency) => calculatePaycheck(base({ payFrequency })).netAnnual,
+    );
+    expect(new Set(annuals).size).toBe(1);
+  });
+});
+
+describe('state engines — hand-computed flat-tax checks on $52,000', () => {
+  it('Illinois: 4.95% after $2,925 per allowance', () => {
+    expect(__test.illinoisIncomeTax(52000, 1)).toBeCloseTo((52000 - 2925) * 0.0495, 2); // 2,429.21
+    expect(__test.illinoisIncomeTax(52000, 0)).toBeCloseTo(2574, 2);
+  });
+  it('Michigan: 4.25% after $5,800 per exemption', () => {
+    expect(__test.michiganIncomeTax(52000, 1)).toBeCloseTo(1963.5, 2);
+  });
+  it('Indiana: 2.95% after $1,000 per exemption', () => {
+    expect(__test.indianaIncomeTax(52000, 1)).toBeCloseTo(1504.5, 2);
+  });
+  it('Colorado: 4.40% after the federal standard deduction', () => {
+    expect(__test.coloradoIncomeTax(52000, 'single', 0)).toBeCloseTo((52000 - 16100) * 0.044, 2); // 1,579.60
+  });
+  it('Pennsylvania: 3.07% flat + 0.07% UC employee tax', () => {
+    const r = calculatePaycheck(base({ state: 'PA' }));
+    expect(line(r, 'state')!.annual).toBeCloseTo(1596.4, 2);
+    expect(line(r, 'sdi')!.annual).toBeCloseTo(36.4, 2);
+  });
+  it('Colorado FAMLI is 0.45% of FICA wages', () => {
+    const r = calculatePaycheck(base({ state: 'CO' }));
+    expect(line(r, 'pfl')!.annual).toBeCloseTo(234, 2);
+  });
+  it("'other' state applies the custom flat rate to taxable wages", () => {
+    const r = calculatePaycheck(base({ state: 'other', customStateRate: 0.05 }));
+    expect(line(r, 'state')!.annual).toBeCloseTo(2600, 2);
+  });
+  it("'none' and the four no-income-tax states withhold no state tax", () => {
+    for (const state of ['none', 'TX', 'FL', 'TN', 'NV'] as PaycheckInput['state'][]) {
+      const r = calculatePaycheck(base({ state }));
+      expect(r.deductions.map((d) => d.key)).toEqual(['federal', 'social-security', 'medicare']);
+    }
+  });
+});
+
+describe('every state × filing status × frequency — internal consistency', () => {
+  const statuses: FilingStatus[] = ['single', 'married', 'hoh'];
+  const freqs = Object.keys(PERIODS_PER_YEAR) as PaycheckInput['payFrequency'][];
+  const rates = [7.25, 18, 25, 60, 150];
+
+  it.each(STATE_CODES)('%s produces a coherent paycheck for all inputs', (state: StateCode) => {
+    for (const filingStatus of statuses) {
+      for (const payFrequency of freqs) {
+        for (const hourlyRate of rates) {
+          const r = calculatePaycheck(base({ state, filingStatus, payFrequency, hourlyRate, stateAllowances: 1 }));
+          const periods = PERIODS_PER_YEAR[payFrequency];
+          expect(r.periodsPerYear).toBe(periods);
+          expect(r.grossAnnual).toBeCloseTo(hourlyRate * 40 * 52, 2);
+          const sum = r.deductions.reduce((s, d) => s + d.annual, 0);
+          expect(r.totalDeductionsAnnual).toBeCloseTo(sum, 1);
+          expect(r.netAnnual).toBeCloseTo(r.grossAnnual - r.totalDeductionsAnnual, 1);
+          expect(r.netPerPeriod).toBeCloseTo(r.netAnnual / periods, 1);
+          for (const d of r.deductions) {
+            expect(d.annual).toBeGreaterThanOrEqual(0);
+            expect(d.perPeriod).toBeCloseTo(d.annual / periods, 1);
+          }
+          expect(r.effectiveRate).toBeGreaterThanOrEqual(0);
+          expect(r.effectiveRate).toBeLessThan(0.6);
+          // No state should withhold more state tax than federal at these wages
+          const st = line(r, 'state');
+          if (st) expect(st.annual).toBeLessThanOrEqual(line(r, 'federal')!.annual + r.grossAnnual * 0.05);
+        }
+      }
+    }
+  });
+
+  it('allowances never increase state tax', () => {
+    for (const state of STATE_CODES) {
+      const a0 = line(calculatePaycheck(base({ state, stateAllowances: 0 })), 'state')?.annual ?? 0;
+      const a3 = line(calculatePaycheck(base({ state, stateAllowances: 3 })), 'state')?.annual ?? 0;
+      expect(a3).toBeLessThanOrEqual(a0 + 0.005);
+    }
+  });
+});
