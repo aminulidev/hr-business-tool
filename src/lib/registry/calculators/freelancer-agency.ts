@@ -344,7 +344,9 @@ export const freelancerAgencyCalculators = defineCalculators([
   },
   {
     slug: 'team-cost-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'labor-cost-calculator',
+    mergedQuery: 'mode=team',
     title: 'Team Cost Calculator',
     metaTitle: 'Free Team Cost Calculator 2026 — Project Team Cost',
     shortDescription:

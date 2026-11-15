@@ -11,12 +11,18 @@ export const businessFinanceCalculators = defineCalculators([
     slug: 'profit-margin-calculator',
     status: 'published',
     title: 'Profit Margin & Markup Calculator',
-    metaTitle: 'Free Profit Margin Calculator 2026 — Formula, Examples, Benchmarks',
+    metaTitle: 'Free Profit Margin Calculator 2026 — Markup, Net Margin, Break-Even & Wholesale',
     shortDescription:
-      'Calculate retail pricing, profit margins, and markup percentages from wholesale costs and selling prices.',
+      'Margin and markup from cost and price, target-margin pricing, gross → operating → net margin from an income statement, contribution margin with break-even, and wholesale-to-retail price chains.',
     metaDescription:
-      'Free profit margin calculator 2026. Calculate net, gross, and operating margin with full formula, worked examples for retail, SaaS, and services, and industry benchmarks. No signup.',
+      'Free profit margin calculator 2026: margin vs. markup from cost and price, price for a target margin, gross, operating and net margin from your income statement, contribution margin and break-even units, and wholesale → retail (keystone) pricing with worked examples.',
     keywords: [
+      'net profit margin calculator',
+      'operating margin calculator',
+      'contribution margin calculator',
+      'break even calculator units',
+      'wholesale price calculator',
+      'keystone pricing calculator',
       'profit margin calculator',
       'omni margin calculator',
       'margin calculator',
@@ -217,7 +223,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'roe-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'financial-ratio-calculator',
+    mergedQuery: 'family=profitability',
     title: 'Return on Equity (ROE) Calculator',
     metaTitle: 'Free ROE Calculator 2026 — Return on Equity Formula & Benchmark',
     shortDescription:
@@ -243,7 +251,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'roa-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'financial-ratio-calculator',
+    mergedQuery: 'family=profitability',
     title: 'Return on Assets (ROA) Calculator',
     metaTitle: 'Free ROA Calculator 2026 — Return on Assets Formula & Benchmark',
     shortDescription:
@@ -269,7 +279,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'net-margin-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'profit-margin-calculator',
+    mergedQuery: 'mode=statement',
     title: 'Net Profit Margin Calculator',
     metaTitle: 'Free Net Profit Margin Calculator 2026 — Net Margin Formula',
     shortDescription:
@@ -300,7 +312,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'contribution-margin-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'profit-margin-calculator',
+    mergedQuery: 'mode=contribution',
     title: 'Contribution Margin Calculator',
     metaTitle: 'Free Contribution Margin Calculator 2026 — Per Unit & Ratio',
     shortDescription:
@@ -357,7 +371,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'operating-margin-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'profit-margin-calculator',
+    mergedQuery: 'mode=statement',
     title: 'Operating Margin Calculator',
     metaTitle: 'Free Operating Margin Calculator 2026 — Operating Income / Revenue',
     shortDescription:
@@ -437,7 +453,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'selling-price-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'profit-margin-calculator',
+    mergedQuery: 'mode=target-margin',
     title: 'Selling Price Calculator',
     metaTitle: 'Free Selling Price Calculator 2026 — Cost + Margin Pricing',
     shortDescription:
@@ -463,7 +481,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'wholesale-price-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'profit-margin-calculator',
+    mergedQuery: 'mode=wholesale',
     title: 'Wholesale Price Calculator',
     metaTitle: 'Free Wholesale Price Calculator 2026 — B2B Pricing from Cost',
     shortDescription:
@@ -620,7 +640,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'inventory-turnover-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'inventory-planning-calculator',
+    mergedQuery: 'mode=turnover',
     title: 'Inventory Turnover Calculator',
     metaTitle: 'Free Inventory Turnover Calculator 2026 — COGS / Avg Inventory',
     shortDescription:
@@ -646,7 +668,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'inventory-holding-cost-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'inventory-planning-calculator',
+    mergedQuery: 'mode=holding',
     title: 'Inventory Holding Cost Calculator',
     metaTitle: 'Free Inventory Holding Cost Calculator 2026 — Carrying Cost %',
     shortDescription:
@@ -671,8 +695,37 @@ export const businessFinanceCalculators = defineCalculators([
     path: '/calculators/inventory-holding-cost-calculator',
   },
   {
+    slug: 'inventory-planning-calculator',
+    status: 'published',
+    title: 'Inventory Planning Calculator',
+    metaTitle: 'Free Inventory Planning Calculator 2026 — EOQ, Reorder Point, Safety Stock & Turnover',
+    shortDescription:
+      'Economic order quantity with a cost-sensitivity table, reorder point and safety stock at any service level, carrying cost by component, and inventory turnover with the cash conversion cycle.',
+    metaDescription:
+      'Free inventory planning calculator for 2026: EOQ (economic order quantity) with ordering vs. holding cost, reorder point and safety stock from demand and lead-time variability at 90–99.9% service, carrying cost by component, inventory turnover, days of inventory and the cash conversion cycle.',
+    keywords: [
+      'EOQ calculator',
+      'economic order quantity calculator',
+      'reorder point calculator',
+      'safety stock calculator',
+      'inventory carrying cost calculator',
+      'holding cost calculator',
+      'inventory turnover calculator',
+      'days inventory outstanding',
+      'cash conversion cycle calculator',
+      'inventory planning',
+      'service level z value safety stock',
+    ],
+    icon: Package,
+    tier: 'tier1',
+    category: 'Business Finance',
+    path: '/calculators/inventory-planning-calculator',
+  },
+  {
     slug: 'eoq-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'inventory-planning-calculator',
+    mergedQuery: 'mode=eoq',
     title: 'Economic Order Quantity (EOQ) Calculator',
     metaTitle: 'Free EOQ Calculator 2026 — Optimal Order Size Formula',
     shortDescription:
@@ -698,7 +751,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'safety-stock-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'inventory-planning-calculator',
+    mergedQuery: 'mode=reorder',
     title: 'Safety Stock Calculator',
     metaTitle: 'Free Safety Stock Calculator 2026 — Buffer Stock Formula',
     shortDescription:
@@ -724,7 +779,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'reorder-point-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'inventory-planning-calculator',
+    mergedQuery: 'mode=reorder',
     title: 'Reorder Point Calculator',
     metaTitle: 'Free Reorder Point Calculator 2026 — When to Reorder',
     shortDescription:
@@ -750,7 +807,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'debt-ratio-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'financial-ratio-calculator',
+    mergedQuery: 'family=leverage',
     title: 'Debt Ratio Calculator',
     metaTitle: 'Free Debt Ratio Calculator 2026 — Total Debt / Total Assets',
     shortDescription:
@@ -776,7 +835,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'current-ratio-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'financial-ratio-calculator',
+    mergedQuery: 'family=liquidity',
     title: 'Current Ratio Calculator',
     metaTitle: 'Free Current Ratio Calculator 2026 — Current Assets / Liabilities',
     shortDescription:
@@ -802,7 +863,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'quick-ratio-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'financial-ratio-calculator',
+    mergedQuery: 'family=liquidity',
     title: 'Quick Ratio (Acid Test) Calculator',
     metaTitle: 'Free Quick Ratio Calculator 2026 — Acid Test Ratio Formula',
     shortDescription:
@@ -828,7 +891,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'interest-coverage-ratio-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'financial-ratio-calculator',
+    mergedQuery: 'family=leverage',
     title: 'Interest Coverage Ratio Calculator',
     metaTitle: 'Free Interest Coverage Ratio Calculator 2026 — EBIT / Interest',
     shortDescription:
@@ -854,7 +919,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'asset-turnover-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'financial-ratio-calculator',
+    mergedQuery: 'family=efficiency',
     title: 'Asset Turnover Calculator',
     metaTitle: 'Free Asset Turnover Calculator 2026 — Revenue / Total Assets',
     shortDescription:
@@ -968,7 +1035,9 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'cash-conversion-cycle-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'inventory-planning-calculator',
+    mergedQuery: 'mode=turnover',
     title: 'Cash Conversion Cycle Calculator',
     metaTitle: 'Free Cash Conversion Cycle Calculator 2026 — DIO + DSO - DPO',
     shortDescription:
@@ -994,15 +1063,25 @@ export const businessFinanceCalculators = defineCalculators([
   },
   {
     slug: 'financial-ratio-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Financial Ratio Calculator',
-    metaTitle: 'Free Financial Ratio Calculator 2026 — Liquidity, Solvency, Profitability',
+    metaTitle: 'Free Financial Ratio Calculator 2026 — Liquidity, Leverage, ROE/ROA & Turnover',
     shortDescription:
-      'Calculate 12 key financial ratios: liquidity, solvency, profitability, and efficiency in one tool.',
+      'Enter one income statement and balance sheet to get 23 ratios by family — liquidity, leverage and coverage, profitability with DuPont, efficiency and the cash conversion cycle — with rule-of-thumb readings.',
     metaDescription:
-      'Free financial ratio calculator 2026. Calculate all key ratios in one place: current ratio, quick ratio, debt ratio, interest coverage, ROE, ROA, net margin, asset turnover, inventory turnover, and more.',
+      'Free financial ratio calculator for 2026: current and quick ratio, debt ratio, debt-to-equity, interest coverage, DSCR, ROA, ROE with DuPont, ROCE, asset and inventory turnover, DSO, DPO and the cash conversion cycle from one set of statement inputs.',
     keywords: [
       'financial ratio calculator',
+      'current ratio calculator',
+      'quick ratio calculator',
+      'debt ratio calculator',
+      'debt to equity ratio calculator',
+      'interest coverage ratio calculator',
+      'roe calculator',
+      'roa calculator',
+      'asset turnover calculator',
+      'dupont analysis calculator',
+      'cash conversion cycle calculator',
       'financial ratios',
       'liquidity ratios',
       'solvency ratios',
