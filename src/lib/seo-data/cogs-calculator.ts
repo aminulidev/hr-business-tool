@@ -82,6 +82,7 @@ const seoData = {
     },
   ],
   relatedTools: [
+    { slug: 'inventory-valuation-calculator', title: 'Inventory Valuation Calculator', description: 'COGS and ending inventory under FIFO, LIFO and weighted average, layer by layer', icon: 'Boxes' },
     { slug: 'gross-margin-calculator', title: 'Gross Margin Calculator', description: 'Calculate gross profit margin and dollar profit from revenue and COGS', icon: 'Percent' },
     { slug: 'markup-calculator', title: 'Markup vs. Margin Calculator', description: 'Convert product cost into retail selling price using target markup or margin', icon: 'Tag' },
     { slug: 'pnl-calculator', title: 'Profit & Loss (P&L) Calculator', description: 'Build a full income statement from revenue, COGS, and operating expenses', icon: 'FileSpreadsheet' },

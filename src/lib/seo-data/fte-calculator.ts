@@ -16,7 +16,7 @@ const seoData = {
     'Enter the combined weekly hours worked by all part-time employees.',
     'Select your standard full-time workweek hours (40 hours for standard HR budgeting, or 30 hours for IRS/ACA compliance).',
     'Review both your Standard Budgeting FTE and your ACA Applicable Large Employer (ALE) FTE count immediately.',
-    'Switch to the Headcount projection tab to forecast year-end headcount from planned hires and your attrition rate, including the backfill hires needed just to stand still, and see the result as FTE.',
+    'To project next year\'s headcount, hires and the backfills needed just to stand still, use the Workforce Planning calculator, which starts from this FTE figure.',
   ],
   formula: 'Part-Time FTE = Total Weekly Part-Time Hours ÷ Standard Full-Time Weekly Hours (40)\nTotal Standard FTE = Full-Time Headcount + Part-Time FTE\nACA FTE = Full-Time Headcount (30+ hrs/wk) + (Total Monthly PT Hours ÷ 120 [or Weekly PT Hours ÷ 30])',
   formulaDescription: 'Full-Time Equivalent (FTE) converts your combined full-time and part-time workforce into standardized full-time units. Standard financial planning uses a 40-hour workweek (2,080 hours/year = 1.0 FTE), whereas the Affordable Care Act (ACA) uses a 30-hour workweek (130 hours/month) to determine the 50-FTE Applicable Large Employer (ALE) mandate.',
@@ -66,7 +66,6 @@ const seoData = {
   workedExamples: [
     { title: 'Small Business Below ACA Threshold', description: '10 full-time employees (40h/wk) + 6 part-time employees working 20h/wk each (120 PT hours total). Standard FTE = 10 + (120 ÷ 40) = 13.0 FTE. ACA FTE = 10 + (120 ÷ 30) = 14.0 ACA FTE (well below the 50-FTE mandate).' },
     { title: 'Hospitality Group Crossing the 50 ACA FTE Line', description: '30 full-time staff + 30 part-time servers working 20h/wk each (600 PT hours total). Standard FTE = 30 + (600 ÷ 40) = 45.0 FTE. However, ACA FTE = 30 + (600 ÷ 30) = 50.0 ACA FTE — triggering the ACA Employer Shared Responsibility Mandate.' },
-    { title: 'Headcount Projection: 100 People, 20 Hires, 15% Attrition', description: 'Start the year at 100 employees with 20 planned hires and 15% annual attrition. Departures over 12 months ≈ (100 + 20 ÷ 2) × 15% = 17 (rounded). Year-end headcount = 100 + 20 − 17 = 103, a net gain of only 3 despite 20 hires. At an average of 38 hours a week that is 97.9 FTE. To end the year at 120 the plan needs about 37 hires.' },
     { title: 'SaaS Company Workforce Planning', description: '50 full-time engineers/marketers + 5 part-time specialists working 20h/wk (100 PT hours). Total Budgeting FTE = 52.5 FTE. At $10M ARR, Revenue per FTE = $190,476.' },
   ],
   faqs: [
@@ -83,7 +82,7 @@ const seoData = {
     { slug: 'employee-cost-calculator', title: 'Employee Cost Calculator', description: 'True loaded cost per FTE', icon: 'DollarSign' },
     { slug: 'labor-cost-calculator', title: 'Labor Cost Calculator', description: 'Total labor cost as % of revenue', icon: 'Wallet' },
     { slug: 'employee-turnover-calculator', title: 'Employee Turnover Calculator', description: 'The attrition rate to feed the headcount projection', icon: 'Users' },
-    { slug: 'workforce-planning-calculator', title: 'Workforce Planning', description: 'Project future hiring needs', icon: 'CalendarRange' },
+    { slug: 'workforce-planning-calculator', title: 'Workforce Planning Calculator', description: 'Multi-year headcount plan with attrition backfill, absenteeism, span of control', icon: 'CalendarRange' },
   ],
   sources: [SRC.irsAleFte, SRC.blsJolts],
 } satisfies CalculatorSeoData;

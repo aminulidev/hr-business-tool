@@ -237,8 +237,8 @@ export const hrAnalyticsCalculators = defineCalculators([
   {
     slug: 'headcount-calculator',
     status: 'merged',
-    mergedInto: 'fte-calculator',
-    mergedQuery: 'mode=headcount',
+    mergedInto: 'workforce-planning-calculator',
+    mergedQuery: 'mode=plan',
     title: 'Headcount Calculator',
     metaTitle: 'Free Headcount Calculator 2026 — Track & Project Headcount',
     shortDescription:
@@ -295,23 +295,32 @@ export const hrAnalyticsCalculators = defineCalculators([
   },
   {
     slug: 'labor-cost-calculator',
-    status: 'draft',
+    status: 'published',
+    lastReviewed: '2026-11-09',
+    reviewNotes:
+      'Employer payroll taxes in the per-employee mode come from employer-cost-2026.ts (golden-tested by state); the loaded-cost, team, labor-share and HR-budget math is covered by labor-cost.test.ts and the article figures are generated from the same functions.',
     title: 'Labor Cost Calculator',
-    metaTitle: 'Free Labor Cost Calculator 2026 — Total Labor Cost % of Revenue',
+    metaTitle: 'Free Labor Cost Calculator 2026 — Cost per Employee, Team Cost & % of Revenue',
     shortDescription:
-      'Calculate total labor cost (wages + benefits + taxes) as a percentage of revenue with industry benchmark comparison.',
+      'Fully loaded cost per employee with 2026 employer taxes by state, project team cost with burden and margin, labor as % of revenue against industry ranges, and HR budget per employee.',
     metaDescription:
-      'Free labor cost calculator 2026. Calculate total labor cost including wages, benefits, payroll taxes, and workers comp. See labor cost as % of revenue with industry benchmarks (restaurants 30%, retail 20%, services 50%).',
+      'Free labor cost calculator for 2026: true cost per employee (payroll taxes by state, benefits, workers comp, overhead, cost per hour worked), team and project cost with margin, labor cost as % of revenue vs. industry ranges, and HR budget per employee.',
     keywords: [
       'labor cost calculator',
+      'employee cost calculator',
+      'cost per employee',
+      'true cost of an employee',
+      'fully loaded cost',
+      'loaded cost per employee',
+      'labor burden rate',
+      'employee cost to employer',
       'labor cost percentage',
-      'total labor cost',
       'labor cost as percent of revenue',
+      'total labor cost',
+      'team cost calculator',
+      'project labor cost',
+      'hr budget calculator',
       'workforce cost calculator',
-      'labor expense calculator',
-      'employee labor cost',
-      'direct labor cost',
-      'labor cost ratio',
       'labor cost formula',
     ],
     icon: Wallet,
@@ -348,7 +357,9 @@ export const hrAnalyticsCalculators = defineCalculators([
   },
   {
     slug: 'hr-budget-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'labor-cost-calculator',
+    mergedQuery: 'mode=budget',
     title: 'HR Budget Calculator',
     metaTitle: 'Free HR Budget Calculator 2026 — Plan HR Department Spend',
     shortDescription:
@@ -530,7 +541,9 @@ export const hrAnalyticsCalculators = defineCalculators([
   },
   {
     slug: 'employee-cost-calculator',
-    status: 'published',
+    status: 'merged',
+    mergedInto: 'labor-cost-calculator',
+    mergedQuery: 'mode=employee',
     title: 'Employee Cost Calculator',
     metaTitle: 'Free Employee Cost Calculator 2026 — True Cost Per Employee',
     shortDescription:
@@ -566,7 +579,9 @@ export const hrAnalyticsCalculators = defineCalculators([
   },
   {
     slug: 'absenteeism-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'workforce-planning-calculator',
+    mergedQuery: 'mode=absence',
     title: 'Absenteeism Calculator',
     metaTitle: 'Free Absenteeism Calculator 2026 — Absence Rate & Cost',
     shortDescription:
@@ -677,7 +692,8 @@ export const hrAnalyticsCalculators = defineCalculators([
   {
     slug: 'employee-benefit-cost-calculator',
     status: 'merged',
-    mergedInto: 'employee-cost-calculator',
+    mergedInto: 'labor-cost-calculator',
+    mergedQuery: 'mode=employee',
     title: 'Employee Benefit Cost Calculator',
     metaTitle: 'Free Employee Benefit Cost Calculator 2026 — Per-Employee Benefits',
     shortDescription:
@@ -731,7 +747,8 @@ export const hrAnalyticsCalculators = defineCalculators([
   {
     slug: 'payroll-cost-calculator',
     status: 'merged',
-    mergedInto: 'employee-cost-calculator',
+    mergedInto: 'labor-cost-calculator',
+    mergedQuery: 'mode=employee',
     title: 'Payroll Cost Calculator',
     metaTitle: 'Free Payroll Cost Calculator 2026 — Total Cost of Payroll',
     shortDescription:
@@ -757,13 +774,13 @@ export const hrAnalyticsCalculators = defineCalculators([
   },
   {
     slug: 'workforce-planning-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Workforce Planning Calculator',
-    metaTitle: 'Free Workforce Planning Calculator 2026 — Headcount Demand Model',
+    metaTitle: 'Free Workforce Planning Calculator 2026 — Headcount Plan, Absenteeism, Span of Control & Labor Efficiency',
     shortDescription:
-      'Plan future headcount needs based on revenue growth, attrition, and productivity targets with scenario modeling.',
+      'Multi-year headcount plan with attrition backfill sized from a revenue target; absenteeism rate, cost and Bradford factor; span of control and management cost; labor efficiency and productivity.',
     metaDescription:
-      'Free workforce planning calculator 2026. Project headcount needs for 1-5 years based on revenue targets, current revenue per employee, attrition rate, and productivity goals. Build base, optimistic, and conservative scenarios.',
+      'Free workforce planning calculator 2026. Build a year-by-year headcount and hiring plan from a revenue target, revenue per employee and attrition (backfill included); measure absenteeism rate, cost and Bradford factor; calculate span of control, layers and management cost; check labor efficiency, variance and labor cost per unit.',
     keywords: [
       'workforce planning calculator',
       'headcount planning',
@@ -789,7 +806,8 @@ export const hrAnalyticsCalculators = defineCalculators([
   {
     slug: 'workforce-capacity-calculator',
     status: 'merged',
-    mergedInto: 'fte-calculator',
+    mergedInto: 'workforce-planning-calculator',
+    mergedQuery: 'mode=efficiency',
     title: 'Workforce Capacity Calculator',
     metaTitle: 'Free Workforce Capacity Calculator 2026 — Max Output per FTE',
     shortDescription:
@@ -815,7 +833,9 @@ export const hrAnalyticsCalculators = defineCalculators([
   },
   {
     slug: 'span-of-control-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'workforce-planning-calculator',
+    mergedQuery: 'mode=span',
     title: 'Span of Control Calculator',
     metaTitle: 'Free Span of Control Calculator 2026 — Manager to IC Ratio',
     shortDescription:
@@ -945,7 +965,9 @@ export const hrAnalyticsCalculators = defineCalculators([
   },
   {
     slug: 'labor-efficiency-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'workforce-planning-calculator',
+    mergedQuery: 'mode=efficiency',
     title: 'Labor Efficiency Calculator',
     metaTitle: 'Free Labor Efficiency Calculator 2026 — Output vs Hours',
     shortDescription:

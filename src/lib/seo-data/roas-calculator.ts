@@ -79,6 +79,7 @@ const seoData = {
     },
   ],
   relatedTools: [
+    { slug: 'marketing-cost-calculator', title: 'Marketing Cost Calculator', description: 'CPC, CPM, CPL, CPA and funnel conversion from one campaign, plus break-even ceilings', icon: 'Target' },
     { slug: 'customer-acquisition-cost-calculator', title: 'Customer Acquisition Cost (CAC) Calculator', description: 'Calculate cost per acquired customer across marketing channels', icon: 'Target' },
     { slug: 'cac-payback-calculator', title: 'CAC Payback Period Calculator', description: 'Measure months needed to recover customer acquisition spend', icon: 'Clock' },
     { slug: 'customer-lifetime-value-calculator', title: 'Customer Lifetime Value (LTV) Calculator', description: 'Compute customer lifetime value and LTV:CAC efficiency', icon: 'Users' },

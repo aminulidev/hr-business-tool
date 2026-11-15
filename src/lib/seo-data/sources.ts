@@ -323,6 +323,12 @@ export const SRC = {
     publisher: BLS,
     note: 'Monthly hires, quits and separations rates by industry',
   },
+  blsAbsences: {
+    label: 'BLS, Current Population Survey — Absences from work of employed full-time wage and salary workers',
+    url: 'https://www.bls.gov/cps/cpsaat46.htm',
+    publisher: BLS,
+    note: 'National absence rate (hours absent as a share of usual hours) used as the reference point for absenteeism',
+  },
   blsOews: {
     label: 'BLS, Occupational Employment and Wage Statistics (OEWS), May 2025 state estimates',
     url: 'https://www.bls.gov/oes/tables.htm',
@@ -336,6 +342,24 @@ export const SRC = {
     note: 'Benefits as a share of total compensation by industry',
   },
   // ---- Non-government reference data ----
+  ycSafe: {
+    label: 'Y Combinator, Safe Financing Documents (post-money SAFE and user guide)',
+    url: 'https://www.ycombinator.com/documents',
+    publisher: 'Y Combinator',
+    note: 'Post-money valuation cap and discount conversion mechanics',
+  },
+  nyuSternData: {
+    label: 'NYU Stern School of Business (Aswath Damodaran), Current Data: Ratios by Industry (US)',
+    url: 'https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datacurrent.html',
+    publisher: 'NYU Stern School of Business',
+    note: 'Return on equity, return on capital, debt ratios, margins and turnover by industry, updated each January from public filings',
+  },
+  nyuSternMargins: {
+    label: 'NYU Stern School of Business (Aswath Damodaran), Margins by Sector (US)',
+    url: 'https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/margin.html',
+    publisher: 'NYU Stern School of Business',
+    note: 'Gross, operating and net margins by industry, updated each January from public-company filings',
+  },
   taxFoundationStateIncome: {
     label: 'Tax Foundation, State Individual Income Tax Rates and Brackets',
     url: 'https://taxfoundation.org/data/all/state/state-income-tax-rates/',

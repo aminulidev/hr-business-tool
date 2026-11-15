@@ -1,152 +1,178 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { DollarSign } from 'lucide-react';
-import TryExample from './TryExample';
+import { useMemo, useState } from 'react';
+import { DollarSign, Info, Plus, Scale, Trash2, Users } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import ComparePanel, { CompareRow } from './ComparePanel';
-import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
-import { formatCurrency, formatPercent } from '@/lib/utils';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import { useSearchParam } from '@/hooks/useSearchParam';
+import { Actions, Field, Headline, int, Kpi, ModeTabs, Note, num, pct, Result, Th, usd } from './suite-ui';
+import { CLV_DEFAULTS, CLV_MODES, computeClv, computeLtvCac, computeMau, isClvMode, LTV_CAC_DEFAULTS, MAU_DEFAULTS, type ClvMode, type Verdict } from '@/lib/pricing/saas-metrics';
 
-interface Snapshot { ar: number; gm: number; ch: number; clv: number; ltvCacRatio: number; avgLifetime: number; label: string; }
+// Phase 17: the ltv-cac-ratio and mau-value pages 301 here with ?mode=ltv-cac|mau.
 
-export default function CustomerLifetimeValueCalculator() {
-  const [arpu, setArpu] = useState('100');
-  const [grossMargin, setGrossMargin] = useState('80');
-  const [monthlyChurn, setMonthlyChurn] = useState('3');
-  const [calculated, setCalculated] = useState(true);
-  const [compareA, setCompareA] = useState<Snapshot | null>(null);
-  const [compareB, setCompareB] = useState<Snapshot | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ arpu: string; grossMargin: string; monthlyChurn: string }>('customer-lifetime-value-calculator');
+let nextId = 100;
+const verdictColor: Record<Verdict['level'], string> = { bad: 'text-red-500', thin: 'text-amber-600', healthy: 'text-emerald-600', 'under-investing': 'text-blue-600' };
 
-  const ar = parseFloat(arpu) || 0;
-  const gm = parseFloat(grossMargin) || 0;
-  const ch = parseFloat(monthlyChurn) || 0;
-  const clv = ch > 0 ? (ar * (gm / 100)) / (ch / 100) : ar * (gm / 100) * 60;
-  const ltvCacRatio = clv > 0 && 500 > 0 ? clv / 500 : 0;
-  const avgLifetime = ch > 0 ? 1 / (ch / 100) : 60;
+// ───────────────────────── CLV
 
-  const handleTryExample = () => { setArpu('100'); setGrossMargin('80'); setMonthlyChurn('3'); setCalculated(true); };
-  const handleCalculate = () => {
-    if (ar > 0) {
-      setCalculated(true);
-      saveEntry({ arpu, grossMargin, monthlyChurn }, `CLV: ${formatCurrency(clv)} (${avgLifetime.toFixed(1)} mo lifetime)`);
-    }
-  };
-  const handleReset = () => { setArpu(''); setGrossMargin('80'); setMonthlyChurn('3'); setCalculated(false); };
-  const handleRestore = (i: { arpu: string; grossMargin: string; monthlyChurn: string }) => { setArpu(i.arpu); setGrossMargin(i.grossMargin); setMonthlyChurn(i.monthlyChurn); setCalculated(true); };
-  const snap = (): Snapshot => ({ ar, gm, ch, clv, ltvCacRatio, avgLifetime, label: `CLV: ${formatCurrency(clv)}` });
+function ClvModeView() {
+  const d = CLV_DEFAULTS;
+  const [arpu, setArpu] = useState(String(d.arpu));
+  const [gm, setGm] = useState(String(d.grossMarginPct));
+  const [churn, setChurn] = useState(String(d.monthlyChurnPct));
+  const [cac, setCac] = useState(String(d.cac));
+  const [cap, setCap] = useState(String(d.capMonths));
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<Record<string, string>>('customer-lifetime-value-calculator');
+  const r = useMemo(() => computeClv({ arpu: num(arpu), grossMarginPct: num(gm), monthlyChurnPct: num(churn), cac: num(cac), capMonths: num(cap) }), [arpu, gm, churn, cac, cap]);
+  const sensitivity = useMemo(() => [1, 2, 3, 5, 8].map((c) => ({ churn: c, r: computeClv({ arpu: num(arpu), grossMarginPct: num(gm), monthlyChurnPct: c, cac: num(cac), capMonths: num(cap) }) })), [arpu, gm, cac, cap]);
 
   return (
-    <div className="w-full">
-      <div className="p-4 sm:p-6 space-y-6">
-        <div className="rounded-lg bg-emerald-500/5 border border-emerald-500/20 p-3 text-xs text-muted-foreground">
-          <DollarSign className="inline h-3 w-3 mr-1" />
-          {`CLV = (ARPU × gross margin) / monthly churn. Target LTV:CAC >3:1 for SaaS. Track by cohort and segment.`}
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="arpu">Monthly ARPU</Label>
-            <div className="relative">
-              <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
-              <Input id="arpu" type="number" step="any" min="0" placeholder="100" className="pl-7"
-                value={arpu} onChange={(e) => { setArpu(e.target.value); setCalculated(true); }} />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="grossMargin">Gross Margin (%)</Label>
-            <div className="relative">
-              
-              <Input id="grossMargin" type="number" step="any" min="0" placeholder="80"
-                value={grossMargin} onChange={(e) => { setGrossMargin(e.target.value); setCalculated(true); }} />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="monthlyChurn">Monthly Churn Rate (%)</Label>
-            <div className="relative">
-              
-              <Input id="monthlyChurn" type="number" step="any" min="0" placeholder="3"
-                value={monthlyChurn} onChange={(e) => { setMonthlyChurn(e.target.value); setCalculated(true); }} />
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          <TryExample onClick={handleTryExample} />
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <Button onClick={handleCalculate} disabled={ar <= 0}
-              className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25 flex-1 sm:flex-none">
-              Calculate CLV
-            </Button>
-            <Button variant="outline" onClick={handleReset} className="shrink-0">Reset</Button>
-          </div>
-        </div>
-
-        {calculated && (
-          <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.3 }} className="result-display mt-2" aria-live="polite">
-            <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
-              <div className="text-center space-y-2">
-                <p className="text-sm text-muted-foreground font-medium">Customer Lifetime Value (CLV)</p>
-                <p className="text-4xl font-bold text-emerald-600">{formatCurrency(clv)}</p>
-                <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/30 text-emerald-600">{`Avg customer lifetime: ${avgLifetime.toFixed(1)} months`}</Badge>
-                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`LTV:CAC (at $500 CAC): ${ltvCacRatio.toFixed(1)}:1`}</Badge>
-                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{'Target LTV:CAC > 3:1'}</Badge>
-                </div>
-                <div className="flex justify-center gap-2 pt-2">
-                  <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
-                  <Button variant="outline" size="sm" onClick={() => setCompareB(snap())} className="h-7 text-[10px] px-2 border-amber-500/30 bg-amber-500/5 text-amber-600">{compareB ? '↺ Set B' : '+ Save B'}</Button>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
-                    <p className="text-xs text-muted-foreground mb-1">Monthly ARPU</p>
-                    <p className={`text-lg font-bold`}>{formatCurrency(ar)}</p>
-                  </div>
-                  <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
-                    <p className="text-xs text-muted-foreground mb-1">Gross Margin</p>
-                    <p className={`text-lg font-bold`}>{`${gm}%`}</p>
-                  </div>
-                  <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
-                    <p className="text-xs text-muted-foreground mb-1">CLV</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{formatCurrency(clv)}</p>
-                  </div>
-                  <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
-                    <p className="text-xs text-muted-foreground mb-1">Avg Lifetime</p>
-                    <p className={`text-lg font-bold`}>{`${avgLifetime.toFixed(1)} mo`}</p>
-                  </div>
-              </div>
-
-              <div className="rounded-lg bg-muted/30 border border-border/30 p-3 text-xs text-muted-foreground">
-                {`CLV = (ARPU × gross margin) / monthly churn. Measures total profit per customer over lifetime. Target LTV:CAC >3:1 (SaaS). Improve CLV by: raise ARPU (upsell), reduce churn (better product), increase gross margin. Even 1% churn reduction can increase CLV 20%+. See our CAC Payback Calculator.`}
-              </div>
-            </div>
-          </motion.div>
-        )}
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+        <Field id="clv-arpu" label="Monthly revenue per customer (ARPU)" value={arpu} onChange={setArpu} prefix="$" step="5" />
+        <Field id="clv-gm" label="Gross margin" value={gm} onChange={setGm} suffix="%" step="1" help="After hosting, support, payment fees" />
+        <Field id="clv-churn" label="Monthly customer churn" value={churn} onChange={setChurn} suffix="%" step="0.1" />
+        <Field id="clv-cac" label="Customer acquisition cost" value={cac} onChange={setCac} prefix="$" step="50" help="0 = skip the ratio" />
+        <Field id="clv-cap" label="Cap lifetime at" value={cap} onChange={setCap} suffix="months" step="12" help="0 = no cap; investors often use 36–60" />
       </div>
-
-      {compareA && compareB && (() => {
-        const rows: CompareRow[] = [
-          { label: 'ARPU', valueA: formatCurrency(compareA.ar), valueB: formatCurrency(compareB.ar), numA: compareA.ar, numB: compareB.ar },
-          { label: 'CLV', valueA: formatCurrency(compareA.clv), valueB: formatCurrency(compareB.clv), numA: compareA.clv, numB: compareB.clv },
-          { label: 'Lifetime', valueA: `${compareA.avgLifetime.toFixed(1)} mo`, valueB: `${compareB.avgLifetime.toFixed(1)} mo`, numA: compareA.avgLifetime, numB: compareB.avgLifetime }
-        ];
-        return (
-          <div className="px-4 pb-6 sm:px-6">
-            <ComparePanel rows={rows} labelA={compareA.label} labelB={compareB.label}
-              onClear={() => { setCompareA(null); setCompareB(null); }}
-              onSwap={() => { const t = compareA; setCompareA(compareB); setCompareB(t); }} />
+      <Actions onExample={() => { setArpu('100'); setGm('80'); setChurn('3'); setCac('800'); setCap('60'); }} onSave={() => r && saveEntry({ arpu, gm, churn, cac, cap }, `CLV ${usd(r.clv)} · ${r.lifetimeUsedMonths} mo lifetime${r.ltvCac !== null ? ` · LTV:CAC ${r.ltvCac}:1` : ''}`)} disabled={!r} />
+      {!r && <p className="text-xs text-amber-600">Enter the monthly revenue per customer.</p>}
+      {r && (
+        <Result>
+          <Headline label="Customer lifetime value (gross-margin basis)" value={usd(r.clv)}>
+            <strong className="text-foreground">{usd(r.grossProfitMonthly, 2)}</strong> gross profit a month × <strong className="text-foreground">{r.lifetimeUsedMonths}</strong> months{r.capped ? <> (capped{r.lifetimeMonths !== null ? `; uncapped lifetime ${r.lifetimeMonths} months` : ''})</> : null} · revenue over the lifetime <strong className="text-foreground">{usd(r.clvRevenue)}</strong>
+          </Headline>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <Kpi label="LTV:CAC" value={r.ltvCac === null ? '—' : `${r.ltvCac}:1`} sub={r.verdict.label} color={verdictColor[r.verdict.level]} />
+            <Kpi label="CAC payback" value={r.paybackMonths === null ? '—' : `${r.paybackMonths} mo`} sub="CAC ÷ monthly gross profit" color="text-blue-600" />
+            <Kpi label="Max CAC for 3:1" value={usd(r.maxCacAt3x)} sub="CLV ÷ 3" />
+            <Kpi label="Annual churn" value={pct(r.annualChurnPct)} sub={`from ${pct(num(churn), 1)} a month`} color="text-red-500" />
           </div>
-        );
-      })()}
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} onDelete={deleteEntry} />
+          <div className="rounded-xl bg-background border border-border/50 overflow-hidden">
+            <div className="px-3 py-2 border-b border-border/50 bg-muted/30 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Same customer, different churn</div>
+            <table className="w-full text-sm">
+              <thead><tr className="border-b border-border/50 text-xs text-muted-foreground"><Th>Monthly churn</Th><Th right>Annual churn</Th><Th right>Lifetime</Th><Th right>CLV</Th><Th right>LTV:CAC</Th><Th right>Max CAC at 3:1</Th></tr></thead>
+              <tbody className="divide-y divide-border/30">
+                {sensitivity.map(({ churn: c, r: x }) => x && <tr key={c} className={c === num(churn) ? 'bg-emerald-500/5 font-semibold' : ''}><td className="px-3 py-2">{c}%</td><td className="text-right px-3 py-2">{pct(x.annualChurnPct)}</td><td className="text-right px-3 py-2">{x.lifetimeUsedMonths} mo{x.capped ? '*' : ''}</td><td className="text-right px-3 py-2 text-emerald-600">{usd(x.clv)}</td><td className="text-right px-3 py-2">{x.ltvCac === null ? '—' : `${x.ltvCac}:1`}</td><td className="text-right px-3 py-2">{usd(x.maxCacAt3x)}</td></tr>)}
+              </tbody>
+            </table>
+          </div>
+          <Note><Info className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />CLV = ARPU × gross margin ÷ monthly churn, i.e. monthly gross profit × average lifetime (1 ÷ churn). Use gross profit, not revenue: a $100 customer at 80% margin is worth $80 a month to spend against. Halving churn doubles CLV; a 10% price rise adds 10%. * = lifetime capped.</Note>
+        </Result>
+      )}
+      <CalcHistoryPanel history={history} onRestore={(i) => { setArpu(i.arpu ?? ''); setGm(i.gm ?? '80'); setChurn(i.churn ?? '3'); setCac(i.cac ?? '0'); setCap(i.cap ?? '0'); }} onClear={clearHistory} onDelete={deleteEntry} />
+    </div>
+  );
+}
+
+// ───────────────────────── LTV:CAC by channel
+
+type ChannelRowState = { id: number; name: string; spend: string; customers: string };
+const toChannelRows = () => LTV_CAC_DEFAULTS.channels.map((c, i) => ({ id: i + 1, name: c.name, spend: String(c.spend), customers: String(c.customers) }));
+
+function LtvCacModeView() {
+  const [ltv, setLtv] = useState(String(LTV_CAC_DEFAULTS.ltv));
+  const [rows, setRows] = useState<ChannelRowState[]>(toChannelRows);
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<Record<string, string>>('ltv-cac-ratio-calculator');
+  const r = useMemo(() => computeLtvCac({ ltv: num(ltv), channels: rows.map((x) => ({ name: x.name || 'Channel', spend: num(x.spend), customers: num(x.customers) })) }), [ltv, rows]);
+  const update = (id: number, patch: Partial<ChannelRowState>) => setRows((p) => p.map((x) => (x.id === id ? { ...x, ...patch } : x)));
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Field id="lc-ltv" label="Customer lifetime value (gross-margin CLV)" value={ltv} onChange={setLtv} prefix="$" step="100" help="From the Lifetime value tab" />
+        <div className="sm:col-span-2 rounded-xl border border-border/50 bg-muted/20 p-3 space-y-2">
+          <p className="text-xs font-semibold">Acquisition spend and customers won, by channel (sales + marketing, same period)</p>
+          {rows.map((row, i) => (
+            <div key={row.id} className="grid grid-cols-[1fr_7rem_6rem_2.5rem] items-center gap-2">
+              <Input aria-label={`Channel ${i + 1} name`} value={row.name} onChange={(e) => update(row.id, { name: e.target.value })} className="text-sm" placeholder="Channel" />
+              <div className="relative"><span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">$</span><Input aria-label={`Channel ${i + 1} spend`} type="number" min="0" step="500" value={row.spend} onChange={(e) => update(row.id, { spend: e.target.value })} className="text-sm pl-6" /></div>
+              <Input aria-label={`Channel ${i + 1} customers`} type="number" min="0" step="1" value={row.customers} onChange={(e) => update(row.id, { customers: e.target.value })} className="text-sm" placeholder="Customers" />
+              <Button type="button" variant="ghost" size="icon" aria-label="Remove channel" onClick={() => setRows((p) => (p.length > 1 ? p.filter((x) => x.id !== row.id) : p))}><Trash2 className="h-4 w-4" /></Button>
+            </div>
+          ))}
+          <Button type="button" variant="outline" size="sm" disabled={rows.length >= 8} onClick={() => setRows((p) => [...p, { id: nextId++, name: '', spend: '', customers: '' }])}><Plus className="h-4 w-4 mr-1" /> Add channel</Button>
+        </div>
+      </div>
+      <Actions onExample={() => { setLtv('2700'); setRows(toChannelRows()); }} onSave={() => r && saveEntry({ ltv, rows: JSON.stringify(rows) }, `LTV:CAC ${r.blendedRatio === null ? '—' : `${r.blendedRatio}:1`} · blended CAC ${usd(r.blendedCac)}`)} disabled={!r} />
+      {!r && <p className="text-xs text-amber-600">Enter a lifetime value.</p>}
+      {r && (
+        <Result>
+          <Headline label="Blended LTV:CAC" value={r.blendedRatio === null ? '—' : `${r.blendedRatio}:1`}>
+            <span className={verdictColor[r.verdict.level]}>{r.verdict.label}</span> · blended CAC <strong className="text-foreground">{usd(r.blendedCac)}</strong> ({usd(r.totalSpend)} ÷ {int(r.totalCustomers)}) · max CAC for 3:1 <strong className="text-foreground">{usd(r.maxCacAt3x)}</strong>
+          </Headline>
+          <div className="rounded-xl bg-background border border-border/50 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead><tr className="border-b border-border/50 bg-muted/20 text-xs text-muted-foreground"><Th>Channel</Th><Th right>Spend</Th><Th right>Customers</Th><Th right>CAC</Th><Th right>LTV:CAC</Th><Th right>Lifetime return − spend</Th></tr></thead>
+              <tbody className="divide-y divide-border/30">
+                {r.channels.map((c, i) => <tr key={i} className={c.name === r.bestChannel ? 'bg-emerald-500/5' : c.name === r.worstChannel ? 'bg-red-500/5' : ''}><td className="px-3 py-2 font-medium">{c.name}{c.name === r.bestChannel && <span className="ml-2 text-[10px] uppercase text-emerald-600">best</span>}{c.name === r.worstChannel && <span className="ml-2 text-[10px] uppercase text-red-500">weakest</span>}</td><td className="text-right px-3 py-2">{usd(c.spend)}</td><td className="text-right px-3 py-2">{int(c.customers)}</td><td className="text-right px-3 py-2">{usd(c.cac)}</td><td className={`text-right px-3 py-2 font-semibold ${verdictColor[c.verdict.level]}`}>{c.ratio === null ? '—' : `${c.ratio}:1`}</td><td className={`text-right px-3 py-2 ${c.netReturn < 0 ? 'text-red-500' : ''}`}>{c.netReturn < 0 ? '−' : ''}{usd(Math.abs(c.netReturn))}</td></tr>)}
+              </tbody>
+            </table>
+          </div>
+          <Note><Scale className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />CAC = fully loaded sales and marketing spend ÷ new customers won from it in the same period. Compare the ratio by channel rather than blended: a 3:1 average can hide one channel at 9:1 and another below 2:1. Move budget from the weakest channel toward the best one until their ratios converge.</Note>
+        </Result>
+      )}
+      <CalcHistoryPanel history={history} onRestore={(i) => { setLtv(i.ltv ?? ''); try { const p = JSON.parse(i.rows) as ChannelRowState[]; if (Array.isArray(p)) setRows(p); } catch {} }} onClear={clearHistory} onDelete={deleteEntry} />
+    </div>
+  );
+}
+
+// ───────────────────────── value per active user
+
+function MauModeView() {
+  const d = MAU_DEFAULTS;
+  const [rev, setRev] = useState(String(d.monthlyRevenue));
+  const [mau, setMau] = useState(String(d.mau));
+  const [dau, setDau] = useState(String(d.dau));
+  const [paying, setPaying] = useState(String(d.payingUsers));
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<Record<string, string>>('mau-value-calculator');
+  const r = useMemo(() => computeMau({ monthlyRevenue: num(rev), mau: num(mau), dau: num(dau), payingUsers: num(paying) }), [rev, mau, dau, paying]);
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <Field id="mau-rev" label="Monthly revenue" value={rev} onChange={setRev} prefix="$" step="1000" help="Subscriptions, ads, in-app purchases" />
+        <Field id="mau-mau" label="Monthly active users (MAU)" value={mau} onChange={setMau} step="1000" />
+        <Field id="mau-dau" label="Daily active users (optional)" value={dau} onChange={setDau} step="500" help="Average DAU over the month" />
+        <Field id="mau-pay" label="Paying users (optional)" value={paying} onChange={setPaying} step="100" />
+      </div>
+      <Actions onExample={() => { setRev('50000'); setMau('50000'); setDau('12000'); setPaying('2000'); }} onSave={() => r && saveEntry({ rev, mau, dau, paying }, `${usd(r.arpuPerMau, 2)} per MAU · ${usd(r.annualValuePerMau, 2)} a year${r.arppu !== null ? ` · ARPPU ${usd(r.arppu, 2)}` : ''}`)} disabled={!r} />
+      {!r && <p className="text-xs text-amber-600">Enter monthly active users.</p>}
+      {r && (
+        <Result>
+          <Headline label="Revenue per monthly active user" value={usd(r.arpuPerMau, 2)}>
+            <strong className="text-foreground">{usd(r.annualValuePerMau, 2)}</strong> a year per active user{r.arppu !== null ? <> · paying users spend <strong className="text-foreground">{usd(r.arppu, 2)}</strong> a month (ARPPU)</> : null}
+          </Headline>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <Kpi label="Paying share of MAU" value={pct(r.payingSharePct)} sub={r.payingSharePct === null ? 'enter paying users' : `${int(num(paying))} of ${int(num(mau))}`} color="text-emerald-600" />
+            <Kpi label="ARPPU" value={usd(r.arppu, 2)} sub="revenue ÷ paying users" />
+            <Kpi label="Stickiness (DAU ÷ MAU)" value={pct(r.stickinessPct)} sub={r.revenuePerDau === null ? 'enter DAU' : `${usd(r.revenuePerDau, 2)} revenue per DAU`} color="text-blue-600" />
+            <Kpi label="+1 point of paying users" value={r.revenuePerPayingPoint === null ? '—' : `+${usd(r.revenuePerPayingPoint)}`} sub="monthly revenue at current ARPPU" color="text-emerald-600" />
+          </div>
+          <Note><Users className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />Revenue per MAU is the whole-audience figure that ad-funded and freemium products are valued on; ARPPU shows what a paying user is worth, and the paying share links the two (ARPU per MAU = ARPPU × paying share). DAU ÷ MAU measures how habitual the product is; consumer apps regarded as sticky sit around 20% and above, and daily-use tools well past 50%.</Note>
+        </Result>
+      )}
+      <CalcHistoryPanel history={history} onRestore={(i) => { setRev(i.rev ?? ''); setMau(i.mau ?? ''); setDau(i.dau ?? '0'); setPaying(i.paying ?? '0'); }} onClear={clearHistory} onDelete={deleteEntry} />
+    </div>
+  );
+}
+
+const ICONS = { clv: DollarSign, 'ltv-cac': Scale, mau: Users };
+
+export default function CustomerLifetimeValueCalculator() {
+  const urlMode = useSearchParam('mode');
+  const [override, setMode] = useState<ClvMode | null>(null);
+  const mode: ClvMode = override ?? (isClvMode(urlMode) ? urlMode : 'clv');
+  return (
+    <div className="w-full">
+      <div className="p-4 sm:p-6 space-y-6 calculator-form">
+        <ModeTabs modes={CLV_MODES} mode={mode} onChange={setMode} label="Lifetime value calculator mode" icons={ICONS} />
+        {mode === 'clv' && <ClvModeView />}
+        {mode === 'ltv-cac' && <LtvCacModeView />}
+        {mode === 'mau' && <MauModeView />}
+      </div>
     </div>
   );
 }

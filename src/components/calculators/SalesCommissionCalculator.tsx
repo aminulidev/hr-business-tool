@@ -36,6 +36,9 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
 import ComparePanel, { CompareRow } from './ComparePanel';
+import { useSearchParam } from '@/hooks/useSearchParam';
+import { CommissionSplitMode, BonusOteMode } from './CommissionModes';
+import { GitCompareArrows, Gift } from 'lucide-react';
 import { formatCurrency, formatPercent, formatNumber } from '@/lib/utils';
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
@@ -84,7 +87,9 @@ interface CompareSnapshot {
   label: string;
 }
 
-type CalcMode = 'simple' | 'tiered' | 'quota';
+type CalcMode = 'simple' | 'tiered' | 'quota' | 'split' | 'bonus';
+const LEGACY_MODES: CalcMode[] = ['simple', 'tiered', 'quota'];
+const isCalcMode = (v: string | null): v is CalcMode => ['simple', 'tiered', 'quota', 'split', 'bonus'].includes(v ?? '');
 
 // ─── Defaults ──────────────────────────────────────────────────────────────
 
@@ -348,7 +353,11 @@ function CustomBarTooltip({ active, payload, label }: { active?: boolean; payloa
 
 export default function SalesCommissionCalculator() {
   // ─── Tab ────────────────────────────────────────────────────────────────
-  const [activeTab, setActiveTab] = useState<CalcMode>('simple');
+  // Phase 17: tiered, quota, split, bonus and incentive pages 301 here with ?mode=…
+  const urlMode = useSearchParam('mode');
+  const [tabOverride, setActiveTab] = useState<CalcMode | null>(null);
+  const activeTab: CalcMode = tabOverride ?? (isCalcMode(urlMode) ? urlMode : 'simple');
+  const legacy = LEGACY_MODES.includes(activeTab);
 
   // ─── Simple Mode ────────────────────────────────────────────────────────
   const [salesAmount, setSalesAmount] = useState('50000');
@@ -784,7 +793,7 @@ export default function SalesCommissionCalculator() {
             onValueChange={(val) => setActiveTab(val as CalcMode)}
             className="w-full"
           >
-            <TabsList className="w-full grid grid-cols-3">
+            <TabsList className="w-full grid grid-cols-3 sm:grid-cols-5 h-auto gap-1 p-1">
               <TabsTrigger value="simple" className="text-xs sm:text-sm">
                 <DollarSign className="h-3.5 w-3.5 mr-1.5 hidden sm:inline-block" />
                 Simple
@@ -796,6 +805,14 @@ export default function SalesCommissionCalculator() {
               <TabsTrigger value="quota" className="text-xs sm:text-sm">
                 <Target className="h-3.5 w-3.5 mr-1.5 hidden sm:inline-block" />
                 Quota Attainment
+              </TabsTrigger>
+              <TabsTrigger value="split" className="text-xs sm:text-sm">
+                <GitCompareArrows className="h-3.5 w-3.5 mr-1.5 hidden sm:inline-block" />
+                Commission Split
+              </TabsTrigger>
+              <TabsTrigger value="bonus" className="text-xs sm:text-sm">
+                <Gift className="h-3.5 w-3.5 mr-1.5 hidden sm:inline-block" />
+                Bonus &amp; OTE
               </TabsTrigger>
             </TabsList>
 
@@ -1019,8 +1036,17 @@ export default function SalesCommissionCalculator() {
                 />
               </div>
             </TabsContent>
+            {/* Phase 17 modes: self-contained inputs + results + history */}
+            <TabsContent value="split" className="mt-6">
+              <CommissionSplitMode />
+            </TabsContent>
+            <TabsContent value="bonus" className="mt-6">
+              <BonusOteMode />
+            </TabsContent>
           </Tabs>
 
+          {legacy && (
+          <>
           {/* ─── Deductions ──────────────────────────────────────────────── */}
           <DeductionsSection deductions={deductions} setDeductions={setDeductions} />
 
@@ -1049,7 +1075,7 @@ export default function SalesCommissionCalculator() {
           {/* Results                                                         */}
           {/* ═══════════════════════════════════════════════════════════════ */}
           <AnimatePresence mode="wait">
-            {hasAnyResult && (
+            {legacy && hasAnyResult && (
               <motion.div
                 key={activeTab}
                 initial={{ opacity: 0, y: 20 }}
@@ -1459,7 +1485,7 @@ export default function SalesCommissionCalculator() {
           </AnimatePresence>
 
           {/* ─── Comparison Panel ────────────────────────────────────────── */}
-          {compareA && compareB && (() => {
+          {legacy && compareA && compareB && (() => {
             const rows: CompareRow[] = [
               { label: 'Total Sales',        valueA: formatCurrency(compareA.result.totalSales),      valueB: formatCurrency(compareB.result.totalSales),      numA: compareA.result.totalSales,      numB: compareB.result.totalSales },
               { label: 'Gross Commission',   valueA: formatCurrency(compareA.result.grossCommission), valueB: formatCurrency(compareB.result.grossCommission), numA: compareA.result.grossCommission, numB: compareB.result.grossCommission },
@@ -1477,10 +1503,13 @@ export default function SalesCommissionCalculator() {
               />
             );
           })()}
+          </>
+          )}
         </div>
       </TooltipProvider>
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory}
-          onDelete={deleteEntry} />
+      {legacy && (
+        <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} onDelete={deleteEntry} />
+      )}
     </div>
   );
 }
