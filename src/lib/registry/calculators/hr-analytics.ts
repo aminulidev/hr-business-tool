@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// HR Analytics — calculator registry entries (35)
+// HR Analytics — calculator registry entries (28)
 // Split from calculator-meta.ts in Roadmap v2 Phase 14.1. Add new HR Analytics
 // calculators here; the slug type and all helpers derive from this data.
 // ---------------------------------------------------------------------------
@@ -263,8 +263,40 @@ export const hrAnalyticsCalculators = defineCalculators([
     path: '/calculators/headcount-calculator',
   },
   {
+    slug: 'hiring-metrics-calculator',
+    status: 'published',
+    title: 'Hiring Metrics Calculator',
+    metaTitle: 'Free Hiring Metrics Calculator 2026 — Time to Fill, Recruiting ROI, Cost of Turnover & Training Cost',
+    shortDescription:
+      'Time to fill and time to hire with vacancy cost and the recruiting funnel; recruiting ROI by source on cost per retained hire; cost of turnover built from its components; training cost and ROI including participant time.',
+    metaDescription:
+      'Free hiring metrics calculator 2026. Time to fill vs time to hire by stage, cost of vacancy, offer acceptance and applicants per hire; recruiting ROI and cost per retained hire by source; cost of employee turnover from separation, vacancy, recruiting, onboarding and ramp-up; training cost per employee, per hour and training ROI.',
+    keywords: [
+      'hiring metrics calculator',
+      'time to fill calculator',
+      'time to hire calculator',
+      'time to fill vs time to hire',
+      'cost of vacancy calculator',
+      'offer acceptance rate',
+      'recruiting roi calculator',
+      'source of hire roi',
+      'cost of turnover calculator',
+      'employee replacement cost',
+      'cost to replace an employee',
+      'training cost calculator',
+      'training cost per employee',
+      'training roi calculator',
+    ],
+    icon: Target,
+    tier: 'tier1',
+    category: 'HR Analytics',
+    path: '/calculators/hiring-metrics-calculator',
+  },
+  {
     slug: 'cost-of-turnover-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'hiring-metrics-calculator',
+    mergedQuery: 'mode=turnover',
     title: 'Cost of Turnover Calculator',
     metaTitle: 'Free Cost of Turnover Calculator 2026 — Total Cost of Attrition',
     shortDescription:
@@ -384,34 +416,10 @@ export const hrAnalyticsCalculators = defineCalculators([
     path: '/calculators/hr-budget-calculator',
   },
   {
-    slug: 'compensation-ratio-calculator',
-    status: 'draft',
-    title: 'Compensation Ratio Calculator',
-    metaTitle: 'Free Compensation Ratio Calculator 2026 — Compa-Ratio Analysis',
-    shortDescription:
-      'Calculate compa-ratio (employee salary vs market midpoint) for each role to identify under/over-paid positions.',
-    metaDescription:
-      'Free compensation ratio calculator 2026. Calculate compa-ratio = employee salary / market midpoint. Identify underpaid (<0.9), at-market (0.9-1.1), and overpaid (>1.1) positions. Used for salary equity and pay band analysis.',
-    keywords: [
-      'compensation ratio calculator',
-      'compa ratio calculator',
-      'comparatio',
-      'salary ratio',
-      'pay ratio analysis',
-      'compensation analysis',
-      'salary positioning',
-      'pay band ratio',
-      'market ratio calculator',
-      'salary midpoint',
-    ],
-    icon: Percent,
-    tier: 'tier2',
-    category: 'HR Analytics',
-    path: '/calculators/compensation-ratio-calculator',
-  },
-  {
     slug: 'time-to-hire-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'hiring-metrics-calculator',
+    mergedQuery: 'mode=time',
     title: 'Time to Hire Calculator',
     metaTitle: 'Free Time to Hire Calculator 2026 — Recruiting Velocity Metric',
     shortDescription:
@@ -437,7 +445,9 @@ export const hrAnalyticsCalculators = defineCalculators([
   },
   {
     slug: 'time-to-fill-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'hiring-metrics-calculator',
+    mergedQuery: 'mode=time',
     title: 'Time to Fill Calculator',
     metaTitle: 'Free Time to Fill Calculator 2026 — Vacancy Duration Metric',
     shortDescription:
@@ -463,7 +473,9 @@ export const hrAnalyticsCalculators = defineCalculators([
   },
   {
     slug: 'recruiting-roi-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'hiring-metrics-calculator',
+    mergedQuery: 'mode=sources',
     title: 'Recruiting ROI Calculator',
     metaTitle: 'Free Recruiting ROI Calculator 2026 — Talent Acquisition ROI',
     shortDescription:
@@ -488,34 +500,10 @@ export const hrAnalyticsCalculators = defineCalculators([
     path: '/calculators/recruiting-roi-calculator',
   },
   {
-    slug: 'employee-engagement-score-calculator',
-    status: 'draft',
-    title: 'Employee Engagement Score Calculator',
-    metaTitle: 'Free Employee Engagement Score Calculator 2026 — eNPS & Survey',
-    shortDescription:
-      'Calculate employee engagement score from survey responses, eNPS (Employee Net Promoter Score), and participation rate.',
-    metaDescription:
-      'Free employee engagement score calculator 2026. Calculate engagement score from pulse survey responses, eNPS (Employee Net Promoter Score = % promoters - % detractors), and participation rate. Benchmark against Gallup Q12.',
-    keywords: [
-      'employee engagement score calculator',
-      'eNPS calculator',
-      'employee net promoter score',
-      'engagement survey calculator',
-      'employee engagement metrics',
-      'engagement index',
-      'pulse survey score',
-      'engagement rate',
-      'Gallup Q12 score',
-      'employee satisfaction score',
-    ],
-    icon: Activity,
-    tier: 'tier2',
-    category: 'HR Analytics',
-    path: '/calculators/employee-engagement-score-calculator',
-  },
-  {
     slug: 'training-cost-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'hiring-metrics-calculator',
+    mergedQuery: 'mode=training',
     title: 'Training Cost Calculator',
     metaTitle: 'Free Training Cost Calculator 2026 — Per-Employee & Total L&D',
     shortDescription:
@@ -613,7 +601,8 @@ export const hrAnalyticsCalculators = defineCalculators([
   {
     slug: 'replacement-cost-calculator',
     status: 'merged',
-    mergedInto: 'employee-turnover-calculator',
+    mergedInto: 'hiring-metrics-calculator',
+    mergedQuery: 'mode=turnover',
     title: 'Replacement Cost Calculator',
     metaTitle: 'Free Replacement Cost Calculator 2026 — Cost to Replace Employee',
     shortDescription:
@@ -636,58 +625,6 @@ export const hrAnalyticsCalculators = defineCalculators([
     tier: 'tier2',
     category: 'HR Analytics',
     path: '/calculators/replacement-cost-calculator',
-  },
-  {
-    slug: 'hr-roi-calculator',
-    status: 'draft',
-    title: 'HR ROI Calculator',
-    metaTitle: 'Free HR ROI Calculator 2026 — HR Investment Return',
-    shortDescription:
-      'Calculate HR ROI: value of HR initiatives (retention savings, productivity gains, cost reductions) vs HR budget.',
-    metaDescription:
-      'Free HR ROI calculator 2026. Calculate return on HR investment: value of retention savings, productivity improvements, training ROI, and cost reductions minus HR department budget. See HR ROI % and payback period.',
-    keywords: [
-      'HR ROI calculator',
-      'human resources ROI',
-      'HR return on investment',
-      'HR value calculator',
-      'HR impact calculator',
-      'HR program ROI',
-      'HR investment return',
-      'HR metrics ROI',
-      'human capital ROI',
-      'HR business value',
-    ],
-    icon: TrendingUp,
-    tier: 'tier2',
-    category: 'HR Analytics',
-    path: '/calculators/hr-roi-calculator',
-  },
-  {
-    slug: 'salary-benchmark-calculator',
-    status: 'draft',
-    title: 'Salary Benchmark Calculator',
-    metaTitle: 'Free Salary Benchmark Calculator 2026 — Market Salary Comparison',
-    shortDescription:
-      'Compare employee salaries to market benchmarks by role, location, and experience to identify pay gaps.',
-    metaDescription:
-      'Free salary benchmark calculator 2026. Compare employee salaries to market data (BLS, Payscale, Glassdoor) by role, location, experience level, and company size. Identify underpaid roles and adjust pay bands for retention.',
-    keywords: [
-      'salary benchmark calculator',
-      'salary benchmarking',
-      'market salary comparison',
-      'salary comparison tool',
-      'compensation benchmarking',
-      'salary survey calculator',
-      'pay benchmark',
-      'market rate calculator',
-      'salary range calculator',
-      'compensation market analysis',
-    ],
-    icon: BarChart3,
-    tier: 'tier2',
-    category: 'HR Analytics',
-    path: '/calculators/salary-benchmark-calculator',
   },
   {
     slug: 'employee-benefit-cost-calculator',
@@ -858,110 +795,6 @@ export const hrAnalyticsCalculators = defineCalculators([
     tier: 'tier3',
     category: 'HR Analytics',
     path: '/calculators/span-of-control-calculator',
-  },
-  {
-    slug: 'diversity-ratio-calculator',
-    status: 'draft',
-    title: 'Diversity Ratio Calculator',
-    metaTitle: 'Free Diversity Ratio Calculator 2026 — DEI Metrics Tracker',
-    shortDescription:
-      'Calculate workforce diversity ratios by gender, race/ethnicity, age, and tenure with EEO-1 benchmark comparison.',
-    metaDescription:
-      'Free diversity ratio calculator 2026. Track workforce diversity by gender, race/ethnicity, age group, and tenure. Compare to EEO-1 benchmarks and BLS workforce demographics. Identify underrepresented groups and track DEI progress.',
-    keywords: [
-      'diversity ratio calculator',
-      'DEI metrics calculator',
-      'workforce diversity',
-      'diversity and inclusion metrics',
-      'gender diversity ratio',
-      'racial diversity calculator',
-      'EEO-1 reporting',
-      'representation metrics',
-      'inclusion index',
-      'diversity benchmark',
-    ],
-    icon: Users,
-    tier: 'tier2',
-    category: 'HR Analytics',
-    path: '/calculators/diversity-ratio-calculator',
-  },
-  {
-    slug: 'promotion-rate-calculator',
-    status: 'draft',
-    title: 'Promotion Rate Calculator',
-    metaTitle: 'Free Promotion Rate Calculator 2026 — Internal Promotion Metrics',
-    shortDescription:
-      'Calculate promotion rate (internal promotions per total headcount) by department, gender, and tenure cohort.',
-    metaDescription:
-      'Free promotion rate calculator 2026. Calculate internal promotion rate: % of employees promoted in a period. Track by department, gender, race, and tenure cohort. Identify career-path gaps and ensure equitable promotion practices.',
-    keywords: [
-      'promotion rate calculator',
-      'internal promotion rate',
-      'promotion metrics',
-      'promotion rate formula',
-      'career advancement rate',
-      'promotion velocity',
-      'promotion equity',
-      'promotion cycle',
-      'internal mobility rate',
-      'promotion analysis',
-    ],
-    icon: TrendingUp,
-    tier: 'tier2',
-    category: 'HR Analytics',
-    path: '/calculators/promotion-rate-calculator',
-  },
-  {
-    slug: 'internal-mobility-calculator',
-    status: 'draft',
-    title: 'Internal Mobility Calculator',
-    metaTitle: 'Free Internal Mobility Rate Calculator 2026 — Talent Movement',
-    shortDescription:
-      'Calculate internal mobility rate (lateral moves + promotions) and retention impact of internal talent movement.',
-    metaDescription:
-      'Free internal mobility rate calculator 2026. Calculate internal mobility rate: lateral moves + promotions per headcount. Higher internal mobility = 2x retention (LinkedIn data). Track by department, level, and time-in-role.',
-    keywords: [
-      'internal mobility calculator',
-      'internal mobility rate',
-      'talent mobility',
-      'internal transfer rate',
-      'lateral move rate',
-      'internal job posting',
-      'talent marketplace',
-      'career pathing metrics',
-      'internal talent movement',
-      'retention through mobility',
-    ],
-    icon: ArrowLeftRight,
-    tier: 'tier2',
-    category: 'HR Analytics',
-    path: '/calculators/internal-mobility-calculator',
-  },
-  {
-    slug: 'employee-lifetime-value-calculator',
-    status: 'draft',
-    title: 'Employee Lifetime Value Calculator',
-    metaTitle: 'Free Employee Lifetime Value Calculator 2026 — ELTV / Human Capital',
-    shortDescription:
-      'Calculate Employee Lifetime Value (ELTV): net value an employee generates over their tenure minus total cost.',
-    metaDescription:
-      'Free employee lifetime value calculator 2026. Calculate ELTV: (revenue generated - total cost) over employee tenure. Identify high-value roles, optimize tenure curves, and quantify the ROI of retention initiatives vs replacement.',
-    keywords: [
-      'employee lifetime value calculator',
-      'ELTV calculator',
-      'human capital value',
-      'employee value calculator',
-      'lifetime value of an employee',
-      'human capital ROI',
-      'employee ROI calculator',
-      'workforce value',
-      'employee net value',
-      'talent value calculator',
-    ],
-    icon: Activity,
-    tier: 'tier2',
-    category: 'HR Analytics',
-    path: '/calculators/employee-lifetime-value-calculator',
   },
   {
     slug: 'labor-efficiency-calculator',

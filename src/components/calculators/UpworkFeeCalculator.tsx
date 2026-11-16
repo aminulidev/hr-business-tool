@@ -94,17 +94,17 @@ export default function UpworkFeeCalculator() {
       <div className="p-4 sm:p-6 space-y-6">
         <div className="rounded-lg bg-emerald-500/5 border border-emerald-500/20 p-3 text-xs text-muted-foreground">
           <DollarSign className="inline h-3 w-3 mr-1" />
-          Calculate your exact Upwork take-home pay AND the reverse client bid needed to net your target income after Upwork’s 10% flat freelancer service fee (or 0% Direct-to-Talent / 5%–15% variable contract rates).
+          Calculate your exact Upwork take-home pay AND the reverse client bid needed to net your target income after Upwork’s freelancer service fee, which is set for each contract between 0% and 15% and shown on your proposal (about 10% is typical; Direct Contracts are 5% or 0%).
         </div>
 
         {/* Fee Tier Presets */}
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-medium text-muted-foreground mr-1">Contract Fee Preset:</span>
           {[
-            { label: '10% Standard Marketplace', rate: '10' },
-            { label: '5% Enterprise / Legacy $10k+', rate: '5' },
-            { label: '15% Variable High-Tier', rate: '15' },
-            { label: '0% Direct Contracts / BYO Client', rate: '0' },
+            { label: '10% Typical contract', rate: '10' },
+            { label: '5% Direct Contract (Basic)', rate: '5' },
+            { label: '15% Top of the range', rate: '15' },
+            { label: '0% Direct Contract (Freelancer Plus)', rate: '0' },
           ].map((preset) => (
             <button
               key={preset.label}

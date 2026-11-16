@@ -36,8 +36,6 @@ const seoData = {
     { slug: 'attrition-calculator', title: 'Attrition Calculator', description: 'Inverse metric: % who left', icon: 'TrendingDown' },
     { slug: 'employee-turnover-calculator', title: 'Employee Turnover Calculator', description: 'Turnover rate and cost', icon: 'Users' },
     { slug: 'cost-of-turnover-calculator', title: 'Cost of Turnover Calculator', description: 'Financial impact of attrition', icon: 'DollarSign' },
-    { slug: 'employee-engagement-score-calculator', title: 'Engagement Score', description: 'Engagement drives retention', icon: 'Activity' },
-    { slug: 'internal-mobility-calculator', title: 'Internal Mobility', description: 'Mobility = 2x retention', icon: 'ArrowLeftRight' },
   ],
 } satisfies CalculatorSeoData;
 export default seoData;

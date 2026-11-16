@@ -38,7 +38,7 @@ const seoData = {
   ],
   relatedTools: [
     { slug: 'break-even-calculator', title: 'Break-Even Calculator', description: 'Calculate break-even units and revenue', icon: 'Target' },
-    { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Return on investment analysis', icon: 'BarChart3' },
+    { slug: 'financial-statements-calculator', title: 'Financial Statements Calculator', description: 'Statement of cash flows from your balances, indirect method', icon: 'FileText' },
     { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Profit margin and markup', icon: 'Percent' },
     { slug: 'payroll-calculator', title: 'Payroll Calculator', description: 'Largest expense for most businesses', icon: 'CreditCard' },
     { slug: 'business-day-calculator', title: 'Business Day Calculator', description: 'Payment terms and due dates', icon: 'CalendarDays' },

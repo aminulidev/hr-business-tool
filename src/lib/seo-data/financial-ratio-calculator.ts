@@ -133,7 +133,7 @@ const seoData = {
     { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Margin ladder, contribution margin and sector margin ranges', icon: 'Percent' },
     { slug: 'working-capital-calculator', title: 'Working Capital Calculator', description: 'The dollar view of liquidity', icon: 'Wallet' },
     { slug: 'inventory-valuation-calculator', title: 'Inventory Valuation Calculator', description: 'FIFO, LIFO and weighted average behind the inventory figure', icon: 'Boxes' },
-    { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Return on a single investment or project', icon: 'BarChart3' },
+    { slug: 'financial-statements-calculator', title: 'Financial Statements Calculator', description: 'Build the income statement, balance sheet and cash flow the ratios read from', icon: 'FileText' },
     { slug: 'break-even-calculator', title: 'Break-Even Calculator', description: 'Fixed costs, contribution and the break-even point', icon: 'Target' },
     { slug: 'ebitda-margin-calculator', title: 'EBITDA Margin Calculator', description: 'Operating cash profitability before financing', icon: 'LineChart' },
   ],
