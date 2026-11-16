@@ -375,33 +375,72 @@ Audited, enriched with 2026 `benchmarkTables` & `deepDiveSections`, and publishe
 | ~~**Delete**~~ **done Nov 16 2026** | compensation-ratio, engagement-score, hr-roi, salary-benchmark (no data source), diversity-ratio, promotion-rate, internal-mobility, employee-lifetime-value | Eight draft entries removed from `hr-analytics.ts` with their components, SEO files and component-map lines (16 files). They were never published, so their URLs were already 404 and stay 404; no redirects. HR Analytics has no drafts left. |
 | **Re-evaluate after 90 days of GSC data** | Phase 12 accounting pages: book-value, fixed-asset, cost-allocation, overhead-rate, manufacturing-cost, operating-expense-ratio, accounts-receivable-days, accounts-payable-days | Cut or merge into the Financial Statements suite if zero impressions |
 
+**Phase 17 cleanups (Nov 16 2026)**
+
+- [x] Dead leftovers of merged pages: 30 slugs merged before Phase 17 still had a component, a component-map line and an SEO file that nothing rendered. Removed all three for each (60 files, 30 map lines); the registry entries stay because they generate the redirects. Each component was checked for other importers first. No merged slug has a component or SEO file any more.
+- [x] US spelling: 111 British spellings in 39 files changed (annualised, normalise, modelled, favourable, judgement, neighbour, fortnight, licence and others), including the `realisedDiscountPct` identifier, renamed everywhere to `realizedDiscountPct`. New content should use US spelling.
+
 ---
 
 ## Phase 18: Distribution & monetization groundwork
 
-- [ ] **Embed that earns links**: `EmbedModal` snippet includes a visible, non-iframe `<a href="…">Calculator by QuickBizCalc</a>` under the iframe; "white-label without link" becomes a paid option later. Track embeds via `?ref=embed` + referrer.
-- [ ] Outreach list (50): HR blogs, bookkeeping firms, staffing agencies, community-college business programs — offer the embed + a co-branded template from 16.3.
-- [ ] Reddit/Quora: answer with a **pre-filled result URL** (Phase 11 feature), never a bare link. r/personalfinance, r/smallbusiness, r/humanresources, r/Payroll.
-- [ ] Newsletter: `api/newsletter` writes JSONL only — wire a Resend audience + a monthly "payroll changes" issue so the list has a reason to exist.
-- [ ] `data/*.jsonl` → SQLite (`bun:sqlite` since production runs bun) so feedback/newsletter survive redeploys and can be queried. Add a private `/admin/feedback` view (basic auth) to actually read calculator feedback.
-- [ ] AdSense: re-apply only after Phases 13–15 are live for ≥4 weeks and GSC shows re-indexing. Keep ad slots out of the embed route and the above-the-fold calculator area (CLS).
+> Code side done Nov 16 2026. What remains is outreach, posting and account settings, which only the owner can do: see `docs/distribution-kit.md`.
 
+- [x] **Embed that earns links** (Nov 16 2026): the Embed button's code is now an iframe plus a visible one-line credit on the host page ("*Title* by QuickBizCalc"), built by `src/lib/embed.ts`. Credit links point at the canonical `www` URL with `?ref=embed`; the embed page's own footer link does too and no longer strips the referrer, so embed visits show up in GA by URL and referrer. **The credit link is `rel="nofollow"`**: Google's link-spam policy counts followed links shipped inside widgets as unnatural, and the site is recovering from a spam update. One constant (`EMBED_LINK_REL`) changes it. The modal no longer says the embed is "ad-supported", and the AdSense script is no longer loaded on the embed route (`AdSenseLoader`). "White-label without link" as a paid option: later.
+- [ ] Outreach list (50): HR blogs, bookkeeping firms, staffing agencies, community-college business programs. **Owner task.** Target criteria, search operators and the email template are in `docs/distribution-kit.md` §2. The co-branded template depends on 16.3, which is not built.
+- [ ] Reddit/Quora: answer with a **pre-filled result URL**, never a bare link. **Owner task.** Rules of thumb and the URL parameters are in `docs/distribution-kit.md` §3; note that r/personalfinance restricts self-promotion.
+- [x] **Newsletter wired to Resend** (Nov 16 2026). Found while doing this: production is Vercel, whose filesystem is read-only, so every sign-up since the move had been silently dropped while the form said "Subscribed! Check your inbox". Now `api/newsletter` saves the address as a Resend contact (and into `RESEND_SEGMENT_ID` when set), falls back to emailing the owner, and returns an error instead of a false success if nothing stored it. Honeypot field against bots. Welcome email only when `RESEND_FROM` (a verified sender) is set. Logic in `src/lib/server/newsletter.ts` with tests. **Copy made honest**: removed "Join 2,000+" (there were no stored subscribers), "one tip every Tuesday at 7:00 AM ET", the three dated "sample issues" and the eight "upcoming topics"; the form and `/newsletter` now promise only an occasional email, at most monthly, when payroll figures or deadlines change. Privacy policy now discloses newsletter, contact and feedback data and the email provider.
+  - [ ] **Owner:** verify the domain in Resend, create a segment, set `RESEND_SEGMENT_ID` and `RESEND_FROM` in Vercel, then send the first issue (steps and an issue outline in `docs/distribution-kit.md` §1).
+- [x] **Feedback and newsletter storage** (Nov 16 2026), replacing the SQLite plan, which assumed a server with a disk (`bun:sqlite`); Vercel has none. Feedback: comments and thumbs-down votes are emailed to the owner (`api/feedback`, slugs validated against the registry, HTML escaped); a bare thumbs-up is only logged. That makes feedback readable today without a database. The contact form now escapes what visitors type and validates lengths. Shared helper `src/lib/server/mailer.ts`.
+  - [ ] Private `/admin/feedback` view: needs a hosted database (Vercel Postgres, Neon or similar) and credentials. Only worth doing once feedback volume makes email unwieldy; pair it with event tracking in Phase 19, which is the better place to count votes.
+- [ ] AdSense: re-apply only after Phases 13–15 are live for ≥4 weeks and GSC shows re-indexing. **Owner task**; checklist in `docs/distribution-kit.md` §4. Ad script is out of the embed route; there are still no manual ad slots, so nothing sits above the fold.
+- [x] ~~Found, not fixed: Google Analytics and AdSense loaded twice (root layout for everyone, `Scripts` again after consent).~~ Fixed in Phase 19: one loader plus Consent Mode v2.
 ---
 
 ## Phase 19: Measurement loop
 
-- [ ] GSC API pull (weekly script → `data/gsc/*.json`): impressions/clicks/position per URL. Drive 15.1/17 "cut or keep" decisions from this, not guesses.
-- [ ] Microsoft Clarity ID is a placeholder (`XXXXXXXXXX`) — set it or remove the script.
-- [ ] Event tracking on: calculate, share, embed-copy, PDF, history-restore, feedback. Know which features people use before building more.
-- [ ] Core Web Vitals budget in CI (Lighthouse CI on 5 flagship URLs; fail on mobile LCP > 2.5s).
+> Code side done Nov 16 2026. Three settings are the owner's: a Search Console service account, four GA4 custom dimensions, and (optionally) a Clarity project ID. Steps for each are in `docs/measurement.md`.
+
+- [x] **GSC API pull** (Nov 16 2026): `npm run gsc:pull` writes `data/gsc/<date>.json` and a Markdown report joined with the registry (pages barely seen, striking distance, first-page results nobody clicks, merged URLs still shown, URLs the registry does not know, change since the previous pull). No dependencies: service-account JWT signed with Node's crypto. `.github/workflows/gsc-weekly.yml` runs it every Monday and attaches the report to the run; it skips itself until the `GSC_SERVICE_ACCOUNT_JSON` secret exists. **Not run against the real property yet**: there are no credentials on this machine, so the first real pull is the test of the API calls (the report logic is unit-tested).
+  - [ ] **Owner:** create the service account, add it to the Search Console property, run the first pull (`docs/measurement.md` §1).
+  - Drafts return 404, so GSC can never say anything about the 13 remaining drafts. That decision needs keyword research, not this report.
+- [x] **Clarity placeholder removed** (Nov 16 2026). Clarity now loads only when `NEXT_PUBLIC_CLARITY_ID` is set and the visitor has explicitly allowed analytics. No ID is set, so it is off.
+  - [ ] **Owner, only if you want Clarity:** create the project, add a Clarity paragraph to the privacy and cookie policies (neither mentions it), then set the variable in Vercel.
+- [x] **Event tracking** (Nov 16 2026): 15 events through one helper, `track()` in `src/lib/analytics.ts`, fired from the shared components so no calculator carries tracking code: `calc_start`, `calc_save`, `history_restore`, `try_example`, `mode_change`, `share`, `copy_result`, `print`, `pdf`, `embed_open`, `embed_copy`, `feedback`, `pay_stub`, `invoice_export`, `newsletter_signup`. Each carries the calculator slug and whether it fired inside an embed; none carries anything a visitor typed. The print dialog's "Official Report" heading became "Calculation Summary" while there (nothing official about it).
+  - [ ] **Owner:** register `calculator`, `mode`, `tool` and `embedded` as event-scoped custom dimensions in GA4, or the parameters cannot be used in reports (`docs/measurement.md` §2).
+- [x] **Consent fixed while wiring events** (Nov 16 2026). GA and AdSense were loaded twice: by the root layout for every visitor whatever the banner said, and again by `Scripts` after consent, which double-counted page views for everyone who accepted. Now one loader with Google Consent Mode v2 (`src/lib/consent.ts`): denied by default in the EEA, UK and Switzerland, granted elsewhere until the visitor rejects. **Expect GA page views to drop on deploy**: that is the double count ending.
+- [x] **Lighthouse CI on 5 flagship URLs, failing on mobile LCP > 2.5 s** (Nov 16 2026): new `lighthouse` job in `ci.yml`, analytics-off build (`NEXT_PUBLIC_DISABLE_ANALYTICS=1`), median of 3 mobile runs, budgets in `lighthouserc.json`: LCP ≤ 2.5 s, CLS ≤ 0.1 and total page weight ≤ 900 kB fail the job; TBT ≤ 600 ms warns. Run locally with the same tool (Lighthouse CI 0.16.1, Lighthouse 13): LCP 1.2–1.4 s, CLS 0, weight 523–706 kB, performance score 93–100 on all five pages.
+  - Measuring found four real problems, all fixed: (1) every calculator page downloaded every calculator, because the component map was imported by a Server Component and its `dynamic()` calls split nothing; it now goes through the client component `CalculatorRenderer`. (2) The header shipped the whole registry on every page; the search dialog now loads on first use (`SearchDialog.tsx`). (3) The home page was invisible until hydration (framer-motion `opacity: 0` on the page wrapper and hero). (4) On phones the cookie banner was the largest text block on some pages, so its late appearance counted as the page's LCP; phone copy is now two lines. `bundle-boundaries.test.ts` guards (1) and (2). Before and after, same tool (Lighthouse 12, one laptop):
+
+    | Page | JS downloaded | LCP (Lighthouse 12) |
+    |---|---|---|
+    | Home | 899 kB → 379 kB | 5.4 s → 3.6 s |
+    | Hourly paycheck | 882 kB → 419 kB | 7.6 s → 4.3 s |
+    | Texas paycheck | 882 kB → 407 kB | 7.6 s → 4.1 s |
+    | $20 an hour | 372 kB → 347 kB | 4.3 s → 3.5 s |
+    | Payroll & taxes hub | 872 kB → 336 kB | 9.0 s → 3.3 s |
+
+  - Lighthouse 12 and 13 estimate LCP differently (3.3–4.3 s against 1.2–1.4 s for the same build). CI pins the Lighthouse CI version; never compare numbers across versions. The old build was not measured with Lighthouse 13.
+  - [ ] **Not verified on GitHub's runner or against production.** Read the first CI run, and run PageSpeed Insights on one calculator page after the next deploy.
+  - [ ] **Still slow** (not started; details in `docs/measurement.md` §4): pages take about 4 s to become interactive on an emulated phone and download 340–420 kB of JavaScript. Biggest levers: make `AppShell`/`Header`/`Footer` Server Components, take framer-motion out of the shell and article layout, drop the animated blurred background shapes on phones, shrink the calculator page's 520 kB HTML.
+- [ ] Found, not fixed: the CSP has no `frame-src` for Google's ad domains, so ad iframes would be blocked once AdSense is approved. Fix together with ad placement.
+- [ ] Found, not fixed: the home page badge says "2026 IRS & FLSA Verified". Nothing on the site is verified by the IRS or the Department of Labor; by the same rule as the newsletter copy it should say what is true (for example "2026 IRS & FLSA figures"). Left for the owner because it is the home page's headline claim.
 
 ---
 
 ## Phase 20: Later / only if 13–19 show recovery
 
-- [ ] Accounts (save scenarios across devices, employer dashboards) — needs the SQLite/Postgres step first.
-- [ ] Paid tier: white-label embed, bulk payroll CSV > 25 rows, API access to `calculatePaycheck`.
-- [ ] 2027 tax year: `withholding-2026.ts` → `withholding/{year}.ts` with a `TAX_YEAR` switch so both years coexist in January.
+- [ ] Accounts (save scenarios across devices, employer dashboards) — needs the SQLite/Postgres step first. **Not started (Nov 17 2026), on purpose**: Phases 13–19 are not deployed yet, so there is no recovery to point to, and there is no database (Vercel has no disk). Needs an owner decision on a hosted database and a sign-in method first. Share links already carry a full scenario between devices.
+- [ ] Paid tier: white-label embed, bulk payroll CSV > 25 rows, API access to `calculatePaycheck`. **Not started (Nov 17 2026), on purpose**: needs accounts, a payment provider and prices, and traffic to sell to. Revisit when Search Console shows the recovery and the embed and bulk events in GA show who uses those features.
+- [x] **2027 tax year** (Nov 17 2026): `withholding-2026.ts` became `src/lib/payroll/withholding/`: `engine.ts` (math and types, no tax figure), `2026.ts`, `2027.ts` (one `TaxYearDefinition` each) and `index.ts` (the switch: `TAX_YEAR`, `SELECTABLE_TAX_YEARS`, `calculatePaycheck` with an optional `taxYear`). The refactor changes no 2026 number: the new engine was compared with the old one over 20,736 paychecks (every state, filing status, W-4 variant and pre-tax combination) and matched exactly.
+  - **2027 preview is live on the paycheck calculators**: a "Tax year: 2026 | 2027 preview" switch on the hourly paycheck calculator, the payroll calculator and the 30 state pages; `?year=2027` in share links; the pay stub, employer view, reverse solver and scenario compare follow the selected year. Everything else (articles, titles, salary pages, bulk payroll, labor cost) stays on 2026.
+  - **What the preview rests on**: federal brackets and standard deductions from IRS Rev. Proc. 2026-35 (Nov 5 2026, final); the withholding method from the IRS early-release draft of the 2027 Publication 15-T (Nov 9 2026), whose tables are replayed row by row in `2027.test.ts` and match to the cent; Social Security wage base $192,300 (SSA, Federal Register 2026-21796, final). Example: $25/hr single in Texas takes home $68 more a year in 2027.
+  - **What is not 2027 yet, and says so on the page**: no state had published 2027 withholding figures on Nov 17 2026, so all 30 states run their 2026 rules; the Form W-4 Step 3 child amount ($2,300) is the 2027 child tax credit because the draft form leaves it blank; employer-side state unemployment and FUTA credit-reduction figures are 2026. A result for 2027 carries a note listing exactly these, with links to the three sources. The tests refuse a state that claims to be published while running the carried-over rule, and refuse a site default year whose federal figures still rest on a draft.
+  - [ ] **Owner, as figures publish** (checklist in `docs/tax-year-rollover.md`): final Publication 15-T and Form W-4 for 2027 (usually December); each state's 2027 withholding (usually December and January); 2027 state unemployment rates and wage bases.
+  - [ ] **Owner, January**: move the site to 2027. `TAX_YEAR` is one line, but the 2026 facts in state pages, registry titles, SEO files and the nine standalone tax calculators have to be updated first (`docs/tax-year-rollover.md` §4).
+  - To hide the preview: set `SELECTABLE_TAX_YEARS` to `[2026]` in `withholding/index.ts`.
+  - [ ] Found, not fixed: the "Share Calculation Link" buttons call `navigator.clipboard.writeText()` without handling a rejection and show "Share Link Copied!" regardless. Inside a cross-origin embed, or when the browser denies clipboard access, the copy fails silently while the button says it worked (the address bar is still updated).
+  - [ ] Found, not fixed: the employer panel still says California's FUTA credit reduction is "potential" and that the final list is set after November 10, 2026. The final list was not findable on Nov 17 2026; check the DOL page and update `FUTA_CREDIT_REDUCTION` and the wording when it is out.
 
 ---
 
@@ -417,4 +456,5 @@ Audited, enriched with 2026 `benchmarkTables` & `deepDiveSections`, and publishe
 8. Request re-indexing in GSC; wait for data
 9. ~~**16.1 flagship features**~~ — done Nov 6 2026 (employer toggle, reverse solver, scenario compare, W-4 Steps 2–4, pay stub, bulk payroll)
 10. **17 suites**, one per PR, demand-checked
-11. **18 / 19**
+11. ~~**18 / 19**~~ — code side done Nov 16 2026 (owner tasks listed in each phase)
+12. **20**: 2027 tax year done Nov 17 2026 (engine split by year, 2027 preview on the paycheck calculators). Accounts and the paid tier are deliberately not started; they wait for measured recovery and owner decisions on a database and payments.

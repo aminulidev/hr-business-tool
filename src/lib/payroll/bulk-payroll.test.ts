@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { BULK_EXAMPLE_CSV, BULK_MAX_ROWS, BULK_OUTPUT_HEADERS, bulkToCsv, parseBulkCsv, runBulkPayroll, splitCsvLine } from './bulk-payroll';
-import { calculatePaycheck } from './withholding-2026';
+import { calculatePaycheck } from './withholding';
 
 describe('splitCsvLine', () => {
   it('handles quotes, embedded commas, tabs and semicolons', () => {

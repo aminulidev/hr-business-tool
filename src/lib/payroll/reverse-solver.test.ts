@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { solveHourlyRateForNet, solveSalaryForNet, targetPerPeriod } from './reverse-solver';
-import { calculatePaycheck, type PaycheckInput } from './withholding-2026';
+import { calculatePaycheck, type PaycheckInput } from './withholding';
 import { STATE_CODES } from './state-pages';
 
 const builder =

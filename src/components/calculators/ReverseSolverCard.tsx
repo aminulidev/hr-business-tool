@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { formatCurrency } from '@/lib/utils';
-import { PERIODS_PER_YEAR, type PaycheckInput, type PayFrequency } from '@/lib/payroll/withholding-2026';
+import { PERIODS_PER_YEAR, type PaycheckInput, type PayFrequency } from '@/lib/payroll/withholding';
 import { solveHourlyRateForNet, solveSalaryForNet, targetPerPeriod, type TargetBasis } from '@/lib/payroll/reverse-solver';
 
 interface ReverseSolverCardProps {

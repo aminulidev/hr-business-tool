@@ -191,9 +191,12 @@ export default function HubPage() {
     return groups;
   }, [filteredCalculators, orderedActiveCategories, searchResults]);
 
+  // The page wrapper and the hero carry initial={false}: they are visible in the server HTML.
+  // Starting them at opacity 0 kept the whole home page blank until React had hydrated, which on a
+  // phone was the slowest largest-paint of any flagship page. The card grids below still animate in.
   return (
     <motion.div
-      initial={{ opacity: 0 }}
+      initial={false}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.35 }}
       className="py-6 sm:py-10"
@@ -201,7 +204,7 @@ export default function HubPage() {
       {/* Hero Section */}
       <div className="text-center mb-8 sm:mb-10 px-4">
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-semibold mb-4"
         >
@@ -210,7 +213,7 @@ export default function HubPage() {
         </motion.div>
 
         <motion.h1
-          initial={{ opacity: 0, y: 14 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.04 }}
           className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-3.5"
@@ -222,7 +225,7 @@ export default function HubPage() {
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 14 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08 }}
           className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-lg mb-6"
@@ -233,7 +236,7 @@ export default function HubPage() {
 
         {/* Search Bar — Flex layout ensures Search icon is never covered by backdrop-blur */}
         <motion.div
-          initial={{ opacity: 0, y: 14 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.12 }}
           className="max-w-2xl mx-auto relative group"

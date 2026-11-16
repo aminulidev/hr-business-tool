@@ -5,8 +5,14 @@
 // federal unemployment tax (FUTA), state unemployment insurance (SUI) at the
 // state's standard new-employer rate, and the employer share of mandatory state
 // paid-leave programs. Workers' compensation, health insurance, retirement
-// match and local employer payroll taxes are not modelled — they vary by
+// match and local employer payroll taxes are not modeled — they vary by
 // employer, not by state.
+//
+// Tax years: the FICA match follows the tax year asked for (`taxYear`, default
+// TAX_YEAR), because the Social Security wage base changes every January. FUTA,
+// state unemployment and the paid-leave employer shares below are 2026 figures
+// (EMPLOYER_STATE_FIGURES_YEAR) and are applied to any year until the states
+// publish new ones; the UI says so when a later year is selected.
 //
 // Sources (figures as of November 2026):
 // - FUTA: IRS Tax Topic 759 — 6.0% on the first $7,000, 5.4% credit, 0.6% net.
@@ -24,21 +30,13 @@
 //   MN DEED Paid Leave (0.88% total, 0.44% employer), NJ TDI new-employer 0.5%.
 // ---------------------------------------------------------------------------
 
-import {
-  CO_FAMLI_RATE,
-  MEDICARE_RATE,
-  MN_PAID_LEAVE_RATE,
-  PERIODS_PER_YEAR,
-  SOCIAL_SECURITY_RATE,
-  SOCIAL_SECURITY_WAGE_BASE,
-  WA_PFML_EMPLOYEE_RATE,
-  type PaycheckLine,
-  type PaycheckState,
-  type PayFrequency,
-  type StateCode,
-} from './withholding-2026';
+import { getTaxYear, PERIODS_PER_YEAR, type PaycheckLine, type PaycheckState, type PayFrequency, type StateCode } from './withholding';
+import { CO_FAMLI_RATE, FEDERAL_2026, MN_PAID_LEAVE_RATE, WA_PFML_EMPLOYEE_RATE } from './withholding/2026';
 import type { SeoSource } from '@/lib/seo-data/types';
 import { SRC } from '@/lib/seo-data/sources';
+
+/** The year the FUTA, state unemployment and paid-leave employer figures in this file were published for */
+export const EMPLOYER_STATE_FIGURES_YEAR = 2026;
 
 export const FUTA_RATE = 0.06;
 export const FUTA_CREDIT = 0.054;
@@ -88,7 +86,8 @@ export interface StateEmployerProfile {
 }
 
 const DOL_LAWS = SRC.dolStateUiLaws;
-const leaveCap = SOCIAL_SECURITY_WAGE_BASE;
+// 2026 paid-leave programs stop at the 2026 Social Security wage base
+const leaveCap = FEDERAL_2026.socialSecurityWageBase;
 
 export const STATE_EMPLOYER_TAXES: Record<StateCode, StateEmployerProfile> = {
   CA: {
@@ -257,6 +256,8 @@ export interface EmployerCostInput {
    * LA, MN) and for 'none' / 'other', where no state table applies.
    */
   suiRate?: number | null;
+  /** Tax year for the FICA match (Social Security wage base); omit for TAX_YEAR */
+  taxYear?: number;
 }
 
 export interface EmployerCostResult {
@@ -292,6 +293,8 @@ export function calculateEmployerCost(input: EmployerCostInput): EmployerCostRes
   const wages = Math.min(gross, Math.max(0, input.ficaWagesAnnual));
   const profile = isStateCode(input.state) ? STATE_EMPLOYER_TAXES[input.state] : null;
 
+  const federal = getTaxYear(input.taxYear).federal;
+
   const futaReduction = isStateCode(input.state) ? (FUTA_CREDIT_REDUCTION[input.state] ?? 0) : 0;
   const futaRate = FUTA_NET_RATE + futaReduction;
 
@@ -299,9 +302,9 @@ export function calculateEmployerCost(input: EmployerCostInput): EmployerCostRes
     {
       key: 'er-social-security',
       label: 'Social Security match (6.2%)',
-      annual: Math.min(wages, SOCIAL_SECURITY_WAGE_BASE) * SOCIAL_SECURITY_RATE,
+      annual: Math.min(wages, federal.socialSecurityWageBase) * federal.socialSecurityRate,
     },
-    { key: 'er-medicare', label: 'Medicare match (1.45%)', annual: wages * MEDICARE_RATE },
+    { key: 'er-medicare', label: 'Medicare match (1.45%)', annual: wages * federal.medicareRate },
     {
       key: 'futa',
       label:

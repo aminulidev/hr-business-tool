@@ -11,10 +11,10 @@ import {
 import AppShell from '@/components/layout/AppShell';
 import { getCategoryHubByName } from '@/lib/category-hubs';
 import CalculatorLayoutServer from '@/components/calculators/CalculatorLayoutServer';
-import { calculatorComponents } from '@/lib/registry/components';
+import CalculatorRenderer from '@/components/calculators/CalculatorRenderer';
 import type { CalculatorSeoData } from '@/lib/seo-data/types';
 import { getAuthor } from '@/lib/authors';
-import { TAX_YEAR } from '@/lib/payroll/withholding-2026';
+import { TAX_YEAR } from '@/lib/payroll/withholding';
 
 export function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -100,12 +100,6 @@ export default async function CalculatorPage({
     notFound();
   }
 
-  const CalculatorComponent = calculatorComponents[calc.slug];
-
-  if (!CalculatorComponent) {
-    notFound();
-  }
-
   let seoData: CalculatorSeoData | null = null;
   try {
     const mod = await import(`@/lib/seo-data/${slug}`);
@@ -159,10 +153,10 @@ export default async function CalculatorPage({
           reviewNotes={calc.reviewNotes}
           taxYear={taxYear}
         >
-          <CalculatorComponent />
+          <CalculatorRenderer slug={calc.slug} />
         </CalculatorLayoutServer>
       ) : (
-        <CalculatorComponent />
+        <CalculatorRenderer slug={calc.slug} />
       )}
     </AppShell>
   );

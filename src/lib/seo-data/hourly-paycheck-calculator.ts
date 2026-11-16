@@ -14,7 +14,7 @@ import {
   type FilingStatus,
   type PaycheckInput,
   type PayFrequency,
-} from '@/lib/payroll/withholding-2026';
+} from '@/lib/payroll/withholding';
 import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
 import { buildEmployerCostContent } from '@/lib/payroll/employer-cost-content';
 import { solveHourlyRateForNet } from '@/lib/payroll/reverse-solver';

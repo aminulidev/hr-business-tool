@@ -1,38 +1,40 @@
 import { NextResponse } from 'next/server';
-import { CONTACT_EMAIL } from '@/lib/calculator-meta';
+import { emailOwner, emailShell, escapeHtml, escapeMultiline, getResend } from '@/lib/server/mailer';
 
-let resendInstance: any = null;
-async function getResend() {
-  if (resendInstance) return resendInstance;
-  if (!process.env.RESEND_API_KEY) return null;
-  const { Resend } = await import('resend');
-  resendInstance = new Resend(process.env.RESEND_API_KEY);
-  return resendInstance;
-}
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const str = (v: unknown, max: number) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 
 export async function POST(req: Request) {
+  let body: Record<string, unknown>;
   try {
-    const { name, email, subject, message } = await req.json();
-    if (!name || !email || !subject || !message) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-    }
-    const resend = await getResend();
-    if (!resend) {
-      console.warn('[contact] RESEND_API_KEY not set — submission logged:', { name, email, subject });
+    body = (await req.json()) as Record<string, unknown>;
+  } catch {
+    return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+  }
+  const name = str(body?.name, 120);
+  const email = str(body?.email, 254);
+  const subject = str(body?.subject, 200).replace(/[\r\n]+/g, ' ');
+  const message = str(body?.message, 5000);
+  if (!name || !email || !subject || !message) return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+  if (!EMAIL_REGEX.test(email)) return NextResponse.json({ error: 'Please provide a valid email address' }, { status: 400 });
+
+  try {
+    if (!(await getResend())) {
+      // Local development without a key: there is nowhere to send it.
+      console.warn('[contact] RESEND_API_KEY not set — submission logged:', { name, subject });
       return NextResponse.json({ success: true, message: 'Submission received.' });
     }
-    const { data, error } = await resend.emails.send({
-      from: 'QuickBizCalc <onboarding@resend.dev>',
-      to: CONTACT_EMAIL,
+    // Everything the visitor typed is escaped before it goes into the HTML email.
+    const sent = await emailOwner({
       subject: `[Contact Form] ${subject}`,
       replyTo: email,
-      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;border:1px solid #e2e8f0;border-radius:8px"><h2 style="color:#059669;border-bottom:2px solid #059669;padding-bottom:10px">New Contact Submission</h2><p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Subject:</strong> ${subject}</p><p><strong>Message:</strong></p><div style="background:#f8fafc;padding:15px;border-radius:4px;border-left:4px solid #cbd5e1">${message.replace(/\n/g, '<br>')}</div></div>`,
+      html: emailShell(
+        'New Contact Submission',
+        `<p><strong>Name:</strong> ${escapeHtml(name)}</p><p><strong>Email:</strong> ${escapeHtml(email)}</p><p><strong>Subject:</strong> ${escapeHtml(subject)}</p><p><strong>Message:</strong></p><div style="background:#f8fafc;padding:15px;border-radius:4px;border-left:4px solid #cbd5e1">${escapeMultiline(message)}</div>`,
+      ),
     });
-    if (error) {
-      console.error('Resend Error:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-    return NextResponse.json({ success: true, data });
+    if (!sent) return NextResponse.json({ error: 'Your message could not be sent. Please try again later.' }, { status: 502 });
+    return NextResponse.json({ success: true });
   } catch (err) {
     console.error('Contact API Error:', err);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

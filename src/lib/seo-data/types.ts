@@ -50,7 +50,7 @@ export interface SeoBenchmarkTable {
 export interface SeoSource {
   label: string;
   url: string;
-  /** Issuing agency or organisation, e.g. "Internal Revenue Service" */
+  /** Issuing agency or organization, e.g. "Internal Revenue Service" */
   publisher?: string;
   /** What this page takes from the source, one short clause */
   note?: string;

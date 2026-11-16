@@ -34,23 +34,28 @@ import { useCalcHistory } from '@/hooks/useCalcHistory';
 import { formatCurrency } from '@/lib/utils';
 import {
   calculatePaycheck,
+  getTaxYear,
+  isStateLineKey,
+  parseTaxYear,
   PERIODS_PER_YEAR,
+  stateRulesYear,
   TAX_YEAR,
+  taxYearNote,
   type FilingStatus,
   type PayFrequency,
-  W4_CHILD_CREDIT,
-  W4_OTHER_DEPENDENT_CREDIT,
   type PaycheckInput,
   type PaycheckResult,
   type PaycheckState,
   type StateCode,
+  type TaxYear,
   type W4Adjustments,
-} from '@/lib/payroll/withholding-2026';
+} from '@/lib/payroll/withholding';
 import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
 import EmployerCostPanel, { ResultViewToggle, type ResultView } from './EmployerCostPanel';
 import ReverseSolverCard from './ReverseSolverCard';
 import PaycheckScenarioCompare from './PaycheckScenarioCompare';
 import PayStubDialog from './PayStubDialog';
+import { TaxYearNotice, TaxYearSwitch } from './TaxYearSwitch';
 import BulkPayrollPanel from './BulkPayrollPanel';
 import { useSearchParam } from '@/hooks/useSearchParam';
 import { calculateEmployerCost } from '@/lib/payroll/employer-cost-2026';
@@ -111,6 +116,8 @@ interface HistoryInputs {
   benefitsPerPeriod: string;
   otherDeductions: string;
   nycResident: string;
+  /** Absent in entries saved before the tax-year switch existed */
+  taxYear?: string;
 }
 
 export type PaycheckMode = 'hourly' | 'salary';
@@ -128,6 +135,8 @@ interface PaycheckDefaults {
   benefitsPerPeriod: string;
   otherDeductions: string;
   nycResident: boolean;
+  /** ?year=2027 opens another selectable tax year */
+  taxYear: TaxYear;
   /** ?view=employer opens the employer-cost side of the result */
   view: ResultView;
   /** Scenario B from b_* params, or null */
@@ -142,12 +151,14 @@ interface PaycheckDefaults {
 }
 
 /** Steps 2–4 as the engine wants them; undefined when every field is blank */
-function w4FromInputs(multipleJobs: boolean, children: string, dependents: string, otherIncome: string, deductions: string, extra: string): W4Adjustments | undefined {
+function w4FromInputs(taxYear: number, multipleJobs: boolean, children: string, dependents: string, otherIncome: string, deductions: string, extra: string): W4Adjustments | undefined {
+  // Step 3 amounts of the selected year
+  const federal = getTaxYear(taxYear).federal;
   const kids = parseInt(children || '0', 10) || 0;
   const deps = parseInt(dependents || '0', 10) || 0;
   const w4: W4Adjustments = {
     multipleJobs,
-    dependentsCredit: kids * W4_CHILD_CREDIT + deps * W4_OTHER_DEPENDENT_CREDIT,
+    dependentsCredit: kids * federal.w4ChildCredit + deps * federal.w4OtherDependentCredit,
     otherIncome: parseFloat(otherIncome || '0') || 0,
     deductions: parseFloat(deductions || '0') || 0,
     extraWithholdingPerPeriod: parseFloat(extra || '0') || 0,
@@ -182,6 +193,7 @@ function readDefaults(params: URLSearchParams | null): PaycheckDefaults {
     benefitsPerPeriod: '',
     otherDeductions: '',
     nycResident: false,
+    taxYear: TAX_YEAR,
     view: 'employee',
     compare: null,
     w4MultipleJobs: false,
@@ -220,6 +232,7 @@ function readDefaults(params: URLSearchParams | null): PaycheckDefaults {
   if (qBen) d.benefitsPerPeriod = qBen;
   if (qOther) d.otherDeductions = qOther;
   if (qNyc === '1') d.nycResident = true;
+  d.taxYear = parseTaxYear(params.get('year'));
   if (params.get('view') === 'employer') d.view = 'employer';
   if (params.get('w4_2') === '1') d.w4MultipleJobs = true;
   const w4num = (k: string) => {
@@ -256,6 +269,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
   const [allowances, setAllowances] = useState(defaults.allowances);
   const [customStateRate, setCustomStateRate] = useState('5');
   const [nycResident, setNycResident] = useState(defaults.nycResident);
+  const [taxYear, setTaxYear] = useState<TaxYear>(defaults.taxYear);
   const [retirementPct, setRetirementPct] = useState(defaults.retirementPct);
   const [benefitsPerPeriod, setBenefitsPerPeriod] = useState(defaults.benefitsPerPeriod);
   const [otherDeductions, setOtherDeductions] = useState(defaults.otherDeductions);
@@ -278,7 +292,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
   const [w4Open, setW4Open] = useState(
     defaults.w4MultipleJobs || !!(defaults.w4Children || defaults.w4Dependents || defaults.w4OtherIncome || defaults.w4Deductions || defaults.w4Extra),
   );
-  const w4 = w4FromInputs(w4MultipleJobs, w4Children, w4Dependents, w4OtherIncome, w4Deductions, w4Extra);
+  const w4 = w4FromInputs(taxYear, w4MultipleJobs, w4Children, w4Dependents, w4OtherIncome, w4Deductions, w4Extra);
 
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<HistoryInputs>(historySlug);
 
@@ -369,6 +383,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
       preTaxBenefitsAnnual: benefits * periods,
       otherDeductionsPerPeriod: other,
       w4,
+      taxYear,
     };
 
     const r = calculatePaycheck({
@@ -404,6 +419,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
     otherDeductions,
     page,
     w4,
+    taxYear,
   ]);
 
   // Reverse solver (Phase 16.1): the current settings applied to any candidate hourly rate
@@ -428,6 +444,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
       preTaxBenefitsAnnual: (parseFloat(benefitsPerPeriod || '0') || 0) * periods,
       otherDeductionsPerPeriod: parseFloat(otherDeductions || '0') || 0,
       w4,
+      taxYear,
     };
   };
   const applySolvedRate = (rate: number) => {
@@ -474,6 +491,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
         benefitsPerPeriod,
         otherDeductions,
         nycResident: nycResident ? '1' : '0',
+        taxYear: String(taxYear),
       },
       isSalary
         ? `${formatCurrency(parseFloat(annualSalary))}/yr → ${formatCurrency(result.netPerPeriod)} take-home per paycheck`
@@ -495,6 +513,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
     setBenefitsPerPeriod(inputs.benefitsPerPeriod ?? '');
     setOtherDeductions(inputs.otherDeductions);
     setNycResident(inputs.nycResident === '1');
+    setTaxYear(parseTaxYear(inputs.taxYear));
   };
 
   const handleTryExample = () => {
@@ -567,6 +586,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
     if (w4Deductions) url.searchParams.set('w4_b', w4Deductions);
     if (w4Extra) url.searchParams.set('w4_c', w4Extra);
     if (state === 'NY' && nycResident) url.searchParams.set('nyc', '1');
+    if (taxYear !== TAX_YEAR) url.searchParams.set('year', String(taxYear));
     if (view === 'employer') url.searchParams.set('view', 'employer');
     writeScenarioParams(url, scenario, isSalary ? 'salary' : 'hourly');
 
@@ -579,6 +599,10 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
     setTimeout(() => setLinkCopied(false), 2500);
   };
 
+  const stateName = state === 'none' || state === 'other' ? null : page!.name;
+  // What is not final about the selected year's figures; null for a finished year
+  const yearNote = result ? taxYearNote(result.taxYear, state, stateName, result.deductions.some((d) => isStateLineKey(d.key))) : null;
+
   const handleCopySummary = () => {
     if (!result) return;
     const stateLabel =
@@ -587,7 +611,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
       ? `Annual Salary: ${formatCurrency(parseFloat(annualSalary))}`
       : `Hourly Rate: ${formatCurrency(parseFloat(hourlyRate))}/hr (${regularHours} regular + ${overtimeHours || 0} OT hrs/week)`;
     const summary = [
-      `--- ${isSalary ? 'Payroll' : 'Hourly Paycheck'} Summary (QuickBizCalc, ${TAX_YEAR}) ---`,
+      `--- ${isSalary ? 'Payroll' : 'Hourly Paycheck'} Summary (QuickBizCalc, ${result.taxYear}${result.taxYear > TAX_YEAR ? ' preview' : ''}) ---`,
       payLine,
       `Pay Frequency: ${FREQ_LABELS[payFrequency]}`,
       `Filing Status: ${FILING_LABELS[filingStatus]}`,
@@ -597,6 +621,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
       `Take-Home Pay / Paycheck: ${formatCurrency(result.netPerPeriod)}`,
       `Take-Home Pay / Year: ${formatCurrency(result.netAnnual)}`,
       ...(isSalary ? [] : [`Take-Home per Hour Worked: ${formatCurrency(result.netPerHour)}`]),
+      ...(yearNote ? [`Note: ${yearNote.title} ${yearNote.sentences.join(' ')}`] : []),
       `Calculated at: https://www.quickbizcalc.com/calculators/${historySlug}`,
     ].join('\n');
 
@@ -612,7 +637,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
       ? 'no state income tax'
       : state === 'other'
         ? `a flat ${customStateRate}% state income tax estimate`
-        : `${page!.name} ${TAX_YEAR} withholding tables`;
+        : `${page!.name} ${stateRulesYear(taxYear, state)} withholding tables`;
 
   const totalWeeklyHours = Math.max(1, (parseFloat(regularHours) || 0) + (parseFloat(overtimeHours) || 0));
   const totalAnnualHours = isSalary ? SALARY_HOURS_PER_YEAR : totalWeeklyHours * 52;
@@ -623,14 +648,15 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
         payFrequency,
         payFrequencyLabel: FREQ_LABELS[payFrequency].replace(/ \(.*\)$/, ''),
         stateName: state === 'none' ? 'No state income tax' : state === 'other' ? `flat ${customStateRate}% state rate` : page!.name,
-        taxYear: TAX_YEAR,
+        taxYear: result.taxYear,
+        taxYearNote: yearNote?.sentences.join(' '),
         isSalary,
         hourlyRate: isSalary ? (parseFloat(annualSalary) || 0) / SALARY_HOURS_PER_YEAR : parseFloat(hourlyRate) || 0,
         regularHoursPerWeek: isSalary ? SALARY_HOURS_PER_WEEK : parseFloat(regularHours) || 0,
         overtimeHoursPerWeek: isSalary ? 0 : parseFloat(overtimeHours || '0') || 0,
         annualSalary: isSalary ? parseFloat(annualSalary) || 0 : undefined,
         result,
-        employer: calculateEmployerCost({ state, grossAnnual: result.grossAnnual, ficaWagesAnnual: result.ficaWagesAnnual, payFrequency, hoursPerYear: totalAnnualHours }),
+        employer: calculateEmployerCost({ state, grossAnnual: result.grossAnnual, ficaWagesAnnual: result.ficaWagesAnnual, payFrequency, hoursPerYear: totalAnnualHours, taxYear: result.taxYear }),
         sourceUrl: `https://www.quickbizcalc.com/calculators/${historySlug}`,
       }
     : null;
@@ -711,6 +737,8 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
                 </button>
               ))}
         </div>
+
+        <TaxYearSwitch year={taxYear} onChange={setTaxYear} />
 
         {/* Pay Inputs */}
         {isSalary ? (
@@ -828,7 +856,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
               <SelectContent>
                 {EXACT_STATES.map((code) => (
                   <SelectItem key={code} value={code}>
-                    {STATE_PAYCHECK_PAGES[code].name} (exact {TAX_YEAR} tables)
+                    {STATE_PAYCHECK_PAGES[code].name} (exact {stateRulesYear(taxYear, code)} tables)
                   </SelectItem>
                 ))}
                 <SelectItem value="none">No state income tax (AK, FL, NV, NH, SD, TN, TX, WA, WY)</SelectItem>
@@ -995,12 +1023,12 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
                 <div className="space-y-1.5">
                   <Label htmlFor="w4Kids" className="text-xs text-muted-foreground">Step 3: children under 17</Label>
                   <Input id="w4Kids" type="number" min="0" max="20" step="1" placeholder="0" value={w4Children} onChange={(e) => setW4Children(e.target.value)} className="text-sm" />
-                  <p className="text-xs text-muted-foreground">× {formatCurrency(W4_CHILD_CREDIT)}/yr</p>
+                  <p className="text-xs text-muted-foreground">× {formatCurrency(getTaxYear(taxYear).federal.w4ChildCredit)}/yr</p>
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="w4Dep" className="text-xs text-muted-foreground">Other dependents</Label>
                   <Input id="w4Dep" type="number" min="0" max="20" step="1" placeholder="0" value={w4Dependents} onChange={(e) => setW4Dependents(e.target.value)} className="text-sm" />
-                  <p className="text-xs text-muted-foreground">× {formatCurrency(W4_OTHER_DEPENDENT_CREDIT)}/yr</p>
+                  <p className="text-xs text-muted-foreground">× {formatCurrency(getTaxYear(taxYear).federal.w4OtherDependentCredit)}/yr</p>
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="w4a" className="text-xs text-muted-foreground">4(a) other income / yr</Label>
@@ -1073,7 +1101,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
           {view === 'employer' && (
             <EmployerCostPanel
               state={state}
-              stateName={state === 'none' || state === 'other' ? null : page!.name}
+              stateName={stateName}
               paycheck={result}
               payFrequency={payFrequency}
               hoursPerYear={totalAnnualHours}
@@ -1086,7 +1114,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
             <div className="text-center space-y-1">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-semibold mb-1">
                 <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Live {TAX_YEAR} Paycheck Estimate
+                Live {result.taxYear} Paycheck Estimate{result.taxYear > TAX_YEAR ? ' (preview)' : ''}
               </div>
               <p className="text-sm text-muted-foreground font-medium">Net Take-Home Pay per Paycheck</p>
               <p className="text-4xl sm:text-5xl font-extrabold text-emerald-600" data-result-primary>
@@ -1098,6 +1126,8 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
                 <strong className="text-foreground">{formatCurrency(result.netPerHour)}</strong>/hr net after taxes
               </p>
             </div>
+
+            <TaxYearNotice note={yearNote} />
 
             {/* Summary KPI Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -1292,7 +1322,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
               <div className="flex items-start gap-2 text-xs text-muted-foreground">
                 <Info className="h-4 w-4 shrink-0 mt-0.5" />
                 <p>
-                  Estimate based on the {TAX_YEAR} IRS percentage method for a standard W-4 and {resultStateNote}. Extra
+                  Estimate based on the {result.taxYear} IRS percentage method for a standard W-4 and {resultStateNote}. Extra
                   W-4 withholding, local taxes, and employer-specific deductions will change your actual paycheck.
                 </p>
               </div>

@@ -40,7 +40,7 @@ function ChurnModeView() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <PeriodField value={s.period} onChange={s.setPeriod} />
         <Field id="ch-start" label="Customers at start" value={s.startC} onChange={s.setStartC} step="1" />
-        <Field id="ch-lost" label="Customers lost" value={s.lostC} onChange={s.setLostC} step="1" help="Cancelled or failed to renew" />
+        <Field id="ch-lost" label="Customers lost" value={s.lostC} onChange={s.setLostC} step="1" help="Canceled or failed to renew" />
         <Field id="ch-new" label="New customers added" value={s.newC} onChange={s.setNewC} step="1" help="Not in the churn denominator" />
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -105,7 +105,7 @@ function RetentionModeView() {
       {r && start > 0 && (
         <Result>
           <Headline label={`Gross revenue retention${m !== 1 ? ` (${m}-month)` : ''}`} value={pct(r.grrPct)}>
-            Net revenue retention <strong className="text-foreground">{pct(r.nrrPct)}</strong> · annualised GRR <strong className="text-foreground">{pct(r.annualGrrPct)}</strong> · annualised NRR <strong className="text-foreground">{pct(r.annualNrrPct)}</strong>
+            Net revenue retention <strong className="text-foreground">{pct(r.nrrPct)}</strong> · annualized GRR <strong className="text-foreground">{pct(r.annualGrrPct)}</strong> · annualized NRR <strong className="text-foreground">{pct(r.annualNrrPct)}</strong>
           </Headline>
           <div className="rounded-xl bg-background border border-border/50 overflow-hidden">
             <table className="w-full text-sm"><tbody className="divide-y divide-border/30">
@@ -117,7 +117,7 @@ function RetentionModeView() {
             <Kpi label="NRR" value={pct(r.nrrPct)} sub={r.nrrPct > 100 ? 'above 100%: the base grows on its own' : 'below 100%: growth must come from new logos'} color={r.nrrPct >= 100 ? 'text-emerald-600' : 'text-amber-600'} />
             <Kpi label="Expansion needed for 100% NRR" value={usd(Math.max(0, num(s.churned) + num(s.contraction)))} sub={`you have ${usd(num(s.expansion))}`} color="text-blue-600" />
           </div>
-          <Note><ShieldCheck className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />GRR = (starting MRR − churned − contraction) ÷ starting MRR; NRR adds expansion back. GRR shows how leaky the bucket is; NRR shows whether expansion fills it faster than it leaks. Public SaaS companies typically report NRR of 100–120% and GRR in the high 80s to mid 90s; compare like for like on period length, which is why the figures are annualised here.</Note>
+          <Note><ShieldCheck className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />GRR = (starting MRR − churned − contraction) ÷ starting MRR; NRR adds expansion back. GRR shows how leaky the bucket is; NRR shows whether expansion fills it faster than it leaks. Public SaaS companies typically report NRR of 100–120% and GRR in the high 80s to mid 90s; compare like for like on period length, which is why the figures are annualized here.</Note>
         </Result>
       )}
       <CalcHistoryPanel history={history} onRestore={s.restore} onClear={clearHistory} onDelete={deleteEntry} />

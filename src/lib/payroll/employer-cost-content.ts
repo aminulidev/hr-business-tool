@@ -5,7 +5,7 @@
 // calculator can never disagree.
 // ---------------------------------------------------------------------------
 
-import { calculatePaycheck, SOCIAL_SECURITY_WAGE_BASE, TAX_YEAR, type PayFrequency } from './withholding-2026';
+import { calculatePaycheck, SOCIAL_SECURITY_WAGE_BASE, TAX_YEAR, type PayFrequency } from './withholding';
 import { STATE_CODES, STATE_PAYCHECK_PAGES } from './state-pages';
 import {
   calculateEmployerCost,

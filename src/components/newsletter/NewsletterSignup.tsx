@@ -1,8 +1,11 @@
 'use client';
 
 /**
- * NewsletterSignup — weekly "Payroll Tip Tuesday" newsletter signup form.
- * Appears on calculator pages and the homepage. Submits to /api/newsletter.
+ * NewsletterSignup — sign-up form for the occasional "payroll changes" email
+ * (at most one a month). Appears in the footer and on /newsletter. Submits to
+ * /api/newsletter, which stores the address as a Resend contact. The copy here
+ * must only promise what is actually sent: no subscriber counts, no schedule
+ * the site does not keep.
  * Persists submitted state in localStorage so the form doesn't reappear
  * for users who have already subscribed.
  */
@@ -12,6 +15,7 @@ import { Mail, Check, Loader2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { track } from '@/lib/analytics';
 
 const STORAGE_KEY = 'qbc_newsletter_subscribed_v1';
 
@@ -27,6 +31,9 @@ export default function NewsletterSignup({
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [dismissed, setDismissed] = useState(false);
+  // Honeypot: hidden from people, filled in by form-filling bots; the API discards those sign-ups.
+  const [website, setWebsite] = useState('');
+  const [confirmationSent, setConfirmationSent] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -50,16 +57,18 @@ export default function NewsletterSignup({
       const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: window.location.pathname }),
+        body: JSON.stringify({ email, source: window.location.pathname, website }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to subscribe');
 
+      setConfirmationSent(Boolean(data.confirmationSent));
+      if (!data.alreadySubscribed) track('newsletter_signup', { placement: variant });
       setStatus('success');
       try {
         localStorage.setItem(STORAGE_KEY, 'true');
       } catch {}
-      toast.success('Subscribed! Check your inbox to confirm.', { duration: 4000 });
+      toast.success(data.alreadySubscribed ? 'You are already subscribed.' : 'Subscribed. You are on the list.', { duration: 4000 });
     } catch (err: any) {
       setStatus('error');
       toast.error(err.message || 'Subscription failed. Please try again.');
@@ -85,7 +94,7 @@ export default function NewsletterSignup({
         <div>
           <p className="text-sm font-semibold text-foreground">You&apos;re subscribed!</p>
           <p className="text-xs text-muted-foreground">
-            Check your inbox for a confirmation. Your first tip arrives next Tuesday.
+            {confirmationSent ? 'A confirmation email is on its way. ' : ''}We email when payroll rules, rates or deadlines change: at most once a month.
           </p>
         </div>
       </div>
@@ -109,17 +118,18 @@ export default function NewsletterSignup({
           <div className="flex items-center gap-2 mb-2">
             <Mail className="size-5" />
             <span className="text-xs font-semibold uppercase tracking-wider text-emerald-100">
-              Payroll Tip Tuesday
+              Payroll updates
             </span>
           </div>
           <h3 className="text-xl sm:text-2xl font-bold mb-2">
-            Get one actionable payroll tip every Tuesday
+            Payroll changes, when they happen
           </h3>
           <p className="text-sm text-emerald-50/90 mb-4">
-            Join 2,000+ small business owners and HR managers. Free, no spam, unsubscribe anytime.
-            Topics include: overtime compliance, bonus tax strategy, retirement plan options, and state tax changes.
+            Rate changes, new thresholds and filing deadlines for US payroll, plus new calculators.
+            At most one email a month. Free, and you can unsubscribe anytime.
           </p>
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
+            <input type="text" name="website" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
             <Input
               type="email"
               value={email}
@@ -163,12 +173,13 @@ export default function NewsletterSignup({
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-foreground mb-1">
-            Get weekly payroll tips
+            Get payroll change alerts
           </p>
           <p className="text-xs text-muted-foreground mb-3">
-            One tip every Tuesday. Free. Unsubscribe anytime.
+            At most one email a month. Free. Unsubscribe anytime.
           </p>
           <form onSubmit={handleSubmit} className="flex gap-2">
+            <input type="text" name="website" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
             <Input
               type="email"
               value={email}

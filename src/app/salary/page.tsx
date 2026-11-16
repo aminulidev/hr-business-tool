@@ -3,7 +3,7 @@ import Link from 'next/link';
 import AppShell from '@/components/layout/AppShell';
 import { SALARY_TIERS, buildSalaryPageData } from '@/lib/salary-pages';
 import { SITE_URL, SITE_NAME } from '@/lib/calculator-meta';
-import { TAX_YEAR } from '@/lib/payroll/withholding-2026';
+import { TAX_YEAR } from '@/lib/payroll/withholding';
 import { ArrowRight, Clock, DollarSign, Landmark, Wallet } from 'lucide-react';
 
 export const metadata: Metadata = {

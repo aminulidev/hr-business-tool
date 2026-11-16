@@ -315,7 +315,7 @@ export const SRC = {
     label: 'OPM, Computing Hourly Rates of Pay Using the 2,087-Hour Divisor',
     url: 'https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/computing-hourly-rates-of-pay-using-the-2087-hour-divisor/',
     publisher: OPM,
-    note: 'Why 2,080 (52 x 40) and 2,087 are both used to annualise an hourly wage',
+    note: 'Why 2,080 (52 x 40) and 2,087 are both used to annualize an hourly wage',
   },
   blsEci: {
     label: 'BLS, Employment Cost Index',

@@ -24,7 +24,7 @@ import {
 
 describe('computeMrr', () => {
   const r = computeMrr(MRR_DEFAULTS)!;
-  it('normalises annual plans to monthly and totals MRR, ARR and ARPA', () => {
+  it('normalizes annual plans to monthly and totals MRR, ARR and ARPA', () => {
     expect(r.plans[2].mrrPerCustomer).toBe(249); // $2,988 ÷ 12
     expect(r.plans[2].acvPerCustomer).toBe(2988);
     expect(r.plans[3].mrr).toBe(18000); // 6 × $36,000 ÷ 12
@@ -72,7 +72,7 @@ describe('computeMovements', () => {
     expect(r.netRevenueChurnPct).toBeCloseTo(-1.5, 6);
     expect(r.bridge.reduce((s, b) => (b.kind === 'start' || b.kind === 'end' ? s : s + b.amount), 0)).toBe(8000);
   });
-  it('annualises growth and reports doubling time', () => {
+  it('annualizes growth and reports doubling time', () => {
     expect(r.annualizedGrowthPct).toBeCloseTo((Math.pow(1.08, 12) - 1) * 100, 6);
     expect(r.monthsToDouble).toBe(9); // ln 2 ÷ ln 1.08 = 9.006, shown to one decimal
     expect(computeMovements({ ...MOVEMENTS_DEFAULTS, newMrr: 0, upsellMrr: 0, seatMrr: 0, crossSellMrr: 0, reactivationMrr: 0 })!.monthsToDouble).toBeNull();
@@ -119,7 +119,7 @@ describe('computePricing', () => {
 
 describe('computeChurn', () => {
   const r = computeChurn(CHURN_DEFAULTS)!;
-  it('logo churn, annualisation and lifetime', () => {
+  it('logo churn, annualization and lifetime', () => {
     expect(r.logoChurnPct).toBeCloseTo(4, 6);
     expect(r.endCustomers).toBe(515);
     expect(r.monthlyLogoChurnPct).toBeCloseTo(4, 6);
@@ -135,7 +135,7 @@ describe('computeChurn', () => {
     expect(r.annualGrrPct).toBeCloseTo(Math.pow(0.958, 12) * 100, 6);
     expect(r.churnerSizeRatio).toBe(0.75); // $150 per lost customer vs $200 average
   });
-  it('converts a quarterly figure to monthly before annualising', () => {
+  it('converts a quarterly figure to monthly before annualizing', () => {
     const q = computeChurn({ ...CHURN_DEFAULTS, periodMonths: 3, lostCustomers: 60 })!;
     expect(q.logoChurnPct).toBeCloseTo(12, 6);
     expect(q.monthlyLogoChurnPct).toBeCloseTo((1 - Math.pow(0.88, 1 / 3)) * 100, 6);

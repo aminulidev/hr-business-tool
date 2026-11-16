@@ -21,7 +21,7 @@ const seoData = {
     'Account for any deductions — subtract broker fees, processing fees, or clawbacks',
     'Add base salary if applicable — combine fixed and variable pay for total compensation',
     'Splitting a commission? The "Commission Split" tab takes the sale, the rate, the brokerage or house cut and flat fees off the top, an optional manager override, and up to five parties with their shares, and shows what each person actually receives and what share of the sale that is.',
-    'Modelling a comp plan? "Bonus & OTE" combines base salary, commission to quota, an accelerator above quota, a bonus with a threshold and kickers, and SPIFFs into on-target earnings, pay mix and an earnings curve from 50% to 150% attainment.',
+    'Modeling a comp plan? "Bonus & OTE" combines base salary, commission to quota, an accelerator above quota, a bonus with a threshold and kickers, and SPIFFs into on-target earnings, pay mix and an earnings curve from 50% to 150% attainment.',
   ],
 
   formula: `Simple: Commission = Sales Amount × (Commission Rate / 100)
@@ -155,7 +155,7 @@ OTE = Base + Quota × Rate + Bonus at quota + SPIFFs;  above quota the rate is �
     {
       question: 'How do I calculate commission on a returned sale?',
       answer:
-        'When a sale is returned or cancelled, the commission previously earned on that sale is typically clawed back in full. For example, if you earned $500 commission on a $10,000 sale that is later returned, your employer will deduct $500 from future commissions. For partial returns, the clawback is pro-rata — a 50% return means a 50% clawback of the original commission. In tiered structures, a return can be particularly complex because it may shift your total sales into a lower tier, retroactively reducing the rate applied to your remaining sales. Always check your comp plan for the specific return policy.',
+        'When a sale is returned or canceled, the commission previously earned on that sale is typically clawed back in full. For example, if you earned $500 commission on a $10,000 sale that is later returned, your employer will deduct $500 from future commissions. For partial returns, the clawback is pro-rata — a 50% return means a 50% clawback of the original commission. In tiered structures, a return can be particularly complex because it may shift your total sales into a lower tier, retroactively reducing the rate applied to your remaining sales. Always check your comp plan for the specific return policy.',
     },
   ],
 

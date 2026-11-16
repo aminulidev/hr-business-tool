@@ -4,7 +4,7 @@ import LegalPageLayout from '@/components/layout/LegalPageLayout';
 import AppShell from '@/components/layout/AppShell';
 import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from '@/lib/registry';
 import { getAuthor } from '@/lib/authors';
-import { TAX_YEAR } from '@/lib/payroll/withholding-2026';
+import { TAX_YEAR } from '@/lib/payroll/withholding';
 
 export const metadata: Metadata = {
   title: 'Editorial Policy',
@@ -37,7 +37,7 @@ export default function EditorialPolicyPage() {
             Nobody on the team is a CPA, enrolled agent, attorney or certified HR professional, and the site does not
             claim otherwise. We do not publish ghost-written &ldquo;expert reviewer&rdquo; names. Authority on this site
             comes from linking each figure to the agency that publishes it, not from credentials. If a credentialed
-            reviewer joins, they will be named here with their real licence details. You can reach the team at{' '}
+            reviewer joins, they will be named here with their real license details. You can reach the team at{' '}
             <a href={`mailto:${CONTACT_EMAIL}`} className="text-emerald-600 hover:underline">{CONTACT_EMAIL}</a>
             {author.links.length > 0 && (
               <>

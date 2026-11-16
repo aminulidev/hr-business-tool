@@ -10,7 +10,7 @@ import {
   type PayFrequency,
   type StateCode,
   TAX_YEAR,
-} from './withholding-2026';
+} from './withholding';
 import type { CalculatorSlug } from '@/lib/registry';
 import type { CalculatorSeoData, SeoSource } from '@/lib/seo-data/types';
 import { FEDERAL_PAYCHECK_SOURCES, SRC } from '@/lib/seo-data/sources';
@@ -1110,7 +1110,7 @@ function describeScenario(page: StatePaycheckPage, s: Scenario) {
 /** Round to the nearest $0.50 so overtime scenarios read naturally */
 const toHalfDollar = (n: number) => Math.round(n * 2) / 2;
 
-/** Signed difference for the neighbour comparison, e.g. "+$612.30 more" / "−$88.40 less" */
+/** Signed difference for the neighbor comparison, e.g. "+$612.30 more" / "−$88.40 less" */
 function signedDiff(n: number): string {
   if (Math.abs(n) < 0.005) return 'same';
   return n > 0 ? `+${usd(n)} more` : `−${usd(-n)} less`;
@@ -1201,7 +1201,7 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
     ];
   });
 
-  // Neighbour comparison, generated from the engine at this state's median wage
+  // Neighbor comparison, generated from the engine at this state's median wage
   const here = singleFullTime(code, median, defaultSingleAllowance);
   // Reverse solver example (Phase 16.1): the hourly rate behind a $2,000 bi-weekly take-home here
   const reverseTarget = 2000;
@@ -1411,7 +1411,7 @@ export function buildStatePaycheckSeo(code: StateCode): CalculatorSeoData {
             ? `At ${usd(median)} an hour, ${bestNeighbor.name}: ${usd(bestNeighbor.result.netAnnual)} a year versus ${usd(here.netAnnual)} in ${page.name}, a gap of ${usd(bestNeighbor.result.netAnnual - here.netAnnual)}. `
             : `At ${usd(median)} an hour, ${page.name}: ${usd(here.netAnnual)} a year versus ${usd(bestNeighbor.result.netAnnual)} in ${bestNeighbor.name}${Math.abs(bestNeighbor.result.netAnnual - here.netAnnual) < 0.5 ? ' (the same)' : `, a gap of ${usd(here.netAnnual - bestNeighbor.result.netAnnual)}`}. ` +
             (worstNeighbor.code !== bestNeighbor.code
-              ? `${worstNeighbor.name} is the lowest of ${page.name}'s neighbours covered here at ${usd(worstNeighbor.result.netAnnual)}. `
+              ? `${worstNeighbor.name} is the lowest of ${page.name}'s neighbors covered here at ${usd(worstNeighbor.result.netAnnual)}. `
               : '') +
             `The difference is entirely state income tax and state payroll programs, because federal withholding is the same everywhere. Local taxes and living costs are not included.`,
       },

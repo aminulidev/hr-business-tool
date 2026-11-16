@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <AppShell>
-      <LegalPageLayout title="Privacy Policy" lastUpdated="April 21, 2026">
+      <LegalPageLayout title="Privacy Policy" lastUpdated="November 16, 2026">
         <section className="space-y-6 text-sm leading-relaxed text-foreground/80">
           <p>
             At QuickBizCalc (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;), we are committed to protecting your privacy.
@@ -54,6 +54,20 @@ export default function PrivacyPolicyPage() {
             We do not transmit, collect, store, or have access to the specific numbers you enter into our
             calculator tools. All calculations are performed client-side using JavaScript, meaning your
             financial data never leaves your device.
+          </p>
+
+          <p>
+            If you subscribe to our email updates, we collect the email address you enter. If you use the
+            contact form, we collect your name, email address and message. If you leave a comment in a
+            calculator&apos;s feedback box, we collect that comment and the page it was left on. Subscriber
+            addresses are stored with, and these messages are delivered through, our email service
+            provider, Resend, which processes them only to send email on our behalf. We use this
+            information only to send the updates you asked for and to reply to you. You can unsubscribe
+            with the link in any email, or ask us to delete your address at any time through the{' '}
+            <Link href="/contact" className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2">
+              contact page
+            </Link>
+            .
           </p>
 
           <h3 className="text-base font-semibold text-foreground mt-4">1.2 Automatically Collected Information</h3>

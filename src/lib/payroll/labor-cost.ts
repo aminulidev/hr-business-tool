@@ -10,7 +10,7 @@
 // ---------------------------------------------------------------------------
 
 import { calculateEmployerCost, type EmployerCostResult } from './employer-cost-2026';
-import type { PaycheckState } from './withholding-2026';
+import type { PaycheckState } from './withholding';
 
 export type LaborMode = 'employee' | 'team' | 'revenue' | 'budget';
 export const LABOR_MODES: { value: LaborMode; label: string; short: string }[] = [

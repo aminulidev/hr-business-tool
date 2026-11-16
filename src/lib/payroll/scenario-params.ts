@@ -6,7 +6,7 @@
 // ---------------------------------------------------------------------------
 
 import { STATE_CODES, STATE_PAYCHECK_PAGES } from './state-pages';
-import type { FilingStatus, PaycheckState, PayFrequency, StateCode } from './withholding-2026';
+import type { FilingStatus, PaycheckState, PayFrequency, StateCode } from './withholding';
 
 export interface CompareScenario {
   state: PaycheckState;

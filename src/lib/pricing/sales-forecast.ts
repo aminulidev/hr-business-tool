@@ -180,7 +180,7 @@ export interface RetentionInput {
   startCustomers: number;
   endCustomers: number;
   newCustomers: number;
-  /** Length of the period in months, to annualise */
+  /** Length of the period in months, to annualize */
   periodMonths: number;
   /** Optional: average revenue per customer per month, to price the churn */
   revenuePerCustomerMonthly: number;

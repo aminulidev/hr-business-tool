@@ -5,9 +5,10 @@ import { Briefcase, Info, User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { formatCurrency } from '@/lib/utils';
-import { TAX_YEAR, type PaycheckResult, type PaycheckState, type PayFrequency } from '@/lib/payroll/withholding-2026';
+import { getTaxYear, TAX_YEAR, type PaycheckResult, type PaycheckState, type PayFrequency } from '@/lib/payroll/withholding';
 import {
   calculateEmployerCost,
+  EMPLOYER_STATE_FIGURES_YEAR,
   FUTA_CREDIT_REDUCTION,
   STATE_EMPLOYER_TAXES,
 } from '@/lib/payroll/employer-cost-2026';
@@ -77,8 +78,9 @@ export default function EmployerCostPanel({ state, stateName, paycheck, payFrequ
         payFrequency,
         hoursPerYear,
         suiRate,
+        taxYear: paycheck.taxYear,
       }),
-    [state, paycheck.grossAnnual, paycheck.ficaWagesAnnual, payFrequency, hoursPerYear, suiRate],
+    [state, paycheck.grossAnnual, paycheck.ficaWagesAnnual, paycheck.taxYear, payFrequency, hoursPerYear, suiRate],
   );
 
   const creditReduction = state !== 'none' && state !== 'other' ? FUTA_CREDIT_REDUCTION[state] : undefined;
@@ -90,7 +92,7 @@ export default function EmployerCostPanel({ state, stateName, paycheck, payFrequ
       <div className="text-center space-y-1">
         <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/10 text-sky-700 dark:text-sky-400 text-xs font-semibold mb-1">
           <Briefcase className="h-3.5 w-3.5" />
-          {TAX_YEAR} Employer Cost{stateName ? ` in ${stateName}` : ''}
+          {paycheck.taxYear} Employer Cost{stateName ? ` in ${stateName}` : ''}{paycheck.taxYear > TAX_YEAR ? ' (preview)' : ''}
         </div>
         <p className="text-sm text-muted-foreground font-medium">Total Cost to Employ per Paycheck</p>
         <p className="text-4xl sm:text-5xl font-extrabold text-sky-600" data-result-primary>
@@ -129,7 +131,7 @@ export default function EmployerCostPanel({ state, stateName, paycheck, payFrequ
             <p>{profile.sui.note}</p>
           ) : (
             <p>
-              Pick a specific state above to use its {TAX_YEAR} new-employer rate and taxable wage base. For any other state, enter the rate
+              Pick a specific state above to use its {EMPLOYER_STATE_FIGURES_YEAR} new-employer rate and taxable wage base. For any other state, enter the rate
               from your unemployment tax notice; it is applied to the first $7,000 of wages, the floor every state uses.
             </p>
           )}
@@ -221,11 +223,23 @@ export default function EmployerCostPanel({ state, stateName, paycheck, payFrequ
         </div>
       </div>
 
+      {paycheck.taxYear !== EMPLOYER_STATE_FIGURES_YEAR && (
+        <div className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-foreground/80" role="note" data-tax-year-note>
+          <Info className="h-4 w-4 shrink-0 mt-0.5 text-amber-600" />
+          <p>
+            <strong className="text-foreground">{paycheck.taxYear > TAX_YEAR ? `${paycheck.taxYear} preview.` : `${paycheck.taxYear} figures.`}</strong>{' '}
+            The Social Security match uses the {paycheck.taxYear} wage base of ${getTaxYear(paycheck.taxYear).federal.socialSecurityWageBase.toLocaleString('en-US')}.
+            FUTA credit reductions, state unemployment rates and wage bases, and paid-leave employer shares are {EMPLOYER_STATE_FIGURES_YEAR} figures,
+            because the {paycheck.taxYear} ones were not published as of this page&apos;s last review.
+          </p>
+        </div>
+      )}
+
       <div className="flex items-start gap-2 text-xs text-muted-foreground">
         <Info className="h-4 w-4 shrink-0 mt-0.5" />
         <p>
-          Employer figures use the {TAX_YEAR} FICA match (Pub. 15), FUTA at {pct(cost.futaRateApplied)} on the first $7,000
-          {creditReduction ? ` (the U.S. DOL's potential ${pct(creditReduction)} credit reduction for ${where}; the final list is set after November 10, ${TAX_YEAR})` : ''},
+          Employer figures use the {paycheck.taxYear} FICA match (Pub. 15), FUTA at {pct(cost.futaRateApplied)} on the first $7,000
+          {creditReduction ? ` (the U.S. DOL's potential ${pct(creditReduction)} credit reduction for ${where}; the final list is set after November 10, ${EMPLOYER_STATE_FIGURES_YEAR})` : ''},
           and {where === 'this state' ? 'the SUI rate you enter' : `${where}'s new-employer SUI rate and wage base`}
           {profile?.extras.length ? `, plus ${profile.extras.map((e) => e.label.replace(/ \(.*\)$/, '')).join(' and ')}` : ''}.
           Experience-rated employers should enter their own SUI rate. Not included: workers' compensation, health insurance, retirement match, and local employer taxes such as the Newark, Jersey City or Oregon transit payroll taxes.
