@@ -402,7 +402,7 @@ export const timeAttendanceCalculators = defineCalculators([
   {
     slug: 'working-hours-calculator',
     status: 'merged',
-    mergedInto: 'work-hours-calculator',
+    mergedInto: 'time-card-calculator',
     title: 'Working Hours Calculator',
     metaTitle: 'Free Working Hours Calculator 2026 — Annual & Monthly Hours',
     shortDescription:
@@ -483,7 +483,8 @@ export const timeAttendanceCalculators = defineCalculators([
   {
     slug: 'clock-in-calculator',
     status: 'merged',
-    mergedInto: 'clock-out-calculator',
+    mergedInto: 'time-card-calculator',
+    mergedQuery: 'mode=clock-out',
     title: 'Clock In Calculator',
     metaTitle: 'Free Clock In Calculator 2026 — Track Start Times & Hours',
     shortDescription:

@@ -1,143 +1,216 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { DollarSign } from 'lucide-react';
-import TryExample from './TryExample';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import ComparePanel, { CompareRow } from './ComparePanel';
-import { useCalcHistory } from '@/hooks/useCalcHistory';
+import { useMemo, useState } from 'react';
+import { GitCompareArrows, Info, ShoppingBag, Wallet } from 'lucide-react';
 import CalcHistoryPanel from './CalcHistoryPanel';
-import { formatCurrency, formatPercent } from '@/lib/utils';
+import { useCalcHistory } from '@/hooks/useCalcHistory';
+import { useSearchParam } from '@/hooks/useSearchParam';
+import { Actions, Field, Headline, Kpi, ModeTabs, Note, num, pct, Result, Th, usd } from './suite-ui';
+import {
+  COMPARE_DEFAULTS,
+  computeCompare,
+  computeFiverrBuyer,
+  computeFiverrSeller,
+  FIVERR_BUYER_DEFAULTS,
+  FIVERR_FEES,
+  FIVERR_MODES,
+  FIVERR_SELLER_DEFAULTS,
+  isFiverrMode,
+  type FiverrFees,
+  type FiverrMode,
+  type PlatformResult,
+} from '@/lib/pricing/platform-fees';
 
-interface Snapshot { order: number; tip: number; sellerFee: number; sellerTakeHome: number; buyerFee: number; buyerTotal: number; label: string; }
+// Fiverr fee calculator (Phase 17). Every fee is an editable setting because
+// Fiverr and Upwork both change them; defaults live in platform-fees.ts.
 
-export default function FiverrFeeCalculator() {
-  const [orderAmount, setOrderAmount] = useState('100');
-  const [tipAmount, setTipAmount] = useState('10');
-  const [calculated, setCalculated] = useState(true);
-  const [compareA, setCompareA] = useState<Snapshot | null>(null);
-  const [compareB, setCompareB] = useState<Snapshot | null>(null);
-  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{ orderAmount: string; tipAmount: string }>('fiverr-fee-calculator');
+const s = (n: number) => String(n);
+type FeeState = { seller: string; buyer: string; small: string; threshold: string };
+const DEFAULT_FEES: FeeState = { seller: s(FIVERR_FEES.sellerFeePct), buyer: s(FIVERR_FEES.buyerFeePct), small: s(FIVERR_FEES.smallOrderFee), threshold: s(FIVERR_FEES.smallOrderThreshold) };
+const toFees = (f: FeeState): FiverrFees => ({ sellerFeePct: num(f.seller), buyerFeePct: num(f.buyer), smallOrderFee: num(f.small), smallOrderThreshold: num(f.threshold) });
 
-  const order = parseFloat(orderAmount) || 0;
-  const tip = parseFloat(tipAmount) || 0;
-  const sellerFee = (order + tip) * 0.20;
-  const sellerTakeHome = order + tip - sellerFee;
-  const buyerFee = order * 0.05 + 2.50;
-  const buyerTotal = order + buyerFee + tip;
+function FeeSettings({ fees, onChange }: { fees: FeeState; onChange: (f: FeeState) => void }) {
+  const changed = JSON.stringify(fees) !== JSON.stringify(DEFAULT_FEES);
+  return (
+    <details className="rounded-xl border border-border/50 bg-muted/20 p-3 text-sm">
+      <summary className="cursor-pointer text-xs font-semibold">
+        Fiverr fee settings: seller {fees.seller}% · buyer {fees.buyer}% + ${fees.small} under ${fees.threshold}{changed ? ' (edited)' : ''}
+      </summary>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
+        <Field id="fee-seller" label="Seller fee" value={fees.seller} onChange={(x) => onChange({ ...fees, seller: x })} suffix="%" step="1" />
+        <Field id="fee-buyer" label="Buyer service fee" value={fees.buyer} onChange={(x) => onChange({ ...fees, buyer: x })} suffix="%" step="0.5" />
+        <Field id="fee-small" label="Small-order fee" value={fees.small} onChange={(x) => onChange({ ...fees, small: x })} prefix="$" step="0.5" />
+        <Field id="fee-threshold" label="Applies to purchases under" value={fees.threshold} onChange={(x) => onChange({ ...fees, threshold: x })} prefix="$" step="5" />
+      </div>
+      <p className="text-xs text-muted-foreground mt-2">Defaults are the fees Fiverr publishes in 2026. The small-order fee has been raised twice in recent years, so if your checkout shows a different amount, enter it here.{changed && <> <button type="button" className="underline underline-offset-2" onClick={() => onChange(DEFAULT_FEES)}>Reset to defaults</button></>}</p>
+    </details>
+  );
+}
 
-  const handleTryExample = () => { setOrderAmount('100'); setTipAmount('10'); setCalculated(true); };
-  const handleCalculate = () => {
-    if (order > 0) {
-      setCalculated(true);
-      saveEntry({ orderAmount, tipAmount }, `Take-home: ${formatCurrency(sellerTakeHome)} (fee: ${formatCurrency(sellerFee)})`);
-    }
-  };
-  const handleReset = () => { setOrderAmount(''); setTipAmount(''); setCalculated(false); };
-  const handleRestore = (i: { orderAmount: string; tipAmount: string }) => { setOrderAmount(i.orderAmount); setTipAmount(i.tipAmount); setCalculated(true); };
-  const snap = (): Snapshot => ({ order, tip, sellerFee, sellerTakeHome, buyerFee, buyerTotal, label: `Take-home: ${formatCurrency(sellerTakeHome)}` });
+// ───────────────────────── seller
+
+function SellerMode() {
+  const d = FIVERR_SELLER_DEFAULTS;
+  const [price, setPrice] = useState(s(d.price));
+  const [extras, setExtras] = useState(s(d.extras));
+  const [tip, setTip] = useState(s(d.tip));
+  const [orders, setOrders] = useState(s(d.ordersPerMonth));
+  const [hours, setHours] = useState(s(d.hoursPerOrder));
+  const [wFee, setWFee] = useState(s(d.withdrawalFee));
+  const [wCount, setWCount] = useState(s(d.withdrawalsPerMonth));
+  const [target, setTarget] = useState(s(d.targetNet));
+  const [fees, setFees] = useState<FeeState>(DEFAULT_FEES);
+  const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<Record<string, string>>('fiverr-fee-calculator');
+  const r = useMemo(() => computeFiverrSeller({ price: num(price), extras: num(extras), tip: num(tip), ordersPerMonth: num(orders), hoursPerOrder: num(hours), withdrawalFee: num(wFee), withdrawalsPerMonth: num(wCount), targetNet: num(target), fees: toFees(fees) }), [price, extras, tip, orders, hours, wFee, wCount, target, fees]);
+  const inputs = { price, extras, tip, orders, hours, wFee, wCount, target, fees: JSON.stringify(fees) };
 
   return (
-    <div className="w-full">
-      <div className="p-4 sm:p-6 space-y-6">
-        <div className="rounded-lg bg-emerald-500/5 border border-emerald-500/20 p-3 text-xs text-muted-foreground">
-          <DollarSign className="inline h-3 w-3 mr-1" />
-          {`Fiverr charges sellers 20% of each order. Buyers pay 5% service fee + $2.50. Calculate your take-home pay.`}
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="orderAmount">Order Amount (gig price)</Label>
-            <div className="relative">
-              <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
-              <Input id="orderAmount" type="number" step="any" min="0" placeholder="100" className="pl-7"
-                value={orderAmount} onChange={(e) => { setOrderAmount(e.target.value); setCalculated(true); }} />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="tipAmount">Tip Amount (optional)</Label>
-            <div className="relative">
-              <span className="absolute left-3 top-[18px] -translate-y-1/2 text-muted-foreground text-sm">$</span>
-              <Input id="tipAmount" type="number" step="any" min="0" placeholder="10" className="pl-7"
-                value={tipAmount} onChange={(e) => { setTipAmount(e.target.value); setCalculated(true); }} />
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          <TryExample onClick={handleTryExample} />
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <Button onClick={handleCalculate} disabled={order <= 0}
-              className="bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25 flex-1 sm:flex-none">
-              Calculate Fiverr Fees
-            </Button>
-            <Button variant="outline" onClick={handleReset} className="shrink-0">Reset</Button>
-          </div>
-        </div>
-
-        {calculated && (
-          <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.3 }} className="result-display mt-2" aria-live="polite">
-            <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-6">
-              <div className="text-center space-y-2">
-                <p className="text-sm text-muted-foreground font-medium">Seller Take-Home</p>
-                <p className="text-4xl font-bold text-emerald-600">{formatCurrency(sellerTakeHome)}</p>
-                <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="bg-red-500/10 border-red-500/30 text-red-600">{`Seller fee (20%): ${formatCurrency(sellerFee)}`}</Badge>
-                  <Badge variant="outline" className="bg-blue-500/10 border-blue-500/30 text-blue-600">{`Buyer pays: ${formatCurrency(buyerTotal)}`}</Badge>
-                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500/30 text-amber-600">{`Buyer fee: ${formatCurrency(buyerFee)}`}</Badge>
-                </div>
-                <div className="flex justify-center gap-2 pt-2">
-                  <Button variant="outline" size="sm" onClick={() => setCompareA(snap())} className="h-7 text-[10px] px-2 border-primary/30 bg-primary/5 text-primary">{compareA ? '↺ Set A' : '+ Save A'}</Button>
-                  <Button variant="outline" size="sm" onClick={() => setCompareB(snap())} className="h-7 text-[10px] px-2 border-amber-500/30 bg-amber-500/5 text-amber-600">{compareB ? '↺ Set B' : '+ Save B'}</Button>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
-                    <p className="text-xs text-muted-foreground mb-1">Order Amount</p>
-                    <p className={`text-lg font-bold`}>{formatCurrency(order)}</p>
-                  </div>
-                  <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
-                    <p className="text-xs text-muted-foreground mb-1">Seller Fee (20%)</p>
-                    <p className={`text-lg font-bold`}>{formatCurrency(sellerFee)}</p>
-                  </div>
-                  <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
-                    <p className="text-xs text-muted-foreground mb-1">Take-Home</p>
-                    <p className={`text-lg font-bold text-emerald-600`}>{formatCurrency(sellerTakeHome)}</p>
-                  </div>
-                  <div className="rounded-xl bg-background border border-border/50 p-4 text-center">
-                    <p className="text-xs text-muted-foreground mb-1">Buyer Total</p>
-                    <p className={`text-lg font-bold`}>{formatCurrency(buyerTotal)}</p>
-                  </div>
-              </div>
-
-              <div className="rounded-lg bg-muted/30 border border-border/30 p-3 text-xs text-muted-foreground">
-                {`Fiverr seller fee = 20% of order + tip. Buyer fee = 5% of order + $2.50 service fee. Tips are also subject to 20% seller fee. Withdrawal: PayPal, Payoneer, or Fiverr Revenue Card.`}
-              </div>
-            </div>
-          </motion.div>
-        )}
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <Field id="sl-price" label="Gig price" value={price} onChange={setPrice} prefix="$" step="5" />
+        <Field id="sl-extras" label="Gig extras on the order" value={extras} onChange={setExtras} prefix="$" step="5" />
+        <Field id="sl-tip" label="Tip from the buyer" value={tip} onChange={setTip} prefix="$" step="1" help="Fiverr takes its fee from tips too" />
+        <Field id="sl-target" label="I want to keep (per order)" value={target} onChange={setTarget} prefix="$" step="5" help="For the price you need to list" />
+        <Field id="sl-orders" label="Orders like this per month" value={orders} onChange={setOrders} step="1" />
+        <Field id="sl-hours" label="Hours of work per order" value={hours} onChange={setHours} suffix="h" step="0.5" />
+        <Field id="sl-wfee" label="Fee per withdrawal" value={wFee} onChange={setWFee} prefix="$" step="1" help="Depends on payout method and country" />
+        <Field id="sl-wcount" label="Withdrawals per month" value={wCount} onChange={setWCount} step="1" />
       </div>
-
-      {compareA && compareB && (() => {
-        const rows: CompareRow[] = [
-          { label: 'Order', valueA: formatCurrency(compareA.order), valueB: formatCurrency(compareB.order), numA: compareA.order, numB: compareB.order },
-          { label: 'Take-Home', valueA: formatCurrency(compareA.sellerTakeHome), valueB: formatCurrency(compareB.sellerTakeHome), numA: compareA.sellerTakeHome, numB: compareB.sellerTakeHome },
-          { label: 'Buyer Total', valueA: formatCurrency(compareA.buyerTotal), valueB: formatCurrency(compareB.buyerTotal), numA: compareA.buyerTotal, numB: compareB.buyerTotal }
-        ];
-        return (
-          <div className="px-4 pb-6 sm:px-6">
-            <ComparePanel rows={rows} labelA={compareA.label} labelB={compareB.label}
-              onClear={() => { setCompareA(null); setCompareB(null); }}
-              onSwap={() => { const t = compareA; setCompareA(compareB); setCompareB(t); }} />
+      <FeeSettings fees={fees} onChange={setFees} />
+      <Actions onExample={() => { setPrice('150'); setExtras('40'); setTip('10'); setOrders('12'); setHours('4'); setWFee('0'); setWCount('2'); setTarget('200'); setFees(DEFAULT_FEES); }} onSave={() => r && saveEntry(inputs, `Order ${usd(r.orderValue, 2)} → you keep ${usd(r.netPerOrder, 2)} · ${usd(r.monthlyNet)} a month`)} disabled={!r} />
+      {!r && <p className="text-xs text-amber-600">Enter a gig price.</p>}
+      {r && (
+        <Result>
+          <Headline label="You keep from this order" value={usd(r.netPerOrder, 2)}>
+            <strong className="text-foreground">{usd(r.orderValue, 2)}</strong> order − <strong className="text-foreground">{usd(r.fiverrFee, 2)}</strong> Fiverr fee ({num(fees.seller)}%{r.tipFee > 0 ? <>, including {usd(r.tipFee, 2)} from the tip</> : null}) · the buyer pays <strong className="text-foreground">{usd(r.buyerPays, 2)}</strong>, so Fiverr keeps <strong className="text-foreground">{pct(r.fiverrTakePct)}</strong> of what changes hands
+          </Headline>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <Kpi label={`Price to keep ${usd(num(target))}`} value={usd(r.priceForTarget, 2)} sub={r.shortfallIfAddingFee !== null ? `adding ${num(fees.seller)}% instead leaves you ${usd(r.shortfallIfAddingFee, 2)} short` : 'enter a target'} color="text-blue-600" />
+            <Kpi label="Net per month" value={usd(r.monthlyNet)} sub={`${num(orders)} orders · ${usd(r.monthlyFees)} in fees${r.monthlyWithdrawalFees > 0 ? ` + ${usd(r.monthlyWithdrawalFees)} withdrawals` : ''}`} color="text-emerald-600" />
+            <Kpi label="Net per year" value={usd(r.annualNet)} sub={`of ${usd(r.monthlyGross * 12)} billed`} />
+            <Kpi label="Effective hourly rate" value={r.effectiveHourly === null ? '—' : usd(r.effectiveHourly, 2)} sub={r.grossHourly === null ? 'enter hours per order' : `${usd(r.grossHourly, 2)} before the fee`} color="text-amber-600" />
           </div>
-        );
-      })()}
-      <CalcHistoryPanel history={history} onRestore={handleRestore} onClear={clearHistory} onDelete={deleteEntry} />
+          <Note><Info className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />Fiverr takes its seller fee from the whole order value: the gig price, any extras and the tip. To keep a target amount, divide it by (1 − fee): {usd(num(target))} ÷ {(1 - num(fees.seller) / 100).toFixed(2)} = {usd(r.priceForTarget, 2)}. Earnings clear 14 days after an order is completed (7 days for Top Rated sellers) before they can be withdrawn. Fees are a business expense for tax purposes.</Note>
+        </Result>
+      )}
+      <CalcHistoryPanel history={history} onRestore={(i) => { setPrice(i.price ?? ''); setExtras(i.extras ?? '0'); setTip(i.tip ?? '0'); setOrders(i.orders ?? '0'); setHours(i.hours ?? '0'); setWFee(i.wFee ?? '0'); setWCount(i.wCount ?? '0'); setTarget(i.target ?? '0'); try { const f = JSON.parse(i.fees) as FeeState; if (f && typeof f === 'object') setFees({ ...DEFAULT_FEES, ...f }); } catch {} }} onClear={clearHistory} onDelete={deleteEntry} />
+    </div>
+  );
+}
+
+// ───────────────────────── buyer
+
+function BuyerMode() {
+  const d = FIVERR_BUYER_DEFAULTS;
+  const [order, setOrder] = useState(s(d.orderAmount));
+  const [tip, setTip] = useState(s(d.tip));
+  const [fees, setFees] = useState<FeeState>(DEFAULT_FEES);
+  const r = useMemo(() => computeFiverrBuyer({ orderAmount: num(order), tip: num(tip), fees: toFees(fees) }), [order, tip, fees]);
+  const ladder = useMemo(() => [5, 25, 50, 99, 100, 250, 500, 1000].map((amount) => ({ amount, r: computeFiverrBuyer({ orderAmount: amount, tip: 0, fees: toFees(fees) })! })), [fees]);
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-4">
+        <Field id="by-order" label="Order amount (gig price + extras)" value={order} onChange={setOrder} prefix="$" step="5" />
+        <Field id="by-tip" label="Tip you plan to add" value={tip} onChange={setTip} prefix="$" step="1" />
+      </div>
+      <FeeSettings fees={fees} onChange={setFees} />
+      {!r && <p className="text-xs text-amber-600">Enter an order amount.</p>}
+      {r && (
+        <Result>
+          <Headline label="Total you pay" value={usd(r.total, 2)}>
+            order {usd(num(order), 2)}{num(tip) > 0 ? <> + tip {usd(num(tip), 2)}</> : null} + <strong className="text-foreground">{usd(r.feeTotal, 2)}</strong> in Fiverr fees (<strong className="text-foreground">{pct(r.effectiveFeePct)}</strong> on top) · the seller receives <strong className="text-foreground">{usd(r.sellerReceives, 2)}</strong>
+          </Headline>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <Kpi label={`Service fee (${num(fees.buyer)}%)`} value={usd(r.percentageFee, 2)} />
+            <Kpi label="Small-order fee" value={usd(r.smallOrderFee, 2)} sub={r.smallOrderFee > 0 ? `order is under ${usd(num(fees.threshold))}` : `none at ${usd(num(fees.threshold))} or more`} color={r.smallOrderFee > 0 ? 'text-amber-600' : 'text-emerald-600'} />
+            <Kpi label="Fee on the tip" value={usd(r.tipFee, 2)} sub="a tip is a separate payment" />
+            <Kpi label="Fiverr keeps in total" value={usd(r.fiverrKeeps, 2)} sub={`${pct(r.fiverrTakePct)} of what you pay`} color="text-red-500" />
+          </div>
+          <div className="rounded-xl bg-background border border-border/50 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead><tr className="border-b border-border/50 bg-muted/20 text-xs text-muted-foreground"><Th>Order</Th><Th right>Fees</Th><Th right>You pay</Th><Th right>Fee on top</Th><Th right>Seller receives</Th></tr></thead>
+              <tbody className="divide-y divide-border/30">
+                {ladder.map(({ amount, r: x }) => <tr key={amount}><td className="px-3 py-2">{usd(amount)}</td><td className="text-right px-3 py-2">{usd(x.feeTotal, 2)}</td><td className="text-right px-3 py-2 font-semibold">{usd(x.total, 2)}</td><td className={`text-right px-3 py-2 ${x.effectiveFeePct > 10 ? 'text-amber-600' : ''}`}>{pct(x.effectiveFeePct)}</td><td className="text-right px-3 py-2 text-muted-foreground">{usd(x.sellerReceives, 2)}</td></tr>)}
+              </tbody>
+            </table>
+          </div>
+          <Note><ShoppingBag className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />Buyers pay the order amount plus a service fee of {num(fees.buyer)}%, and a flat {usd(num(fees.small), 2)} on purchases under {usd(num(fees.threshold))}, which is why very small orders carry a large fee in percentage terms. The fee applies to each payment, including extras added later and tips. The checkout always shows the exact figure, with any tax, before you pay.</Note>
+        </Result>
+      )}
+    </div>
+  );
+}
+
+// ───────────────────────── Fiverr vs Upwork
+
+function PlatformCard({ p, best }: { p: PlatformResult; best: boolean }) {
+  return (
+    <div className={`rounded-xl border p-4 space-y-2 bg-background ${best ? 'border-emerald-500/40' : 'border-border/50'}`}>
+      <div className="flex items-center justify-between"><p className="font-semibold">{p.platform}</p>{best && <span className="text-[10px] uppercase text-emerald-600 font-semibold">freelancer keeps more</span>}</div>
+      <table className="w-full text-sm"><tbody className="divide-y divide-border/30">
+        <tr><td className="py-1.5">Client pays</td><td className="text-right py-1.5 font-semibold">{usd(p.clientPays, 2)}</td></tr>
+        <tr><td className="py-1.5 text-muted-foreground">of which client-side fee</td><td className="text-right py-1.5 text-muted-foreground">{usd(p.clientFee, 2)}</td></tr>
+        <tr><td className="py-1.5 text-muted-foreground">Freelancer-side fee</td><td className="text-right py-1.5 text-red-500">−{usd(p.freelancerFee, 2)}</td></tr>
+        <tr><td className="py-1.5">Freelancer keeps</td><td className="text-right py-1.5 font-bold text-emerald-600">{usd(p.freelancerNets, 2)}</td></tr>
+        <tr><td className="py-1.5">Platform keeps</td><td className="text-right py-1.5">{usd(p.platformKeeps, 2)} <span className="text-xs text-muted-foreground">({pct(p.takePct)})</span></td></tr>
+        {p.priceForTarget !== null && <tr><td className="py-1.5">Quote to keep the target</td><td className="text-right py-1.5 text-blue-600 font-semibold">{usd(p.priceForTarget, 2)} <span className="text-xs text-muted-foreground font-normal">(client pays {usd(p.clientPaysForTarget, 2)})</span></td></tr>}
+      </tbody></table>
+    </div>
+  );
+}
+
+function CompareMode() {
+  const d = COMPARE_DEFAULTS;
+  const [price, setPrice] = useState(s(d.projectPrice));
+  const [target, setTarget] = useState(s(d.targetNet));
+  const [uFee, setUFee] = useState(s(d.upworkFreelancerFeePct));
+  const [uClient, setUClient] = useState(s(d.upworkClientFeePct));
+  const [fees, setFees] = useState<FeeState>(DEFAULT_FEES);
+  const r = useMemo(() => computeCompare({ projectPrice: num(price), targetNet: num(target), fiverr: toFees(fees), upworkFreelancerFeePct: num(uFee), upworkClientFeePct: num(uClient) }), [price, target, uFee, uClient, fees]);
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <Field id="cp-price" label="Job price quoted to the client" value={price} onChange={setPrice} prefix="$" step="25" />
+        <Field id="cp-target" label="Freelancer wants to keep" value={target} onChange={setTarget} prefix="$" step="25" />
+        <Field id="cp-ufee" label="Upwork freelancer fee on this contract" value={uFee} onChange={setUFee} suffix="%" step="1" help="0–15%, shown on the proposal; about 10% is typical" />
+        <Field id="cp-uclient" label="Upwork client marketplace fee" value={uClient} onChange={setUClient} suffix="%" step="0.5" help="3–5% on the Basic plan" />
+      </div>
+      <FeeSettings fees={fees} onChange={setFees} />
+      {!r && <p className="text-xs text-amber-600">Enter a job price.</p>}
+      {r && (
+        <Result>
+          <Headline label={`On a ${usd(num(price))} job the freelancer keeps`} value={`${usd(r.fiverr.freelancerNets)} vs ${usd(r.upwork.freelancerNets)}`}>
+            Fiverr vs Upwork · {r.freelancerDifference === 0 ? 'the same on both' : <><strong className="text-foreground">{usd(Math.abs(r.freelancerDifference), 2)}</strong> more on {r.freelancerDifference > 0 ? 'Upwork' : 'Fiverr'}</>} · the client pays <strong className="text-foreground">{usd(Math.abs(r.clientDifference), 2)}</strong> {r.clientDifference >= 0 ? 'more on Fiverr' : 'more on Upwork'}
+          </Headline>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <PlatformCard p={r.fiverr} best={r.freelancerDifference < 0} />
+            <PlatformCard p={r.upwork} best={r.freelancerDifference > 0} />
+          </div>
+          <Note><GitCompareArrows className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />Fiverr charges the seller a fixed {num(fees.seller)}% on every order; Upwork sets a freelancer fee between 0% and 15% for each contract and shows it before you send the proposal. Upwork would have to charge {pct(r.breakEvenUpworkFeePct, 0)} for the two to pay the freelancer the same. Fees are only part of the choice: Fiverr sells packaged gigs that buyers find, Upwork charges for the Connects used to bid on posted jobs. For Upwork take-home in detail, use the <a href="/calculators/upwork-fee-calculator" className="underline underline-offset-2 hover:text-foreground">Upwork Fee Calculator</a>.</Note>
+        </Result>
+      )}
+    </div>
+  );
+}
+
+// ───────────────────────── page
+
+const ICONS = { seller: Wallet, buyer: ShoppingBag, compare: GitCompareArrows };
+
+export default function FiverrFeeCalculator() {
+  const urlMode = useSearchParam('mode');
+  const [override, setMode] = useState<FiverrMode | null>(null);
+  const mode: FiverrMode = override ?? (isFiverrMode(urlMode) ? urlMode : 'seller');
+  return (
+    <div className="w-full">
+      <div className="p-4 sm:p-6 space-y-6 calculator-form">
+        <ModeTabs modes={FIVERR_MODES} mode={mode} onChange={setMode} label="Fiverr fee calculator mode" icons={ICONS} />
+        {mode === 'seller' && <SellerMode />}
+        {mode === 'buyer' && <BuyerMode />}
+        {mode === 'compare' && <CompareMode />}
+      </div>
     </div>
   );
 }

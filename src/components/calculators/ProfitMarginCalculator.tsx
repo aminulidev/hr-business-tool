@@ -31,8 +31,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
 import ComparePanel, { CompareRow } from './ComparePanel';
+import { useSearchParam } from '@/hooks/useSearchParam';
+import { StatementMarginMode, ContributionMarginMode, WholesaleChainMode } from './ProfitMarginModes';
+import { Layers, Scale, Warehouse } from 'lucide-react';
 
-type CalcMode = 'cost-selling' | 'target-margin' | 'cost-revenue';
+type CalcMode = 'cost-selling' | 'target-margin' | 'cost-revenue' | 'statement' | 'contribution' | 'wholesale';
+const LEGACY_MODES: CalcMode[] = ['cost-selling', 'target-margin', 'cost-revenue'];
+const ALL_MODES: CalcMode[] = [...LEGACY_MODES, 'statement', 'contribution', 'wholesale'];
+const isCalcMode = (v: string | null): v is CalcMode => (ALL_MODES as string[]).includes(v ?? '');
 
 interface MarginResult {
   profit: number;
@@ -118,7 +124,12 @@ function MarginBar({ margin }: { margin: number }) {
 const TARGET_MARGIN_PRESETS = ['20', '30', '40', '50', '60', '75'];
 
 export default function ProfitMarginCalculator() {
-  const [mode, setMode] = useState<CalcMode>('cost-selling');
+  // Phase 17: the net-margin, operating-margin, contribution-margin, selling-price and
+  // wholesale-price pages 301 here with ?mode=…
+  const urlMode = useSearchParam('mode');
+  const [modeOverride, setMode] = useState<CalcMode | null>(null);
+  const mode: CalcMode = modeOverride ?? (isCalcMode(urlMode) ? urlMode : 'cost-selling');
+  const legacy = LEGACY_MODES.includes(mode);
 
   // Cost + Selling Price mode (pre-loaded for instant live results)
   const [costPrice, setCostPrice] = useState('60');
@@ -284,7 +295,7 @@ export default function ProfitMarginCalculator() {
       <div className="p-4 sm:p-6 space-y-6">
         {/* 3-Way Bi-Directional Mode Toggle */}
         <Tabs value={mode} onValueChange={(val) => setMode(val as CalcMode)} className="w-full">
-          <TabsList className="w-full grid grid-cols-1 sm:grid-cols-3 h-auto gap-1 p-1">
+          <TabsList className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 h-auto gap-1 p-1">
             <TabsTrigger value="cost-selling" className="text-xs sm:text-sm py-2">
               <DollarSign className="h-3.5 w-3.5 mr-1" />
               Unit Cost &amp; Price
@@ -296,6 +307,18 @@ export default function ProfitMarginCalculator() {
             <TabsTrigger value="cost-revenue" className="text-xs sm:text-sm py-2">
               <TrendingUp className="h-3.5 w-3.5 mr-1" />
               Total Cost &amp; Revenue
+            </TabsTrigger>
+            <TabsTrigger value="statement" className="text-xs sm:text-sm py-2">
+              <Layers className="h-3.5 w-3.5 mr-1" />
+              Gross, Operating &amp; Net
+            </TabsTrigger>
+            <TabsTrigger value="contribution" className="text-xs sm:text-sm py-2">
+              <Scale className="h-3.5 w-3.5 mr-1" />
+              Contribution &amp; Break-Even
+            </TabsTrigger>
+            <TabsTrigger value="wholesale" className="text-xs sm:text-sm py-2">
+              <Warehouse className="h-3.5 w-3.5 mr-1" />
+              Wholesale → Retail
             </TabsTrigger>
           </TabsList>
 
@@ -444,9 +467,21 @@ export default function ProfitMarginCalculator() {
               </div>
             </div>
           </TabsContent>
+
+          {/* Phase 17 modes: self-contained inputs + results + history */}
+          <TabsContent value="statement" className="mt-4">
+            <StatementMarginMode />
+          </TabsContent>
+          <TabsContent value="contribution" className="mt-4">
+            <ContributionMarginMode />
+          </TabsContent>
+          <TabsContent value="wholesale" className="mt-4">
+            <WholesaleChainMode />
+          </TabsContent>
         </Tabs>
 
         {/* Actions */}
+        {legacy && (
         <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <TryExample onClick={handleTryExample} />
           <Button
@@ -459,10 +494,11 @@ export default function ProfitMarginCalculator() {
             Save Calculation to History
           </Button>
         </div>
+        )}
       </div>
 
       {/* Live Results */}
-      {result && (
+      {legacy && result && (
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -657,7 +693,7 @@ export default function ProfitMarginCalculator() {
       )}
 
       {/* Comparison save buttons */}
-      {result && (
+      {legacy && result && (
         <div className="flex flex-wrap gap-2 mt-4 px-4 sm:px-6">
           <button
             onClick={() =>

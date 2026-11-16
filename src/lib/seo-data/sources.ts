@@ -122,6 +122,12 @@ export const SRC = {
     publisher: IRS,
     note: 'MACRS recovery periods, Section 179 limits and bonus depreciation',
   },
+  irsPub583: {
+    label: 'IRS Publication 583, Starting a Business and Keeping Records',
+    url: 'https://www.irs.gov/publications/p583',
+    publisher: IRS,
+    note: 'Invoices as supporting documents for gross receipts, and how long to keep business records',
+  },
   irsPub334: {
     label: 'IRS Publication 334, Tax Guide for Small Business - Chapter 6, Cost of Goods Sold',
     url: 'https://www.irs.gov/publications/p334',
@@ -323,6 +329,12 @@ export const SRC = {
     publisher: BLS,
     note: 'Monthly hires, quits and separations rates by industry',
   },
+  blsAbsences: {
+    label: 'BLS, Current Population Survey — Absences from work of employed full-time wage and salary workers',
+    url: 'https://www.bls.gov/cps/cpsaat46.htm',
+    publisher: BLS,
+    note: 'National absence rate (hours absent as a share of usual hours) used as the reference point for absenteeism',
+  },
   blsOews: {
     label: 'BLS, Occupational Employment and Wage Statistics (OEWS), May 2025 state estimates',
     url: 'https://www.bls.gov/oes/tables.htm',
@@ -336,11 +348,47 @@ export const SRC = {
     note: 'Benefits as a share of total compensation by industry',
   },
   // ---- Non-government reference data ----
+  ycSafe: {
+    label: 'Y Combinator, Safe Financing Documents (post-money SAFE and user guide)',
+    url: 'https://www.ycombinator.com/documents',
+    publisher: 'Y Combinator',
+    note: 'Post-money valuation cap and discount conversion mechanics',
+  },
+  nyuSternData: {
+    label: 'NYU Stern School of Business (Aswath Damodaran), Current Data: Ratios by Industry (US)',
+    url: 'https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datacurrent.html',
+    publisher: 'NYU Stern School of Business',
+    note: 'Return on equity, return on capital, debt ratios, margins and turnover by industry, updated each January from public filings',
+  },
+  nyuSternMargins: {
+    label: 'NYU Stern School of Business (Aswath Damodaran), Margins by Sector (US)',
+    url: 'https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/margin.html',
+    publisher: 'NYU Stern School of Business',
+    note: 'Gross, operating and net margins by industry, updated each January from public-company filings',
+  },
   taxFoundationStateIncome: {
     label: 'Tax Foundation, State Individual Income Tax Rates and Brackets',
     url: 'https://taxfoundation.org/data/all/state/state-income-tax-rates/',
     publisher: 'Tax Foundation',
     note: 'Side-by-side state income tax rates for the current year',
+  },
+  taxFoundationVat: {
+    label: 'Tax Foundation, VAT Rates in Europe, as of January 2026',
+    url: 'https://taxfoundation.org/data/all/eu/value-added-tax-vat-rates-europe/',
+    publisher: 'Tax Foundation',
+    note: 'Standard, reduced and super-reduced VAT rates for EU members, the UK, Norway, Switzerland, Iceland and Turkey',
+  },
+  hmrcVatRates: {
+    label: 'GOV.UK, VAT rates',
+    url: 'https://www.gov.uk/vat-rates',
+    publisher: 'HM Revenue & Customs',
+    note: 'UK standard (20%), reduced (5%) and zero rates and what they apply to',
+  },
+  craGstHst: {
+    label: 'Canada Revenue Agency, Charge and collect the GST/HST',
+    url: 'https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses/charge-collect-which-rate.html',
+    publisher: 'Canada Revenue Agency',
+    note: 'GST/HST rate by province, including the Nova Scotia HST of 14% from April 1, 2025',
   },
   taxFoundationSalesTax: {
     label: 'Tax Foundation, State and Local Sales Tax Rates',
@@ -367,10 +415,16 @@ export const SRC = {
     note: "Workers' compensation class codes and rating methodology used in most states",
   },
   upworkFees: {
-    label: 'Upwork Help Center, Freelancer Service Fees',
-    url: 'https://support.upwork.com/hc/en-us/articles/211062538-Freelancer-Service-Fees',
+    label: 'Upwork Help Center, Learn about the Freelancer Service Fee',
+    url: 'https://support.upwork.com/hc/en-us/articles/211062538-Learn-about-the-Freelancer-Service-Fee',
     publisher: 'Upwork',
-    note: 'Current freelancer service fee percentage',
+    note: 'Freelancer service fee of 0%–15% set per contract and locked when the proposal or offer is sent',
+  },
+  fiverrFees: {
+    label: 'Fiverr Help Center, Paying for orders, extras, or custom offers',
+    url: 'https://help.fiverr.com/hc/en-us/articles/37332672658193-Paying-for-orders-extras-or-custom-offers',
+    publisher: 'Fiverr',
+    note: 'Buyer service fee and small-order fee; applied to every payment',
   },
 } satisfies Record<string, SeoSource>;
 

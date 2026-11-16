@@ -11,9 +11,9 @@ export const salesCompensationCalculators = defineCalculators([
     slug: 'commission-calculator',
     status: 'published',
     title: 'Sales Commission Calculator',
-    metaTitle: 'Free Sales Commission Calculator 2026 — Flat, Tiered & Quota Plans',
+    metaTitle: 'Free Sales Commission Calculator 2026 — Flat, Tiered, Quota, Splits & OTE',
     shortDescription:
-      'Calculate take-home commission from flat rates, tiered structures, and quota-based plans with deductions and visual charts.',
+      'Flat, tiered and quota-based commission with deductions and charts, plus commission splits between agents or a brokerage and bonus, accelerator and on-target-earnings plans.',
     metaDescription: 'Free sales commission calculator for 2026: flat-rate, tiered, and quota-based plans with accelerators, splits, base salary, and deductions. See gross and net commission instantly with charts.',
     keywords: [
       'commission calculator',
@@ -39,7 +39,9 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'tiered-commission-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'commission-calculator',
+    mergedQuery: 'mode=tiered',
     title: 'Tiered Commission Calculator',
     metaTitle: 'Free Tiered Commission Calculator 2026 — Multi-Tier Sales Pay',
     shortDescription:
@@ -67,6 +69,7 @@ export const salesCompensationCalculators = defineCalculators([
     slug: 'split-commission-calculator',
     status: 'merged',
     mergedInto: 'commission-calculator',
+    mergedQuery: 'mode=split',
     title: 'Split Commission Calculator',
     metaTitle: 'Free Split Commission Calculator 2026 — Multi-Rep Deal Split',
     shortDescription:
@@ -92,7 +95,9 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'quota-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'commission-calculator',
+    mergedQuery: 'mode=quota',
     title: 'Sales Quota Calculator',
     metaTitle: 'Free Sales Quota Calculator 2026 — Set Rep Quotas by Territory',
     shortDescription:
@@ -125,6 +130,7 @@ export const salesCompensationCalculators = defineCalculators([
     slug: 'sales-target-calculator',
     status: 'merged',
     mergedInto: 'commission-calculator',
+    mergedQuery: 'mode=quota',
     title: 'Sales Target Calculator',
     metaTitle: 'Free Sales Target Calculator 2026 — Revenue & Unit Goals',
     shortDescription:
@@ -150,7 +156,9 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'sales-bonus-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'commission-calculator',
+    mergedQuery: 'mode=bonus',
     title: 'Sales Bonus Calculator',
     metaTitle: 'Free Sales Bonus Calculator 2026 — Performance Bonus & SPIFFs',
     shortDescription:
@@ -176,7 +184,9 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'commission-split-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'commission-calculator',
+    mergedQuery: 'mode=split',
     title: 'Commission Split Calculator',
     metaTitle: 'Free Commission Split Calculator 2026 — Rep vs Company Split',
     shortDescription:
@@ -207,7 +217,9 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'incentive-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'commission-calculator',
+    mergedQuery: 'mode=bonus',
     title: 'Sales Incentive Calculator',
     metaTitle: 'Free Sales Incentive Calculator 2026 — Variable Comp Plan Design',
     shortDescription:
@@ -233,7 +245,9 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'revenue-forecast-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'sales-forecast-calculator',
+    mergedQuery: 'mode=growth',
     title: 'Revenue Forecast Calculator',
     metaTitle: 'Free Revenue Forecast Calculator 2026 — Annual Revenue Projection',
     shortDescription:
@@ -259,15 +273,24 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'sales-forecast-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Sales Forecast Calculator',
-    metaTitle: 'Free Sales Forecast Calculator 2026 — Pipeline-Based Forecast',
+    metaTitle: 'Free Sales Forecast Calculator 2026 — Pipeline, Win Rate, Growth & Retention',
     shortDescription:
-      'Forecast sales from pipeline value, win rate, and stage probabilities. See weighted pipeline forecast.',
+      'Stage-weighted pipeline forecast with win rate, coverage and gap to quota; revenue growth with an annualised rate and banded projection; customer retention, churn and lifetime.',
     metaDescription:
-      'Free sales forecast calculator 2026. Forecast sales from pipeline: deal value × stage probability × win rate. See weighted pipeline forecast, best/worst case, and coverage ratio (pipeline needed to hit quota).',
+      'Free sales forecast calculator for 2026: stage-weighted pipeline forecast timed to your sales cycle, win rate, pipeline coverage and the pipeline needed to hit quota; revenue growth rate, annualised and projected with bands; customer retention rate, churn, lifetime and churned revenue.',
     keywords: [
       'sales forecast calculator',
+      'revenue forecast calculator',
+      'pipeline calculator',
+      'weighted pipeline forecast',
+      'win rate calculator',
+      'pipeline coverage ratio',
+      'revenue growth calculator',
+      'annualized growth rate',
+      'customer retention calculator',
+      'churn rate',
       'pipeline forecast',
       'weighted pipeline',
       'sales prediction',
@@ -285,7 +308,9 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'pipeline-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'sales-forecast-calculator',
+    mergedQuery: 'mode=pipeline',
     title: 'Sales Pipeline Calculator',
     metaTitle: 'Free Sales Pipeline Calculator 2026 — Coverage & Gap Analysis',
     shortDescription:
@@ -311,7 +336,9 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'win-rate-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'sales-forecast-calculator',
+    mergedQuery: 'mode=pipeline',
     title: 'Win Rate Calculator',
     metaTitle: 'Free Win Rate Calculator 2026 — Sales Win/Loss Analysis',
     shortDescription:
@@ -337,7 +364,9 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'conversion-rate-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'marketing-cost-calculator',
+    mergedQuery: 'mode=stages',
     title: 'Conversion Rate Calculator',
     metaTitle: 'Free Conversion Rate Calculator 2026 — Sales Funnel Conversion',
     shortDescription:
@@ -418,11 +447,11 @@ export const salesCompensationCalculators = defineCalculators([
     slug: 'customer-lifetime-value-calculator',
     status: 'published',
     title: 'Customer Lifetime Value (CLV) Calculator',
-    metaTitle: 'Free CLV Calculator 2026 — Customer Lifetime Value Formula',
+    metaTitle: 'Free CLV Calculator 2026 — Customer Lifetime Value, LTV:CAC by Channel & Value per MAU',
     shortDescription:
-      'Calculate CLV = (ARPU × gross margin) / monthly churn. See by cohort and segment. Target LTV:CAC 3:1.',
+      'Gross-margin CLV with lifetime cap, LTV:CAC verdict and CAC payback; LTV:CAC by acquisition channel; revenue per monthly active user, ARPPU and stickiness.',
     metaDescription:
-      'Free customer lifetime value calculator 2026. Calculate CLV = (ARPU × gross margin) / churn rate. See simple CLV, predictive CLV, and historic CLV. Target LTV:CAC > 3:1 for SaaS. Track by segment and cohort.',
+      'Free customer lifetime value calculator 2026. CLV = (ARPU × gross margin) ÷ monthly churn with an optional lifetime cap, LTV:CAC ratio, CAC payback and a churn sensitivity table; LTV:CAC by acquisition channel with best and weakest flagged; revenue per MAU, ARPPU, paying share and DAU/MAU.',
     keywords: [
       'CLV calculator',
       'customer lifetime value',
@@ -431,9 +460,14 @@ export const salesCompensationCalculators = defineCalculators([
       'CLV formula',
       'customer LTV',
       'lifetime customer value',
-      'predictive CLV',
-      'historic CLV',
       'customer value',
+      'ltv cac ratio calculator',
+      'ltv to cac',
+      'saas unit economics',
+      'cac payback',
+      'mau value calculator',
+      'revenue per mau',
+      'arppu calculator',
     ],
     icon: DollarSign,
     tier: 'tier1',
@@ -468,7 +502,9 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'marketing-roi-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'marketing-cost-calculator',
+    mergedQuery: 'mode=funnel',
     title: 'Marketing ROI Calculator',
     metaTitle: 'Free Marketing ROI Calculator 2026 — Campaign ROI & Attribution',
     shortDescription:
@@ -494,7 +530,9 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'cpl-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'marketing-cost-calculator',
+    mergedQuery: 'mode=funnel',
     title: 'Cost Per Lead (CPL) Calculator',
     metaTitle: 'Free CPL Calculator 2026 — Cost Per Lead by Marketing Channel',
     shortDescription:
@@ -525,7 +563,9 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'cpa-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'marketing-cost-calculator',
+    mergedQuery: 'mode=funnel',
     title: 'Cost Per Acquisition (CPA) Calculator',
     metaTitle: 'Free CPA Calculator 2026 — Cost Per Customer Acquisition',
     shortDescription:
@@ -551,7 +591,9 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'cpm-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'marketing-cost-calculator',
+    mergedQuery: 'mode=funnel',
     title: 'CPM Calculator (Cost Per Mille)',
     metaTitle: 'Free CPM Calculator 2026 — Cost Per 1,000 Impressions',
     shortDescription:
@@ -576,8 +618,40 @@ export const salesCompensationCalculators = defineCalculators([
     path: '/calculators/cpm-calculator',
   },
   {
+    slug: 'marketing-cost-calculator',
+    status: 'published',
+    title: 'Marketing Cost Calculator',
+    metaTitle: 'Free Marketing Cost Calculator 2026 — CPC, CPM, CPL, CPA, ROAS & Conversion Rate',
+    shortDescription:
+      'CPM, CTR, CPC, CPL, CPA, ROAS and profit ROI from one campaign; the budget and break-even CPC/CPA ceilings to win a target number of customers; stage-by-stage funnel conversion.',
+    metaDescription:
+      'Free marketing cost calculator for 2026: cost per click, per thousand impressions, per lead and per acquisition with ROAS and profit-based ROI from one campaign, the ad budget and break-even CPC, CPL and CPA ceilings for a customer target, and multi-stage funnel conversion rates.',
+    keywords: [
+      'marketing cost calculator',
+      'CPC calculator',
+      'cost per click calculator',
+      'CPM calculator',
+      'CPL calculator',
+      'cost per lead calculator',
+      'CPA calculator',
+      'cost per acquisition calculator',
+      'marketing ROI calculator',
+      'ROAS calculator',
+      'conversion rate calculator',
+      'funnel conversion rate',
+      'break even CPA',
+      'ad budget calculator',
+    ],
+    icon: Target,
+    tier: 'tier1',
+    category: 'Sales & Compensation',
+    path: '/calculators/marketing-cost-calculator',
+  },
+  {
     slug: 'cpc-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'marketing-cost-calculator',
+    mergedQuery: 'mode=funnel',
     title: 'CPC Calculator (Cost Per Click)',
     metaTitle: 'Free CPC Calculator 2026 — Cost Per Click Advertising',
     shortDescription:
@@ -629,7 +703,9 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'revenue-growth-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'sales-forecast-calculator',
+    mergedQuery: 'mode=growth',
     title: 'Revenue Growth Calculator',
     metaTitle: 'Free Revenue Growth Calculator 2026 — YoY, MoM, CAGR',
     shortDescription:
@@ -655,7 +731,9 @@ export const salesCompensationCalculators = defineCalculators([
   },
   {
     slug: 'customer-retention-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'sales-forecast-calculator',
+    mergedQuery: 'mode=retention',
     title: 'Customer Retention Calculator',
     metaTitle: 'Free Customer Retention Calculator 2026 — Churn & Retention Rate',
     shortDescription:
@@ -709,11 +787,11 @@ export const salesCompensationCalculators = defineCalculators([
     slug: 'upwork-fee-calculator',
     status: 'published',
     title: 'Upwork Fee Calculator',
-    metaTitle: 'Free Upwork Fee Calculator 2026 — Sliding Scale Fees',
+    metaTitle: 'Free Upwork Fee Calculator 2026 — Take-Home Pay & Reverse Bid',
     shortDescription:
-      'Calculate Upwork fees: 10% flat fee or sliding scale (20%/10%/5%). See freelancer take-home and client cost.',
+      'Upwork take-home after the 0%–15% per-contract freelancer service fee, the bid that nets your target amount, and the client marketplace fee.',
     metaDescription:
-      'Free Upwork fee calculator 2026. Calculate Upwork service fees: 10% flat rate (new) or sliding scale (20% first $500, 10% $500-10k, 5% above $10k). See freelancer take-home pay and client total cost.',
+      'Free Upwork fee calculator 2026. Enter the freelancer service fee shown on your proposal (0%–15%, set per contract; about 10% is typical) to see take-home pay after fees and withdrawal costs, the bid needed to net your target, and what the client pays with the marketplace fee.',
     keywords: [
       'Upwork fee calculator',
       'Upwork service fee',
@@ -735,20 +813,20 @@ export const salesCompensationCalculators = defineCalculators([
     slug: 'mrr-calculator',
     status: 'published',
     title: 'MRR Calculator',
-    metaTitle: 'Free MRR Calculator 2026 — Monthly Recurring Revenue',
-    shortDescription: 'Calculate Monthly Recurring Revenue (MRR) from active subscriptions, upgrades, downgrades, and churn.',
-    metaDescription: 'Free MRR calculator 2026. Calculate Monthly Recurring Revenue from active subscriptions. Track new MRR, expansion MRR, churned MRR, and net new MRR. Critical SaaS metric for growth tracking.',
-    keywords: ['mrr calculator', 'monthly recurring revenue', 'how to calculate mrr', 'mrr formula', 'saas mrr', 'net new mrr', 'mrr growth', 'recurring revenue calculator'],
+    metaTitle: 'Free MRR Calculator 2026 — MRR, ARR, Net New MRR, Trial Conversion & Pricing Tiers',
+    shortDescription: 'MRR, ARR, ARPU and ACV from your plan table; the net new MRR bridge with expansion, quick ratio and NRR; trial and freemium conversion; gross margin by pricing tier.',
+    metaDescription: 'Free MRR calculator 2026. Normalise monthly, quarterly and annual plans into MRR, ARR, ARPU and ACV; build the net new MRR bridge (new, expansion, contraction, churn, quick ratio, NRR); measure trial-to-paid and free-to-paid conversion; check gross margin per pricing tier.',
+    keywords: ['mrr calculator', 'monthly recurring revenue', 'how to calculate mrr', 'mrr formula', 'saas mrr', 'net new mrr', 'mrr growth', 'recurring revenue calculator', 'arr calculator', 'annual recurring revenue', 'arpu calculator', 'acv calculator', 'expansion mrr', 'saas quick ratio', 'trial conversion rate', 'free to paid conversion', 'saas pricing tiers'],
     icon: TrendingUp, tier: 'tier1', category: 'Sales & Compensation', path: '/calculators/mrr-calculator',
   },
   {
     slug: 'churn-rate-calculator',
     status: 'published',
     title: 'Churn Rate Calculator',
-    metaTitle: 'Free Churn Rate Calculator 2026 — Logo & Revenue Churn',
-    shortDescription: 'Calculate customer churn rate (logo) and revenue churn rate. Track by cohort, segment, and plan.',
-    metaDescription: 'Free churn rate calculator 2026. Calculate logo churn (customers lost) and revenue churn (MRR lost). SaaS benchmarks: logo churn <5%/yr, revenue churn <3%/yr. Track gross and net churn.',
-    keywords: ['churn rate calculator', 'customer churn', 'revenue churn', 'how to calculate churn', 'churn rate formula', 'saas churn', 'logo churn', 'net churn'],
+    metaTitle: 'Free Churn Rate Calculator 2026 — Logo & Revenue Churn, Annualised, GRR & NRR',
+    shortDescription: 'Logo and revenue churn for any period length, annualised properly, with customer lifetime, the size of the customers leaving, and the GRR / NRR retention bridge.',
+    metaDescription: 'Free churn rate calculator 2026. Logo churn, gross and net revenue churn, compound annual churn and average customer lifetime from monthly, quarterly or annual figures; see whether large or small accounts are leaving; gross revenue retention (GRR) and net revenue retention (NRR) bridge.',
+    keywords: ['churn rate calculator', 'customer churn', 'revenue churn', 'how to calculate churn', 'churn rate formula', 'saas churn', 'logo churn', 'net churn', 'annual churn rate', 'gross revenue retention', 'grr calculator', 'grr vs nrr', 'customer lifetime churn'],
     icon: TrendingDown, tier: 'tier1', category: 'Sales & Compensation', path: '/calculators/churn-rate-calculator',
   },
   {

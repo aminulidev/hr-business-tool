@@ -1,5 +1,17 @@
 import type { CalculatorSeoData } from './types';
 import { SRC } from './sources';
+import { ATTAINMENT_STEPS, BONUS_DEFAULTS, computeBonusOte, computeCommissionSplit, SPLIT_DEFAULTS } from '@/lib/pricing/commission';
+
+const usd = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+const usd0 = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+const pct = (n: number, d = 0) => `${n.toFixed(d)}%`;
+
+// Phase 17: split and bonus/OTE figures come from the same functions the tabs run
+const split = computeCommissionSplit(SPLIT_DEFAULTS);
+const teamSplit = computeCommissionSplit({ saleAmount: 120000, commissionRatePct: 10, houseCutPct: 0, flatFees: 0, managerOverridePct: 5, parties: [{ name: 'Account executive', sharePct: 70 }, { name: 'Sales engineer', sharePct: 30 }] });
+const ote = computeBonusOte(BONUS_DEFAULTS);
+const ladder = ATTAINMENT_STEPS.map((a) => ({ a, r: computeBonusOte({ ...BONUS_DEFAULTS, attainmentPct: a }) }));
+
 const seoData = {
   howToSteps: [
     'Determine your commission structure — flat rate, tiered, or base + commission',
@@ -8,13 +20,17 @@ const seoData = {
     'Apply the commission formula — multiply sales by rate(s) according to your structure',
     'Account for any deductions — subtract broker fees, processing fees, or clawbacks',
     'Add base salary if applicable — combine fixed and variable pay for total compensation',
+    'Splitting a commission? The "Commission Split" tab takes the sale, the rate, the brokerage or house cut and flat fees off the top, an optional manager override, and up to five parties with their shares, and shows what each person actually receives and what share of the sale that is.',
+    'Modelling a comp plan? "Bonus & OTE" combines base salary, commission to quota, an accelerator above quota, a bonus with a threshold and kickers, and SPIFFs into on-target earnings, pay mix and an earnings curve from 50% to 150% attainment.',
   ],
 
   formula: `Simple: Commission = Sales Amount × (Commission Rate / 100)
 Tiered: Commission = ∑(Tier Sales × Tier Rate)
 With Base: Total Compensation = Base Salary + Commission
 Net Commission = Gross Commission − Deductions
-Quota Attainment = (Actual Sales / Quota) × 100%`,
+Quota Attainment = (Actual Sales / Quota) × 100%
+Split: Pool = Gross − House cut − Fees − Override;  Party share = Pool × Share %
+OTE = Base + Quota × Rate + Bonus at quota + SPIFFs;  above quota the rate is × Accelerator`,
 
   formulaDescription:
     'The commission formula depends on your compensation structure. A simple flat rate multiplies your total sales by a single percentage. Tiered structures apply different rates to different portions of your sales, rewarding higher volumes. Quota-based plans add accelerators that increase your rate when you exceed targets. Always subtract any deductions to arrive at your net commission.',
@@ -34,6 +50,33 @@ Quota Attainment = (Actual Sales / Quota) × 100%`,
       title: 'B2B Account Executive — Quota with Accelerator',
       description:
         'An AE has an $80,000 annual quota, a 10% commission rate, and a 1.5x accelerator above quota. They close $100,000 in sales. Regular commission on $80,000 at 10% = $8,000. Accelerated commission on $20,000 above quota at 15% (10% × 1.5) = $3,000. Total commission = $11,000. With a $55,000 base, total comp = $66,000.',
+    },
+  ],
+
+  benchmarkTables: [
+    {
+      title: `Earnings Curve for the Sample Plan (${usd0(BONUS_DEFAULTS.baseSalary)} base, ${usd0(BONUS_DEFAULTS.quota)} quota, ${BONUS_DEFAULTS.commissionRatePct}% to quota, ${BONUS_DEFAULTS.acceleratorMultiplier}× above, ${usd0(BONUS_DEFAULTS.bonusAtQuota)} bonus)`,
+      description: 'How total earnings move with attainment when commission, accelerator, threshold bonus and kickers are combined. OTE is the 100% row.',
+      headers: ['Attainment', 'Sales', 'Commission', 'Bonus', 'Total earnings', '% of OTE'],
+      rows: ladder.map(({ a, r }) => [`${a}%`, usd0(r.actualSales), usd0(r.commission), usd0(r.bonus), usd0(r.totalEarnings), pct(r.pctOfOte)]),
+      note: `Bonus pays nothing below ${BONUS_DEFAULTS.bonusThresholdPct}% attainment, scales to ${usd0(BONUS_DEFAULTS.bonusAtQuota)} at 100% and adds ${usd0(BONUS_DEFAULTS.bonusPer10PtsOver)} for every full 10 points above; SPIFFs of ${usd0(BONUS_DEFAULTS.spiffs)} are assumed earned at every level. Pay mix at target: ${pct(100 - ote.payMixVariablePct)} base / ${pct(ote.payMixVariablePct)} variable.`,
+    },
+  ],
+
+  deepDiveSections: [
+    {
+      title: 'How a Commission Gets Split: House Cut, Fees, Overrides and Shares',
+      paragraphs: [
+        `A split works top-down. The sale earns a gross commission; the brokerage or house takes its cut and any flat fees; a manager or team lead may take an override on the gross; what is left is the pool the people who did the work share. On the sample ${usd0(SPLIT_DEFAULTS.saleAmount)} home sale at ${SPLIT_DEFAULTS.commissionRatePct}%, the gross is ${usd(split.grossCommission)}; a ${SPLIT_DEFAULTS.houseCutPct}% house cut (${usd(split.houseCut)}) and a ${usd(SPLIT_DEFAULTS.flatFees)} transaction fee leave ${usd(split.pool)}, split 60/40 into ${usd(split.parties[0].amount)} for the listing agent and ${usd(split.parties[1].amount)} for the co-agent — so the listing agent's take is ${pct(split.effectiveRateOnSale ?? 0, 2)} of the sale price, not 3%.`,
+        `Team deals in B2B work the same way without a brokerage: a ${usd0(120000)} deal at 10% with a 5% manager override leaves ${usd(teamSplit.pool)} to split 70/30, ${usd(teamSplit.parties[0].amount)} to the account executive and ${usd(teamSplit.parties[1].amount)} to the sales engineer. The tab warns when the shares do not add up to 100%, which is the most common reason a split dispute ends up with payroll.`,
+      ],
+    },
+    {
+      title: 'Reading a Comp Plan: OTE, Pay Mix, Accelerators and Kickers',
+      paragraphs: [
+        `On-target earnings are what the plan pays at exactly 100% of quota: base salary plus commission on the quota plus the at-quota bonus and any SPIFFs the plan expects. The sample plan's OTE is ${usd0(ote.ote)} on a ${usd0(BONUS_DEFAULTS.baseSalary)} base, a ${pct(100 - ote.payMixVariablePct)}/${pct(ote.payMixVariablePct)} pay mix. Pay mix is the first thing to read in an offer: 50/50 is common for new-business account executives, 70/30 or 80/20 for account managers and customer success, and 100% variable only in roles where the rep controls the whole sale.`,
+        `Accelerators and kickers are what make the curve bend. At ${BONUS_DEFAULTS.attainmentPct}% attainment the sample rep earns ${usd0(ote.totalEarnings)}, ${pct(ote.pctOfOte)} of OTE: the last ${usd0(ote.actualSales - BONUS_DEFAULTS.quota)} of sales paid ${usd0(ote.commissionAbove)} at the accelerated rate and triggered a ${usd0(BONUS_DEFAULTS.bonusPer10PtsOver)} kicker. Below the ${BONUS_DEFAULTS.bonusThresholdPct}% threshold the bonus disappears entirely, which is why plans with a high threshold feel harsher than their OTE suggests. The earnings-curve table shows the whole shape at a glance; compare two offers by their 80% and 120% rows, not just the OTE.`,
+      ],
     },
   ],
 
@@ -59,6 +102,21 @@ Quota Attainment = (Actual Sales / Quota) × 100%`,
   ],
 
   faqs: [
+    {
+      question: 'How do I split a commission between agents or with my brokerage?',
+      answer:
+        `Start from the gross commission, take off the brokerage or house cut and any flat fees, then any manager override, and divide what is left by the agreed shares. On a ${usd0(SPLIT_DEFAULTS.saleAmount)} sale at ${SPLIT_DEFAULTS.commissionRatePct}% (${usd(split.grossCommission)} gross), a ${SPLIT_DEFAULTS.houseCutPct}% house cut and a ${usd(SPLIT_DEFAULTS.flatFees)} fee leave ${usd(split.pool)}; a 60/40 split pays ${usd(split.parties[0].amount)} and ${usd(split.parties[1].amount)}. The "Commission Split" tab handles up to five parties and flags shares that do not total 100%.`,
+    },
+    {
+      question: 'What are on-target earnings (OTE) and pay mix?',
+      answer:
+        `OTE is total pay at exactly 100% of quota: base salary plus the commission earned on the quota plus any at-quota bonus. Pay mix is the base/variable split of that OTE — the sample plan is ${usd0(ote.ote)} OTE at ${pct(100 - ote.payMixVariablePct)}/${pct(ote.payMixVariablePct)}. A richer mix (more variable) means higher upside and a lower floor; the "Bonus & OTE" tab shows earnings from 50% to 150% attainment so you can see the floor and the upside, not just the midpoint.`,
+    },
+    {
+      question: 'How do sales bonuses with thresholds and kickers work?',
+      answer:
+        `Most plans pay no bonus below a threshold (often 70–80% of quota), a pro-rata share between the threshold and 100%, the full bonus at 100%, and a fixed kicker for each further step above quota. In the sample plan a ${usd0(BONUS_DEFAULTS.bonusAtQuota)} bonus starts at ${BONUS_DEFAULTS.bonusThresholdPct}% and adds ${usd0(BONUS_DEFAULTS.bonusPer10PtsOver)} per full 10 points over 100%, so 90% attainment pays ${usd0(computeBonusOte({ ...BONUS_DEFAULTS, attainmentPct: 90 }).bonus)} and 120% pays ${usd0(computeBonusOte({ ...BONUS_DEFAULTS, attainmentPct: 120 }).bonus)}. SPIFFs are flat incentives for specific products or periods and sit on top of all of this.`,
+    },
     {
       question: 'What is a sales commission?',
       answer:
@@ -110,6 +168,7 @@ Quota Attainment = (Actual Sales / Quota) × 100%`,
     { slug: 'roi-calculator' as const, title: 'ROI Calculator', description: 'Calculate return on investment for business decisions', icon: 'BarChart3' },
   ],
   sources: [SRC.dolFactSheet20, SRC.cfr778_117],
+  // Note: tiered, quota, split, bonus and incentive calculator URLs redirect to the matching tab here (Phase 17).
 } satisfies CalculatorSeoData;
 
 export default seoData;

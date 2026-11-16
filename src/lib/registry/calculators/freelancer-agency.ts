@@ -1,21 +1,21 @@
 // ---------------------------------------------------------------------------
-// Freelancer & Agency — calculator registry entries (15)
+// Freelancer & Agency — calculator registry entries (17)
 // Split from calculator-meta.ts in Roadmap v2 Phase 14.1. Add new Freelancer & Agency
 // calculators here; the slug type and all helpers derive from this data.
 // ---------------------------------------------------------------------------
-import { CalendarRange, Clock, DollarSign, FileText, Percent, TrendingUp, Users } from 'lucide-react';
+import { Briefcase, CalendarRange, Clock, DollarSign, FileText, Percent, TrendingUp, Users } from 'lucide-react';
 import { defineCalculators } from '../define';
 
 export const freelancerAgencyCalculators = defineCalculators([
   {
     slug: 'fiverr-fee-calculator',
-    status: 'draft',
+    status: 'published',
     title: 'Fiverr Fee Calculator',
-    metaTitle: 'Free Fiverr Fee Calculator 2026 — Seller & Buyer Fees',
+    metaTitle: 'Free Fiverr Fee Calculator 2026 — Seller Take-Home, Buyer Cost & Fiverr vs Upwork',
     shortDescription:
-      'Calculate Fiverr fees: 20% seller service fee and 5% + $2 buyer service fee. See your take-home pay.',
+      'What a Fiverr seller keeps after the 20% fee (tips and extras included) and the price that nets your target; what a buyer pays with the 5.5% service fee and small-order fee; Fiverr vs Upwork on the same job.',
     metaDescription:
-      'Free Fiverr fee calculator 2026. Calculate Fiverr seller fees (20% of order) and buyer fees (5% + $2.50 service fee). See take-home pay as a seller and total cost as a buyer. Includes gig extras and tips.',
+      'Free Fiverr fee calculator 2026. Seller take-home after the 20% fee on the gig, extras and tips, the price to list to keep a target amount, monthly net income and effective hourly rate; buyer total with the 5.5% service fee and small-order fee; side-by-side Fiverr vs Upwork fees for freelancers and clients.',
     keywords: [
       'Fiverr fee calculator',
       'Fiverr seller fee',
@@ -27,6 +27,10 @@ export const freelancerAgencyCalculators = defineCalculators([
       'Fiverr processing fee',
       'Fiverr gig fee',
       'Fiverr fee percentage',
+      'Fiverr small order fee',
+      'Fiverr vs Upwork fees',
+      'Fiverr calculator',
+      'how much does Fiverr take',
     ],
     icon: DollarSign,
     tier: 'tier2',
@@ -34,8 +38,40 @@ export const freelancerAgencyCalculators = defineCalculators([
     path: '/calculators/fiverr-fee-calculator',
   },
   {
+    slug: 'freelance-pricing-calculator',
+    status: 'published',
+    title: 'Freelance Pricing Calculator',
+    metaTitle: 'Free Freelance Pricing Calculator 2026 — Project Quote, Day Rate, Retainer, Client Profit & Agency Margin',
+    shortDescription:
+      'Build a project quote with contingency and see your effective hourly rate; turn a target income into a day rate card; price a retainer; rank clients by profit; check agency margin after utilization.',
+    metaDescription:
+      'Free freelance pricing calculator 2026. Project quote builder with contingency, expenses, deposit and overrun check; consulting day rate and hourly rate from target income; retainer pricing with usage scenarios; profit and effective rate per client with revenue concentration; agency margin, markup and bill-rate multiplier.',
+    keywords: [
+      'freelance pricing calculator',
+      'project pricing calculator',
+      'freelance quote calculator',
+      'project estimate calculator',
+      'consultant fee calculator',
+      'consulting day rate calculator',
+      'day rate calculator',
+      'retainer calculator',
+      'monthly retainer pricing',
+      'profit per client calculator',
+      'client profitability calculator',
+      'agency margin calculator',
+      'agency markup calculator',
+      'value of my time calculator',
+    ],
+    icon: Briefcase,
+    tier: 'tier1',
+    category: 'Freelancer & Agency',
+    path: '/calculators/freelance-pricing-calculator',
+  },
+  {
     slug: 'project-pricing-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'freelance-pricing-calculator',
+    mergedQuery: 'mode=project',
     title: 'Project Pricing Calculator',
     metaTitle: 'Free Project Pricing Calculator 2026 — Fixed-Bid Project Cost',
     shortDescription:
@@ -75,8 +111,37 @@ export const freelancerAgencyCalculators = defineCalculators([
     path: '/calculators/project-pricing-calculator',
   },
   {
+    slug: 'invoice-generator',
+    status: 'published',
+    title: 'Invoice Generator',
+    metaTitle: 'Free Invoice Generator 2026 — Create & Download a PDF Invoice, No Sign-Up',
+    shortDescription:
+      'Create a professional invoice with line items, discount, sales tax or VAT, shipping and deposits, then print it or save it as a PDF. No account, and nothing is uploaded.',
+    metaDescription:
+      'Free online invoice generator. Add your business and client, line items, percent or fixed discount, sales tax, VAT or GST (added or included), shipping and deposits; due date from Net 15/30/60 terms; add a logo; live preview; print or save as PDF. No sign-up, and your data never leaves your browser.',
+    keywords: [
+      'invoice generator',
+      'free invoice generator',
+      'invoice maker',
+      'create invoice online',
+      'invoice template',
+      'pdf invoice generator',
+      'invoice calculator',
+      'invoice with tax',
+      'invoice with discount',
+      'freelance invoice',
+      'net 30 invoice',
+      'vat invoice generator',
+    ],
+    icon: FileText,
+    tier: 'tier1',
+    category: 'Freelancer & Agency',
+    path: '/calculators/invoice-generator',
+  },
+  {
     slug: 'invoice-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'invoice-generator',
     title: 'Invoice Calculator',
     metaTitle: 'Free Invoice Calculator 2026 — Subtotal, Tax, Discount, Total',
     shortDescription:
@@ -103,7 +168,8 @@ export const freelancerAgencyCalculators = defineCalculators([
   {
     slug: 'client-profit-calculator',
     status: 'merged',
-    mergedInto: 'billable-hours-calculator',
+    mergedInto: 'freelance-pricing-calculator',
+    mergedQuery: 'mode=clients',
     title: 'Client Profit Calculator',
     metaTitle: 'Free Client Profit Calculator 2026 — Profit Per Client Account',
     shortDescription:
@@ -129,7 +195,9 @@ export const freelancerAgencyCalculators = defineCalculators([
   },
   {
     slug: 'agency-margin-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'freelance-pricing-calculator',
+    mergedQuery: 'mode=agency',
     title: 'Agency Margin Calculator',
     metaTitle: 'Free Agency Margin Calculator 2026 — Agency Markup & Profit',
     shortDescription:
@@ -156,7 +224,8 @@ export const freelancerAgencyCalculators = defineCalculators([
   {
     slug: 'proposal-price-calculator',
     status: 'merged',
-    mergedInto: 'billable-hours-calculator',
+    mergedInto: 'freelance-pricing-calculator',
+    mergedQuery: 'mode=project',
     title: 'Proposal Price Calculator',
     metaTitle: 'Free Proposal Price Calculator 2026 — RFP & Bid Pricing',
     shortDescription:
@@ -182,7 +251,9 @@ export const freelancerAgencyCalculators = defineCalculators([
   },
   {
     slug: 'retainer-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'freelance-pricing-calculator',
+    mergedQuery: 'mode=retainer',
     title: 'Retainer Calculator',
     metaTitle: 'Free Retainer Calculator 2026 — Monthly Retainer Pricing',
     shortDescription:
@@ -208,7 +279,9 @@ export const freelancerAgencyCalculators = defineCalculators([
   },
   {
     slug: 'consultant-fee-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'freelance-pricing-calculator',
+    mergedQuery: 'mode=rate',
     title: 'Consultant Fee Calculator',
     metaTitle: 'Free Consultant Fee Calculator 2026 — Hourly, Daily, Project',
     shortDescription:
@@ -261,7 +334,9 @@ export const freelancerAgencyCalculators = defineCalculators([
   },
   {
     slug: 'profit-per-client-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'freelance-pricing-calculator',
+    mergedQuery: 'mode=clients',
     title: 'Profit Per Client Calculator',
     metaTitle: 'Free Profit Per Client Calculator 2026 — Client Profitability',
     shortDescription:
@@ -292,7 +367,9 @@ export const freelancerAgencyCalculators = defineCalculators([
   },
   {
     slug: 'time-value-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'freelance-pricing-calculator',
+    mergedQuery: 'mode=rate',
     title: 'Time Value Calculator',
     metaTitle: 'Free Time Value Calculator 2026 — Value of Your Time',
     shortDescription:
@@ -318,7 +395,9 @@ export const freelancerAgencyCalculators = defineCalculators([
   },
   {
     slug: 'monthly-revenue-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'freelance-pricing-calculator',
+    mergedQuery: 'mode=clients',
     title: 'Monthly Revenue Calculator',
     metaTitle: 'Free Monthly Revenue Calculator 2026 — Freelancer & Agency',
     shortDescription:
@@ -344,7 +423,9 @@ export const freelancerAgencyCalculators = defineCalculators([
   },
   {
     slug: 'team-cost-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'labor-cost-calculator',
+    mergedQuery: 'mode=team',
     title: 'Team Cost Calculator',
     metaTitle: 'Free Team Cost Calculator 2026 — Project Team Cost',
     shortDescription:
@@ -371,7 +452,8 @@ export const freelancerAgencyCalculators = defineCalculators([
   {
     slug: 'quote-calculator',
     status: 'merged',
-    mergedInto: 'billable-hours-calculator',
+    mergedInto: 'freelance-pricing-calculator',
+    mergedQuery: 'mode=project',
     title: 'Quote Calculator',
     metaTitle: 'Free Quote Calculator 2026 — Client Quote Generator',
     shortDescription:
@@ -398,7 +480,8 @@ export const freelancerAgencyCalculators = defineCalculators([
   {
     slug: 'estimate-calculator',
     status: 'merged',
-    mergedInto: 'billable-hours-calculator',
+    mergedInto: 'freelance-pricing-calculator',
+    mergedQuery: 'mode=project',
     title: 'Estimate Calculator',
     metaTitle: 'Free Estimate Calculator 2026 — Project Time & Cost Estimate',
     shortDescription:

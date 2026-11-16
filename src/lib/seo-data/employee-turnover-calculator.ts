@@ -41,7 +41,7 @@ const seoData = {
     { slug: 'revenue-per-employee-calculator', title: 'Revenue per Employee', description: 'Workforce productivity metrics', icon: 'Activity' },
     { slug: 'severance-pay-calculator', title: 'Severance Pay Calculator', description: 'Calculate departing employee packages', icon: 'UserMinus' },
     { slug: 'salary-increase-calculator', title: 'Salary Increase Calculator', description: 'Model compensation improvements', icon: 'TrendingUp' },
-    { slug: 'workers-comp-calculator', title: 'Workers Comp Calculator', description: 'Estimate insurance premiums', icon: 'ShieldCheck' },
+    { slug: 'hiring-metrics-calculator', title: 'Hiring Metrics Calculator', description: 'Cost of turnover built from separation, vacancy, recruiting and ramp-up', icon: 'Target' },
   ],
   sources: [SRC.blsJolts],
 } satisfies CalculatorSeoData;

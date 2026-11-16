@@ -302,12 +302,14 @@ export const CATEGORY_HUBS: CategoryHubConfig[] = [
       'Quantify true loaded employee cost (1.25x–1.45x salary), calculate IRS ACA Full-Time Equivalents, and benchmark turnover and revenue per FTE.',
     icon: Users,
     featuredSlugs: [
-      'employee-cost-calculator',
+      'labor-cost-calculator',
+      'workforce-planning-calculator',
       'fte-calculator',
       'employee-turnover-calculator',
       'severance-pay-calculator',
       'revenue-per-employee-calculator',
       'cost-per-hire-calculator',
+      'hiring-metrics-calculator',
     ],
     referenceTable: {
       title: '2026 Core HR & People Analytics Benchmarks',

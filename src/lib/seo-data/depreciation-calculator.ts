@@ -83,7 +83,7 @@ const seoData = {
   ],
   relatedTools: [
     { slug: 'ebitda-margin-calculator', title: 'EBITDA Calculator', description: 'Calculate EBITDA and operating margin by adding back D&A', icon: 'BarChart3' },
-    { slug: 'pnl-calculator', title: 'Profit & Loss (P&L) Calculator', description: 'Build a complete income statement with operating expenses and D&A', icon: 'FileSpreadsheet' },
+    { slug: 'financial-statements-calculator', title: 'Financial Statements Calculator', description: 'Post the depreciation entry and see the income statement, balance sheet and cash flow', icon: 'FileText' },
     { slug: 'working-capital-calculator', title: 'Working Capital Calculator', description: 'Analyze short-term assets, liabilities, and current ratio', icon: 'Scale' },
     { slug: 'business-valuation-calculator', title: 'Business Valuation Calculator', description: 'Value your business using EBITDA, revenue, and net asset multiples', icon: 'Building2' },
     { slug: 'roi-calculator', title: 'Equipment ROI Calculator', description: 'Calculate return on investment for capital expenditures', icon: 'TrendingUp' },

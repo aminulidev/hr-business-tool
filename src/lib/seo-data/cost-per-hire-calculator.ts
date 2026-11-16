@@ -40,7 +40,7 @@ const seoData = {
     { slug: 'employee-turnover-calculator', title: 'Employee Turnover Calculator', description: 'Turnover rate & attrition cost', icon: 'Users' },
     { slug: 'revenue-per-employee-calculator', title: 'Revenue per Employee', description: 'Workforce productivity ratio', icon: 'Activity' },
     { slug: 'workers-comp-calculator', title: 'Workers Comp Calculator', description: 'Estimate insurance premiums', icon: 'ShieldCheck' },
-    { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Measure return on HR investment', icon: 'BarChart3' },
+    { slug: 'hiring-metrics-calculator', title: 'Hiring Metrics Calculator', description: 'Time to fill, recruiting ROI by source and cost of turnover', icon: 'Target' },
     { slug: 'salary-increase-calculator', title: 'Salary Increase Calculator', description: 'Model compensation improvements', icon: 'TrendingUp' },
   ],
 } satisfies CalculatorSeoData;
