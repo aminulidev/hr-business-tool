@@ -5,6 +5,8 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { CONTACT_EMAIL, SITE_URL, SITE_NAME, SITE_TAGLINE } from '@/lib/calculator-meta';
 import { CONFIG } from "@/lib/config";
+import AdSenseLoader from '@/components/analytics/AdSenseLoader';
+import { consentBootstrapScript } from '@/lib/consent';
 import Link from "next/link";
 
 const geistSans = Geist({
@@ -165,17 +167,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        {/* Google AdSense Script */}
-        {CONFIG.monetization.adSenseId && (
-          <Script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${CONFIG.monetization.adSenseId}`}
-            crossOrigin="anonymous"
-            strategy="afterInteractive"
-          />
-        )}
+        {/* Consent Mode defaults and the visitor's stored choice, set before any Google tag runs */}
+        <Script id="consent-bootstrap" strategy="beforeInteractive">
+          {consentBootstrapScript()}
+        </Script>
 
-        {/* Google Analytics Scripts */}
+        {/* Google AdSense: loaded everywhere except the embed route (see AdSenseLoader) */}
+        <AdSenseLoader />
+
+        {/* Google Analytics: loaded once, here. Consent comes from the bootstrap script above. */}
         {CONFIG.analytics.gaId && (
           <>
             <Script
@@ -184,8 +184,6 @@ export default function RootLayout({
             />
             <Script id="google-analytics" strategy="afterInteractive">
               {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
                 gtag('config', '${CONFIG.analytics.gaId}');
               `}

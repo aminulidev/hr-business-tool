@@ -46,7 +46,7 @@ const seoData = {
   formulaDescription:
     'Customer lifetime value is the gross profit an average customer generates before they leave: monthly revenue, less the cost of serving it, multiplied by how many months they stay. Using gross profit rather than revenue is what makes the figure comparable with acquisition cost, because CAC is paid from gross profit. The lifetime is the reciprocal of churn, which is why small churn changes move CLV so much, and why investors cap very long implied lifetimes at three to five years. ' +
     'LTV:CAC compares that lifetime gross profit with what it cost to acquire the customer. A blended ratio hides the spread between channels, so the second tab computes it channel by channel. ' +
-    'For products monetised across a large free or ad-supported audience, revenue per monthly active user and ARPPU are the equivalent unit-economics figures, linked by the paying share.',
+    'For products monetized across a large free or ad-supported audience, revenue per monthly active user and ARPPU are the equivalent unit-economics figures, linked by the paying share.',
 
   benchmarkTables: [
     {

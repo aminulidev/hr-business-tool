@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { buildPayStubHtml, defaultPeriodNumber, type PayStubData } from '@/lib/payroll/pay-stub';
+import { track } from '@/lib/analytics';
 
 type StubInputs = Omit<PayStubData, 'employeeName' | 'employerName' | 'payDate' | 'periodNumber'>;
 
@@ -49,11 +50,13 @@ export default function PayStubDialog({ open, onOpenChange, data }: PayStubDialo
   const print = () => {
     const win = frameRef.current?.contentWindow;
     if (!win) return;
+    track('pay_stub', { action: 'print' });
     win.focus();
     win.print();
   };
 
   const download = () => {
+    track('pay_stub', { action: 'download' });
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

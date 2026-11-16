@@ -9,7 +9,7 @@ import {
   type PayFrequency,
   type StateCode,
   TAX_YEAR,
-} from '@/lib/payroll/withholding-2026';
+} from '@/lib/payroll/withholding';
 import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
 import { ArrowRight, Calculator, Check, DollarSign, Link2, MapPin } from 'lucide-react';
 

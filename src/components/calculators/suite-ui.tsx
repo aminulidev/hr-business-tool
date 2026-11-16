@@ -7,6 +7,7 @@ import TryExample from './TryExample';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { track } from '@/lib/analytics';
 
 // Small shared pieces for the Phase 17 multi-mode calculators. Keep the
 // `result-display` / `calculator-form` classes: MobileResultSheet and
@@ -88,7 +89,7 @@ export function ModeTabs<T extends string>({ modes, mode, onChange, label, icons
       {modes.map((m) => {
         const Icon: LucideIcon = icons[m.value];
         return (
-          <button key={m.value} type="button" role="tab" aria-selected={mode === m.value} onClick={() => onChange(m.value)} className={`inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${mode === m.value ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/25' : 'text-muted-foreground hover:text-foreground'}`}>
+          <button key={m.value} type="button" role="tab" aria-selected={mode === m.value} onClick={() => { if (m.value !== mode) track('mode_change', { mode: m.value }); onChange(m.value); }} className={`inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${mode === m.value ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/25' : 'text-muted-foreground hover:text-foreground'}`}>
             <Icon className="h-4 w-4" />
             <span className="hidden sm:inline">{m.label}</span>
             <span className="sm:hidden">{m.short}</span>

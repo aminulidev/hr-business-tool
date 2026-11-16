@@ -162,8 +162,8 @@ export interface SafeConversion extends SafeNote {
   postRoundPct: number;
   shares: number;
   conversionPrice: number;
-  /** Discount to the round price actually realised */
-  realisedDiscountPct: number;
+  /** Discount to the round price actually realized */
+  realizedDiscountPct: number;
   valueAtRound: number;
   multipleOnMoney: number;
 }
@@ -229,7 +229,7 @@ export function computeSafes(i: SafeInput): SafeResult | null {
       postRoundPct: c.postPct * 100,
       shares: Math.round(shares),
       conversionPrice: round4(convPrice),
-      realisedDiscountPct: (1 - convPrice / price) * 100,
+      realizedDiscountPct: (1 - convPrice / price) * 100,
       valueAtRound: round2(shares * price),
       multipleOnMoney: round2((shares * price) / c.amount),
     };
@@ -273,7 +273,7 @@ export interface PlannedHire {
 
 export interface PoolInput {
   fullyDilutedShares: number;
-  /** Pool already authorised, % of fully diluted */
+  /** Pool already authorized, % of fully diluted */
   currentPoolPct: number;
   /** Of which already granted, % of fully diluted */
   grantedPct: number;

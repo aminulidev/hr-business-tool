@@ -1,0 +1,57 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "npm run start -- -p 3111",
+      "startServerReadyPattern": "Ready",
+      "startServerReadyTimeout": 60000,
+      "numberOfRuns": 3,
+      "url": [
+        "http://localhost:3111/",
+        "http://localhost:3111/calculators/hourly-paycheck-calculator",
+        "http://localhost:3111/calculators/texas-hourly-paycheck-calculator",
+        "http://localhost:3111/salary/20-an-hour",
+        "http://localhost:3111/category/payroll-taxes"
+      ],
+      "settings": {
+        "onlyCategories": ["performance"],
+        "chromeFlags": "--headless=new --no-sandbox"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "largest-contentful-paint": [
+          "error",
+          {
+            "maxNumericValue": 2500,
+            "aggregationMethod": "median"
+          }
+        ],
+        "cumulative-layout-shift": [
+          "error",
+          {
+            "maxNumericValue": 0.1,
+            "aggregationMethod": "median"
+          }
+        ],
+        "total-byte-weight": [
+          "error",
+          {
+            "maxNumericValue": 921600,
+            "aggregationMethod": "median"
+          }
+        ],
+        "total-blocking-time": [
+          "warn",
+          {
+            "maxNumericValue": 600,
+            "aggregationMethod": "median"
+          }
+        ]
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci/reports"
+    }
+  }
+}

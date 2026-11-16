@@ -6,6 +6,7 @@ import { ThumbsUp, ThumbsDown, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
+import { track } from '@/lib/analytics';
 
 const STORAGE_KEY = 'qbc_feedback_v1';
 const COOLDOWN_MINUTES = 30;
@@ -49,6 +50,8 @@ export default function FeedbackWidget() {
 
   const submit = useCallback(async (helpful: boolean | null, message?: string) => {
     const entry: FeedbackEntry = { slug, helpful, message: message?.trim() || undefined, ts: Date.now() };
+    // Votes are counted here; the API only emails the owner comments and thumbs-down.
+    track('feedback', { helpful: helpful === null ? 'none' : helpful ? 'yes' : 'no', has_comment: Boolean(entry.message) });
     const entries = readStore();
     entries.push(entry);
     writeStore(entries);

@@ -27,18 +27,24 @@ import TryExample from './TryExample';
 import { formatCurrency } from '@/lib/utils';
 import {
   calculatePaycheck,
+  isStateLineKey,
+  parseTaxYear,
+  stateRulesYear,
   TAX_YEAR,
+  taxYearNote,
   type FilingStatus,
   type PayFrequency,
   type PaycheckInput,
   type PaycheckResult,
   type StateCode,
-} from '@/lib/payroll/withholding-2026';
+  type TaxYear,
+} from '@/lib/payroll/withholding';
 import { STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
 import EmployerCostPanel, { ResultViewToggle, type ResultView } from './EmployerCostPanel';
 import ReverseSolverCard from './ReverseSolverCard';
 import PaycheckScenarioCompare from './PaycheckScenarioCompare';
 import PayStubDialog from './PayStubDialog';
+import { TaxYearNotice, TaxYearSwitch } from './TaxYearSwitch';
 import { calculateEmployerCost } from '@/lib/payroll/employer-cost-2026';
 import { parseScenarioParams, writeScenarioParams, type CompareScenario } from '@/lib/payroll/scenario-params';
 
@@ -63,6 +69,8 @@ interface StateDefaults {
   filingStatus: FilingStatus;
   allowances: string;
   nycResident: boolean;
+  /** ?year=2027 opens another selectable tax year */
+  taxYear: TaxYear;
   /** ?view=employer opens the employer-cost side of the result */
   view: ResultView;
   /** Scenario B from b_* params, or null */
@@ -91,6 +99,7 @@ function readDefaults(params: URLSearchParams | null, state: StateCode): StateDe
     filingStatus: 'single',
     allowances: String(STATE_PAYCHECK_PAGES[state].allowances?.defaultSingle ?? 0),
     nycResident: false,
+    taxYear: TAX_YEAR,
     view: 'employee',
     compare: null,
   };
@@ -110,6 +119,7 @@ function readDefaults(params: URLSearchParams | null, state: StateCode): StateDe
   if (qStatus && qStatus in FILING_LABELS) d.filingStatus = qStatus;
   if (qAllow) d.allowances = qAllow;
   if (qNyc === '1') d.nycResident = true;
+  d.taxYear = parseTaxYear(params.get('year'));
   if (params.get('view') === 'employer') d.view = 'employer';
   d.compare = parseScenarioParams(params, scenarioOf(d, state));
   return d;
@@ -134,6 +144,7 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
   const [filingStatus, setFilingStatus] = useState<FilingStatus>(defaults.filingStatus);
   const [allowances, setAllowances] = useState(defaults.allowances);
   const [nycResident, setNycResident] = useState(defaults.nycResident);
+  const [taxYear, setTaxYear] = useState<TaxYear>(defaults.taxYear);
   const [linkCopied, setLinkCopied] = useState(false);
   const [view, setView] = useState<ResultView>(defaults.view);
   const [stubOpen, setStubOpen] = useState(false);
@@ -150,6 +161,7 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
     url.searchParams.set('status', filingStatus);
     if (page.allowances && allowances) url.searchParams.set('allowances', allowances);
     if (state === 'NY' && nycResident) url.searchParams.set('nyc', '1');
+    if (taxYear !== TAX_YEAR) url.searchParams.set('year', String(taxYear));
     if (view === 'employer') url.searchParams.set('view', 'employer');
     writeScenarioParams(url, scenario, 'hourly');
 
@@ -202,10 +214,11 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
         filingStatus,
         stateAllowances: page.allowances ? allow : 0,
         nycResident: state === 'NY' && nycResident,
+        taxYear,
       }),
       error: null,
     };
-  }, [state, hourlyRate, regularHours, overtimeHours, payFrequency, filingStatus, allowances, nycResident, page]);
+  }, [state, hourlyRate, regularHours, overtimeHours, payFrequency, filingStatus, allowances, nycResident, taxYear, page]);
 
   // Reverse solver (Phase 16.1): the current settings applied to any candidate hourly rate
   const inputForRate = (rate: number): PaycheckInput | null => {
@@ -220,6 +233,7 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
       filingStatus,
       stateAllowances: page.allowances ? parseInt(allowances || '0', 10) || 0 : 0,
       nycResident: state === 'NY' && nycResident,
+      taxYear,
     };
   };
 
@@ -250,19 +264,23 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
   const totalWeeklyHours = Math.max(1, (parseFloat(regularHours) || 0) + (parseFloat(overtimeHours) || 0));
   const totalAnnualHours = totalWeeklyHours * 52;
 
+  // What is not final about the selected year's figures; null for a finished year
+  const yearNote = result ? taxYearNote(result.taxYear, state, page.name, result.deductions.some((d) => isStateLineKey(d.key))) : null;
+
   // Pay stub preview (Phase 16.1)
   const stubData = result
     ? {
         payFrequency,
         payFrequencyLabel: FREQ_LABELS[payFrequency].replace(/ \(.*\)$/, ''),
         stateName: page.name,
-        taxYear: TAX_YEAR,
+        taxYear: result.taxYear,
+        taxYearNote: yearNote?.sentences.join(' '),
         isSalary: false,
         hourlyRate: parseFloat(hourlyRate) || 0,
         regularHoursPerWeek: parseFloat(regularHours) || 0,
         overtimeHoursPerWeek: parseFloat(overtimeHours || '0') || 0,
         result,
-        employer: calculateEmployerCost({ state, grossAnnual: result.grossAnnual, ficaWagesAnnual: result.ficaWagesAnnual, payFrequency, hoursPerYear: totalAnnualHours }),
+        employer: calculateEmployerCost({ state, grossAnnual: result.grossAnnual, ficaWagesAnnual: result.ficaWagesAnnual, payFrequency, hoursPerYear: totalAnnualHours, taxYear: result.taxYear }),
         sourceUrl: `https://www.quickbizcalc.com/calculators/${page.slug}`,
       }
     : null;
@@ -291,6 +309,8 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
             </button>
           ))}
         </div>
+
+        <TaxYearSwitch year={taxYear} onChange={setTaxYear} />
 
         {/* Wage & Hours */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -471,7 +491,7 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
             <div className="text-center space-y-1">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-semibold mb-1">
                 <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Live {page.name} {TAX_YEAR} Paycheck Estimate
+                Live {page.name} {result.taxYear} Paycheck Estimate{result.taxYear > TAX_YEAR ? ' (preview)' : ''}
               </div>
               <p className="text-sm text-muted-foreground font-medium">Net Take-Home Pay per Paycheck</p>
               <p className="text-4xl sm:text-5xl font-extrabold text-emerald-600" data-result-primary>
@@ -483,6 +503,8 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
                 <strong className="text-foreground">{formatCurrency(result.netPerHour)}</strong>/hr net after taxes
               </p>
             </div>
+
+            <TaxYearNotice note={yearNote} />
 
             <div className="grid grid-cols-3 gap-3">
               {[
@@ -583,7 +605,7 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
               <div className="flex items-start gap-2">
                 <Info className="h-4 w-4 shrink-0 mt-0.5" />
                 <p>
-                  Estimate based on {TAX_YEAR} IRS and {page.name} withholding formulas for a standard W-4 with no
+                  Estimate based on {result.taxYear} IRS and {stateRulesYear(result.taxYear, state) !== result.taxYear ? `${stateRulesYear(result.taxYear, state)} ` : ''}{page.name} withholding formulas for a standard W-4 with no
                   pre-tax deductions. 401(k) contributions, health insurance premiums, or extra W-4 withholding will
                   change your actual paycheck.
                 </p>

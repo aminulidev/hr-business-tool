@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { track } from '@/lib/analytics';
 import { motion, AnimatePresence } from 'framer-motion';
 import { History, ChevronDown, ChevronUp, RotateCcw, Trash2, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -101,7 +102,7 @@ export default function CalcHistoryPanel<T = Record<string, string>>({
                     type="button"
                     variant="ghost"
                     size="sm"
-                    onClick={() => onRestore(entry.inputs)}
+                    onClick={() => { track('history_restore'); onRestore(entry.inputs); }}
                     className="shrink-0 h-7 px-2.5 text-xs opacity-0 group-hover:opacity-100 transition-opacity text-emerald-600 hover:text-emerald-700 hover:bg-emerald-500/10"
                     title="Restore these inputs"
                   >

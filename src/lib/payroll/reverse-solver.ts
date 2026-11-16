@@ -4,7 +4,7 @@
 // monotonic in the hourly rate, so no tax formula is duplicated here.
 // ---------------------------------------------------------------------------
 
-import { calculatePaycheck, PERIODS_PER_YEAR, type PaycheckInput, type PaycheckResult } from './withholding-2026';
+import { calculatePaycheck, PERIODS_PER_YEAR, type PaycheckInput, type PaycheckResult } from './withholding';
 
 export type TargetBasis = 'paycheck' | 'month' | 'year';
 
@@ -80,7 +80,7 @@ export function solveHourlyRateForNet(
 }
 
 /**
- * Salary flavour: returns the annual salary (whole dollars, rounded up) that
+ * Salary flavor: returns the annual salary (whole dollars, rounded up) that
  * yields the target take-home when run as 40 hours a week at salary ÷ 2,080.
  */
 export function solveSalaryForNet(

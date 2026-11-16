@@ -105,16 +105,22 @@ export default function CookieConsentBanner() {
                   </h3>
                   <Shield className="h-3.5 w-3.5 text-emerald-600" />
                 </div>
+                {/* Short copy on phones: at four lines this paragraph was the largest text block on
+                    some pages, so the browser counted the banner (which appears after hydration) as the
+                    page's largest paint. Two lines also cover less of the calculator. */}
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  We use cookies to enhance your experience, analyze site traffic, and serve
-                  relevant ads. You can choose which cookies to allow. Read our{' '}
+                  <span className="sm:hidden">We use cookies for analytics and ads. You choose which to allow.</span>
+                  <span className="hidden sm:inline">
+                    We use cookies to enhance your experience, analyze site traffic, and serve relevant ads. You can
+                    choose which cookies to allow. Read our
+                  </span>{' '}
                   <Link
                     href="/cookie-policy"
                     className="text-emerald-600 hover:text-emerald-700 underline underline-offset-2"
                   >
                     Cookie Policy
-                  </Link>{' '}
-                  for details.
+                  </Link>
+                  <span className="hidden sm:inline"> for details.</span>
                 </p>
               </div>
               <button

@@ -11,6 +11,7 @@ import {
   Download,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { track } from '@/lib/analytics';
 
 // Lazy-load EmbedModal — zero bundle cost until user clicks Embed
 const EmbedModal = dynamic(() => import('./EmbedModal'), { ssr: false });
@@ -132,6 +133,7 @@ export default function ResultActions() {
   // ---- Print ----
   const handlePrint = useCallback(() => {
     if (!hasResult) return;
+    track('print');
 
     const titleEl = document.querySelector('h1');
     const calculatorTitle = titleEl ? titleEl.textContent?.trim() || 'Calculator' : 'Calculator';
@@ -220,7 +222,7 @@ export default function ResultActions() {
         <span class="pdf-brand">QuickBizCalc</span>
       </div>
       <div class="pdf-header-right">
-        <div class="pdf-doc-title">Official Report</div>
+        <div class="pdf-doc-title">Calculation Summary</div>
         <div class="pdf-date">${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
       </div>
     </div>
@@ -281,6 +283,7 @@ export default function ResultActions() {
   // ---- Copy result text ----
   const handleCopy = useCallback(async () => {
     if (!hasResult) return;
+    track('copy_result');
 
     try {
       const resultSection = document.querySelector('.result-display');
@@ -305,6 +308,7 @@ export default function ResultActions() {
 
   // ---- Share: encode inputs into URL, copy to clipboard ----
   const handleShare = useCallback(async () => {
+    track('share');
     const inputs = gatherInputs();
     const url = new URL(window.location.href);
 
@@ -339,6 +343,7 @@ export default function ResultActions() {
   // ---- PDF Export — opens a styled print preview; user selects "Save as PDF" ----
   const handlePDF = useCallback(() => {
     if (!hasResult || pdfLoading) return;
+    track('pdf');
     setPdfLoading(true);
 
     try {
@@ -418,7 +423,7 @@ export default function ResultActions() {
         <span class="pdf-brand">QuickBizCalc</span>
       </div>
       <div class="pdf-header-right">
-        <div class="pdf-doc-title">Official Report</div>
+        <div class="pdf-doc-title">Calculation Summary</div>
         <div class="pdf-date">${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
       </div>
     </div>
@@ -470,6 +475,7 @@ export default function ResultActions() {
   // ---- Embed ----
   const handleEmbed = useCallback(() => {
     const { slug, title } = getSlugInfo();
+    track('embed_open');
     setEmbedSlug(slug);
     setEmbedTitle(title);
     setShowEmbed(true);

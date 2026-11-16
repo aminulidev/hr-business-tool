@@ -277,9 +277,9 @@ export const salesCompensationCalculators = defineCalculators([
     title: 'Sales Forecast Calculator',
     metaTitle: 'Free Sales Forecast Calculator 2026 — Pipeline, Win Rate, Growth & Retention',
     shortDescription:
-      'Stage-weighted pipeline forecast with win rate, coverage and gap to quota; revenue growth with an annualised rate and banded projection; customer retention, churn and lifetime.',
+      'Stage-weighted pipeline forecast with win rate, coverage and gap to quota; revenue growth with an annualized rate and banded projection; customer retention, churn and lifetime.',
     metaDescription:
-      'Free sales forecast calculator for 2026: stage-weighted pipeline forecast timed to your sales cycle, win rate, pipeline coverage and the pipeline needed to hit quota; revenue growth rate, annualised and projected with bands; customer retention rate, churn, lifetime and churned revenue.',
+      'Free sales forecast calculator for 2026: stage-weighted pipeline forecast timed to your sales cycle, win rate, pipeline coverage and the pipeline needed to hit quota; revenue growth rate, annualized and projected with bands; customer retention rate, churn, lifetime and churned revenue.',
     keywords: [
       'sales forecast calculator',
       'revenue forecast calculator',
@@ -815,7 +815,7 @@ export const salesCompensationCalculators = defineCalculators([
     title: 'MRR Calculator',
     metaTitle: 'Free MRR Calculator 2026 — MRR, ARR, Net New MRR, Trial Conversion & Pricing Tiers',
     shortDescription: 'MRR, ARR, ARPU and ACV from your plan table; the net new MRR bridge with expansion, quick ratio and NRR; trial and freemium conversion; gross margin by pricing tier.',
-    metaDescription: 'Free MRR calculator 2026. Normalise monthly, quarterly and annual plans into MRR, ARR, ARPU and ACV; build the net new MRR bridge (new, expansion, contraction, churn, quick ratio, NRR); measure trial-to-paid and free-to-paid conversion; check gross margin per pricing tier.',
+    metaDescription: 'Free MRR calculator 2026. Normalize monthly, quarterly and annual plans into MRR, ARR, ARPU and ACV; build the net new MRR bridge (new, expansion, contraction, churn, quick ratio, NRR); measure trial-to-paid and free-to-paid conversion; check gross margin per pricing tier.',
     keywords: ['mrr calculator', 'monthly recurring revenue', 'how to calculate mrr', 'mrr formula', 'saas mrr', 'net new mrr', 'mrr growth', 'recurring revenue calculator', 'arr calculator', 'annual recurring revenue', 'arpu calculator', 'acv calculator', 'expansion mrr', 'saas quick ratio', 'trial conversion rate', 'free to paid conversion', 'saas pricing tiers'],
     icon: TrendingUp, tier: 'tier1', category: 'Sales & Compensation', path: '/calculators/mrr-calculator',
   },
@@ -823,8 +823,8 @@ export const salesCompensationCalculators = defineCalculators([
     slug: 'churn-rate-calculator',
     status: 'published',
     title: 'Churn Rate Calculator',
-    metaTitle: 'Free Churn Rate Calculator 2026 — Logo & Revenue Churn, Annualised, GRR & NRR',
-    shortDescription: 'Logo and revenue churn for any period length, annualised properly, with customer lifetime, the size of the customers leaving, and the GRR / NRR retention bridge.',
+    metaTitle: 'Free Churn Rate Calculator 2026 — Logo & Revenue Churn, Annualized, GRR & NRR',
+    shortDescription: 'Logo and revenue churn for any period length, annualized properly, with customer lifetime, the size of the customers leaving, and the GRR / NRR retention bridge.',
     metaDescription: 'Free churn rate calculator 2026. Logo churn, gross and net revenue churn, compound annual churn and average customer lifetime from monthly, quarterly or annual figures; see whether large or small accounts are leaving; gross revenue retention (GRR) and net revenue retention (NRR) bridge.',
     keywords: ['churn rate calculator', 'customer churn', 'revenue churn', 'how to calculate churn', 'churn rate formula', 'saas churn', 'logo churn', 'net churn', 'annual churn rate', 'gross revenue retention', 'grr calculator', 'grr vs nrr', 'customer lifetime churn'],
     icon: TrendingDown, tier: 'tier1', category: 'Sales & Compensation', path: '/calculators/churn-rate-calculator',

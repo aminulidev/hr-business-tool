@@ -13,7 +13,7 @@ import CalcHistoryPanel from './CalcHistoryPanel';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import { useSearchParam } from '@/hooks/useSearchParam';
 import { formatCurrency } from '@/lib/utils';
-import { TAX_YEAR, type PaycheckState, type StateCode } from '@/lib/payroll/withholding-2026';
+import { TAX_YEAR, type PaycheckState, type StateCode } from '@/lib/payroll/withholding';
 import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
 import { STATE_EMPLOYER_TAXES } from '@/lib/payroll/employer-cost-2026';
 import {

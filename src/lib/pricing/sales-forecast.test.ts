@@ -39,7 +39,7 @@ describe('computePipeline', () => {
 
 describe('computeGrowth', () => {
   const r = computeGrowth(GROWTH_DEFAULTS);
-  it('growth, annualised and monthly rates', () => {
+  it('growth, annualized and monthly rates', () => {
     expect(r.growthPct).toBeCloseTo(20, 6);
     expect(r.absoluteGrowth).toBe(200000);
     expect(r.annualizedPct).toBeCloseTo(20, 6); // already annual
@@ -53,7 +53,7 @@ describe('computeGrowth', () => {
     expect(r.endOptimistic).toBeCloseTo(1200000 * 1.25 ** 3, 0);
     expect(r.endConservative).toBeCloseTo(1200000 * 1.15 ** 3, 0);
   });
-  it('monthly periods annualise correctly and a custom rate overrides', () => {
+  it('monthly periods annualize correctly and a custom rate overrides', () => {
     const m = computeGrowth({ previousRevenue: 100000, currentRevenue: 105000, periodMonths: 1, projectPeriods: 12, projectionRatePct: 5, bandPts: 2 });
     expect(m.annualizedPct).toBeCloseTo((Math.pow(1.05, 12) - 1) * 100, 4);
     expect(m.endBase).toBeCloseTo(105000 * 1.05 ** 12, 0);

@@ -15,13 +15,13 @@ const seoData = {
   formula:
     'Average weekly hours = (shifts per cycle × shift length) ÷ (cycle days ÷ 7)\n2-2-3 and Pitman: 7 shifts × 12 h ÷ 2 weeks = 42 h/week\nDuPont: 14 shifts × 12 h ÷ 4 weeks = 42 h/week\n4-on-4-off: 4 shifts × 12 h ÷ (8 ÷ 7) weeks = 42 h/week\nFLSA overtime = hours over 40 in each individual workweek (not the average)\n7(k) overtime = hours over 171 (police) or 212 (fire) in a 28-day work period',
   formulaDescription:
-    'Every common 12-hour rotation averages 42 hours a week because four crews share 168 hours of coverage: 168 ÷ 4 = 42. The average hides the week-to-week swing that drives overtime — a 2-2-3 crew works three shifts (36 hours) one week and four (48 hours) the next, so under the FLSA that second week carries 8 hours at time-and-a-half even though the fortnight averages out. Public-safety employers can elect a 7(k) work period of 7 to 28 days instead; over 28 days the thresholds are 171 hours for law enforcement and 212 for fire protection, which is why most agencies use 28-day periods with 12-hour rotations. The weekly roster uses the plain FLSA rule: hours over 40 for each person at 1.5× their rate.',
+    'Every common 12-hour rotation averages 42 hours a week because four crews share 168 hours of coverage: 168 ÷ 4 = 42. The average hides the week-to-week swing that drives overtime — a 2-2-3 crew works three shifts (36 hours) one week and four (48 hours) the next, so under the FLSA that second week carries 8 hours at time-and-a-half even though the two-week period averages out. Public-safety employers can elect a 7(k) work period of 7 to 28 days instead; over 28 days the thresholds are 171 hours for law enforcement and 212 for fire protection, which is why most agencies use 28-day periods with 12-hour rotations. The weekly roster uses the plain FLSA rule: hours over 40 for each person at 1.5× their rate.',
 
   workedExamples: [
     {
       title: '2-2-3 (Panama) for a 4-crew plant at $28/hour',
       description:
-        'Each crew works 7 of every 14 days on 12-hour shifts: 84 hours per fortnight, 42 a week on average. Week 1 is 36 hours (3 shifts) and week 2 is 48 hours (4 shifts), so each fortnight includes 8 overtime hours. Pay per fortnight = 76 regular hours × $28 + 8 OT hours × $42 = $2,128 + $336 = $2,464, or about $1,232 a week. Over a year: 2,184 hours, 208 of them overtime.',
+        'Each crew works 7 of every 14 days on 12-hour shifts: 84 hours per two weeks, 42 a week on average. Week 1 is 36 hours (3 shifts) and week 2 is 48 hours (4 shifts), so each two-week period includes 8 overtime hours. Pay per two weeks = 76 regular hours × $28 + 8 OT hours × $42 = $2,128 + $336 = $2,464, or about $1,232 a week. Over a year: 2,184 hours, 208 of them overtime.',
     },
     {
       title: 'DuPont 28-day cycle for a refinery, $32/hour',
@@ -65,7 +65,7 @@ const seoData = {
       rows: [
         ['Oregon (statewide)', '14 days', '1 hour of pay for added hours or changed times; half pay for cut hours', 'Retail, hospitality, food service with 500+ employees worldwide'],
         ['New York City', '14 days', '$10–$75 per change', 'Fast food (also "clopening" ban) and retail'],
-        ['Chicago', '14 days', '1 hour of pay per change; half pay for cancelled hours', 'Building services, healthcare, hotels, manufacturing, restaurants, retail, warehouses'],
+        ['Chicago', '14 days', '1 hour of pay per change; half pay for canceled hours', 'Building services, healthcare, hotels, manufacturing, restaurants, retail, warehouses'],
         ['Seattle', '14 days', '1 hour of pay for additions; half pay for subtractions', 'Retail and food service with 500+ employees'],
         ['San Francisco', '14 days', '1–4 hours of pay depending on notice', 'Formula retail with 40+ locations'],
         ['Philadelphia', '14 days', '1 hour of pay for additions; half pay for subtractions', 'Retail, hospitality, food service with 250+ employees and 30+ locations'],

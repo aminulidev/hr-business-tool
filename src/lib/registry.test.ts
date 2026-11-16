@@ -208,7 +208,7 @@ describe('trust layer (Phase 13)', () => {
     expectNone(problems);
   });
 
-  it('authorship is organisation-level until a real, named reviewer is added', () => {
+  it('authorship is organization-level until a real, named reviewer is added', () => {
     // Option 2 chosen Nov 6 2026: no named persons, no invented credentials.
     const authors: Author[] = Object.values(AUTHORS);
     for (const a of authors) {
@@ -220,7 +220,7 @@ describe('trust layer (Phase 13)', () => {
     expect(AUTHORS['editorial-team'].kind).toBe('organization');
   });
 
-  it('every source is a labelled https link to a specific publication', async () => {
+  it('every source is a labeled https link to a specific publication', async () => {
     const problems: string[] = [];
     for (const c of published) {
       const seo = await loadSeo(c.slug);
