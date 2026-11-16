@@ -94,7 +94,7 @@ function MrrMode() {
             </table>
           </div>
           <div className="rounded-xl bg-background border border-border/50 p-4 space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Normalise a contract: ACV, TCV and MRR</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Normalize a contract: ACV, TCV and MRR</p>
             <div className="grid grid-cols-3 gap-3">
               <Field id="ct-tcv" label="Total contract value" value={tcv} onChange={setTcv} prefix="$" step="1000" />
               <Field id="ct-term" label="Term" value={term} onChange={setTerm} suffix="months" step="1" />
@@ -102,7 +102,7 @@ function MrrMode() {
             </div>
             {c && <div className="grid grid-cols-3 gap-3"><Kpi label="ACV" value={usd(c.acv)} sub="recurring ÷ years" color="text-emerald-600" /><Kpi label="Adds to MRR" value={usd(c.mrr)} sub={`for ${c.termMonths} months`} /><Kpi label="Excluded from MRR" value={usd(c.oneTimeFees)} sub="setup, services" color="text-amber-600" /></div>}
           </div>
-          <Note><Info className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />MRR counts only contractually recurring subscription revenue, normalised to a month: an annual plan contributes 1/12 of its price each month, a quarterly plan 1/3. One-time fees, services and uncommitted overages stay out. ARR = MRR × 12; ARPA (average revenue per account) = MRR ÷ paying customers; ACV = ARPA × 12.</Note>
+          <Note><Info className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />MRR counts only contractually recurring subscription revenue, normalized to a month: an annual plan contributes 1/12 of its price each month, a quarterly plan 1/3. One-time fees, services and uncommitted overages stay out. ARR = MRR × 12; ARPA (average revenue per account) = MRR ÷ paying customers; ACV = ARPA × 12.</Note>
         </Result>
       )}
       <CalcHistoryPanel history={history} onRestore={(i) => { try { const p = JSON.parse(i.rows) as PlanRowState[]; if (Array.isArray(p)) setRows(p); } catch {} setTcv(i.tcv ?? ''); setTerm(i.term ?? '12'); setOneTime(i.oneTime ?? '0'); }} onClear={clearHistory} onDelete={deleteEntry} />

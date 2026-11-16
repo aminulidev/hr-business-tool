@@ -2,13 +2,13 @@
 // Programmatic Wage & Salary Breakdown Pages (/salary/[slug])
 // ---------------------------------------------------------------------------
 // Deterministic 2026 gross-to-net, 7-period, 30-state tax, and 50/30/20 budget
-// breakdowns powered by calculatePaycheck() in withholding-2026.ts.
+// breakdowns powered by calculatePaycheck() in payroll/withholding.
 
 import {
   calculatePaycheck,
   type StateCode,
   TAX_YEAR,
-} from './payroll/withholding-2026';
+} from './payroll/withholding';
 import { STATE_CODES, STATE_PAYCHECK_PAGES } from './payroll/state-pages';
 
 export type SalaryTierType = 'hourly' | 'annual';
@@ -43,7 +43,7 @@ const usd = (n: number, decimals = 0) =>
 
 /**
  * Date the salary-page math was last verified: every figure is produced by the
- * shared payroll engine, whose golden tests (withholding-2026.test.ts) and
+ * shared payroll engine, whose golden tests (payroll/withholding/2026.test.ts) and
  * generated-content tests (state-pages.test.ts) ran green on this date.
  */
 export const SALARY_PAGES_REVIEWED = '2026-11-06';

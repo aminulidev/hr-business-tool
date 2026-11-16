@@ -13,7 +13,7 @@ import {
   type PaycheckState,
   type PayFrequency,
   type StateCode,
-} from './withholding-2026';
+} from './withholding';
 import { STATE_CODES, STATE_PAYCHECK_PAGES } from './state-pages';
 import { calculateEmployerCost, type EmployerCostResult } from './employer-cost-2026';
 
@@ -89,7 +89,7 @@ const HEADER_ALIASES: Record<string, BulkColumnKey> = {
   section125: 'benefits',
 };
 
-/** Split one CSV line, honouring double quotes; also accepts tab- or semicolon-separated lines */
+/** Split one CSV line, honoring double quotes; also accepts tab- or semicolon-separated lines */
 export function splitCsvLine(line: string): string[] {
   const sep = line.includes('\t') ? '\t' : line.includes(';') && !line.includes(',') ? ';' : ',';
   const out: string[] = [];
@@ -125,7 +125,7 @@ function headerMap(cells: string[]): Record<number, BulkColumnKey> | null {
       hits++;
     }
   });
-  // a header row has at least two recognised names and no plain numbers
+  // a header row has at least two recognized names and no plain numbers
   const numeric = cells.filter((c) => /^-?\d+(\.\d+)?$/.test(c)).length;
   return hits >= 2 && numeric === 0 ? map : null;
 }

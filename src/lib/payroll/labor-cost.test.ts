@@ -42,7 +42,7 @@ describe('computeLoadedCost', () => {
     expect(ca.total).toBeGreaterThan(r.total);
   });
 
-  it('hourly mode annualises rate × hours and respects part-time hours', () => {
+  it('hourly mode annualizes rate × hours and respects part-time hours', () => {
     const pt = computeLoadedCost({ ...LOADED_COST_DEFAULTS, payType: 'hourly', hourlyRate: 20, hoursPerWeek: 30, paidDaysOff: 10 });
     expect(pt.wages).toBe(20 * 30 * 52);
     expect(pt.paidHoursPerYear).toBe(1560);

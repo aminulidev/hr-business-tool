@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildPayStubHtml, defaultPeriodNumber, escapeHtml, formatPayDate, payStubLines, type PayStubData } from './pay-stub';
-import { calculatePaycheck, TAX_YEAR } from './withholding-2026';
+import { calculatePaycheck, hasStateLines, TAX_YEAR, taxYearNote } from './withholding';
 import { calculateEmployerCost } from './employer-cost-2026';
 
 const result = calculatePaycheck({
@@ -83,6 +83,19 @@ describe('buildPayStubHtml', () => {
     expect(html).toContain('Employer contributions');
     expect(html).toContain('CA Employment Training Tax');
     expect(html).toContain('not an official payroll record');
+  });
+
+  it('prints the tax-year note for a preview year and nothing extra for a finished one', () => {
+    expect(buildPayStubHtml(data)).not.toContain('had not published');
+
+    const preview = calculatePaycheck({ state: 'CA', hourlyRate: 25, regularHoursPerWeek: 40, overtimeHoursPerWeek: 5, overtimeMultiplier: 1.5, payFrequency: 'bi-weekly', filingStatus: 'single', stateAllowances: 1, taxYear: 2027 });
+    const note = taxYearNote(preview.taxYear, 'CA', 'California', hasStateLines(preview))!.sentences.join(' ');
+    const html = buildPayStubHtml({ ...data, result: preview, taxYear: preview.taxYear, taxYearNote: note });
+    expect(html).toContain('2027 withholding');
+    expect(html).toContain('California had not published 2027 withholding figures as of November 17, 2026, so the California lines use 2026 rules.');
+    expect(html).toContain('IRS draft');
+    // the note goes through the same escaping as every other value
+    expect(buildPayStubHtml({ ...data, taxYearNote: '<b>x</b>' })).toContain('&lt;b&gt;x&lt;/b&gt;');
   });
 
   it('leaves the employer section out when no employer figures are given', () => {

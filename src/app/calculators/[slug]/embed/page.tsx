@@ -1,8 +1,10 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getCalculatorBySlug, getAllSlugs, isCalculatorPublished } from '@/lib/calculator-meta';
-import { calculatorComponents } from '@/lib/registry/components';
+import CalculatorRenderer from '@/components/calculators/CalculatorRenderer';
 import Link from 'next/link';
+import { embedCreditUrl } from '@/lib/embed';
+import CalcStartTracker from '@/components/analytics/CalcStartTracker';
 
 // ---------------------------------------------------------------------------
 // Metadata — noindex so embed pages don't create duplicate content
@@ -45,18 +47,16 @@ export default async function EmbedPage({
   const calc = getCalculatorBySlug(slug);
   if (!calc || !isCalculatorPublished(calc)) notFound();
 
-  const CalculatorComponent = calculatorComponents[calc.slug];
-  if (!CalculatorComponent) notFound();
-
   return (
     <div className="embed-page min-h-screen bg-background">
-      <CalculatorComponent />
+      <CalculatorRenderer slug={calc.slug} />
+      <CalcStartTracker scope=".embed-page" />
       <div className="text-center py-2 text-xs text-muted-foreground border-t border-border mt-2">
         Powered by{' '}
         <Link
-          href={`https://quickbizcalc.com/calculators/${slug}`}
+          href={embedCreditUrl(slug)}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener"
           className="text-primary font-semibold hover:underline"
         >
           QuickBizCalc

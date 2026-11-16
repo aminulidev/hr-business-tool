@@ -184,7 +184,7 @@ export default function InventoryValuationCalculator() {
 
             <div className="flex items-start gap-2 text-xs text-muted-foreground">
               <Info className="h-4 w-4 shrink-0 mt-0.5" />
-              <p>With {result.costTrend} costs, {result.costTrend === 'rising' ? 'LIFO reports the highest COGS and lowest profit, FIFO the lowest COGS and the highest ending inventory' : result.costTrend === 'falling' ? 'FIFO reports the highest COGS and LIFO the highest ending inventory' : 'all three methods agree'}. LIFO is allowed for US tax (IRS Form 970 election, conformity rule) but not under IFRS. Specific identification, retail method and lower-of-cost-or-market write-downs are not modelled.</p>
+              <p>With {result.costTrend} costs, {result.costTrend === 'rising' ? 'LIFO reports the highest COGS and lowest profit, FIFO the lowest COGS and the highest ending inventory' : result.costTrend === 'falling' ? 'FIFO reports the highest COGS and LIFO the highest ending inventory' : 'all three methods agree'}. LIFO is allowed for US tax (IRS Form 970 election, conformity rule) but not under IFRS. Specific identification, retail method and lower-of-cost-or-market write-downs are not modeled.</p>
             </div>
           </div>
         </motion.div>

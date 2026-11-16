@@ -155,7 +155,7 @@ const seoData = {
     { slug: 'break-even-calculator', title: 'Break-Even Calculator', description: 'Break-even point from fixed costs and unit economics', icon: 'Target' },
     { slug: 'labor-cost-calculator', title: 'Labor Cost Calculator', description: 'Loaded employee and team cost to feed your cost lines', icon: 'Briefcase' },
     { slug: 'discount-calculator', title: 'Discount Calculator', description: 'Sale prices, stacked discounts and what they do to margin', icon: 'Tag' },
-    { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Return on investment with annualised figures', icon: 'BarChart3' },
+    { slug: 'roi-calculator', title: 'ROI Calculator', description: 'Return on investment with annualized figures', icon: 'BarChart3' },
   ],
   sources: [SRC.nyuSternMargins],
 } satisfies CalculatorSeoData;

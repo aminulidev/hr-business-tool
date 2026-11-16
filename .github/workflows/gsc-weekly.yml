@@ -1,0 +1,59 @@
+name: Search Console weekly report
+
+# Pulls the last 28 days from Search Console every Monday and attaches the report to the run.
+# It does nothing until the repository secret GSC_SERVICE_ACCOUNT_JSON exists (setup: docs/measurement.md).
+# Nothing is committed: download the report from the run's Artifacts section.
+
+on:
+  schedule:
+    - cron: '0 13 * * 1' # Mondays 13:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+      GSC_SITE_URL: ${{ vars.GSC_SITE_URL }}
+    steps:
+      - name: Check for credentials
+        id: creds
+        run: |
+          if [ -z "$GSC_SERVICE_ACCOUNT_JSON" ]; then
+            echo "GSC_SERVICE_ACCOUNT_JSON is not set; skipping. See docs/measurement.md." >> "$GITHUB_STEP_SUMMARY"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v5
+        if: steps.creds.outputs.ready == 'true'
+
+      - uses: actions/setup-node@v5
+        if: steps.creds.outputs.ready == 'true'
+        with:
+          node-version: 22
+
+      # The scripts use only Node built-ins, so there is no install step.
+      # The runner keeps no history, so pull the previous 28 days first; the report then shows the change.
+      - name: Pull the previous 28 days (for comparison)
+        if: steps.creds.outputs.ready == 'true'
+        run: |
+          node scripts/gsc-pull.mjs --end "$(date -u -d '31 days ago' +%F)"
+
+      - name: Pull the last 28 days and write the report
+        if: steps.creds.outputs.ready == 'true'
+        run: |
+          node scripts/gsc-pull.mjs
+          cat "$(ls data/gsc/report-*.md | sort | tail -1)" >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: steps.creds.outputs.ready == 'true'
+        with:
+          name: gsc-report
+          path: data/gsc/
+          retention-days: 90

@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Code2, Copy, Check, X, ExternalLink, Monitor } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { track } from '@/lib/analytics';
+import { buildEmbedCode, EMBED_DEFAULT_HEIGHT, EMBED_DEFAULT_WIDTH } from '@/lib/embed';
 
 interface EmbedModalProps {
   slug: string;
@@ -12,30 +14,18 @@ interface EmbedModalProps {
   onClose: () => void;
 }
 
-const EMBED_WIDTH = 900;
-const EMBED_HEIGHT = 700;
-
 export default function EmbedModal({ slug, title, onClose }: EmbedModalProps) {
   const [copied, setCopied] = useState(false);
-  const [width, setWidth] = useState(String(EMBED_WIDTH));
-  const [height, setHeight] = useState(String(EMBED_HEIGHT));
+  const [width, setWidth] = useState(String(EMBED_DEFAULT_WIDTH));
+  const [height, setHeight] = useState(String(EMBED_DEFAULT_HEIGHT));
 
-  const embedUrl =
-    typeof window !== 'undefined'
-      ? `${window.location.origin}/calculators/${slug}/embed`
-      : `https://quickbizcalc.com/calculators/${slug}/embed`;
-
-  const iframeCode = `<iframe
-  src="${embedUrl}"
-  width="${width}"
-  height="${height}"
-  style="border:none;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.10)"
-  title="${title}"
-  loading="lazy"
-  allow="clipboard-write"
-></iframe>`;
+  // The preview opens this site's own embed route; the copied code always points at production.
+  const previewUrl = `/calculators/${slug}/embed`;
+  // An iframe plus a visible one-line credit that sits on the host page, outside the frame.
+  const iframeCode = buildEmbedCode({ slug, title, width: Number(width), height: Number(height) });
 
   const handleCopy = useCallback(async () => {
+    track('embed_copy', { tool: slug });
     try {
       await navigator.clipboard.writeText(iframeCode);
     } catch {
@@ -48,7 +38,7 @@ export default function EmbedModal({ slug, title, onClose }: EmbedModalProps) {
     }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  }, [iframeCode]);
+  }, [iframeCode, slug]);
 
   return (
     <AnimatePresence>
@@ -153,12 +143,12 @@ export default function EmbedModal({ slug, title, onClose }: EmbedModalProps) {
 
             {/* Info banner */}
             <div className="bg-primary/5 border border-primary/15 rounded-xl px-4 py-3 text-xs text-muted-foreground leading-relaxed">
-              <strong className="text-foreground">Free to embed.</strong> This calculator will remain free and ad-supported on your site. A small &quot;Powered by QuickBizCalc&quot; attribution appears at the bottom.
+              <strong className="text-foreground">Free to embed, with no ads inside it.</strong> The code includes a one-line credit under the calculator. Please keep it: it is the only thing we ask in return.
             </div>
 
             {/* Preview link */}
             <Link
-              href={embedUrl}
+              href={previewUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-xs text-primary hover:underline font-medium"

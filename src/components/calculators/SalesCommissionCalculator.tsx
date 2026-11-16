@@ -523,7 +523,7 @@ export default function SalesCommissionCalculator() {
     };
   }, [quotaBase, quotaRate, salesQuota, actualSales, accelerator, totalDeductions]);
 
-  // ─── Comparison snapshot (reads the three memoised results above) ───────
+  // ─── Comparison snapshot (reads the three memoized results above) ───────
   const getSnapshot = (): CommissionSnapshot => {
     if (activeTab === 'simple') {
       const sales = parseNum(salesAmount);

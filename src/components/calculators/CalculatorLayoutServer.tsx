@@ -13,6 +13,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import ResultActions from './ResultActions';
+import CalcStartTracker from '@/components/analytics/CalcStartTracker';
 import FeedbackWidget from './FeedbackWidget';
 import { iconMap, type IconName } from '@/lib/registry/icons';
 import Byline from '@/components/seo/Byline';
@@ -488,6 +489,7 @@ export default function CalculatorLayoutServer({
             </div>
             <div className="shrink-0 w-full sm:w-auto">
               <ResultActions />
+              <CalcStartTracker />
             </div>
           </div>
         </div>

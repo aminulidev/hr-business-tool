@@ -40,3 +40,16 @@ yarn-error.log*
 next-env.d.ts
 
 /lib/generated/prisma
+
+# Google service account keys for scripts/gsc-pull.mjs (keep the key outside the repo anyway)
+*gsc-key*.json
+*service-account*.json
+
+# Local-development copies of sign-ups, feedback and contact messages (they hold email addresses)
+data/*.jsonl
+
+# Raw Search Console pulls (large; the Markdown reports next to them can be committed)
+data/gsc/*.json
+
+# Lighthouse CI output
+.lighthouseci/

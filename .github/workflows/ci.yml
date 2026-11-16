@@ -34,3 +34,37 @@ jobs:
         run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: 1
+
+  # Phase 19: performance budget. Builds with analytics off so lab runs never report to the live GA property,
+  # then measures five flagship pages on an emulated phone (median of 3 runs each). Budgets are in
+  # lighthouserc.json; how to read and tighten them is in docs/measurement.md.
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build (analytics off)
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+          NEXT_PUBLIC_DISABLE_ANALYTICS: 1
+
+      - name: Lighthouse budget (mobile, 5 pages, median of 3 runs)
+        run: npx --yes @lhci/cli@0.16.1 autorun
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
+          retention-days: 14
+          include-hidden-files: true

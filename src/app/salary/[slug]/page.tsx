@@ -14,7 +14,7 @@ import {
 import Byline from '@/components/seo/Byline';
 import { authorJsonLd, getAuthor, publisherJsonLd } from '@/lib/authors';
 import { SITE_URL, SITE_NAME } from '@/lib/calculator-meta';
-import { TAX_YEAR } from '@/lib/payroll/withholding-2026';
+import { TAX_YEAR } from '@/lib/payroll/withholding';
 import {
   ArrowLeft,
   ArrowRight,

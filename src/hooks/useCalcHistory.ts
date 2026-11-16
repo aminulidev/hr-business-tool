@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import type { CalculatorSlug } from '@/lib/calculator-meta';
+import { track } from '@/lib/analytics';
 
 export interface CalcHistoryEntry<T = Record<string, string>> {
   id: string;
@@ -51,6 +52,8 @@ export function useCalcHistory<T = Record<string, string>>(slug: CalculatorSlug)
         inputs,
         summary,
       };
+      // `tool` is the history key, which on multi-mode pages identifies the tab that was saved.
+      track('calc_save', { tool: slug });
       setHistory((prev) => {
         const updated = [entry, ...prev].slice(0, MAX_ENTRIES);
         writeStorage<T>(slug, updated);

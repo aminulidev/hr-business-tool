@@ -16,7 +16,7 @@ import {
   type PaycheckState,
   type PayFrequency,
   type StateCode,
-} from '@/lib/payroll/withholding-2026';
+} from '@/lib/payroll/withholding';
 import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
 import { scenarioAllowances, type CompareScenario } from '@/lib/payroll/scenario-params';
 
@@ -71,6 +71,7 @@ export function scenarioInput(s: CompareScenario, mode: 'hourly' | 'salary', a: 
     preTaxBenefitsAnnual: a.preTaxBenefitsAnnual,
     otherDeductionsPerPeriod: ((a.otherDeductionsPerPeriod ?? 0) * aPeriods) / periods,
     w4: a.w4,
+    taxYear: a.taxYear,
   };
 }
 

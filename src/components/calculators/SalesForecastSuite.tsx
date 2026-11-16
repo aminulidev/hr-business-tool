@@ -175,7 +175,7 @@ function GrowthMode() {
           <div className="text-center space-y-1">
             <p className="text-sm text-muted-foreground font-medium">Revenue growth, {periodWord} over {periodWord}</p>
             <p className={`text-4xl sm:text-5xl font-extrabold ${tone}`} data-result-primary>{pct(r.growthPct)}</p>
-            <p className="text-xs sm:text-sm text-muted-foreground"><strong className="text-foreground">{formatCurrency(r.absoluteGrowth)}</strong> absolute · annualised <strong className="text-foreground">{pct(r.annualizedPct)}</strong> · monthly compound <strong className="text-foreground">{pct(r.monthlyPct, 2)}</strong>{r.doublingPeriods !== null && <> · doubles every <strong className="text-foreground">{r.doublingPeriods}</strong> {periodWord}s at {pct(r.rateUsedPct)}</>}</p>
+            <p className="text-xs sm:text-sm text-muted-foreground"><strong className="text-foreground">{formatCurrency(r.absoluteGrowth)}</strong> absolute · annualized <strong className="text-foreground">{pct(r.annualizedPct)}</strong> · monthly compound <strong className="text-foreground">{pct(r.monthlyPct, 2)}</strong>{r.doublingPeriods !== null && <> · doubles every <strong className="text-foreground">{r.doublingPeriods}</strong> {periodWord}s at {pct(r.rateUsedPct)}</>}</p>
           </div>
           {r.projection.length > 0 && (
             <div className="rounded-xl bg-background border border-border/50 overflow-hidden">
@@ -224,7 +224,7 @@ function RetentionMode() {
           <div className="text-center space-y-1">
             <p className="text-sm text-muted-foreground font-medium">Customer retention rate</p>
             <p className={`text-4xl sm:text-5xl font-extrabold ${tone}`} data-result-primary>{pct(r.retentionPct)}</p>
-            <p className="text-xs sm:text-sm text-muted-foreground"><strong className="text-foreground">{int(r.retained)}</strong> of {int(num(v.start))} kept · churn <strong className="text-foreground">{pct(r.churnPct)}</strong> ({int(r.churned)} lost) · annualised retention <strong className="text-foreground">{pct(r.annualRetentionPct)}</strong>{r.averageLifetimeMonths !== null && <> · average customer lifetime <strong className="text-foreground">{r.averageLifetimeMonths}</strong> months</>}</p>
+            <p className="text-xs sm:text-sm text-muted-foreground"><strong className="text-foreground">{int(r.retained)}</strong> of {int(num(v.start))} kept · churn <strong className="text-foreground">{pct(r.churnPct)}</strong> ({int(r.churned)} lost) · annualized retention <strong className="text-foreground">{pct(r.annualRetentionPct)}</strong>{r.averageLifetimeMonths !== null && <> · average customer lifetime <strong className="text-foreground">{r.averageLifetimeMonths}</strong> months</>}</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Kpi label="Net customer growth" value={pct(r.netGrowthPct)} sub={`${int(num(v.end))} vs ${int(num(v.start))}`} color={r.netGrowthPct !== null && r.netGrowthPct < 0 ? 'text-red-600' : 'text-emerald-600'} />
@@ -232,7 +232,7 @@ function RetentionMode() {
             <Kpi label="Revenue lost to churn" value={r.churnedRevenuePeriod === null ? 'add revenue per customer' : formatCurrency(r.churnedRevenuePeriod)} sub={r.churnedRevenueAnnual !== null ? `≈ ${formatCurrency(r.churnedRevenueAnnual)} a year` : undefined} color="text-amber-600" />
             <Kpi label="Cohort left after 12 months" value={r.cohortAfter12Months === null ? '—' : int(r.cohortAfter12Months)} sub="of today's customers, with no new ones" />
           </div>
-          <p className="text-xs text-muted-foreground flex items-start gap-2"><Info className="h-4 w-4 shrink-0 mt-0.5" /> Retention = (end − new) ÷ start. New customers are excluded so that growth cannot hide churn. Annualised figures compound the period rate; lifetime is 1 ÷ monthly churn, the simplest input to a customer lifetime value.</p>
+          <p className="text-xs text-muted-foreground flex items-start gap-2"><Info className="h-4 w-4 shrink-0 mt-0.5" /> Retention = (end − new) ÷ start. New customers are excluded so that growth cannot hide churn. Annualized figures compound the period rate; lifetime is 1 ÷ monthly churn, the simplest input to a customer lifetime value.</p>
         </Result>
       )}
       <CalcHistoryPanel history={history} onRestore={(i) => setV((p) => ({ ...p, ...i }))} onClear={clearHistory} onDelete={deleteEntry} />

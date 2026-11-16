@@ -5,7 +5,7 @@ import { SRC } from './sources';
 // employee-cost, team-cost and hr-budget pages. Every figure below is produced
 // by the same functions the calculator runs, so article and tool agree.
 // ---------------------------------------------------------------------------
-import { TAX_YEAR } from '@/lib/payroll/withholding-2026';
+import { TAX_YEAR } from '@/lib/payroll/withholding';
 import { STATE_EMPLOYER_TAXES } from '@/lib/payroll/employer-cost-2026';
 import { buildEmployerCostContent } from '@/lib/payroll/employer-cost-content';
 import {

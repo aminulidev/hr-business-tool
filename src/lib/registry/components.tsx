@@ -1,8 +1,13 @@
 // ---------------------------------------------------------------------------
 // slug → calculator component. The ONLY place that maps a slug to its React
-// component; both /calculators/[slug] and /calculators/[slug]/embed read it.
-// Keys are type-checked against the registry. registry.test.ts asserts every
-// published slug has an entry.
+// component; both /calculators/[slug] and /calculators/[slug]/embed read it,
+// through the client component CalculatorRenderer. Keys are type-checked
+// against the registry. registry.test.ts asserts every published slug has an
+// entry.
+//
+// Import this file only from client components. Imported from a Server
+// Component, the dynamic() calls below do not split anything and every
+// calculator is shipped to every calculator page.
 // ---------------------------------------------------------------------------
 import type React from 'react';
 import dynamic from 'next/dynamic';
@@ -26,7 +31,6 @@ export const calculatorComponents: Partial<Record<CalculatorSlug, React.Componen
   'overtime-calculator': dynamic(() => import('@/components/calculators/OvertimeCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'discount-calculator': dynamic(() => import('@/components/calculators/DiscountCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'tax-bracket-calculator': dynamic(() => import('@/components/calculators/TaxBracketCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'after-tax-income-calculator': dynamic(() => import('@/components/calculators/AfterTaxIncomeCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'business-day-calculator': dynamic(() => import('@/components/calculators/BusinessDayCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'property-tax-calculator': dynamic(() => import('@/components/calculators/PropertyTaxCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'gross-margin-calculator': dynamic(() => import('@/components/calculators/GrossMarginCalculator'), { loading: () => <CalculatorSkeleton /> }),
@@ -34,8 +38,6 @@ export const calculatorComponents: Partial<Record<CalculatorSlug, React.Componen
   'tax-refund-estimator': dynamic(() => import('@/components/calculators/TaxRefundCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'time-to-decimal-calculator': dynamic(() => import('@/components/calculators/DecimalConverterCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'wages-calculator': dynamic(() => import('@/components/calculators/WagesCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'payroll-deduction-calculator': dynamic(() => import('@/components/calculators/PayrollDeductionCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'salary-tax-calculator': dynamic(() => import('@/components/calculators/SalaryTaxCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'time-card-calculator-with-lunch': dynamic(() => import('@/components/calculators/TimeCardLunchCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'hourly-paycheck-calculator': dynamic(() => import('@/components/calculators/HourlyPaycheckCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'california-hourly-paycheck-calculator': () => <StatePaycheckCalculator state="CA" />,
@@ -91,33 +93,13 @@ export const calculatorComponents: Partial<Record<CalculatorSlug, React.Componen
   'w-2-calculator': dynamic(() => import('@/components/calculators/W2Calculator'), { loading: () => <CalculatorSkeleton /> }),
   '1099-calculator': dynamic(() => import('@/components/calculators/Calculator1099'), { loading: () => <CalculatorSkeleton /> }),
   'self-employment-tax-calculator': dynamic(() => import('@/components/calculators/SelfEmploymentTaxCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'work-hours-calculator': dynamic(() => import('@/components/calculators/WorkHoursCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'employee-hours-calculator': dynamic(() => import('@/components/calculators/EmployeeHoursCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'shift-hours-calculator': dynamic(() => import('@/components/calculators/ShiftHoursCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'attendance-calculator': dynamic(() => import('@/components/calculators/AttendanceCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'leave-calculator': dynamic(() => import('@/components/calculators/LeaveCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'working-hours-calculator': dynamic(() => import('@/components/calculators/WorkingHoursCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'timesheet-calculator': dynamic(() => import('@/components/calculators/TimesheetCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'payroll-hours-calculator': dynamic(() => import('@/components/calculators/PayrollHoursCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'clock-in-calculator': dynamic(() => import('@/components/calculators/ClockInCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'utilization-rate-calculator': dynamic(() => import('@/components/calculators/UtilizationRateCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'shift-rotation-calculator': dynamic(() => import('@/components/calculators/ShiftSchedulePlanner'), { loading: () => <CalculatorSkeleton /> }),
-  'lunch-deduction-calculator': dynamic(() => import('@/components/calculators/LunchDeductionCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'employee-retention-calculator': dynamic(() => import('@/components/calculators/EmployeeRetentionCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'attrition-calculator': dynamic(() => import('@/components/calculators/AttritionCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'fte-calculator': dynamic(() => import('@/components/calculators/FTECalculator'), { loading: () => <CalculatorSkeleton /> }),
   'hiring-metrics-calculator': dynamic(() => import('@/components/calculators/HiringMetricsSuite'), { loading: () => <CalculatorSkeleton /> }),
   'labor-cost-calculator': dynamic(() => import('@/components/calculators/LaborCostSuite'), { loading: () => <CalculatorSkeleton /> }),
-  'employee-productivity-calculator': dynamic(() => import('@/components/calculators/EmployeeProductivityCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'employee-benefit-cost-calculator': dynamic(() => import('@/components/calculators/EmployeeBenefitCostCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'employee-utilization-calculator': dynamic(() => import('@/components/calculators/EmployeeUtilizationCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'payroll-cost-calculator': dynamic(() => import('@/components/calculators/PayrollCostCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'workforce-planning-calculator': dynamic(() => import('@/components/calculators/WorkforcePlanningSuite'), { loading: () => <CalculatorSkeleton /> }),
-  'workforce-capacity-calculator': dynamic(() => import('@/components/calculators/WorkforceCapacityCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'ebitda-margin-calculator': dynamic(() => import('@/components/calculators/EbitdaMarginCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'gross-profit-calculator': dynamic(() => import('@/components/calculators/GrossProfitCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'net-profit-calculator': dynamic(() => import('@/components/calculators/NetProfitCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'retail-margin-calculator': dynamic(() => import('@/components/calculators/RetailMarginCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'burn-rate-calculator': dynamic(() => import('@/components/calculators/BurnRateCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'runway-calculator': dynamic(() => import('@/components/calculators/RunwayCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'budget-calculator': dynamic(() => import('@/components/calculators/BudgetCalculator'), { loading: () => <CalculatorSkeleton /> }),
@@ -129,11 +111,7 @@ export const calculatorComponents: Partial<Record<CalculatorSlug, React.Componen
   'financial-ratio-calculator': dynamic(() => import('@/components/calculators/FinancialRatioSuite'), { loading: () => <CalculatorSkeleton /> }),
   'unit-economics-calculator': dynamic(() => import('@/components/calculators/UnitEconomicsCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'operating-cash-flow-calculator': dynamic(() => import('@/components/calculators/OperatingCashFlowCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'contribution-calculator': dynamic(() => import('@/components/calculators/ContributionCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'split-commission-calculator': dynamic(() => import('@/components/calculators/SplitCommissionCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'sales-target-calculator': dynamic(() => import('@/components/calculators/SalesTargetCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'sales-forecast-calculator': dynamic(() => import('@/components/calculators/SalesForecastSuite'), { loading: () => <CalculatorSkeleton /> }),
-  'lead-cost-calculator': dynamic(() => import('@/components/calculators/LeadCostCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'customer-acquisition-cost-calculator': dynamic(() => import('@/components/calculators/CustomerAcquisitionCostCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'customer-lifetime-value-calculator': dynamic(() => import('@/components/calculators/CustomerLifetimeValueCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'cac-payback-calculator': dynamic(() => import('@/components/calculators/CacPaybackCalculator'), { loading: () => <CalculatorSkeleton /> }),
@@ -150,9 +128,6 @@ export const calculatorComponents: Partial<Record<CalculatorSlug, React.Componen
   'startup-equity-calculator': dynamic(() => import('@/components/calculators/StartupEquitySuite'), { loading: () => <CalculatorSkeleton /> }),
   'vat-calculator': dynamic(() => import('@/components/calculators/VatCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'sales-tax-calculator': dynamic(() => import('@/components/calculators/SalesTaxCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'income-tax-calculator': dynamic(() => import('@/components/calculators/IncomeTaxCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'straight-line-depreciation-calculator': dynamic(() => import('@/components/calculators/StraightLineDepreciationCalculator'), { loading: () => <CalculatorSkeleton /> }),
-  'declining-balance-depreciation-calculator': dynamic(() => import('@/components/calculators/DecliningBalanceDepreciationCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'financial-statements-calculator': dynamic(() => import('@/components/calculators/FinancialStatementsSuite'), { loading: () => <CalculatorSkeleton /> }),
   'inventory-valuation-calculator': dynamic(() => import('@/components/calculators/InventoryValuationCalculator'), { loading: () => <CalculatorSkeleton /> }),
   'accounts-receivable-days-calculator': dynamic(() => import('@/components/calculators/AccountsReceivableDaysCalculator'), { loading: () => <CalculatorSkeleton /> }),

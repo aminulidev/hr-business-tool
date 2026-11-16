@@ -70,10 +70,10 @@ describe('computeSafes', () => {
     expect(r.existingPctPostRound).toBeCloseTo((1 - 0.083333 - 0.03125) * 70, 2);
     expect(r.safes[0].postRoundPct + r.safes[1].postRoundPct + r.existingPctPostRound + r.investorPct + r.poolPct).toBeCloseTo(100, 6);
   });
-  it('conversion price, realised discount and paper multiple', () => {
+  it('conversion price, realized discount and paper multiple', () => {
     expect(r.safes[0].conversionPrice).toBeLessThan(r.roundPricePerShare);
     // cap 6M against the effective pre-money the old holders get (12M − 10% × 15M = 10.5M) → 42.9% off the round price
-    expect(r.safes[0].realisedDiscountPct).toBeCloseTo((1 - 6000000 / 10500000) * 100, 3);
+    expect(r.safes[0].realizedDiscountPct).toBeCloseTo((1 - 6000000 / 10500000) * 100, 3);
     expect(r.safes[0].multipleOnMoney).toBeCloseTo(1.75, 2); // 5.83% × 15M ÷ 500k
     expect(r.safes[1].multipleOnMoney).toBeCloseTo(1.31, 2);
     expect(r.roundPricePerShare).toBeCloseTo(15000000 / r.totalSharesAfter, 3);
@@ -82,10 +82,10 @@ describe('computeSafes', () => {
     const d = computeSafes({ ...SAFE_DEFAULTS, safes: [{ name: 'D', amount: 100000, cap: 20000000, discountPct: 20 }, { name: 'U', amount: 100000, cap: 0, discountPct: 0 }] })!;
     expect(d.safes[0].method).toBe('discount');
     expect(d.safes[0].effectiveValuation).toBe(12000000); // 15M post × 0.8
-    expect(d.safes[0].realisedDiscountPct).toBeCloseTo(20, 6);
+    expect(d.safes[0].realizedDiscountPct).toBeCloseTo(20, 6);
     expect(d.safes[0].postRoundPct).toBeCloseTo((100000 / 12000000) * 100, 6);
     expect(d.safes[1].method).toBe('round');
-    expect(d.safes[1].realisedDiscountPct).toBeCloseTo(0, 6);
+    expect(d.safes[1].realizedDiscountPct).toBeCloseTo(0, 6);
     expect(d.safes[1].conversionPrice).toBe(d.roundPricePerShare);
   });
   it('reports what founders would have kept had the SAFE money been raised in the round', () => {

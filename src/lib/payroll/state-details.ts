@@ -23,11 +23,10 @@ import {
   OR_PAID_LEAVE_RATE,
   OR_TRANSIT_TAX_RATE,
   PA_UC_EMPLOYEE_RATE,
-  SOCIAL_SECURITY_WAGE_BASE,
   WA_CARES_RATE,
   WA_PFML_EMPLOYEE_RATE,
-  type StateCode,
-} from './withholding-2026';
+} from './withholding/2026';
+import { SOCIAL_SECURITY_WAGE_BASE, type StateCode } from './withholding';
 
 export interface LocalMinimumWage {
   jurisdiction: string;
@@ -46,7 +45,7 @@ export interface PayrollProgram {
 export interface StateDetails {
   /** BLS OEWS May 2025 all-occupations median, $/hour */
   medianHourlyWage: number;
-  /** Neighbouring states that also have a page; used for the engine-generated comparison */
+  /** Neighboring states that also have a page; used for the engine-generated comparison */
   neighbors: StateCode[];
   /** Local minimum wages above the state floor; omit when the state pre-empts local minimums */
   localMinimumWages?: LocalMinimumWage[];
@@ -157,7 +156,7 @@ export const STATE_DETAILS: Record<StateCode, StateDetails> = {
     ],
     localIncomeTax: {
       summary:
-        'New York City residents pay a city income tax of 3.078% to 3.876%, withheld with state tax; the calculator applies it when you switch on the NYC resident option. Yonkers residents pay a surcharge of 16.75% of their state tax, and non-residents who work in Yonkers pay 0.5% of wages; neither is modelled here.',
+        'New York City residents pay a city income tax of 3.078% to 3.876%, withheld with state tax; the calculator applies it when you switch on the NYC resident option. Yonkers residents pay a surcharge of 16.75% of their state tax, and non-residents who work in Yonkers pay 0.5% of wages; neither is modeled here.',
       examples: [
         { place: 'New York City (residents)', rate: '3.078%–3.876%' },
         { place: 'Yonkers (residents)', rate: '16.75% of NY State tax' },
@@ -766,7 +765,7 @@ export const STATE_DETAILS: Record<StateCode, StateDetails> = {
     ],
     localIncomeTax: {
       summary:
-        'Two Portland-area income taxes apply only above high thresholds and are withheld only if you opt in or earn above the threshold: Multnomah County\'s Preschool for All tax and the Metro Supportive Housing Services tax. Neither affects a typical hourly paycheck and neither is modelled here.',
+        'Two Portland-area income taxes apply only above high thresholds and are withheld only if you opt in or earn above the threshold: Multnomah County\'s Preschool for All tax and the Metro Supportive Housing Services tax. Neither affects a typical hourly paycheck and neither is modeled here.',
       examples: [
         { place: 'Multnomah County Preschool for All', rate: '1.5% over $125,000 single / $200,000 joint (3% over $250,000 / $400,000)' },
         { place: 'Metro Supportive Housing Services', rate: '1% over $125,000 single / $200,000 joint' },

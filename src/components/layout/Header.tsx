@@ -6,29 +6,25 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calculator, ArrowLeft, Info, Mail, Menu, X, Search, BookOpen, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
-import { getPublishedCalculators, categoryOrder, calculators, type CalculatorMeta } from '@/lib/calculator-meta';
-import { searchCalculators, popularCalculators } from '@/lib/search-calculators';
+import dynamic from 'next/dynamic';
+
+// The dialog pulls in the whole calculator registry, so it is fetched on first use instead of on every page load.
+const loadSearchDialog = () => import('./SearchDialog');
+const SearchDialog = dynamic(loadSearchDialog, { ssr: false });
 
 // ─── Search Component ────────────────────────────────────────────────────────
 
 function SearchBar() {
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState('');
-  const router = useRouter();
+  // False until the visitor first opens search; the dialog is not rendered (or downloaded) before that.
+  const [loaded, setLoaded] = useState(false);
 
   // Ctrl+K / Cmd+K keyboard shortcut
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
+        setLoaded(true);
         setOpen((prev) => !prev);
       }
     };
@@ -36,27 +32,22 @@ function SearchBar() {
     return () => document.removeEventListener('keydown', onKey);
   }, []);
 
-  const handleOpenChange = (isOpen: boolean) => {
-    setOpen(isOpen);
-    if (!isOpen) {
-      setSearch('');
-    }
+  const openSearch = () => {
+    setLoaded(true);
+    setOpen(true);
   };
-
-  const handleSelect = (path: string) => {
-    setOpen(false);
-    setSearch('');
-    router.push(path);
+  // Start the download as soon as the visitor shows intent, so the dialog is ready by the click.
+  const preload = () => {
+    void loadSearchDialog();
   };
-
-  const isSearching = search.trim().length > 0;
-  const searchResults = isSearching ? searchCalculators(search, getPublishedCalculators()) : [];
 
   return (
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={openSearch}
+        onPointerEnter={preload}
+        onFocus={preload}
         aria-label="Search calculators"
         className="flex items-center cursor-pointer gap-2 h-9 rounded-lg border border-border/50 bg-background/80 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors px-3 w-9 sm:w-auto"
       >
@@ -67,164 +58,7 @@ function SearchBar() {
         </kbd>
       </button>
 
-      <CommandDialog
-        open={open}
-        onOpenChange={handleOpenChange}
-        shouldFilter={false}
-        title="Search Calculators"
-        description="Search for any business or HR calculator"
-        showCloseButton={false}
-        className="sm:max-w-xl"
-      >
-        <CommandInput
-          placeholder="Search calculators (e.g. 'roi', 'commission', 'payroll', 'tax')..."
-          value={search}
-          onValueChange={setSearch}
-        />
-        <CommandList className="max-h-[60vh]">
-          {isSearching ? (
-            searchResults.length === 0 ? (
-              <div className="py-10 px-4 text-center">
-                <p className="text-sm font-semibold text-foreground">No calculators found</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  We couldn&apos;t find any tool matching &ldquo;{search}&rdquo;.
-                </p>
-                <div className="mt-4 flex flex-wrap justify-center gap-1.5">
-                  <span className="text-xs text-muted-foreground self-center mr-1">Try:</span>
-                  {['ROI', 'Commission', 'Payroll', 'Overtime', 'Break-Even', 'PTO'].map((term) => (
-                    <button
-                      key={term}
-                      type="button"
-                      onClick={() => setSearch(term)}
-                      className="text-xs px-2.5 py-1 rounded-md bg-muted hover:bg-accent hover:text-foreground text-muted-foreground transition-colors"
-                    >
-                      {term}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <CommandGroup heading={`Matching Calculators (${searchResults.length})`}>
-                {searchResults.map(({ calculator: calc, score }, idx) => {
-                  const Icon = calc.icon;
-                  const isTopMatch = idx === 0 && score >= 1000;
-                  return (
-                    <CommandItem
-                      key={calc.slug}
-                      value={calc.slug}
-                      onSelect={() => handleSelect(calc.path)}
-                      className="flex items-center justify-between gap-3 px-3 py-2.5 cursor-pointer rounded-lg aria-selected:bg-accent"
-                    >
-                      <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600">
-                          <Icon className="h-4 w-4" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="text-sm font-medium truncate text-foreground">{calc.title}</p>
-                            {isTopMatch && (
-                              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-600 border border-emerald-500/20 shrink-0">
-                                Best Match
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-xs text-muted-foreground truncate">{calc.shortDescription}</p>
-                        </div>
-                      </div>
-                      <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-muted/80 text-muted-foreground shrink-0 hidden sm:inline">
-                        {calc.category}
-                      </span>
-                    </CommandItem>
-                  );
-                })}
-              </CommandGroup>
-            )
-          ) : (
-            <>
-              {/* Popular Calculators Quick Access */}
-              <CommandGroup heading="Popular Calculators">
-                {popularCalculators.map((calc) => {
-                  const Icon = calc.icon;
-                  return (
-                    <CommandItem
-                      key={calc.slug}
-                      value={calc.slug}
-                      onSelect={() => handleSelect(calc.path)}
-                      className="flex items-center justify-between gap-3 px-3 py-2.5 cursor-pointer rounded-lg aria-selected:bg-accent"
-                    >
-                      <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600">
-                          <Icon className="h-4 w-4" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium truncate text-foreground">{calc.title}</p>
-                          <p className="text-xs text-muted-foreground truncate">{calc.shortDescription}</p>
-                        </div>
-                      </div>
-                      <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-muted/80 text-muted-foreground shrink-0 hidden sm:inline">
-                        {calc.category}
-                      </span>
-                    </CommandItem>
-                  );
-                })}
-              </CommandGroup>
-
-              {/* All Categories */}
-              {categoryOrder.map((category) => {
-                const group = getPublishedCalculators().filter((c) => c.category === category);
-                if (group.length === 0) return null;
-                return (
-                  <CommandGroup key={category} heading={category}>
-                    {group.map((calc) => {
-                      const Icon = calc.icon;
-                      return (
-                        <CommandItem
-                          key={calc.slug}
-                          value={calc.slug}
-                          onSelect={() => handleSelect(calc.path)}
-                          className="flex items-center justify-between gap-3 px-3 py-2.5 cursor-pointer rounded-lg aria-selected:bg-accent"
-                        >
-                          <div className="flex items-center gap-3 min-w-0 flex-1">
-                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600">
-                              <Icon className="h-4 w-4" />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <p className="text-sm font-medium truncate text-foreground">{calc.title}</p>
-                              <p className="text-xs text-muted-foreground truncate">{calc.shortDescription}</p>
-                            </div>
-                          </div>
-                          <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-muted/80 text-muted-foreground shrink-0 hidden sm:inline">
-                            {calc.category}
-                          </span>
-                        </CommandItem>
-                      );
-                    })}
-                  </CommandGroup>
-                );
-              })}
-            </>
-          )}
-        </CommandList>
-
-        {/* Footer hint */}
-        <div className="border-t px-3 py-2 flex items-center gap-3 text-xs text-muted-foreground">
-          <span className="flex items-center gap-1">
-            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium">↑↓</kbd>
-            navigate
-          </span>
-          <span className="flex items-center gap-1">
-            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium">↵</kbd>
-            open
-          </span>
-          <span className="flex items-center gap-1">
-            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium">Esc</kbd>
-            close
-          </span>
-          <span className="ml-auto flex items-center gap-1">
-            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium">⌘K</kbd>
-          </span>
-        </div>
-      </CommandDialog>
+      {loaded && <SearchDialog open={open} onOpenChange={setOpen} />}
     </>
   );
 }

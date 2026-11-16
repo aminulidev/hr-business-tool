@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { formatCurrency } from '@/lib/utils';
-import { TAX_YEAR, type PayFrequency } from '@/lib/payroll/withholding-2026';
+import { TAX_YEAR, type PayFrequency } from '@/lib/payroll/withholding';
 import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
 import { BULK_COLUMNS, BULK_EXAMPLE_CSV, BULK_MAX_ROWS, bulkToCsv, parseBulkCsv, runBulkPayroll } from '@/lib/payroll/bulk-payroll';
 

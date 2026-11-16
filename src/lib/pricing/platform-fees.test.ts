@@ -30,7 +30,7 @@ describe('computeFiverrBuyer', () => {
     expect(five.total).toBeCloseTo(5 + 0.28 + 3, 2); // a $5 gig costs $8.28
     expect(five.effectiveFeePct).toBeCloseTo(65.5, 1);
   });
-  it('fees are parameters, so an older schedule can be modelled', () => {
+  it('fees are parameters, so an older schedule can be modeled', () => {
     const old = computeFiverrBuyer({ orderAmount: 40, tip: 0, fees: { ...FIVERR_FEES, smallOrderFee: 2, smallOrderThreshold: 50 } })!;
     expect(old.total).toBe(44.2);
     expect(computeFiverrBuyer({ orderAmount: 0, tip: 5, fees: FIVERR_FEES })).toBeNull();

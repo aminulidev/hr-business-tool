@@ -2,6 +2,7 @@
 
 import { Lightbulb } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { track } from '@/lib/analytics';
 
 interface TryExampleProps {
   label?: string;
@@ -14,7 +15,7 @@ export default function TryExample({ label = 'Try an Example', onClick }: TryExa
       type="button"
       variant="ghost"
       size="sm"
-      onClick={onClick}
+      onClick={() => { track('try_example'); onClick(); }}
       className="gap-1.5 text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/20 print:hidden"
     >
       <Lightbulb className="h-3.5 w-3.5" />

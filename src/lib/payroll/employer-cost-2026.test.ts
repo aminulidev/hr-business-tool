@@ -2,13 +2,14 @@ import { describe, expect, it } from 'vitest';
 import {
   calculateEmployerCost,
   EMPLOYER_COST_SOURCES,
+  EMPLOYER_STATE_FIGURES_YEAR,
   FUTA_CREDIT_REDUCTION,
   FUTA_NET_RATE,
   FUTA_WAGE_BASE,
   STATE_EMPLOYER_TAXES,
   WA_PFML_EMPLOYER_RATE,
 } from './employer-cost-2026';
-import { calculatePaycheck, SOCIAL_SECURITY_WAGE_BASE, type StateCode } from './withholding-2026';
+import { calculatePaycheck, SOCIAL_SECURITY_WAGE_BASE, type StateCode } from './withholding';
 import { STATE_CODES } from './state-pages';
 
 // ---------------------------------------------------------------------------
@@ -41,6 +42,19 @@ describe('federal employer taxes', () => {
     const r = calculateEmployerCost(base('TX', { grossAnnual: 300000, ficaWagesAnnual: 300000 }));
     expect(line(r, 'er-social-security')).toBe(Math.round(SOCIAL_SECURITY_WAGE_BASE * 0.062 * 100) / 100);
     expect(line(r, 'er-medicare')).toBe(4350); // 300,000 × 1.45%, no additional Medicare on the employer
+  });
+
+  it('the Social Security match follows the tax year asked for; state figures do not move', () => {
+    const wages = { grossAnnual: 300000, ficaWagesAnnual: 300000 };
+    const y2026 = calculateEmployerCost(base('WA', { ...wages, suiRate: 0.012 }));
+    const y2027 = calculateEmployerCost(base('WA', { ...wages, suiRate: 0.012, taxYear: 2027 }));
+    expect(line(y2026, 'er-social-security')).toBe(11439); // 184,500 × 6.2%
+    expect(line(y2027, 'er-social-security')).toBe(11922.6); // 192,300 × 6.2%
+    expect(calculateEmployerCost(base('WA', { ...wages, suiRate: 0.012, taxYear: 2026 }))).toEqual(y2026);
+    // FUTA, SUI and the paid-leave employer share are 2026 figures in both
+    expect(EMPLOYER_STATE_FIGURES_YEAR).toBe(2026);
+    for (const key of ['er-medicare', 'futa', 'sui', 'pfml']) expect(line(y2027, key)).toBe(line(y2026, key));
+    expect(line(y2027, 'pfml')).toBeCloseTo(184500 * WA_PFML_EMPLOYER_RATE, 2);
   });
 
   it('applies the potential 2026 credit reduction only in California', () => {

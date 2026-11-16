@@ -11,6 +11,7 @@ import TryExample from './TryExample';
 import CalcHistoryPanel from './CalcHistoryPanel';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import { Kpi, num } from './suite-ui';
+import { track } from '@/lib/analytics';
 import {
   buildInvoiceHtml,
   computeInvoice,
@@ -143,10 +144,12 @@ export default function InvoiceGenerator() {
   const print = () => {
     const win = frameRef.current?.contentWindow;
     if (!win) return;
+    track('invoice_export', { action: 'print' });
     win.focus();
     win.print();
   };
   const download = () => {
+    track('invoice_export', { action: 'download' });
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

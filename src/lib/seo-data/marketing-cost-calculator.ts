@@ -86,7 +86,7 @@ const seoData = {
     {
       title: 'ROAS, ROI and the Margin That Separates Them',
       paragraphs: [
-        `The campaign returns ${usd(f.revenue)} on ${usd0(d.spend)}: a ${f.roas}× ROAS and a ${pct(f.roi, 0)} revenue-based ROI. Those numbers ignore what the ${d.customers} orders cost to fulfil. At a ${d.grossMarginPct}% gross margin the gross profit is ${usd(f.grossProfit)}, so the profit-based ROI is ${pct(f.profitRoi, 0)} and the campaign nets ${usd(f.netProfit)} after ad spend. Drop the margin to 30% and the identical campaign nets ${usd(fThin.netProfit)} with a profit ROI of ${pct(fThin.profitRoi, 0)} — the same ${f.roas}× ROAS, now a loss.`,
+        `The campaign returns ${usd(f.revenue)} on ${usd0(d.spend)}: a ${f.roas}× ROAS and a ${pct(f.roi, 0)} revenue-based ROI. Those numbers ignore what the ${d.customers} orders cost to fulfill. At a ${d.grossMarginPct}% gross margin the gross profit is ${usd(f.grossProfit)}, so the profit-based ROI is ${pct(f.profitRoi, 0)} and the campaign nets ${usd(f.netProfit)} after ad spend. Drop the margin to 30% and the identical campaign nets ${usd(fThin.netProfit)} with a profit ROI of ${pct(fThin.profitRoi, 0)} — the same ${f.roas}× ROAS, now a loss.`,
         `Break-even ROAS is 1 ÷ gross margin: ${f.breakEvenRoas}× at ${d.grossMarginPct}%, ${fThin.breakEvenRoas}× at 30%. Break-even CPA is revenue per customer × gross margin, ${usd(f.breakEvenCpa)} here, and the budget tab cascades it back up the funnel into a CPL, CPC and CPM ceiling. Media buyers who bid against the CPC ceiling rather than a platform-suggested bid stop overpaying for clicks that cannot convert profitably.`,
       ],
     },

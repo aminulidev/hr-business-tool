@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildStatePaycheckSeo, STATE_CODES, STATE_PAYCHECK_PAGES } from './state-pages';
 import { STATE_DETAILS } from './state-details';
-import { calculatePaycheck, PERIODS_PER_YEAR, type StateCode } from './withholding-2026';
+import { calculatePaycheck, PERIODS_PER_YEAR, type StateCode } from './withholding';
 
 // The state pages' article text is generated from the engine. These tests make
 // sure the numbers a reader sees agree with each other and with the engine —
@@ -109,7 +109,7 @@ describe('state slugs', () => {
 // ---------------------------------------------------------------------------
 // Phase 15.3 — every state page must differ from every other state page in the
 // parts a template could otherwise stamp out: FAQs, 2026 changes, overtime
-// details, local wage tables. The neighbour comparison is engine-generated, so
+// details, local wage tables. The neighbor comparison is engine-generated, so
 // it is checked against the engine like the other tables.
 // ---------------------------------------------------------------------------
 describe('state pages are not templated (Phase 15.3)', () => {
@@ -147,7 +147,7 @@ describe('state pages are not templated (Phase 15.3)', () => {
       expect(STATE_DETAILS[code].changes2026.length, `${code} changes2026`).toBeGreaterThanOrEqual(2);
       expect(STATE_DETAILS[code].overtimeDetail.length, `${code} overtimeDetail`).toBeGreaterThanOrEqual(1);
       expect(STATE_DETAILS[code].neighbors.length, `${code} neighbors`).toBeGreaterThanOrEqual(1);
-      for (const n of STATE_DETAILS[code].neighbors) expect(STATE_CODES, `${code} neighbour ${n}`).toContain(n);
+      for (const n of STATE_DETAILS[code].neighbors) expect(STATE_CODES, `${code} neighbor ${n}`).toContain(n);
     }
     expect([...duplicates(changes), ...duplicates(overtime), ...duplicates(summaries), ...duplicates(minWage)].join('\n')).toBe('');
   });
@@ -174,7 +174,7 @@ describe('state pages are not templated (Phase 15.3)', () => {
     }
   });
 
-  it.each(STATE_CODES)('%s neighbour comparison table balances against the engine', (code) => {
+  it.each(STATE_CODES)('%s neighbor comparison table balances against the engine', (code) => {
     const table = seos[code].benchmarkTables!.find((t) => t.title.includes('Neighboring States'))!;
     expect(table).toBeDefined();
     const median = STATE_DETAILS[code].medianHourlyWage;
@@ -199,7 +199,7 @@ describe('state pages are not templated (Phase 15.3)', () => {
       expect(money(netPer), `${code}/${name} net per period`).toBeCloseTo(r.netPerPeriod, 1);
       expect(money(netAnnual), `${code}/${name} net annual`).toBeCloseTo(r.netAnnual, 0);
     }
-    // first row is the state itself, every other row a declared neighbour
+    // first row is the state itself, every other row a declared neighbor
     expect(table.rows[0][0]).toBe(STATE_PAYCHECK_PAGES[code].name);
     expect(table.rows.length).toBe(STATE_DETAILS[code].neighbors.length + 1);
   });
