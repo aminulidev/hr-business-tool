@@ -65,7 +65,7 @@ const seoData = {
     { slug: 'markup-calculator', title: 'Markup Calculator', description: 'Retail price markup & margin', icon: 'DollarSign' },
     { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Gross & net profit margin', icon: 'BarChart3' },
     { slug: 'break-even-calculator', title: 'Break-Even Calculator', description: 'Break-even units & revenue', icon: 'Target' },
-    { slug: 'commission-calculator', title: 'Sales Commission Calculator', description: 'Pre-tax sales commission', icon: 'BadgeDollarSign' },
+    { slug: 'vat-calculator', title: 'VAT & GST Calculator', description: 'VAT and GST for sales outside the US', icon: 'Percent' },
   ],
   sources: [SRC.taxFoundationSalesTax, SRC.ftaStateAgencies],
 } satisfies CalculatorSeoData;

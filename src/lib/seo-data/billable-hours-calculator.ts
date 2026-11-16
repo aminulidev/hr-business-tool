@@ -158,9 +158,9 @@ const seoData = {
   relatedTools: [
     { slug: 'time-card-calculator', title: 'Time Card Calculator', description: 'Track daily clock-in/out hours & rounding', icon: 'Clock' },
     { slug: 'time-card-calculator-with-lunch', title: 'Time Card with Lunch', description: 'Weekly & biweekly hours minus break deductions', icon: 'Coffee' },
-    { slug: 'time-to-decimal-calculator', title: 'Time to Decimal Converter', description: 'Convert HH:MM into decimal payroll & billing hours', icon: 'Hash' },
+    { slug: 'invoice-generator', title: 'Invoice Generator', description: 'Bill those hours on a PDF invoice', icon: 'FileText' },
     { slug: 'revenue-per-employee-calculator', title: 'Revenue per Employee', description: 'Benchmark workforce revenue efficiency', icon: 'Activity' },
-    { slug: 'wages-calculator', title: 'Wages Calculator', description: 'Calculate gross wages from hours and rate', icon: 'Banknote' },
+    { slug: 'freelance-pricing-calculator', title: 'Freelance Pricing Calculator', description: 'Project quotes, retainers, client profit and agency margin', icon: 'Briefcase' },
     { slug: 'profit-margin-calculator', title: 'Profit Margin Calculator', description: 'Analyze service & project profit margins', icon: 'Percent' },
   ],
 } satisfies CalculatorSeoData;

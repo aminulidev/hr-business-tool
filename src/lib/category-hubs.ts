@@ -309,6 +309,7 @@ export const CATEGORY_HUBS: CategoryHubConfig[] = [
       'severance-pay-calculator',
       'revenue-per-employee-calculator',
       'cost-per-hire-calculator',
+      'hiring-metrics-calculator',
     ],
     referenceTable: {
       title: '2026 Core HR & People Analytics Benchmarks',

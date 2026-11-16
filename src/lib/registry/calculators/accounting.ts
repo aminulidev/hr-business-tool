@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Accounting — calculator registry entries (22)
+// Accounting — calculator registry entries (23)
 // Split from calculator-meta.ts in Roadmap v2 Phase 14.1. Add new Accounting
 // calculators here; the slug type and all helpers derive from this data.
 // ---------------------------------------------------------------------------
@@ -9,7 +9,9 @@ import { defineCalculators } from '../define';
 export const accountingCalculators = defineCalculators([
   {
     slug: 'gst-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'vat-calculator',
+    mergedQuery: 'country=au',
     title: 'GST Calculator',
     metaTitle: 'Free GST Calculator 2026 — Goods and Services Tax',
     shortDescription: 'Calculate GST (Goods and Services Tax) inclusive and exclusive amounts with custom rates.',
@@ -19,12 +21,12 @@ export const accountingCalculators = defineCalculators([
   },
   {
     slug: 'vat-calculator',
-    status: 'draft',
-    title: 'VAT Calculator',
-    metaTitle: 'Free VAT Calculator 2026 — Value Added Tax',
-    shortDescription: 'Calculate VAT inclusive and exclusive amounts with custom rates. UK 20%, Germany 19%, France 20%.',
-    metaDescription: 'Free VAT calculator 2026. Calculate VAT inclusive and exclusive amounts. Add or remove VAT at standard rates (UK 20%, Germany 19%, France 20%, Ireland 23%). See net, VAT, and gross.',
-    keywords: ['vat calculator', 'value added tax', 'how to calculate vat', 'vat inclusive', 'vat exclusive', 'vat rate', 'add vat', 'remove vat', 'vat formula'],
+    status: 'published',
+    title: 'VAT & GST Calculator',
+    metaTitle: 'Free VAT & GST Calculator 2026 — Add or Remove Tax, 40 Countries',
+    shortDescription: 'Add or remove VAT or GST with 2026 rates preset for 40 countries, including every Canadian province, reduced and zero rates, and a VAT / GST return estimate.',
+    metaDescription: 'Free VAT and GST calculator for 2026. Add or remove tax at the standard, reduced or zero rate for the UK, every EU country, Canada (GST, HST, PST, QST by province), Australia, New Zealand, India, Singapore and more, or enter any rate. Shows net, tax and gross, the VAT fraction, and output minus input tax for a return.',
+    keywords: ['vat calculator', 'gst calculator', 'add vat', 'remove vat', 'reverse vat calculator', 'vat inclusive', 'vat exclusive', 'how to calculate vat', 'vat rates by country 2026', 'gst hst calculator canada', 'uk vat calculator', 'gst inclusive', 'vat fraction', 'vat return calculator'],
     icon: Percent, tier: 'tier1', category: 'Accounting', path: '/calculators/vat-calculator',
   },
   {
@@ -61,8 +63,39 @@ export const accountingCalculators = defineCalculators([
     icon: TrendingDown, tier: 'tier2', category: 'Accounting', path: '/calculators/declining-balance-depreciation-calculator',
   },
   {
+    slug: 'financial-statements-calculator',
+    status: 'published',
+    title: 'Financial Statements Calculator',
+    metaTitle: 'Free Financial Statements Calculator 2026 — Trial Balance, Income Statement, Balance Sheet & Cash Flow',
+    shortDescription:
+      'One set of accounts builds all of it: an adjusted trial balance with error hints, journal entries, a multi-step income statement, a classified balance sheet and an indirect-method cash flow statement that reconciles to cash.',
+    metaDescription:
+      'Free financial statements calculator for students and bookkeepers. Enter a trial balance and adjusting journal entries to generate the income statement (P&L), balance sheet with retained earnings, and statement of cash flows (indirect method). Checks that debits equal credits, assets equal liabilities plus equity, and cash flow reconciles.',
+    keywords: [
+      'financial statements calculator',
+      'trial balance calculator',
+      'balance sheet calculator',
+      'income statement calculator',
+      'profit and loss calculator',
+      'pnl calculator',
+      'cash flow statement calculator',
+      'indirect method cash flow',
+      'journal entry calculator',
+      'debits and credits',
+      'adjusting entries',
+      'retained earnings calculator',
+      'accounting equation',
+    ],
+    icon: FileText,
+    tier: 'tier1',
+    category: 'Accounting',
+    path: '/calculators/financial-statements-calculator',
+  },
+  {
     slug: 'journal-entry-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'financial-statements-calculator',
+    mergedQuery: 'mode=journal',
     title: 'Journal Entry Calculator',
     metaTitle: 'Free Journal Entry Calculator 2026 — Debits and Credits',
     shortDescription: 'Create balanced journal entries with debits and credits. Verify accounting equation.',
@@ -72,7 +105,9 @@ export const accountingCalculators = defineCalculators([
   },
   {
     slug: 'trial-balance-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'financial-statements-calculator',
+    mergedQuery: 'mode=trial',
     title: 'Trial Balance Calculator',
     metaTitle: 'Free Trial Balance Calculator 2026 — Debit/Credit Balance',
     shortDescription: 'Verify total debits equal total credits. Check if trial balance is balanced.',
@@ -82,7 +117,9 @@ export const accountingCalculators = defineCalculators([
   },
   {
     slug: 'balance-sheet-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'financial-statements-calculator',
+    mergedQuery: 'mode=balance',
     title: 'Balance Sheet Calculator',
     metaTitle: 'Free Balance Sheet Calculator 2026 — Assets = Liabilities + Equity',
     shortDescription: 'Build a balance sheet: assets, liabilities, and equity. Verify accounting equation.',
@@ -92,7 +129,9 @@ export const accountingCalculators = defineCalculators([
   },
   {
     slug: 'cash-flow-statement-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'financial-statements-calculator',
+    mergedQuery: 'mode=cashflow',
     title: 'Cash Flow Statement Calculator',
     metaTitle: 'Free Cash Flow Statement Calculator 2026 — Operating/Investing/Financing',
     shortDescription: 'Build a cash flow statement: operating, investing, and financing activities.',
@@ -102,7 +141,9 @@ export const accountingCalculators = defineCalculators([
   },
   {
     slug: 'pnl-calculator',
-    status: 'draft',
+    status: 'merged',
+    mergedInto: 'financial-statements-calculator',
+    mergedQuery: 'mode=income',
     title: 'P&L Calculator (Income Statement)',
     metaTitle: 'Free P&L Calculator 2026 — Profit and Loss Statement',
     shortDescription: 'Build a profit and loss (income) statement: revenue, COGS, gross profit, operating expenses, net income.',

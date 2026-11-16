@@ -787,11 +787,11 @@ export const salesCompensationCalculators = defineCalculators([
     slug: 'upwork-fee-calculator',
     status: 'published',
     title: 'Upwork Fee Calculator',
-    metaTitle: 'Free Upwork Fee Calculator 2026 — Sliding Scale Fees',
+    metaTitle: 'Free Upwork Fee Calculator 2026 — Take-Home Pay & Reverse Bid',
     shortDescription:
-      'Calculate Upwork fees: 10% flat fee or sliding scale (20%/10%/5%). See freelancer take-home and client cost.',
+      'Upwork take-home after the 0%–15% per-contract freelancer service fee, the bid that nets your target amount, and the client marketplace fee.',
     metaDescription:
-      'Free Upwork fee calculator 2026. Calculate Upwork service fees: 10% flat rate (new) or sliding scale (20% first $500, 10% $500-10k, 5% above $10k). See freelancer take-home pay and client total cost.',
+      'Free Upwork fee calculator 2026. Enter the freelancer service fee shown on your proposal (0%–15%, set per contract; about 10% is typical) to see take-home pay after fees and withdrawal costs, the bid needed to net your target, and what the client pays with the marketplace fee.',
     keywords: [
       'Upwork fee calculator',
       'Upwork service fee',

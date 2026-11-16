@@ -82,7 +82,7 @@ export function Note({ children }: { children: ReactNode }) {
 }
 
 export function ModeTabs<T extends string>({ modes, mode, onChange, label, icons }: { modes: { value: T; label: string; short: string }[]; mode: T; onChange: (m: T) => void; label: string; icons: Record<T, LucideIcon> }) {
-  const cols = modes.length <= 2 ? 'grid-cols-2' : modes.length === 3 ? 'grid-cols-3' : 'grid-cols-2 sm:grid-cols-4';
+  const cols = modes.length <= 2 ? 'grid-cols-2' : modes.length === 3 ? 'grid-cols-3' : modes.length === 5 ? 'grid-cols-3 sm:grid-cols-5' : 'grid-cols-2 sm:grid-cols-4';
   return (
     <div className={`grid ${cols} gap-1 rounded-xl bg-muted/50 p-1 border border-border/50`} role="tablist" aria-label={label}>
       {modes.map((m) => {
