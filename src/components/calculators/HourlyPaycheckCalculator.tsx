@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { useInitialQuery } from '@/hooks/useSearchParam';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import {
   DollarSign,
   Clock,
@@ -50,15 +50,23 @@ import {
   type TaxYear,
   type W4Adjustments,
 } from '@/lib/payroll/withholding';
-import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
-import EmployerCostPanel, { ResultViewToggle, type ResultView } from './EmployerCostPanel';
+import { STATE_CODES, STATE_META } from '@/lib/payroll/state-meta';
+import dynamic from 'next/dynamic';
+import { ResultViewToggle, type ResultView } from './ResultViewToggle';
+
+// Loaded when first needed, not with the page: the employer view (with the state unemployment tables),
+// the pay stub dialog and the bulk payroll table. A share link that opens one of them still gets it server-rendered.
+const EmployerCostPanel = dynamic(() => import('./EmployerCostPanel'), {
+  loading: () => <div className="h-64 rounded-2xl border border-sky-500/20 bg-sky-500/5 animate-pulse" aria-hidden />,
+});
+const PayStubDialog = dynamic(() => import('./PayStubDialog'), { ssr: false });
+const BulkPayrollPanel = dynamic(() => import('./BulkPayrollPanel'), {
+  loading: () => <div className="m-4 sm:m-6 h-64 rounded-2xl border border-border/50 bg-muted/30 animate-pulse" aria-hidden />,
+});
 import ReverseSolverCard from './ReverseSolverCard';
 import PaycheckScenarioCompare from './PaycheckScenarioCompare';
-import PayStubDialog from './PayStubDialog';
 import { TaxYearNotice, TaxYearSwitch } from './TaxYearSwitch';
-import BulkPayrollPanel from './BulkPayrollPanel';
 import { useSearchParam } from '@/hooks/useSearchParam';
-import { calculateEmployerCost } from '@/lib/payroll/employer-cost-2026';
 import { parseScenarioParams, writeScenarioParams, type CompareScenario } from '@/lib/payroll/scenario-params';
 
 // ---------------------------------------------------------------------------
@@ -83,7 +91,7 @@ const SALARY_PRESETS = ['45000', '65000', '85000', '110000', '150000'];
 
 // States with exact 2026 withholding tables, alphabetical
 const EXACT_STATES: StateCode[] = [...STATE_CODES].sort((a, b) =>
-  STATE_PAYCHECK_PAGES[a].name.localeCompare(STATE_PAYCHECK_PAGES[b].name)
+  STATE_META[a].name.localeCompare(STATE_META[b].name)
 );
 
 const NO_TAX_STATES = 'Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas, Washington, and Wyoming';
@@ -97,7 +105,7 @@ function isExactState(s: PaycheckState): s is StateCode {
 
 function defaultAllowances(s: PaycheckState, status: FilingStatus): string {
   if (!isExactState(s)) return '0';
-  const a = STATE_PAYCHECK_PAGES[s].allowances;
+  const a = STATE_META[s].allowances;
   if (!a) return '0';
   return String(status === 'married' ? a.defaultMarried : a.defaultSingle);
 }
@@ -277,6 +285,12 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
   const [linkCopied, setLinkCopied] = useState(false);
   const [view, setView] = useState<ResultView>(defaults.view);
   const [stubOpen, setStubOpen] = useState(false);
+  // False until the visitor first opens the pay stub; the dialog is not downloaded before that
+  const [stubLoaded, setStubLoaded] = useState(false);
+  const openStub = () => {
+    setStubLoaded(true);
+    setStubOpen(true);
+  };
   // Bulk payroll (Phase 16.1): ?mode=bulk opens the multi-employee table
   const urlMode = useSearchParam('mode');
   const [bulkOverride, setBulkMode] = useState<boolean | null>(null);
@@ -296,7 +310,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
 
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<HistoryInputs>(historySlug);
 
-  const page = isExactState(state) ? STATE_PAYCHECK_PAGES[state] : null;
+  const page = isExactState(state) ? STATE_META[state] : null;
 
   const changeState = (v: PaycheckState) => {
     setState(v);
@@ -656,7 +670,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
         overtimeHoursPerWeek: isSalary ? 0 : parseFloat(overtimeHours || '0') || 0,
         annualSalary: isSalary ? parseFloat(annualSalary) || 0 : undefined,
         result,
-        employer: calculateEmployerCost({ state, grossAnnual: result.grossAnnual, ficaWagesAnnual: result.ficaWagesAnnual, payFrequency, hoursPerYear: totalAnnualHours, taxYear: result.taxYear }),
+        employerInput: { state, grossAnnual: result.grossAnnual, ficaWagesAnnual: result.ficaWagesAnnual, payFrequency, hoursPerYear: totalAnnualHours, taxYear: result.taxYear },
         sourceUrl: `https://www.quickbizcalc.com/calculators/${historySlug}`,
       }
     : null;
@@ -856,7 +870,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
               <SelectContent>
                 {EXACT_STATES.map((code) => (
                   <SelectItem key={code} value={code}>
-                    {STATE_PAYCHECK_PAGES[code].name} (exact {stateRulesYear(taxYear, code)} tables)
+                    {STATE_META[code].name} (exact {stateRulesYear(taxYear, code)} tables)
                   </SelectItem>
                 ))}
                 <SelectItem value="none">No state income tax (AK, FL, NV, NH, SD, TN, TX, WA, WY)</SelectItem>
@@ -1335,7 +1349,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
                   {copied ? <Check className="h-4 w-4 mr-1.5 text-emerald-600" /> : <Copy className="h-4 w-4 mr-1.5" />}
                   {copied ? 'Copied' : 'Copy summary'}
                 </Button>
-                <Button onClick={() => setStubOpen(true)} variant="outline" size="sm">
+                <Button onClick={openStub} variant="outline" size="sm">
                   <Receipt className="h-4 w-4 mr-1.5" />
                   Pay stub preview
                 </Button>
@@ -1346,7 +1360,7 @@ function HourlyPaycheckForm({ mode, defaults }: { mode: PaycheckMode; defaults: 
         </motion.div>
       )}
 
-      {stubData && <PayStubDialog open={stubOpen} onOpenChange={setStubOpen} data={stubData} />}
+      {stubLoaded && stubData && <PayStubDialog open={stubOpen} onOpenChange={setStubOpen} data={stubData} />}
 
       {/* Scenario compare: A (above) vs. B, persisted as b_* params (Phase 16.1) */}
       {result && (

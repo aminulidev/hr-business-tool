@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from '@/components/motion';
 import { Calculator, ArrowLeft, Info, Mail, Menu, X, Search, BookOpen, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
@@ -98,7 +98,7 @@ export default function Header() {
                 </Button>
               </motion.div>
             )}
-            <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
+            <Link href="/" prefetch={false} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
               <motion.div className="flex items-center gap-2" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <img src="/logo.svg" alt="QuickBizCalc Logo" className="h-9 w-9 drop-shadow-md" />
                 <div className="text-lg font-bold tracking-tight text-foreground">
@@ -122,7 +122,7 @@ export default function Header() {
               {/* Desktop-only nav links */}
               <div className="hidden lg:flex items-center gap-2">
                 {!isHub && !isLegalPage && (
-                  <Link href="/">
+                  <Link href="/" prefetch={false}>
                     <Button variant="outline" size="sm" className="text-muted-foreground cursor-pointer">
                       <Calculator className="h-3.5 w-3.5 mr-1.5" />
                       All Calculators
@@ -184,6 +184,7 @@ export default function Header() {
               {!isHub && !isLegalPage && (
                 <Link
                   href="/"
+                  prefetch={false}
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors cursor-pointer"
                 >

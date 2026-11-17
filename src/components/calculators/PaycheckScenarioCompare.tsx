@@ -17,12 +17,12 @@ import {
   type PayFrequency,
   type StateCode,
 } from '@/lib/payroll/withholding';
-import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
+import { STATE_CODES, STATE_META } from '@/lib/payroll/state-meta';
 import { scenarioAllowances, type CompareScenario } from '@/lib/payroll/scenario-params';
 
 const FREQ_SHORT: Record<PayFrequency, string> = { weekly: 'Weekly', 'bi-weekly': 'Bi-weekly', 'semi-monthly': 'Semi-monthly', monthly: 'Monthly' };
 const STATUS_SHORT: Record<FilingStatus, string> = { single: 'Single', married: 'Married filing jointly', hoh: 'Head of household' };
-const STATES_SORTED: StateCode[] = [...STATE_CODES].sort((a, b) => STATE_PAYCHECK_PAGES[a].name.localeCompare(STATE_PAYCHECK_PAGES[b].name));
+const STATES_SORTED: StateCode[] = [...STATE_CODES].sort((a, b) => STATE_META[a].name.localeCompare(STATE_META[b].name));
 
 interface PaycheckScenarioCompareProps {
   mode: 'hourly' | 'salary';
@@ -42,7 +42,7 @@ const SALARY_HOURS = 2080;
 function stateLabel(s: PaycheckState): string {
   if (s === 'none') return 'No state income tax';
   if (s === 'other') return 'Flat rate (as in A)';
-  return STATE_PAYCHECK_PAGES[s].name;
+  return STATE_META[s].name;
 }
 
 /** Scenario B as a full PaycheckInput, borrowing anything the scenario does not carry from A */
@@ -164,7 +164,7 @@ export default function PaycheckScenarioCompare({ mode, base, baseScenario, scen
               <SelectTrigger aria-label="Scenario B state"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {STATES_SORTED.map((code) => (
-                  <SelectItem key={code} value={code}>{STATE_PAYCHECK_PAGES[code].name}</SelectItem>
+                  <SelectItem key={code} value={code}>{STATE_META[code].name}</SelectItem>
                 ))}
                 <SelectItem value="none">No state income tax</SelectItem>
                 {base.state === 'other' && <SelectItem value="other">Flat rate (as in A)</SelectItem>}

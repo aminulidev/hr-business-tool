@@ -10,7 +10,7 @@
 
 import { useMemo, useState } from 'react';
 import { useSearchParam } from '@/hooks/useSearchParam';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import { RefreshCw, CalendarDays, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

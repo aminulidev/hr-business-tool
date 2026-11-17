@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from '@/components/motion';
 import { Code2, Copy, Check, X, ExternalLink, Monitor } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';

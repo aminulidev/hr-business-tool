@@ -1,5 +1,25 @@
 import type { CalculatorSeoData } from './types';
 import { SRC } from './sources';
+// Worked examples are produced by computeW2(), the function the calculator runs, so the numbers in
+// the article always match the tool (and the state figures match the state paycheck pages).
+import { SOCIAL_SECURITY_WAGE_BASE } from '@/lib/payroll/federal-tax';
+import { stateTaxName } from '@/lib/payroll/state-tax';
+import { computeW2, type W2Input } from '@/lib/payroll/w2';
+
+const usd = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+const usd0 = (n: number) => `$${Math.round(n).toLocaleString('en-US')}`;
+
+function w2Example(who: string, input: W2Input, periods: number, periodWord: string): string {
+  const r = computeW2(input);
+  const state = stateTaxName(input.state);
+  const fica = `Social Security = ${usd(r.ssTax)}${r.ficaWages > SOCIAL_SECURITY_WAGE_BASE ? ` (it stops at the ${usd0(SOCIAL_SECURITY_WAGE_BASE)} wage base)` : ''}; Medicare = ${usd(r.medicareTax)}${r.addMedicare > 0 ? `, plus ${usd(r.addMedicare)} Additional Medicare on wages over $200,000` : ''}`;
+  const stateText =
+    r.stateTax === 0
+      ? `${state} takes nothing from wages.`
+      : `${state} takes ${usd(r.stateTax)} (${r.stateLines.map((l) => `${l.label}: ${usd(l.annual)}`).join('; ')}).`;
+  return `${who} FICA wages = ${usd0(r.ficaWages)}. ${fica}. Box 1 wages = ${usd0(r.afterPretax)}; after the ${usd0(r.standardDeduction)} standard deduction, taxable income is ${usd0(r.taxableIncome)} and federal income tax is ${usd(r.federalTax)}. ${stateText} Total tax = ${usd(r.totalTax)}. Net annual take-home = ${usd(r.netAnnual)}, or ${usd(r.netAnnual / periods)} per ${periodWord} paycheck.`;
+}
+
 const seoData = {
   breadcrumbs: [{ label: 'Calculators' }, { label: 'W-2 Calculator' }],
   tableOfContents: [
@@ -13,34 +33,59 @@ const seoData = {
   howToSteps: [
     'Enter your annual contractual gross salary or hourly annualized compensation.',
     'Select your federal income tax filing status: Single, Married Filing Jointly, Head of Household, or Married Filing Separately.',
-    'Select your state of residence to auto-fill current state income tax parameters, or customize the state percentage directly.',
+    'Select your state. For the states the calculator models it applies that state\'s own withholding rule; for any other state choose "Another state" and enter a flat rate.',
     'Choose your exact paycheck disbursement frequency: Weekly (52 pay periods), Bi-weekly (26 pay periods), Semi-monthly (24 pay periods), or Monthly (12 pay periods).',
     'Input voluntary pre-tax deductions: Traditional 401(k)/403(b), Health Savings Account (HSA), and Section 125 cafeteria plans (medical, dental, vision premiums, flexible spending accounts).',
     'Click "Calculate W-2 Take-Home" to view your exact per-paycheck net take-home pay, total annual tax liability, and line-item withholding statement.',
     'Review the W-2 Box 1 vs. Boxes 3 & 5 wage reconciliation table to understand how different benefits reduce income taxes versus FICA taxes.',
   ],
-  formula: 'FICA Payroll Tax Breakdown:\nFICA Wages = Gross Pay - Section 125 Cafeteria Benefits - Pre-Tax HSA\nSocial Security (OASDI) = 6.2% × Min(FICA Wages, $184,500 Statutory Wage Base)\nMedicare (HI) = 1.45% × FICA Wages + 0.9% Additional Medicare on wages exceeding $200,000 (Single) / $250,000 (MFJ)\n\nFederal Income Tax Withholding:\nTaxable Federal Wages (W-2 Box 1) = Gross Wages - Pre-Tax 401(k) - Pre-Tax HSA - Section 125 Benefits\nTaxable Income = Max(0, Taxable Federal Wages - Standard Deduction)\nFederal Income Tax = ∑ (Taxable Income in Bracket_i × Statutory Rate_i)\n\nState Income Tax Withholding:\nState Taxable Wages = Max(0, Taxable Federal Wages - State Standard Deduction)\nState Income Tax = State Taxable Wages × State Effective Tax Rate\n\nNet Paycheck Formula:\nAnnual Net Pay = Gross Wages - Total Federal Tax - Total FICA Tax - State Tax - Pre-Tax Deductions\nNet Pay Per Paycheck = Annual Net Pay ÷ Pay Periods per Year (52, 26, 24, or 12)',
+  formula: 'FICA Payroll Tax Breakdown:\nFICA Wages = Gross Pay - Section 125 Cafeteria Benefits - Pre-Tax HSA\nSocial Security (OASDI) = 6.2% × Min(FICA Wages, $184,500 Statutory Wage Base)\nMedicare (HI) = 1.45% × FICA Wages + 0.9% Additional Medicare on wages exceeding $200,000 (the amount employers withhold on, whatever the filing status)\n\nFederal Income Tax Withholding:\nTaxable Federal Wages (W-2 Box 1) = Gross Wages - Pre-Tax 401(k) - Pre-Tax HSA - Section 125 Benefits\nTaxable Income = Max(0, Taxable Federal Wages - Standard Deduction)\nFederal Income Tax = ∑ (Taxable Income in Bracket_i × Statutory Rate_i)\n\nState Taxes:\nState Taxes = the state\'s own withholding formula applied to Taxable Federal Wages, plus employee-paid state programs on FICA Wages\n(another state: Taxable Federal Wages × the flat rate you enter)\n\nNet Paycheck Formula:\nAnnual Net Pay = Gross Wages - Total Federal Tax - Total FICA Tax - State Tax - Pre-Tax Deductions\nNet Pay Per Paycheck = Annual Net Pay ÷ Pay Periods per Year (52, 26, 24, or 12)',
   formulaDescription: 'Form W-2 (Wage and Tax Statement) reflects statutory payroll tax withholdings and employer-sponsored benefit deductions. W-2 employees split mandatory Federal Insurance Contributions Act (FICA) taxes equally with employers (7.65% employee + 7.65% employer = 15.3% total). Crucially, retirement contributions (traditional 401(k) and 403(b)) are exempt from federal and state income taxes but remain 100% subject to FICA taxes. In contrast, Section 125 cafeteria plans (employer group health, dental, and vision insurance) and Health Savings Accounts (HSAs) enjoy triple tax-advantaged status, exempting contributions from federal income tax, state income tax, and employee FICA taxes.',
   workedExamples: [
     {
       title: 'Single Software Engineer Earning $95,000 (Bi-Weekly, California)',
-      description: 'A single tech worker in California earns $95,000 gross salary paid bi-weekly (26 paychecks). They contribute $6,500/year to a traditional 401(k), $2,000 to an HSA, and $1,800 to Section 125 health insurance. FICA wages = $91,200 ($95,000 - $2,000 - $1,800). FICA taxes = $5,654.40 Social Security (6.2%) + $1,322.40 Medicare (1.45%) = $6,976.80. Federal taxable income after $16,100 standard deduction = $68,600, generating $9,804.00 in federal income tax. California state tax (~6.5%) = $5,479.50. Total annual deductions and taxes = $32,560.30. Net annual take-home = $62,439.70, or $2,401.53 net per bi-weekly paycheck.',
+      description: w2Example(
+        'A single tech worker in California earns $95,000 paid bi-weekly (26 paychecks) and contributes $6,500 a year to a traditional 401(k), $2,000 to an HSA and $1,800 to Section 125 health insurance.',
+        { grossAnnual: 95000, filingStatus: 'single', state: 'CA', pretax401k: 6500, pretaxHsa: 2000, pretaxOther: 1800 },
+        26,
+        'bi-weekly',
+      ),
     },
     {
       title: 'Married Healthcare Worker at $120,000 (Bi-Weekly, Texas - No State Tax)',
-      description: 'A married nurse filing jointly in Texas earns $120,000 paid bi-weekly (26 pay periods) with no state income tax. Deductions include $8,000 in traditional 401(k) and $3,600 in Section 125 medical premiums. FICA wages = $116,400. FICA taxes: Social Security = $7,216.80; Medicare = $1,687.80. Federal taxable income after $32,200 standard deduction = $76,200 ($108,400 Box 1 - $32,200), producing $8,648.00 in federal income tax. Texas state income tax = $0.00. Total taxes = $17,552.60. Total pre-tax retirement and benefits = $11,600.00. Net annual take-home = $90,847.40, yielding $3,494.13 per bi-weekly paycheck.',
+      description: w2Example(
+        'A married nurse filing jointly in Texas earns $120,000 paid bi-weekly (26 paychecks), with $8,000 going to a traditional 401(k) and $3,600 to Section 125 medical premiums.',
+        { grossAnnual: 120000, filingStatus: 'mfj', state: 'TX', pretax401k: 8000, pretaxOther: 3600 },
+        26,
+        'bi-weekly',
+      ),
     },
     {
       title: 'High-Income Professional Earning $240,000 (Semi-Monthly, New York)',
-      description: 'An executive in New York earns $240,000 gross salary paid semi-monthly (24 pay periods). Pre-tax contributions: $24,500 maximum 401(k), $4,400 HSA, and $3,000 medical insurance. FICA wages = $232,600. Because FICA wages exceed the $184,500 OASDI cap, Social Security tax is capped at $11,439.00. Medicare tax includes 1.45% on all $232,600 ($3,372.70) plus 0.9% Additional Medicare on wages exceeding $200,000 ($293.40), totaling $3,666.10 in Medicare. Federal income tax = $38,678.00 (taxable income $192,000 after the $16,100 standard deduction). New York state tax = $12,450.00. Total annual take-home = $141,866.90, resulting in $5,911.12 net take-home per semi-monthly paycheck.',
+      description: w2Example(
+        'A single executive in New York earns $240,000 paid semi-monthly (24 paychecks) and puts $24,500 into a 401(k), $4,400 into an HSA and $3,000 into medical insurance.',
+        { grossAnnual: 240000, filingStatus: 'single', state: 'NY', pretax401k: 24500, pretaxHsa: 4400, pretaxOther: 3000 },
+        24,
+        'semi-monthly',
+      ),
     },
     {
       title: 'Mid-Level Marketing Manager Earning $72,000 (Bi-Weekly, Florida)',
-      description: 'A marketing manager in Florida earns $72,000 paid bi-weekly. Voluntary deductions: 5% 401(k) ($3,600) and $1,200 Section 125 health insurance. FICA wages = $70,800. Social Security = $4,389.60; Medicare = $1,026.60. Federal taxable income after $16,100 standard deduction = $51,100 ($67,200 - $16,100), producing $5,954.00 in federal income tax. Florida state tax = $0.00. Net annual pay = $55,829.80 ($2,147.30 per bi-weekly paycheck), retaining over 77.5% of contractual gross earnings.',
+      description: w2Example(
+        'A single marketing manager in Florida earns $72,000 paid bi-weekly, with 5% ($3,600) going to a 401(k) and $1,200 to Section 125 health insurance.',
+        { grossAnnual: 72000, filingStatus: 'single', state: 'FL', pretax401k: 3600, pretaxOther: 1200 },
+        26,
+        'bi-weekly',
+      ),
     },
     {
       title: 'Head of Household Single Parent at $58,000 (Weekly, Illinois)',
-      description: 'A single parent in Illinois earns $58,000 paid weekly (52 paychecks). They contribute $2,000 to a 401(k) and $1,500 to Section 125 insurance. FICA wages = $56,500. FICA taxes: Social Security = $3,503.00; Medicare = $819.25. Federal taxable income after $24,150 HoH standard deduction = $30,350, generating $3,288.00 in federal tax. Illinois flat tax (4.95%) after basic exemption = $2,640.00. Net annual take-home = $44,249.75, delivering $850.96 take-home pay every Friday.',
+      description: w2Example(
+        'A single parent in Illinois, filing as head of household, earns $58,000 paid weekly (52 paychecks) and contributes $2,000 to a 401(k) and $1,500 to Section 125 insurance.',
+        { grossAnnual: 58000, filingStatus: 'hoh', state: 'IL', pretax401k: 2000, pretaxOther: 1500 },
+        52,
+        'weekly',
+      ),
     },
   ],
   faqs: [
@@ -87,7 +132,7 @@ const seoData = {
     {
       slug: 'state-tax-calculator',
       title: 'State Tax Calculator',
-      description: 'Calculate state income tax liabilities and cross-state relocation savings across all 50 states',
+      description: "State income tax on your wages under each state's own rules, with two states compared side by side",
       icon: 'FileText',
     },
     {

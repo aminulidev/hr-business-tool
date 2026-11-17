@@ -7,6 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+// The toaster is mounted here, not in the root layout: this form is the only thing on the site that uses it.
+import { Toaster } from '@/components/ui/toaster';
 import { Send, CheckCircle2 } from 'lucide-react';
 
 export default function ContactForm() {
@@ -61,6 +63,7 @@ export default function ContactForm() {
     return (
       <Card className="border-emerald-500/20 bg-emerald-500/5">
         <CardContent className="pt-10 pb-10 text-center space-y-4">
+          <Toaster />
           <div className="flex justify-center">
             <div className="rounded-full bg-emerald-500/10 p-3">
               <CheckCircle2 className="h-10 w-10 text-emerald-600" />
@@ -134,6 +137,7 @@ export default function ContactForm() {
             )}
           </Button>
         </form>
+        <Toaster />
       </CardContent>
     </Card>
   );

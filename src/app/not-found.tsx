@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import { Calculator, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -32,7 +32,7 @@ export default function NotFound() {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Link href="/">
+          <Link href="/" prefetch={false}>
             <Button
               size="lg"
               className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white shadow-lg shadow-emerald-500/25"

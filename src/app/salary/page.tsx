@@ -73,7 +73,7 @@ export default function SalaryHubPage() {
           aria-label="Breadcrumb"
           className="flex flex-wrap items-center gap-2 text-xs font-medium text-muted-foreground"
         >
-          <Link href="/" className="hover:text-foreground transition-colors">
+          <Link href="/" prefetch={false} className="hover:text-foreground transition-colors">
             Home
           </Link>
           <span>/</span>

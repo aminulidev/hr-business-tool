@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Home, ChevronRight } from 'lucide-react';
 import { SITE_NAME } from '@/lib/calculator-meta';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 
 interface LegalPageLayoutProps {
   title: string;
@@ -30,6 +30,7 @@ export default function LegalPageLayout({
           <li className="flex items-center">
             <Link
               href="/"
+              prefetch={false}
               className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Home className="size-3.5" />
@@ -40,6 +41,7 @@ export default function LegalPageLayout({
           <li className="flex items-center">
             <Link
               href="/"
+              prefetch={false}
               className="text-muted-foreground hover:text-foreground transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               All Calculators

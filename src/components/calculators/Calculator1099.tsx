@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import { FileSpreadsheet } from 'lucide-react';
 import TryExample from './TryExample';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
@@ -14,98 +14,23 @@ import ComparePanel, { CompareRow } from './ComparePanel';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
 import { formatCurrency, formatPercent } from '@/lib/utils';
+import { FEDERAL_STANDARD_DEDUCTIONS, SOCIAL_SECURITY_WAGE_BASE, type ReturnFilingStatus } from '@/lib/payroll/federal-tax';
+import { compute1099 } from '@/lib/payroll/form-1099';
+import { isStateTaxChoice, stateTaxName, type StateTaxChoice } from '@/lib/payroll/state-tax';
+import { TAX_YEAR } from '@/lib/payroll/withholding';
+import { StateRateInput, StateTaxSelect } from './StateTaxSelect';
 
-type FilingStatus = 'single' | 'mfj' | 'mfs' | 'hoh';
+type FilingStatus = ReturnFilingStatus;
 
-// 2026 Federal brackets
-const FED_BRACKETS: Record<FilingStatus, { min: number; max: number; rate: number }[]> = {
-  single: [
-    { min: 0, max: 12400, rate: 0.10 }, { min: 12400, max: 50400, rate: 0.12 },
-    { min: 50400, max: 105700, rate: 0.22 }, { min: 105700, max: 201775, rate: 0.24 },
-    { min: 201775, max: 256225, rate: 0.32 }, { min: 256225, max: 640600, rate: 0.35 },
-    { min: 640600, max: Infinity, rate: 0.37 },
-  ],
-  mfj: [
-    { min: 0, max: 24800, rate: 0.10 }, { min: 24800, max: 100800, rate: 0.12 },
-    { min: 100800, max: 211400, rate: 0.22 }, { min: 211400, max: 403550, rate: 0.24 },
-    { min: 403550, max: 512450, rate: 0.32 }, { min: 512450, max: 768700, rate: 0.35 },
-    { min: 768700, max: Infinity, rate: 0.37 },
-  ],
-  mfs: [
-    { min: 0, max: 12400, rate: 0.10 }, { min: 12400, max: 50400, rate: 0.12 },
-    { min: 50400, max: 105700, rate: 0.22 }, { min: 105700, max: 201775, rate: 0.24 },
-    { min: 201775, max: 256225, rate: 0.32 }, { min: 256225, max: 384350, rate: 0.35 },
-    { min: 384350, max: Infinity, rate: 0.37 },
-  ],
-  hoh: [
-    { min: 0, max: 17700, rate: 0.10 }, { min: 17700, max: 67450, rate: 0.12 },
-    { min: 67450, max: 105700, rate: 0.22 }, { min: 105700, max: 201775, rate: 0.24 },
-    { min: 201775, max: 256225, rate: 0.32 }, { min: 256225, max: 640600, rate: 0.35 },
-    { min: 640600, max: Infinity, rate: 0.37 },
-  ],
-};
+// No tax figure is typed in this file: federal brackets, self-employment tax rates and state rules
+// reach it through compute1099 (src/lib/payroll/form-1099.ts), which reads the paycheck engine's tax year.
+const STD_DED = FEDERAL_STANDARD_DEDUCTIONS;
 
-const STD_DED: Record<FilingStatus, number> = { single: 16100, mfj: 32200, mfs: 16100, hoh: 24150 };
-const QBI_DEDUCTION_RATE = 0.20;
-const SS_WAGE_BASE = 184500;
-const SS_RATE = 0.124; // SECA SS portion
-const MEDICARE_RATE = 0.029; // SECA Medicare portion
-const SECA_COMBINED_RATE = SS_RATE + MEDICARE_RATE; // 15.3%
+// State figures come from the paycheck engine (src/lib/payroll/state-tax.ts); no state rate is typed here.
+const STATE_HELP_MODELED = 'income tax formula, applied to net profit after the self-employment tax deduction.';
+const STATE_HELP_OTHER = 'Your rate is applied to net profit after the self-employment tax deduction.';
+const SS_WAGE_BASE = SOCIAL_SECURITY_WAGE_BASE;
 
-// Approximate average/flat state tax rates for quick 1099 contractor estimation
-const STATE_RATES: Record<string, { name: string; rate: number }> = {
-  AL: { name: 'Alabama', rate: 4.5 },
-  AK: { name: 'Alaska', rate: 0.0 },
-  AZ: { name: 'Arizona', rate: 2.5 },
-  AR: { name: 'Arkansas', rate: 4.4 },
-  CA: { name: 'California', rate: 6.5 },
-  CO: { name: 'Colorado', rate: 4.4 },
-  CT: { name: 'Connecticut', rate: 5.5 },
-  DE: { name: 'Delaware', rate: 5.0 },
-  FL: { name: 'Florida', rate: 0.0 },
-  GA: { name: 'Georgia', rate: 5.39 },
-  HI: { name: 'Hawaii', rate: 7.5 },
-  ID: { name: 'Idaho', rate: 5.695 },
-  IL: { name: 'Illinois', rate: 4.95 },
-  IN: { name: 'Indiana', rate: 3.05 },
-  IA: { name: 'Iowa', rate: 5.0 },
-  KS: { name: 'Kansas', rate: 5.25 },
-  KY: { name: 'Kentucky', rate: 4.0 },
-  LA: { name: 'Louisiana', rate: 3.5 },
-  ME: { name: 'Maine', rate: 6.0 },
-  MD: { name: 'Maryland', rate: 4.75 },
-  MA: { name: 'Massachusetts', rate: 5.0 },
-  MI: { name: 'Michigan', rate: 4.25 },
-  MN: { name: 'Minnesota', rate: 6.8 },
-  MS: { name: 'Mississippi', rate: 4.4 },
-  MO: { name: 'Missouri', rate: 4.5 },
-  MT: { name: 'Montana', rate: 5.9 },
-  NE: { name: 'Nebraska', rate: 5.0 },
-  NV: { name: 'Nevada', rate: 0.0 },
-  NH: { name: 'New Hampshire', rate: 0.0 },
-  NJ: { name: 'New Jersey', rate: 5.5 },
-  NM: { name: 'New Mexico', rate: 4.5 },
-  NY: { name: 'New York', rate: 6.0 },
-  NC: { name: 'North Carolina', rate: 4.5 },
-  ND: { name: 'North Dakota', rate: 1.95 },
-  OH: { name: 'Ohio', rate: 3.5 },
-  OK: { name: 'Oklahoma', rate: 4.0 },
-  OR: { name: 'Oregon', rate: 7.5 },
-  PA: { name: 'Pennsylvania', rate: 3.07 },
-  RI: { name: 'Rhode Island', rate: 4.75 },
-  SC: { name: 'South Carolina', rate: 5.0 },
-  SD: { name: 'South Dakota', rate: 0.0 },
-  TN: { name: 'Tennessee', rate: 0.0 },
-  TX: { name: 'Texas', rate: 0.0 },
-  UT: { name: 'Utah', rate: 4.65 },
-  VT: { name: 'Vermont', rate: 5.5 },
-  VA: { name: 'Virginia', rate: 5.0 },
-  WA: { name: 'Washington', rate: 0.0 },
-  WV: { name: 'West Virginia', rate: 4.0 },
-  WI: { name: 'Wisconsin', rate: 5.0 },
-  WY: { name: 'Wyoming', rate: 0.0 },
-  OTHER: { name: 'Custom Rate', rate: 5.0 },
-};
 
 interface Snapshot1099 {
   grossIncome: number;
@@ -123,69 +48,30 @@ export default function Calculator1099() {
   const [grossIncome, setGrossIncome] = useState('95000');
   const [businessExpenses, setBusinessExpenses] = useState('12000');
   const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
-  const [selectedState, setSelectedState] = useState('CA');
+  const [selectedState, setSelectedState] = useState<StateTaxChoice>('CA');
   const [stateRate, setStateRate] = useState('5');
-  const [useCustomStateRate, setUseCustomStateRate] = useState(false);
   const [calculated, setCalculated] = useState(true);
   const [compareA, setCompareA] = useState<Snapshot1099 | null>(null);
   const [compareB, setCompareB] = useState<Snapshot1099 | null>(null);
   const { history, saveEntry, clearHistory, deleteEntry } = useCalcHistory<{
-    grossIncome: string; businessExpenses: string; filingStatus: string; stateRate: string;
+    grossIncome: string; businessExpenses: string; filingStatus: string; stateRate: string; selectedState?: string;
   }>('1099-calculator');
 
   const gross = parseFloat(grossIncome) || 0;
   const expenses = parseFloat(businessExpenses) || 0;
   const sRate = parseFloat(stateRate) || 0;
 
+  // The math lives in src/lib/payroll/form-1099.ts, which the article's worked examples run too
   const result = useMemo(() => {
     if (gross <= 0) return null;
-    const netSE = Math.max(0, gross - expenses);
-
-    // SECA: 15.3% on 92.35% of net SE earnings
-    const secaTaxable = netSE * 0.9235;
-    const ssPortion = Math.min(secaTaxable, SS_WAGE_BASE) * SS_RATE;
-    const medicarePortion = secaTaxable * MEDICARE_RATE;
-    const secaTax = ssPortion + medicarePortion;
-
-    // 50% of SECA tax is deductible above-the-line
-    const secaDeduction = secaTax / 2;
-
-    // QBI Deduction: 20% of net SE income (simplified — assumes below taxable income thresholds)
-    const qbiDeduction = netSE * QBI_DEDUCTION_RATE;
-
-    // Taxable income for federal income tax
-    const stdDed = STD_DED[filingStatus];
-    const taxableIncome = Math.max(0, netSE - secaDeduction - qbiDeduction - stdDed);
-
-    let federalTax = 0;
-    for (const b of FED_BRACKETS[filingStatus]) {
-      if (taxableIncome > b.min) {
-        federalTax += (Math.min(taxableIncome, b.max) - b.min) * b.rate;
-      } else break;
-    }
-
-    const stateTaxable = Math.max(0, netSE - stdDed * 0.5);
-    const stateTax = stateTaxable * (sRate / 100);
-
-    const totalTax = secaTax + federalTax + stateTax;
-    const afterTax = netSE - totalTax;
-    const marginalRate = FED_BRACKETS[filingStatus].find((b) => taxableIncome > b.min && taxableIncome <= b.max)?.rate || 0;
-    const effectiveRate = netSE > 0 ? totalTax / netSE : 0;
-
-    // Quarterly estimated payments
-    const quarterly = totalTax / 4;
-
-    return {
-      netSE, secaTaxable, secaTax, ssPortion, medicarePortion, secaDeduction,
-      qbiDeduction, taxableIncome, federalTax, stateTax, totalTax, afterTax,
-      marginalRate, effectiveRate, quarterly,
-    };
-  }, [gross, expenses, filingStatus, sRate]);
+    return compute1099({ grossIncome: gross, businessExpenses: expenses, filingStatus, state: selectedState, customStateRatePct: sRate });
+  }, [gross, expenses, filingStatus, selectedState, sRate]);
 
   const handleTryExample = () => {
     setGrossIncome('95000');
     setBusinessExpenses('12000');
     setFilingStatus('single');
+    setSelectedState('CA');
     setStateRate('5');
     setCalculated(true);
   };
@@ -194,20 +80,23 @@ export default function Calculator1099() {
     if (gross > 0 && result) {
       setCalculated(true);
       saveEntry(
-        { grossIncome, businessExpenses, filingStatus, stateRate },
+        { grossIncome, businessExpenses, filingStatus, stateRate, selectedState },
         `1099 · Net ${formatCurrency(result.netSE)} · SECA ${formatCurrency(result.secaTax)} · Total tax ${formatCurrency(result.totalTax)}`,
       );
     }
   };
 
   const handleReset = () => {
-    setGrossIncome(''); setBusinessExpenses('0'); setFilingStatus('single'); setStateRate('5');
+    setGrossIncome(''); setBusinessExpenses('0'); setFilingStatus('single'); setSelectedState('CA'); setStateRate('5');
     setCalculated(false);
   };
 
-  const handleRestore = (i: { grossIncome: string; businessExpenses: string; filingStatus: string; stateRate: string }) => {
+  const handleRestore = (i: { grossIncome: string; businessExpenses: string; filingStatus: string; stateRate: string; selectedState?: string }) => {
     setGrossIncome(i.grossIncome); setBusinessExpenses(i.businessExpenses);
-    setFilingStatus(i.filingStatus as FilingStatus); setStateRate(i.stateRate);
+    setFilingStatus(i.filingStatus as FilingStatus);
+    // Entries saved before November 2026 hold only a rate: restore them as another state at that rate
+    setSelectedState(isStateTaxChoice(i.selectedState) ? i.selectedState : 'other');
+    setStateRate(i.stateRate);
     setCalculated(true);
   };
 
@@ -271,49 +160,16 @@ export default function Calculator1099() {
 
           <div className="space-y-2">
             <Label htmlFor="i9-state-select" className="font-medium">State of Business / Residence</Label>
-            <Select 
-              value={selectedState} 
-              onValueChange={(v) => { 
-                setSelectedState(v); 
-                if (v !== 'OTHER') {
-                  setStateRate(STATE_RATES[v].rate.toString());
-                  setUseCustomStateRate(false);
-                } else {
-                  setUseCustomStateRate(true);
-                }
-                setCalculated(false); 
-              }}
-            >
-              <SelectTrigger id="i9-state-select"><SelectValue /></SelectTrigger>
-              <SelectContent className="max-h-80">
-                {Object.entries(STATE_RATES).map(([code, s]) => (
-                  <SelectItem key={code} value={code}>
-                    {s.name} {s.rate === 0 ? '(0% no tax)' : `(~${s.rate}%)`}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-              <span>Rate: {stateRate}%</span>
-              <button 
-                type="button" 
-                onClick={() => setUseCustomStateRate(!useCustomStateRate)}
-                className="text-amber-600 underline hover:text-amber-700"
-              >
-                {useCustomStateRate ? 'Auto' : 'Edit %'}
-              </button>
-            </div>
+            <StateTaxSelect id="i9-state-select" value={selectedState} onChange={(v) => { setSelectedState(v); setCalculated(true); }} />
+            <p className="text-[11px] text-muted-foreground">
+              {selectedState === 'other' ? STATE_HELP_OTHER : `${TAX_YEAR} ${stateTaxName(selectedState)} ${STATE_HELP_MODELED}`}
+            </p>
           </div>
         </div>
 
-        {useCustomStateRate && (
-          <div className="p-3 bg-muted/40 rounded-xl border border-border/50 max-w-sm space-y-1">
-            <Label htmlFor="i9-custom-rate" className="text-xs font-medium">Custom State / Local Income Tax Rate (%)</Label>
-            <div className="relative">
-              <Input id="i9-custom-rate" type="number" step="0.1" min="0" max="20"
-                value={stateRate} onChange={(e) => { setStateRate(e.target.value); setCalculated(true); }} className="h-8 text-xs" />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">%</span>
-            </div>
+        {selectedState === 'other' && (
+          <div className="p-3 bg-muted/40 rounded-xl border border-border/50 max-w-sm">
+            <StateRateInput id="i9-custom-rate" value={stateRate} onChange={(v) => { setStateRate(v); setCalculated(true); }} />
           </div>
         )}
 
@@ -405,13 +261,13 @@ export default function Calculator1099() {
                   <div className="flex justify-between px-4 py-2"><span className="text-muted-foreground">Gross 1099 Revenue:</span><span className="font-semibold">{formatCurrency(gross)}</span></div>
                   <div className="flex justify-between px-4 py-2"><span className="text-muted-foreground">Less Deductible Business Expenses:</span><span className="font-semibold text-rose-600">-{formatCurrency(expenses)}</span></div>
                   <div className="flex justify-between px-4 py-2 bg-muted/10"><span className="font-medium">Net Schedule C Profit:</span><span className="font-bold">{formatCurrency(result.netSE)}</span></div>
-                  <div className="flex justify-between px-4 py-2"><span className="text-muted-foreground">SECA Social Security (12.4% on 92.35% up to $184,500):</span><span className="font-semibold">{formatCurrency(result.ssPortion)}</span></div>
+                  <div className="flex justify-between px-4 py-2"><span className="text-muted-foreground">SECA Social Security (12.4% on 92.35% up to ${SS_WAGE_BASE.toLocaleString('en-US')}):</span><span className="font-semibold">{formatCurrency(result.ssPortion)}</span></div>
                   <div className="flex justify-between px-4 py-2"><span className="text-muted-foreground">SECA Medicare (2.9% on 92.35%):</span><span className="font-semibold">{formatCurrency(result.medicarePortion)}</span></div>
                   <div className="flex justify-between px-4 py-2 text-blue-600"><span className="font-medium">Total SECA Self-Employment Tax:</span><span className="font-bold">-{formatCurrency(result.secaTax)}</span></div>
                   <div className="flex justify-between px-4 py-2 text-emerald-600"><span className="text-muted-foreground">Above-the-Line 50% SECA Deduction:</span><span>-{formatCurrency(result.secaDeduction)}</span></div>
                   <div className="flex justify-between px-4 py-2 text-emerald-600"><span className="text-muted-foreground">Section 199A QBI Deduction (20%):</span><span>-{formatCurrency(result.qbiDeduction)}</span></div>
                   <div className="flex justify-between px-4 py-2"><span className="text-muted-foreground">Federal Income Tax:</span><span className="font-semibold text-blue-600">-{formatCurrency(result.federalTax)}</span></div>
-                  <div className="flex justify-between px-4 py-2"><span className="text-muted-foreground">Estimated State Tax ({selectedState} @ {stateRate}%):</span><span className="font-semibold text-purple-600">-{formatCurrency(result.stateTax)}</span></div>
+                  <div className="flex justify-between px-4 py-2"><span className="text-muted-foreground">Estimated State Income Tax ({stateTaxName(selectedState)}{selectedState === 'other' ? ` @ ${stateRate}%` : ''}):</span><span className="font-semibold text-purple-600">-{formatCurrency(result.stateTax)}</span></div>
                   <div className="flex justify-between px-4 py-2.5 font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400"><span>Net Take-Home Pay (After All Taxes):</span><span className="font-mono">{formatCurrency(result.afterTax)}</span></div>
                 </div>
               </div>

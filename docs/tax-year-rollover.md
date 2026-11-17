@@ -61,6 +61,10 @@ Do each item when its source appears. After any change run `npm test`.
    hand-computed test for it in `2027.test.ts`. The tests refuse a state that is listed as published but still
    runs the 2026 rule object, and the note under the result stops saying "2026 rules" for that state on its own.
    A state whose 2027 method is identical to 2026 still gets its own entry and a test, so the claim is checked.
+   The 15 states that have a withholding rule but no paycheck page (`2026-more-states.ts`) work the same way:
+   write the 2027 rule in a `2027-more-states.ts`, put it in `moreStateRules` in `2027.ts` and add the code to
+   `moreStatesPublished`. Arkansas, Maine and West Virginia each reissued their tables during 2026, so check
+   those three for a mid-year revision as well as a January one.
 4. **`asOf`** in `2027.ts`: set it to the date you last checked what is unpublished. It is printed in the note.
 5. **Employer side.** `employer-cost-2026.ts` holds 2026 state unemployment rates, wage bases, paid-leave employer
    shares and the FUTA credit reduction. Only the Social Security match follows the selected year. When the 2027
@@ -80,11 +84,13 @@ true for 2027 before the year printed next to it changes:
   taxes and "what changed in 2026" bullets for 30 states. `state-details.ts` imports state rates from
   `withholding/2026`; point each import at the 2027 figure as the state is updated.
 - **Registry titles and descriptions** that print the year, and the SEO files of the Payroll & Taxes category.
-- **Standalone tax calculators** that carry their own copy of the 2026 figures. Search
-  `src/components/calculators` for `16100`, `32200` and `184500`: today that finds `FederalTaxCalculator`,
-  `Calculator1099`, `TaxRefundCalculator`, `TaxBracketCalculator`, `W2Calculator`, `FicaTaxCalculator`,
-  `SelfEmploymentTaxCalculator`, `SocialSecurityEstimator` and `ContractorVsEmployeeCalculator`.
-  `StateTaxCalculator` has its own state rate table as well.
+- **Standalone tax calculators** (federal tax, tax brackets, W-2, 1099, refund, FICA, self-employment, Social
+  Security, contractor vs employee, state tax). Since November 2026 they read their federal figures and state
+  rules from the engine through `src/lib/payroll/federal-tax.ts` and `state-tax.ts`, so their numbers move with
+  `TAX_YEAR` on their own, and a test fails if a figure is typed into a component again. What still needs a
+  read is their wording: labels and help text that say "2026", and the hand-written parts of their articles.
+- **Home page copy** (`HubPage.tsx`) quotes the 2026 Social Security wage base in two paragraphs.
+- **Social Security estimator**: its benefit bend points are typed in the component and are not from the engine.
 - **Salary pages** (`salary-pages.ts`), which generate their numbers from the engine but have year wording.
 - **Blog posts** that quote 2026 figures: add an `updated:` date when one is revised.
 - **`lastReviewed`** on the 32 engine-backed pages, once their 2027 numbers are verified.

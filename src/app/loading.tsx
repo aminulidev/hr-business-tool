@@ -1,8 +1,9 @@
-import AppShell from '@/components/layout/AppShell';
+// Not AppShell: a loading file that imports the client shell makes every page download it again (see ShellSkeleton).
+import ShellSkeleton from '@/components/layout/ShellSkeleton';
 
 export default function Loading() {
   return (
-    <AppShell>
+    <ShellSkeleton>
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12 animate-pulse">
         {/* Hero Skeleton */}
         <div className="text-center space-y-6 max-w-3xl mx-auto">
@@ -38,6 +39,6 @@ export default function Loading() {
           ))}
         </div>
       </div>
-    </AppShell>
+    </ShellSkeleton>
   );
 }

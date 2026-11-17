@@ -399,6 +399,7 @@ export default function CalculatorLayoutServer({
               <li className="flex items-center" itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
                 <Link
                   href="/"
+                  prefetch={false}
                   className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   itemProp="item"
                 >

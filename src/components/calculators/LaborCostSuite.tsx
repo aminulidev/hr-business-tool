@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import { Briefcase, Users, Percent, Wallet, Plus, Trash2, Info, BookmarkPlus } from 'lucide-react';
 import TryExample from './TryExample';
 import { Input } from '@/components/ui/input';
@@ -14,7 +14,7 @@ import { useCalcHistory } from '@/hooks/useCalcHistory';
 import { useSearchParam } from '@/hooks/useSearchParam';
 import { formatCurrency } from '@/lib/utils';
 import { TAX_YEAR, type PaycheckState, type StateCode } from '@/lib/payroll/withholding';
-import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
+import { STATE_CODES, STATE_META } from '@/lib/payroll/state-meta';
 import { STATE_EMPLOYER_TAXES } from '@/lib/payroll/employer-cost-2026';
 import {
   computeHrBudget,
@@ -33,7 +33,7 @@ import {
   type TeamMember,
 } from '@/lib/payroll/labor-cost';
 
-const STATES_SORTED: StateCode[] = [...STATE_CODES].sort((a, b) => STATE_PAYCHECK_PAGES[a].name.localeCompare(STATE_PAYCHECK_PAGES[b].name));
+const STATES_SORTED: StateCode[] = [...STATE_CODES].sort((a, b) => STATE_META[a].name.localeCompare(STATE_META[b].name));
 const num = (v: string, fallback = 0) => {
   const n = parseFloat(v);
   return Number.isFinite(n) ? n : fallback;
@@ -139,7 +139,7 @@ function EmployeeMode() {
             <Select value={state} onValueChange={(v) => { setState(v as PaycheckState); setSui(''); }}>
               <SelectTrigger aria-label="State"><SelectValue /></SelectTrigger>
               <SelectContent>
-                {STATES_SORTED.map((c) => <SelectItem key={c} value={c}>{STATE_PAYCHECK_PAGES[c].name}</SelectItem>)}
+                {STATES_SORTED.map((c) => <SelectItem key={c} value={c}>{STATE_META[c].name}</SelectItem>)}
                 <SelectItem value="none">Other state (federal taxes only)</SelectItem>
               </SelectContent>
             </Select>
@@ -226,7 +226,7 @@ function EmployeeMode() {
           <div className="flex items-start gap-2 text-xs text-muted-foreground">
             <Info className="h-4 w-4 shrink-0 mt-0.5" />
             <p>
-              Payroll taxes use the {TAX_YEAR} employer rates: 6.2% Social Security match, 1.45% Medicare match, FUTA on the first $7,000{profile ? `, ${STATE_PAYCHECK_PAGES[state as StateCode].name} unemployment insurance${profile.sui.rate !== null ? ` at the ${profile.sui.rateText} new-employer rate` : ''} on the first $${profile.sui.wageBase.toLocaleString('en-US')}` : ''}{profile?.extras.length ? ` and ${profile.extras.map((e) => e.label.replace(/ \(.*\)$/, '')).join(', ')}` : ''}.
+              Payroll taxes use the {TAX_YEAR} employer rates: 6.2% Social Security match, 1.45% Medicare match, FUTA on the first $7,000{profile ? `, ${STATE_META[state as StateCode].name} unemployment insurance${profile.sui.rate !== null ? ` at the ${profile.sui.rateText} new-employer rate` : ''} on the first $${profile.sui.wageBase.toLocaleString('en-US')}` : ''}{profile?.extras.length ? ` and ${profile.extras.map((e) => e.label.replace(/ \(.*\)$/, '')).join(', ')}` : ''}.
               The hourly figures divide by {result.paidHoursPerYear.toLocaleString('en-US')} paid hours and {result.workedHoursPerYear.toLocaleString('en-US')} hours actually worked after {pto || 0} paid days off.
             </p>
           </div>

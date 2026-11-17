@@ -1131,11 +1131,11 @@ export const payrollTaxesCalculators = defineCalculators([
     slug: 'state-tax-calculator',
     status: 'published',
     title: 'State Tax Calculator',
-    metaTitle: 'Free State Tax Calculator 2026 — All 50 States Income Tax',
+    metaTitle: 'State Tax Calculator 2026: Income Tax by State, Compared',
     shortDescription:
-      'Calculate state income tax for all 50 states, including flat-rate states, progressive bracket states, and no-income-tax states.',
+      "See what a state takes from your wages in 2026: income tax for 40 states under each state's own withholding rules, the nine states with no tax on wages, and any two compared side by side.",
     metaDescription:
-      'Free state income tax calculator 2026. Calculate state tax for all 50 states with current brackets, standard deductions, and exemptions. Compare take-home pay across states including no-income-tax states like Texas, Florida, and Tennessee.',
+      'State income tax calculator for 2026: see the tax on your wages in 49 states, the effective rate, and how two states compare, such as California and Texas.',
     keywords: [
       'state tax calculator',
       'state income tax calculator',

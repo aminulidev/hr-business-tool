@@ -10,7 +10,7 @@ import {
   type StateCode,
   TAX_YEAR,
 } from '@/lib/payroll/withholding';
-import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
+import { STATE_CODES, STATE_META } from '@/lib/payroll/state-meta';
 import { ArrowRight, Calculator, Check, DollarSign, Link2, MapPin } from 'lucide-react';
 
 interface SalaryBreakdownInteractiveProps {
@@ -111,7 +111,7 @@ function SalaryBreakdownForm({
     setTimeout(() => setLinkCopied(false), 2500);
   };
 
-  const statePage = STATE_PAYCHECK_PAGES[state];
+  const statePage = STATE_META[state];
 
   const result = useMemo(() => {
     const allowances = statePage.allowances
@@ -182,7 +182,7 @@ function SalaryBreakdownForm({
               >
                 {STATE_CODES.map((code) => (
                   <option key={code} value={code}>
-                    {STATE_PAYCHECK_PAGES[code].name} ({code})
+                    {STATE_META[code].name} ({code})
                   </option>
                 ))}
               </select>

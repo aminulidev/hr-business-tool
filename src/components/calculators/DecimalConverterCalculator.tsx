@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import { Hash, Info, ArrowRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

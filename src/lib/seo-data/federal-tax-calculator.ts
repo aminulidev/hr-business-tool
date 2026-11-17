@@ -91,7 +91,7 @@ const seoData = {
     {
       slug: 'state-tax-calculator',
       title: 'State Tax Calculator',
-      description: 'Calculate state income tax liabilities across all 50 US states and flat-tax jurisdictions',
+      description: "State income tax on your wages under each state's own rules, with two states compared side by side",
       icon: 'FileText',
     },
     {

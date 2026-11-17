@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import { Clock } from 'lucide-react';
 import TryExample from './TryExample';
 import { Input } from '@/components/ui/input';
