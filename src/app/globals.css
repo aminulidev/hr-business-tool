@@ -182,6 +182,37 @@
     radial-gradient(at 10% 70%, oklch(0.666 0.179 58.318 / 8%) 0%, transparent 50%);
 }
 
+/* Entrance animations for src/components/motion.tsx (the stand-in for framer-motion).
+   The element animates FROM the values in its custom properties to its own resting
+   style; "backwards" holds the starting state during a delay and leaves nothing
+   behind afterwards. */
+@keyframes motion-lite-in {
+  from {
+    opacity: var(--ml-o, 1);
+    transform: translate(var(--ml-x, 0), var(--ml-y, 0)) scale(var(--ml-s, 1));
+  }
+}
+@keyframes motion-lite-grow {
+  from { width: var(--ml-w, 0); }
+}
+.motion-lite {
+  animation: motion-lite-in var(--ml-d, 0.3s) ease-out var(--ml-delay, 0s) backwards;
+}
+.motion-lite-grow {
+  animation: motion-lite-grow var(--ml-d, 0.5s) ease-out var(--ml-delay, 0s) backwards;
+}
+.motion-lite.motion-lite-grow {
+  animation:
+    motion-lite-in var(--ml-d, 0.3s) ease-out var(--ml-delay, 0s) backwards,
+    motion-lite-grow var(--ml-d, 0.5s) ease-out var(--ml-delay, 0s) backwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-lite,
+  .motion-lite-grow {
+    animation: none;
+  }
+}
+
 /* Animated gradient orb */
 @keyframes float {
   0%, 100% { transform: translate(0, 0) scale(1); }

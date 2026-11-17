@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import TryExample from './TryExample';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import {
   Banknote,
   DollarSign,

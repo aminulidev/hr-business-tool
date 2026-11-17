@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { ThumbsUp, ThumbsDown, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { toast } from 'sonner';
 import { track } from '@/lib/analytics';
 
 const STORAGE_KEY = 'qbc_feedback_v1';
@@ -60,9 +59,10 @@ export default function FeedbackWidget() {
     } catch {}
   }, [slug]);
 
-  const handleHelpful = () => { setSubmitted(true); submit(true); toast.success('Thanks for your feedback!', { duration: 2500 }); };
-  const handleNotHelpful = () => { setSubmitted(false); setShowTextarea(true); submit(false); toast('Thanks — tell us what was missing?', { duration: 2500 }); };
-  const handleSubmitText = () => { submit(false, feedbackText); setShowTextarea(false); toast.success('Feedback submitted. Thank you!', { duration: 2500 }); setFeedbackText(''); };
+  // The thank-you is the inline message below; no toast (none was ever mounted for this widget)
+  const handleHelpful = () => { setSubmitted(true); submit(true); };
+  const handleNotHelpful = () => { setSubmitted(false); setShowTextarea(true); submit(false); };
+  const handleSubmitText = () => { submit(false, feedbackText); setShowTextarea(false); setFeedbackText(''); };
   const handleDismiss = () => { setShowTextarea(false); setSubmitted(null); };
 
   if (submitted !== null && !showTextarea) {

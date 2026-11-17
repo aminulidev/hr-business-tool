@@ -14,7 +14,6 @@ import { useEffect, useState } from 'react';
 import { Mail, Check, Loader2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { toast } from 'sonner';
 import { track } from '@/lib/analytics';
 
 const STORAGE_KEY = 'qbc_newsletter_subscribed_v1';
@@ -34,6 +33,8 @@ export default function NewsletterSignup({
   // Honeypot: hidden from people, filled in by form-filling bots; the API discards those sign-ups.
   const [website, setWebsite] = useState('');
   const [confirmationSent, setConfirmationSent] = useState(false);
+  // Shown under the form. It used to go to a toast, but no toaster was mounted, so a failed sign-up showed nothing.
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -48,10 +49,11 @@ export default function NewsletterSignup({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes('@')) {
-      toast.error('Please enter a valid email address');
+      setErrorMessage('Please enter a valid email address.');
       return;
     }
 
+    setErrorMessage('');
     setStatus('loading');
     try {
       const res = await fetch('/api/newsletter', {
@@ -68,10 +70,9 @@ export default function NewsletterSignup({
       try {
         localStorage.setItem(STORAGE_KEY, 'true');
       } catch {}
-      toast.success(data.alreadySubscribed ? 'You are already subscribed.' : 'Subscribed. You are on the list.', { duration: 4000 });
     } catch (err: any) {
       setStatus('error');
-      toast.error(err.message || 'Subscription failed. Please try again.');
+      setErrorMessage(err.message || 'Subscription failed. Please try again.');
     }
   };
 
@@ -157,6 +158,11 @@ export default function NewsletterSignup({
               )}
             </Button>
           </form>
+          {errorMessage && (
+            <p role="alert" className="mt-2 inline-block rounded-md bg-white/15 px-2.5 py-1 text-xs font-medium text-white">
+              {errorMessage}
+            </p>
+          )}
         </div>
       </div>
     );
@@ -205,6 +211,11 @@ export default function NewsletterSignup({
               )}
             </Button>
           </form>
+          {errorMessage && (
+            <p role="alert" className="mt-1.5 text-xs font-medium text-red-600 dark:text-red-400">
+              {errorMessage}
+            </p>
+          )}
         </div>
         <button
           onClick={handleDismiss}

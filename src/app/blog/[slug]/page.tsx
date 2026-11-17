@@ -168,6 +168,7 @@ export default async function PostPage({ params }: Props) {
             </div>
             <Link
               href="/"
+              prefetch={false}
               className="px-5 py-2.5 rounded-xl bg-white text-emerald-700 font-bold text-sm hover:bg-emerald-50 transition-colors shrink-0 flex items-center gap-1.5"
             >
               <Calculator className="h-4 w-4" />

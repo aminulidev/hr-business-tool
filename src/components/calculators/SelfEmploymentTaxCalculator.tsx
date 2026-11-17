@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import { UserCog, Calendar, DollarSign, Calculator, HelpCircle, ShieldCheck, ArrowRight, Receipt, Split } from 'lucide-react';
 import TryExample from './TryExample';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
@@ -13,15 +13,25 @@ import ComparePanel, { CompareRow } from './ComparePanel';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
 import { formatCurrency, formatPercent } from '@/lib/utils';
+import {
+  ADDITIONAL_MEDICARE_RATE,
+  ADDITIONAL_MEDICARE_THRESHOLDS,
+  MEDICARE_RATE as EMPLOYEE_MEDICARE_RATE,
+  SECA_MEDICARE_RATE,
+  SECA_NET_EARNINGS_FACTOR,
+  SECA_SOCIAL_SECURITY_RATE,
+  SOCIAL_SECURITY_RATE,
+  SOCIAL_SECURITY_WAGE_BASE,
+} from '@/lib/payroll/federal-tax';
 
-// 2026 SECA statutory constants
-const SS_WAGE_BASE = 184500;
-const SS_RATE_SE = 0.124; // 12.4% (employer 6.2% + employee 6.2%)
-const MEDICARE_RATE_SE = 0.029; // 2.9% (employer 1.45% + employee 1.45%)
-const ADD_MEDICARE_RATE = 0.009; // 0.9% additional Medicare
-const ADD_MEDICARE_THRESHOLD_SINGLE = 200000;
-const ADD_MEDICARE_THRESHOLD_MFJ = 250000;
-const NET_SE_FACTOR = 0.9235; // IRC § 1402(a)(12): 92.35% (100% - 7.65%)
+// Self-employment tax figures for the site's tax year come from the paycheck engine (src/lib/payroll/federal-tax.ts)
+const SS_WAGE_BASE = SOCIAL_SECURITY_WAGE_BASE;
+const SS_RATE_SE = SECA_SOCIAL_SECURITY_RATE; // 12.4% (employer 6.2% + employee 6.2%)
+const MEDICARE_RATE_SE = SECA_MEDICARE_RATE; // 2.9% (employer 1.45% + employee 1.45%)
+const ADD_MEDICARE_RATE = ADDITIONAL_MEDICARE_RATE; // 0.9% additional Medicare
+const ADD_MEDICARE_THRESHOLD_SINGLE = ADDITIONAL_MEDICARE_THRESHOLDS.single;
+const ADD_MEDICARE_THRESHOLD_MFJ = ADDITIONAL_MEDICARE_THRESHOLDS.mfj;
+const NET_SE_FACTOR = SECA_NET_EARNINGS_FACTOR; // IRC § 1402(a)(12): 92.35% (100% - 7.65%)
 
 interface SESnapshot {
   netSE: number;
@@ -110,7 +120,7 @@ export default function SelfEmploymentTaxCalculator() {
     const quarterlyPayment = totalSECA / 4;
 
     // Comparison with W-2 employee: employee would pay 7.65% FICA on wage equivalent
-    const equivalentW2Fica = (Math.min(effectiveNetSE, remainingSSCap) * 0.062) + (effectiveNetSE * 0.0145);
+    const equivalentW2Fica = (Math.min(effectiveNetSE, remainingSSCap) * SOCIAL_SECURITY_RATE) + (effectiveNetSE * EMPLOYEE_MEDICARE_RATE);
     const extraEmployerHalfPaid = Math.max(0, totalSECA - equivalentW2Fica);
 
     return {
@@ -324,7 +334,7 @@ export default function SelfEmploymentTaxCalculator() {
             <div className="space-y-2">
               <div className="flex items-center gap-1.5">
                 <Label htmlFor="w2-wages" className="text-xs font-semibold">W-2 Wages (Day Job, if any)</Label>
-                <div title="If you work a W-2 job concurrently, FICA taxes already paid reduce your remaining 2026 $184,500 Social Security cap on self-employment earnings.">
+                <div title={`If you work a W-2 job concurrently, FICA taxes already paid reduce your remaining $${SS_WAGE_BASE.toLocaleString('en-US')} Social Security cap on self-employment earnings.`}>
                   <HelpCircle className="w-3.5 h-3.5 text-muted-foreground cursor-help" />
                 </div>
               </div>
@@ -342,7 +352,7 @@ export default function SelfEmploymentTaxCalculator() {
                 />
               </div>
               <p className="text-[11px] text-muted-foreground">
-                Reduces the $184,500 Social Security wage cap dollar-for-dollar.
+                Reduces the ${SS_WAGE_BASE.toLocaleString('en-US')} Social Security wage cap dollar-for-dollar.
               </p>
             </div>
 

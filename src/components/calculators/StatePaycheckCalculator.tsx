@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { useInitialQuery } from '@/hooks/useSearchParam';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import {
   DollarSign,
   Clock,
@@ -39,13 +39,19 @@ import {
   type StateCode,
   type TaxYear,
 } from '@/lib/payroll/withholding';
-import { STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
-import EmployerCostPanel, { ResultViewToggle, type ResultView } from './EmployerCostPanel';
+import { STATE_META } from '@/lib/payroll/state-meta';
+import dynamic from 'next/dynamic';
+import { ResultViewToggle, type ResultView } from './ResultViewToggle';
+
+// Loaded when first needed, not with the page: the employer view (with the state unemployment tables),
+// the pay stub dialog. A share link that opens one of them still gets it server-rendered.
+const EmployerCostPanel = dynamic(() => import('./EmployerCostPanel'), {
+  loading: () => <div className="h-64 rounded-2xl border border-sky-500/20 bg-sky-500/5 animate-pulse" aria-hidden />,
+});
+const PayStubDialog = dynamic(() => import('./PayStubDialog'), { ssr: false });
 import ReverseSolverCard from './ReverseSolverCard';
 import PaycheckScenarioCompare from './PaycheckScenarioCompare';
-import PayStubDialog from './PayStubDialog';
 import { TaxYearNotice, TaxYearSwitch } from './TaxYearSwitch';
-import { calculateEmployerCost } from '@/lib/payroll/employer-cost-2026';
 import { parseScenarioParams, writeScenarioParams, type CompareScenario } from '@/lib/payroll/scenario-params';
 
 const FREQ_LABELS: Record<PayFrequency, string> = {
@@ -97,7 +103,7 @@ function readDefaults(params: URLSearchParams | null, state: StateCode): StateDe
     overtimeHours: '0',
     payFrequency: 'bi-weekly',
     filingStatus: 'single',
-    allowances: String(STATE_PAYCHECK_PAGES[state].allowances?.defaultSingle ?? 0),
+    allowances: String(STATE_META[state].allowances?.defaultSingle ?? 0),
     nycResident: false,
     taxYear: TAX_YEAR,
     view: 'employee',
@@ -133,7 +139,7 @@ export default function StatePaycheckCalculator({ state }: { state: StateCode })
 }
 
 function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: StateDefaults }) {
-  const page = STATE_PAYCHECK_PAGES[state];
+  const page = STATE_META[state];
   const minWageStr = page.minimumWage.toFixed(2);
   const presets = Array.from(new Set([minWageStr, '20', '25', '30', '40', '50']));
 
@@ -148,6 +154,12 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
   const [linkCopied, setLinkCopied] = useState(false);
   const [view, setView] = useState<ResultView>(defaults.view);
   const [stubOpen, setStubOpen] = useState(false);
+  // False until the visitor first opens the pay stub; the dialog is not downloaded before that
+  const [stubLoaded, setStubLoaded] = useState(false);
+  const openStub = () => {
+    setStubLoaded(true);
+    setStubOpen(true);
+  };
   const [scenario, setScenario] = useState<CompareScenario | null>(defaults.compare);
 
   const handleShareLink = () => {
@@ -280,7 +292,7 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
         regularHoursPerWeek: parseFloat(regularHours) || 0,
         overtimeHoursPerWeek: parseFloat(overtimeHours || '0') || 0,
         result,
-        employer: calculateEmployerCost({ state, grossAnnual: result.grossAnnual, ficaWagesAnnual: result.ficaWagesAnnual, payFrequency, hoursPerYear: totalAnnualHours, taxYear: result.taxYear }),
+        employerInput: { state, grossAnnual: result.grossAnnual, ficaWagesAnnual: result.ficaWagesAnnual, payFrequency, hoursPerYear: totalAnnualHours, taxYear: result.taxYear },
         sourceUrl: `https://www.quickbizcalc.com/calculators/${page.slug}`,
       }
     : null;
@@ -620,7 +632,7 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
                   {linkCopied ? <Check className="h-4 w-4 mr-1.5 text-emerald-600" /> : <Link2 className="h-4 w-4 mr-1.5" />}
                   {linkCopied ? 'Share Link Copied!' : 'Share Calculation Link'}
                 </Button>
-                <Button onClick={() => setStubOpen(true)} variant="outline" size="sm">
+                <Button onClick={openStub} variant="outline" size="sm">
                   <Receipt className="h-4 w-4 mr-1.5" />
                   Pay stub preview
                 </Button>
@@ -631,7 +643,7 @@ function StatePaycheckForm({ state, defaults }: { state: StateCode; defaults: St
         </motion.div>
       )}
 
-      {stubData && <PayStubDialog open={stubOpen} onOpenChange={setStubOpen} data={stubData} />}
+      {stubLoaded && stubData && <PayStubDialog open={stubOpen} onOpenChange={setStubOpen} data={stubData} />}
 
       {/* Scenario compare: this state vs. a raise, another state or a different schedule (Phase 16.1) */}
       {result && (

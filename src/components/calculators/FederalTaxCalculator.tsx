@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import { Landmark } from 'lucide-react';
 import TryExample from './TryExample';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
@@ -14,54 +14,25 @@ import ComparePanel, { CompareRow } from './ComparePanel';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
 import { formatCurrency, formatPercent } from '@/lib/utils';
+import {
+  FEDERAL_BRACKETS,
+  FEDERAL_STANDARD_DEDUCTIONS,
+  MEDICARE_RATE,
+  SOCIAL_SECURITY_RATE,
+  SOCIAL_SECURITY_WAGE_BASE,
+  type ReturnFilingStatus,
+} from '@/lib/payroll/federal-tax';
 
-type FilingStatus = 'single' | 'mfj' | 'mfs' | 'hoh';
+type FilingStatus = ReturnFilingStatus;
 
 interface BracketDef { min: number; max: number; rate: number; }
 
-// 2026 Federal Tax Brackets (IRS Rev. Proc. 2025-32)
-const brackets2026: Record<FilingStatus, BracketDef[]> = {
-  single: [
-    { min: 0, max: 12400, rate: 0.10 },
-    { min: 12400, max: 50400, rate: 0.12 },
-    { min: 50400, max: 105700, rate: 0.22 },
-    { min: 105700, max: 201775, rate: 0.24 },
-    { min: 201775, max: 256225, rate: 0.32 },
-    { min: 256225, max: 640600, rate: 0.35 },
-    { min: 640600, max: Infinity, rate: 0.37 },
-  ],
-  mfj: [
-    { min: 0, max: 24800, rate: 0.10 },
-    { min: 24800, max: 100800, rate: 0.12 },
-    { min: 100800, max: 211400, rate: 0.22 },
-    { min: 211400, max: 403550, rate: 0.24 },
-    { min: 403550, max: 512450, rate: 0.32 },
-    { min: 512450, max: 768700, rate: 0.35 },
-    { min: 768700, max: Infinity, rate: 0.37 },
-  ],
-  mfs: [
-    { min: 0, max: 12400, rate: 0.10 },
-    { min: 12400, max: 50400, rate: 0.12 },
-    { min: 50400, max: 105700, rate: 0.22 },
-    { min: 105700, max: 201775, rate: 0.24 },
-    { min: 201775, max: 256225, rate: 0.32 },
-    { min: 256225, max: 384350, rate: 0.35 },
-    { min: 384350, max: Infinity, rate: 0.37 },
-  ],
-  hoh: [
-    { min: 0, max: 17700, rate: 0.10 },
-    { min: 17700, max: 67450, rate: 0.12 },
-    { min: 67450, max: 105700, rate: 0.22 },
-    { min: 105700, max: 201775, rate: 0.24 },
-    { min: 201775, max: 256225, rate: 0.32 },
-    { min: 256225, max: 640600, rate: 0.35 },
-    { min: 640600, max: Infinity, rate: 0.37 },
-  ],
-};
+// Brackets and standard deductions for the site's tax year come from the paycheck engine
+// (src/lib/payroll/federal-tax.ts); nothing is typed here.
+const taxBrackets: Record<FilingStatus, BracketDef[]> = FEDERAL_BRACKETS;
 
-const standardDeductions: Record<FilingStatus, number> = {
-  single: 16100, mfj: 32200, mfs: 16100, hoh: 24150,
-};
+const standardDeductions = FEDERAL_STANDARD_DEDUCTIONS;
+const usd0 = (n: number) => `$${n.toLocaleString('en-US')}`;
 
 const filingStatusLabels: Record<FilingStatus, string> = {
   single: 'Single',
@@ -105,7 +76,7 @@ export default function FederalTaxCalculator() {
       ? stdDed + aboveLineNum 
       : Math.max(itemizedNum, 0) + aboveLineNum;
     const taxableIncome = Math.max(0, gross - appliedDeduction);
-    const brackets = brackets2026[filingStatus];
+    const brackets = taxBrackets[filingStatus];
     let totalTax = 0;
     let marginalRate = 0;
     const breakdown: { rate: number; incomeInBracket: number; taxInBracket: number; min: number; max: number | null }[] = [];
@@ -122,9 +93,9 @@ export default function FederalTaxCalculator() {
       }
     }
 
-    // 2026 Estimated FICA (Social Security wage cap $184,500 @ 6.2%, Medicare 1.45% uncapped)
-    const ssTax = Math.min(gross, 184500) * 0.062;
-    const medTax = gross * 0.0145;
+    // Estimated FICA: Social Security up to the wage base, Medicare uncapped
+    const ssTax = Math.min(gross, SOCIAL_SECURITY_WAGE_BASE) * SOCIAL_SECURITY_RATE;
+    const medTax = gross * MEDICARE_RATE;
     const estFica = ssTax + medTax;
     const effectiveRate = gross > 0 ? totalTax / gross : 0;
     const afterTax = gross - totalTax;
@@ -229,10 +200,10 @@ export default function FederalTaxCalculator() {
             <Select value={filingStatus} onValueChange={(v) => { setFilingStatus(v as FilingStatus); setCalculated(true); }}>
               <SelectTrigger id="ft-status"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="single">Single ($16,100 Std Ded)</SelectItem>
-                <SelectItem value="mfj">Married Filing Jointly ($32,200 Std Ded)</SelectItem>
-                <SelectItem value="hoh">Head of Household ($24,150 Std Ded)</SelectItem>
-                <SelectItem value="mfs">Married Filing Separately ($16,100 Std Ded)</SelectItem>
+                <SelectItem value="single">Single ({usd0(standardDeductions.single)} Std Ded)</SelectItem>
+                <SelectItem value="mfj">Married Filing Jointly ({usd0(standardDeductions.mfj)} Std Ded)</SelectItem>
+                <SelectItem value="hoh">Head of Household ({usd0(standardDeductions.hoh)} Std Ded)</SelectItem>
+                <SelectItem value="mfs">Married Filing Separately ({usd0(standardDeductions.mfs)} Std Ded)</SelectItem>
               </SelectContent>
             </Select>
             <p className="text-[11px] text-muted-foreground">Governs 2026 bracket thresholds &amp; standard deduction.</p>
@@ -428,7 +399,7 @@ export default function FederalTaxCalculator() {
                   Estimated FICA (Social Security &amp; Medicare) Notice
                 </div>
                 <p className="text-muted-foreground leading-relaxed">
-                  In addition to your <strong>{formatCurrency(result.totalTax)}</strong> federal income tax, employees owe mandatory FICA payroll taxes of approximately <strong>{formatCurrency(result.estFica)}</strong> (6.2% Social Security up to $184,500 + 1.45% Medicare uncapped).
+                  In addition to your <strong>{formatCurrency(result.totalTax)}</strong> federal income tax, employees owe mandatory FICA payroll taxes of approximately <strong>{formatCurrency(result.estFica)}</strong> (6.2% Social Security up to {usd0(SOCIAL_SECURITY_WAGE_BASE)} + 1.45% Medicare uncapped).
                 </p>
                 <div className="flex flex-wrap items-center gap-4 pt-1 font-medium text-foreground">
                   <span>Total Federal + FICA: <strong>{formatCurrency(result.totalWithFica)}</strong></span>

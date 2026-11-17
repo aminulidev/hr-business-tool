@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import { BookmarkPlus, Info, Plus, Trash2, PieChart, FileText, Users, Handshake } from 'lucide-react';
 import TryExample from './TryExample';
 import { Input } from '@/components/ui/input';

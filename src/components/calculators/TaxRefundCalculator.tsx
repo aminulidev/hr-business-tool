@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import { Receipt, DollarSign, Percent, Info, PieChart as PieChartIcon } from 'lucide-react';
 import TryExample from './TryExample';
 import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
@@ -18,9 +18,11 @@ import {
 } from '@/components/ui/select';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
+import { FEDERAL_BRACKETS, FEDERAL_STANDARD_DEDUCTIONS, type ReturnFilingStatus } from '@/lib/payroll/federal-tax';
+import { TAX_YEAR } from '@/lib/payroll/withholding';
 
 // ---------------------------------------------------------------------------
-// 2025 Federal Tax Brackets
+// Federal tax brackets for the site's tax year, from the paycheck engine (src/lib/payroll/federal-tax.ts)
 // ---------------------------------------------------------------------------
 
 interface TaxBracket {
@@ -29,53 +31,13 @@ interface TaxBracket {
   rate: number;
 }
 
-type FilingStatus = 'single' | 'mfj' | 'mfs' | 'hoh';
+type FilingStatus = ReturnFilingStatus;
 
-const brackets2025: Record<FilingStatus, TaxBracket[]> = {
-  single: [
-    { min: 0, max: 12400, rate: 10 },
-    { min: 12400, max: 50400, rate: 12 },
-    { min: 50400, max: 105700, rate: 22 },
-    { min: 105700, max: 201775, rate: 24 },
-    { min: 201775, max: 256225, rate: 32 },
-    { min: 256225, max: 640600, rate: 35 },
-    { min: 640600, max: Infinity, rate: 37 },
-  ],
-  mfj: [
-    { min: 0, max: 24800, rate: 10 },
-    { min: 24800, max: 100800, rate: 12 },
-    { min: 100800, max: 211400, rate: 22 },
-    { min: 211400, max: 403550, rate: 24 },
-    { min: 403550, max: 512450, rate: 32 },
-    { min: 512450, max: 768700, rate: 35 },
-    { min: 768700, max: Infinity, rate: 37 },
-  ],
-  mfs: [
-    { min: 0, max: 12400, rate: 10 },
-    { min: 12400, max: 50400, rate: 12 },
-    { min: 50400, max: 105700, rate: 22 },
-    { min: 105700, max: 201775, rate: 24 },
-    { min: 201775, max: 256225, rate: 32 },
-    { min: 256225, max: 384350, rate: 35 },
-    { min: 384350, max: Infinity, rate: 37 },
-  ],
-  hoh: [
-    { min: 0, max: 17700, rate: 10 },
-    { min: 17700, max: 67450, rate: 12 },
-    { min: 67450, max: 105700, rate: 22 },
-    { min: 105700, max: 201775, rate: 24 },
-    { min: 201775, max: 256225, rate: 32 },
-    { min: 256225, max: 640600, rate: 35 },
-    { min: 640600, max: Infinity, rate: 37 },
-  ],
-};
+// This calculator works in whole-number percentages (22, not 0.22)
+const inPercent = (status: FilingStatus): TaxBracket[] => FEDERAL_BRACKETS[status].map((b) => ({ ...b, rate: Math.round(b.rate * 100) }));
+const taxBrackets: Record<FilingStatus, TaxBracket[]> = { single: inPercent('single'), mfj: inPercent('mfj'), mfs: inPercent('mfs'), hoh: inPercent('hoh') };
 
-const standardDeductions: Record<FilingStatus, number> = {
-  single: 16100,
-  mfj: 32200,
-  mfs: 16100,
-  hoh: 24150,
-};
+const standardDeductions: Record<FilingStatus, number> = FEDERAL_STANDARD_DEDUCTIONS;
 
 const STATE_TAX_RATE = 5.0; // Flat estimate for state tax
 
@@ -117,7 +79,7 @@ const formatCurrency = (value: number): string =>
   value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
 function calculateFederalTax(taxableIncome: number, status: FilingStatus): { tax: number; breakdown: BracketBreakdown[]; topBracket: number } {
-  const bracketList = brackets2025[status];
+  const bracketList = taxBrackets[status];
   const breakdown: BracketBreakdown[] = [];
   let totalTax = 0;
   let topBracket = 10;
@@ -635,7 +597,7 @@ export default function TaxRefundCalculator() {
               <div className="flex items-start gap-2 rounded-lg bg-muted/30 border border-border/30 p-3 text-xs text-muted-foreground">
                 <Info className="h-4 w-4 shrink-0 mt-0.5" />
                 <p>
-                  <strong>Disclaimer:</strong> This calculator provides estimates using 2025 federal tax brackets and a flat {STATE_TAX_RATE}% state tax estimate.
+                  <strong>Disclaimer:</strong> This calculator provides estimates using {TAX_YEAR} federal tax brackets and a flat {STATE_TAX_RATE}% state tax estimate.
                   Actual tax liability may differ due to additional state tax rules, pre-tax deductions (401k, HSA), self-employment tax,
                   capital gains, and other factors not included. State tax is estimated at a flat {STATE_TAX_RATE}% rate — your actual
                   state rate varies. Consult a tax professional for precise calculations.

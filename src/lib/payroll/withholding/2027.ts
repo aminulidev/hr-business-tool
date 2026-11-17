@@ -22,7 +22,7 @@
 // `statesPublished`. `docs/tax-year-rollover.md` has the full checklist.
 
 import { scheduleFromBrackets, type FederalTables, type TaxYearDefinition } from './engine';
-import { STATE_RULES_2026 } from './2026';
+import { MORE_STATE_RULES_2026, STATE_RULES_2026 } from './2026';
 
 const FEDERAL_RATES = [0.1, 0.12, 0.22, 0.24, 0.32, 0.35, 0.37];
 
@@ -48,6 +48,8 @@ export const YEAR_2027: TaxYearDefinition = {
   // Carried over from 2026. Replace a state's entry with its 2027 rule when the state publishes one.
   stateRules: { ...STATE_RULES_2026 },
   statesPublished: [],
+  moreStateRules: { ...MORE_STATE_RULES_2026 },
+  moreStatesPublished: [],
   stateRulesFrom: 2026,
   federalBasis: 'IRS Rev. Proc. 2026-35, the IRS draft of the 2027 Publication 15-T and the SSA 2027 wage base of $192,300',
   federalSources: [

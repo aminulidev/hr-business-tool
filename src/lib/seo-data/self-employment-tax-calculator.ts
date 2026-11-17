@@ -117,7 +117,7 @@ const seoData = {
     { slug: 'contractor-vs-employee-calculator', title: '1099 vs W-2 Calculator', description: 'Detailed financial comparison between independent contractor and employee offers', icon: 'Briefcase' },
     { slug: 'federal-tax-calculator', title: 'Federal Tax Calculator', description: 'Estimate 2026 federal income tax brackets, standard deduction, and effective rates', icon: 'Landmark' },
     { slug: 'w-2-calculator', title: 'W-2 Paycheck Calculator', description: 'Itemize paycheck withholdings, federal tax, state tax, and net take-home pay', icon: 'FileText' },
-    { slug: 'state-tax-calculator', title: 'State Tax Calculator', description: 'State income tax liabilities across all 50 US states with relocation comparisons', icon: 'MapPin' },
+    { slug: 'state-tax-calculator', title: 'State Tax Calculator', description: "State income tax on your wages under each state's own rules, with two states compared side by side", icon: 'MapPin' },
   ],
   sources: [SRC.irsSelfEmploymentTax, SRC.irsScheduleSE, SRC.ssaCola, SRC.irsTopic560],
 } satisfies CalculatorSeoData;
