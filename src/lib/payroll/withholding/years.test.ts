@@ -69,8 +69,10 @@ describe('tax-year registry', () => {
     expect(new Date(`${def.asOf}T00:00:00Z`).getTime()).toBeLessThanOrEqual(Date.now() + 24 * 60 * 60 * 1000);
 
     const unpublished = STATE_CODES.filter((code) => !def.statesPublished.includes(code));
+    for (const code of def.moreStatesPublished) expect(def.moreStateRules[code], `${year} ${code} published without a rule`).toBeTypeOf('function');
     if (unpublished.length === 0) {
       expect(def.stateRulesFrom).toBe(year);
+      expect([...def.moreStatesPublished].sort()).toEqual(Object.keys(def.moreStateRules).sort());
     } else {
       // A state that has not published must run on the very rule of the year it is carried from.
       expect(def.stateRulesFrom).toBeLessThan(year);
@@ -80,6 +82,12 @@ describe('tax-year registry', () => {
       // ...and a state listed as published must have a rule of its own, not the carried-over one
       for (const code of def.statesPublished) {
         expect(def.stateRules[code], `${year} ${code} is listed as published but still runs the ${def.stateRulesFrom} rule`).not.toBe(source.stateRules[code]);
+      }
+      // the same two rules for the jurisdictions without a paycheck page
+      for (const code of Object.keys(def.moreStateRules) as (keyof typeof def.moreStateRules)[]) {
+        const carried = !def.moreStatesPublished.includes(code);
+        if (carried) expect(def.moreStateRules[code], `${year} ${code} is not listed as published`).toBe(source.moreStateRules[code]);
+        else expect(def.moreStateRules[code], `${year} ${code} is listed as published`).not.toBe(source.moreStateRules[code]);
       }
       for (const code of unpublished) {
         expect(def.stateRules[code], `${year} ${code} is not listed as published, so it must be the ${def.stateRulesFrom} rule`).toBe(source.stateRules[code]);

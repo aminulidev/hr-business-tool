@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import { FileText, DollarSign, TrendingDown, Info, BarChart as BarChartIcon } from 'lucide-react';
 import TryExample from './TryExample';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from 'recharts';
@@ -20,6 +20,7 @@ import { Switch } from '@/components/ui/switch';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
 import ComparePanel, { CompareRow } from './ComparePanel';
+import { FEDERAL_BRACKETS, FEDERAL_STANDARD_DEDUCTIONS } from '@/lib/payroll/federal-tax';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -55,55 +56,14 @@ interface TaxResult {
 // 2026 Federal Tax Brackets (IRS Rev. Proc. 2025-32, adjusted for inflation)
 // ---------------------------------------------------------------------------
 
-const brackets2026: Record<FilingStatus, BracketDefinition[]> = {
-  single: [
-    { min: 0, max: 12400, rate: 0.1 },
-    { min: 12400, max: 50400, rate: 0.12 },
-    { min: 50400, max: 105700, rate: 0.22 },
-    { min: 105700, max: 201775, rate: 0.24 },
-    { min: 201775, max: 256225, rate: 0.32 },
-    { min: 256225, max: 640600, rate: 0.35 },
-    { min: 640600, max: Infinity, rate: 0.37 },
-  ],
-  mfj: [
-    { min: 0, max: 24800, rate: 0.1 },
-    { min: 24800, max: 100800, rate: 0.12 },
-    { min: 100800, max: 211400, rate: 0.22 },
-    { min: 211400, max: 403550, rate: 0.24 },
-    { min: 403550, max: 512450, rate: 0.32 },
-    { min: 512450, max: 768700, rate: 0.35 },
-    { min: 768700, max: Infinity, rate: 0.37 },
-  ],
-  mfs: [
-    { min: 0, max: 12400, rate: 0.1 },
-    { min: 12400, max: 50400, rate: 0.12 },
-    { min: 50400, max: 105700, rate: 0.22 },
-    { min: 105700, max: 201775, rate: 0.24 },
-    { min: 201775, max: 256225, rate: 0.32 },
-    { min: 256225, max: 384350, rate: 0.35 },
-    { min: 384350, max: Infinity, rate: 0.37 },
-  ],
-  hoh: [
-    { min: 0, max: 17700, rate: 0.1 },
-    { min: 17700, max: 67450, rate: 0.12 },
-    { min: 67450, max: 105700, rate: 0.22 },
-    { min: 105700, max: 201775, rate: 0.24 },
-    { min: 201775, max: 256225, rate: 0.32 },
-    { min: 256225, max: 640600, rate: 0.35 },
-    { min: 640600, max: Infinity, rate: 0.37 },
-  ],
-};
+// From the paycheck engine's tax year (src/lib/payroll/federal-tax.ts); nothing is typed here.
+const taxBrackets: Record<FilingStatus, BracketDefinition[]> = FEDERAL_BRACKETS;
 
 // ---------------------------------------------------------------------------
 // 2026 Standard Deductions
 // ---------------------------------------------------------------------------
 
-const standardDeductions: Record<FilingStatus, number> = {
-  single: 16100,
-  mfj: 32200,
-  mfs: 16100,
-  hoh: 24150,
-};
+const standardDeductions: Record<FilingStatus, number> = FEDERAL_STANDARD_DEDUCTIONS;
 
 // ---------------------------------------------------------------------------
 // Filing status labels
@@ -179,7 +139,7 @@ function calculateTax(
 ): TaxResult {
   const deduction = applyStandardDeduction ? standardDeductions[filingStatus] : 0;
   const taxableIncome = Math.max(0, grossIncome - deduction);
-  const brackets = brackets2026[filingStatus];
+  const brackets = taxBrackets[filingStatus];
   let remaining = taxableIncome;
   let totalTax = 0;
   let marginalRate = 0;

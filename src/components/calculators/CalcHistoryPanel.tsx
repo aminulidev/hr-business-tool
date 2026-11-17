@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { track } from '@/lib/analytics';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from '@/components/motion';
 import { History, ChevronDown, ChevronUp, RotateCcw, Trash2, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { CalcHistoryEntry } from '@/hooks/useCalcHistory';

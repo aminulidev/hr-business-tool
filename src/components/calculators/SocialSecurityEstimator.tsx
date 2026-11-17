@@ -10,7 +10,7 @@
  */
 
 import { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import { Landmark, Calendar, DollarSign, Info, TrendingUp } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import TryExample from './TryExample';
+import { SOCIAL_SECURITY_WAGE_BASE } from '@/lib/payroll/federal-tax';
 
 interface SocialSecurityResult {
   aime: number; // Average Indexed Monthly Earnings
@@ -58,8 +59,8 @@ export default function SocialSecurityEstimator() {
     if (isNaN(income) || isNaN(age) || isNaN(worked) || isNaN(retire)) return null;
     if (income <= 0 || worked <= 0) return null;
 
-    // Cap at 2026 wage base ($184,500)
-    const ssWages = Math.min(income, 184500);
+    // Cap at the Social Security wage base of the site's tax year
+    const ssWages = Math.min(income, SOCIAL_SECURITY_WAGE_BASE);
     const yearsTo35 = Math.max(0, 35 - worked);
     // AIME = (sum of 35 highest indexed years) / 420 (35 years × 12 months)
     // Simplified: assume current income is the indexed average
@@ -121,7 +122,7 @@ export default function SocialSecurityEstimator() {
         <div>
           <Label htmlFor="income" className="text-sm font-medium">Current Annual Income ($)</Label>
           <Input id="income" type="number" value={annualIncome} onChange={(e) => setAnnualIncome(e.target.value)} className="mt-1" />
-          <p className="text-xs text-muted-foreground mt-1">Capped at 2026 SS wage base ($184,500)</p>
+          <p className="text-xs text-muted-foreground mt-1">Capped at the Social Security wage base (${SOCIAL_SECURITY_WAGE_BASE.toLocaleString('en-US')})</p>
         </div>
         <div>
           <Label htmlFor="age" className="text-sm font-medium">Current Age</Label>

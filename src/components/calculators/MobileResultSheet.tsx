@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from '@/components/motion';
 import { ArrowDown, Sparkles, X } from 'lucide-react';
 
 interface MobileResultSheetProps {

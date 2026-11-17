@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import TryExample from './TryExample';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import { PieChart, DollarSign, Percent, Info, Plus, Trash2 } from 'lucide-react';
 import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
 import { Input } from '@/components/ui/input';

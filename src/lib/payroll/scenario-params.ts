@@ -5,7 +5,7 @@
 // b_status, b_freq, b_ret).
 // ---------------------------------------------------------------------------
 
-import { STATE_CODES, STATE_PAYCHECK_PAGES } from './state-pages';
+import { STATE_CODES, STATE_META } from './state-meta';
 import type { FilingStatus, PaycheckState, PayFrequency, StateCode } from './withholding';
 
 export interface CompareScenario {
@@ -32,7 +32,7 @@ export function isPaycheckState(s: string | null): s is PaycheckState {
 /** Default state allowances for a scenario, mirroring the main form */
 export function scenarioAllowances(state: PaycheckState, status: FilingStatus): number {
   if (state === 'none' || state === 'other') return 0;
-  const a = STATE_PAYCHECK_PAGES[state as StateCode].allowances;
+  const a = STATE_META[state as StateCode].allowances;
   if (!a) return 0;
   return status === 'married' ? a.defaultMarried : a.defaultSingle;
 }

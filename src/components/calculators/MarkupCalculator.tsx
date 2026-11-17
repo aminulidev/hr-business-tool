@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import { Package, DollarSign, Percent, Info, ArrowRightLeft } from 'lucide-react';
 import TryExample from './TryExample';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';

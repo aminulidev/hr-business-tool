@@ -41,6 +41,13 @@ export type StateCode =
   | 'OR'
   | 'SC';
 
+/**
+ * Jurisdictions with a withholding rule but no paycheck page (see 2026-more-states.ts).
+ * They are a separate type on purpose: everything keyed by StateCode (paycheck pages,
+ * employer-cost profiles, article content) stays complete for the 30 page states.
+ */
+export type WithholdingOnlyState = 'AL' | 'AR' | 'CT' | 'DE' | 'DC' | 'HI' | 'KS' | 'ME' | 'MS' | 'MT' | 'NE' | 'NM' | 'ND' | 'OK' | 'RI' | 'VT' | 'WV';
+
 /** StateCode plus the two generic options used by the national hourly paycheck calculator */
 export type PaycheckState = StateCode | 'none' | 'other';
 
@@ -186,6 +193,10 @@ export interface TaxYearDefinition {
   stateRules: Record<StateCode, StateRule>;
   /** States whose rule above comes from that state's publication for this year */
   statesPublished: readonly StateCode[];
+  /** Rules for jurisdictions without a paycheck page; one that is missing is not modeled at all */
+  moreStateRules: Partial<Record<WithholdingOnlyState, StateRule>>;
+  /** The same honesty rule as `statesPublished`, for `moreStateRules` */
+  moreStatesPublished: readonly WithholdingOnlyState[];
   /** The year the other states' rules are carried over from; equals `year` once every state is published */
   stateRulesFrom: number;
   /** What the federal figures rest on, one clause, for the note under a result */

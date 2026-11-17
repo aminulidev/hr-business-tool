@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from '@/components/motion';
 import { Landmark } from 'lucide-react';
 import TryExample from './TryExample';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
@@ -14,12 +14,21 @@ import ComparePanel, { CompareRow } from './ComparePanel';
 import { useCalcHistory } from '@/hooks/useCalcHistory';
 import CalcHistoryPanel from './CalcHistoryPanel';
 import { formatCurrency, formatPercent } from '@/lib/utils';
+import {
+  ADDITIONAL_MEDICARE_RATE,
+  ADDITIONAL_MEDICARE_WITHHOLDING_THRESHOLD,
+  MEDICARE_RATE as FICA_MEDICARE_RATE,
+  SECA_NET_EARNINGS_FACTOR,
+  SOCIAL_SECURITY_RATE,
+  SOCIAL_SECURITY_WAGE_BASE,
+} from '@/lib/payroll/federal-tax';
 
-const SS_WAGE_BASE_2026 = 184500;
-const SS_RATE = 0.062;
-const MEDICARE_RATE = 0.0145;
-const ADD_MEDICARE_RATE = 0.009;
-const ADD_MEDICARE_THRESHOLD = 200000;
+// FICA figures for the site's tax year come from the paycheck engine (src/lib/payroll/federal-tax.ts)
+const SS_WAGE_BASE = SOCIAL_SECURITY_WAGE_BASE;
+const SS_RATE = SOCIAL_SECURITY_RATE;
+const MEDICARE_RATE = FICA_MEDICARE_RATE;
+const ADD_MEDICARE_RATE = ADDITIONAL_MEDICARE_RATE;
+const ADD_MEDICARE_THRESHOLD = ADDITIONAL_MEDICARE_WITHHOLDING_THRESHOLD;
 
 interface FicaSnapshot { gross: number; employeeSS: number; employeeMedicare: number; additionalMedicare: number; totalEmployee: number; selfEmployed: boolean; label: string; }
 
@@ -38,9 +47,9 @@ export default function FicaTaxCalculator() {
     if (gross <= 0) return null;
     
     // For self-employed, FICA is calculated on 92.35% of net earnings
-    const taxableGross = isSE ? gross * 0.9235 : gross;
+    const taxableGross = isSE ? gross * SECA_NET_EARNINGS_FACTOR : gross;
     
-    const ssWages = Math.min(taxableGross, SS_WAGE_BASE_2026);
+    const ssWages = Math.min(taxableGross, SS_WAGE_BASE);
     const empSS = ssWages * SS_RATE;
     const empMedicare = taxableGross * MEDICARE_RATE;
     const addMedicare = taxableGross > ADD_MEDICARE_THRESHOLD ? (taxableGross - ADD_MEDICARE_THRESHOLD) * ADD_MEDICARE_RATE : 0;
@@ -114,9 +123,9 @@ export default function FicaTaxCalculator() {
         {/* 2026 Rate Reference */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 rounded-xl bg-muted/30 border border-border/30 p-4">
           {[
-            { label: 'Social Security', value: '6.2%', note: 'Up to $184,500' },
+            { label: 'Social Security', value: '6.2%', note: `Up to $${SS_WAGE_BASE.toLocaleString('en-US')}` },
             { label: 'Medicare', value: '1.45%', note: 'No income cap' },
-            { label: 'Add. Medicare', value: '0.9%', note: 'Over $200,000' },
+            { label: 'Add. Medicare', value: '0.9%', note: `Over $${ADD_MEDICARE_THRESHOLD.toLocaleString('en-US')}` },
             { label: 'Employer Match', value: '7.65%', note: 'SS + Medicare' },
           ].map((r) => (
             <div key={r.label} className="text-center">
@@ -195,9 +204,9 @@ export default function FicaTaxCalculator() {
                 </div>
               )}
 
-              {gross > SS_WAGE_BASE_2026 && (
+              {gross > SS_WAGE_BASE && (
                 <div className="rounded-lg bg-amber-500/5 border border-amber-500/20 p-3 text-xs text-amber-700 dark:text-amber-300">
-                  ⚠️ Your wages exceed the 2026 Social Security wage base of <strong>{formatCurrency(SS_WAGE_BASE_2026)}</strong>. Only wages up to this limit are subject to the 6.2% SS tax. All wages remain subject to Medicare taxes.
+                  ⚠️ Your wages exceed the 2026 Social Security wage base of <strong>{formatCurrency(SS_WAGE_BASE)}</strong>. Only wages up to this limit are subject to the 6.2% SS tax. All wages remain subject to Medicare taxes.
                 </div>
               )}
             </div>

@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { formatCurrency } from '@/lib/utils';
 import { TAX_YEAR, type PayFrequency } from '@/lib/payroll/withholding';
-import { STATE_CODES, STATE_PAYCHECK_PAGES } from '@/lib/payroll/state-pages';
+import { STATE_CODES, STATE_META } from '@/lib/payroll/state-meta';
 import { BULK_COLUMNS, BULK_EXAMPLE_CSV, BULK_MAX_ROWS, bulkToCsv, parseBulkCsv, runBulkPayroll } from '@/lib/payroll/bulk-payroll';
 
 const FREQ_LABELS: Record<PayFrequency, string> = {
@@ -185,7 +185,7 @@ export default function BulkPayrollPanel({ initialFrequency = 'bi-weekly' }: { i
                         {r.row.type === 'salary' ? `${formatCurrency(r.row.pay)}/yr` : `${formatCurrency(r.row.pay)}/hr × ${r.row.hours}h${r.row.overtime ? ` + ${r.row.overtime} OT` : ''}`} · {r.row.status}
                       </div>
                     </td>
-                    <td className="px-3 py-2">{r.row.state === 'none' ? '—' : STATE_PAYCHECK_PAGES[r.row.state as keyof typeof STATE_PAYCHECK_PAGES].name}</td>
+                    <td className="px-3 py-2">{r.row.state === 'none' ? '—' : STATE_META[r.row.state as keyof typeof STATE_META].name}</td>
                     <td className="text-right px-3 py-2">{formatCurrency(r.paycheck.grossPerPeriod)}</td>
                     <td className="text-right px-3 py-2 text-red-500">{formatCurrency(r.federal)}</td>
                     <td className="text-right px-3 py-2 text-red-500">{formatCurrency(r.fica)}</td>

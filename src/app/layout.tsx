@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
 import { CONTACT_EMAIL, SITE_URL, SITE_NAME, SITE_TAGLINE } from '@/lib/calculator-meta';
 import { CONFIG } from "@/lib/config";
 import AdSenseLoader from '@/components/analytics/AdSenseLoader';
@@ -198,7 +197,6 @@ export default function RootLayout({
           Skip to main content
         </Link>
         {children}
-        <Toaster />
       </body>
     </html>
   );

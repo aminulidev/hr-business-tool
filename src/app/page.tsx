@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import AppShell from '@/components/layout/AppShell';
 import HubPage from '@/components/calculators/HubPage';
+import { getHubCalculators } from '@/lib/hub-data';
 import { SITE_URL, SITE_NAME, SITE_TAGLINE } from '@/lib/calculator-meta';
 
 // Homepage sets its own canonical to prevent ?q= parameter variants
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <AppShell>
-      <HubPage />
+      <HubPage calculators={getHubCalculators()} />
     </AppShell>
   );
 }

@@ -195,20 +195,59 @@ The "before" build was not measured with Lighthouse 13, so there is no before-an
 
 `src/lib/bundle-boundaries.test.ts` fails the test run if either of the first two comes back.
 
+### Interactivity work (November 2026)
+
+The pages painted quickly but took about four seconds to respond to a tap on the emulated phone. Measured before
+and after with the tool CI uses (Lighthouse 13 through LHCI 0.16.1, one laptop, median of three runs):
+
+| Page | Time to interactive | JavaScript downloaded | Main-thread work |
+|---|---|---|---|
+| Home | 4.02 s → 3.70 s | 379 kB → 281 kB | 3.27 s → 2.31 s |
+| Hourly paycheck calculator | 4.38 s → 4.21 s | 425 kB → 273 kB | 3.20 s → 2.49 s |
+| Texas paycheck calculator | 4.30 s → 4.13 s | 413 kB → 264 kB | 2.98 s → 2.30 s |
+| $20 an hour salary page | 3.91 s → 3.54 s | 352 kB → 206 kB | 2.27 s → 1.95 s |
+| Payroll & taxes category | 3.82 s → 3.51 s | 337 kB → 207 kB | 2.54 s → 1.84 s |
+
+Largest paint is unchanged (1.21 to 1.36 s). Main-thread work is on the emulated phone, which runs four times
+slower than the laptop.
+
+Read the first column with one fact in mind: **a page of plain text on this site (the editorial policy) measures
+3.18 s** with 172 kB of JavaScript. That is what Next.js and React cost on Lighthouse's slow-4G phone before the
+site adds anything, so the salary and category pages are now about 0.35 s above the floor and the paycheck
+calculators about one second above it. On that emulated network every 20 kB of JavaScript or HTML costs about a
+tenth of a second.
+
+| What every page downloaded | Fix |
+|---|---|
+| The framer-motion animation library (37 kB compressed), used only to fade or slide elements in | `src/components/motion.tsx` keeps the same JSX and does the entrance with CSS. Elements now leave without an animation, and the small hover and tap scale effects are gone |
+| The home page's code and the whole calculator registry (71 kB), because Next prefetches the header's home link | The server passes the home page its calculator list (`hub-data.ts`); search keywords load when the search box is first used (`hub-keywords.ts`); links to `/` carry `prefetch={false}` |
+| The toast system (16 kB), for one form | Mounted by the contact form only. The newsletter form shows its error next to the field |
+| On paycheck pages, each state's article text and the employer tax notes (22 kB) | Client code reads the small `state-meta.ts`; the employer view, the pay stub dialog and the bulk table load when first opened |
+| The page shell three times over: both `loading.tsx` files imported the client shell | `ShellSkeleton`, a server component, frames the loading states |
+| Three large blurred, moving background shapes | Not drawn on phones |
+
+`src/lib/bundle-boundaries.test.ts` fails the test run if any of these comes back.
+
+Two lab artifacts worth knowing. Speed Index on the paycheck pages reads 0.2 to 0.3 s higher than before in some
+runs although the real first paint is earlier (0.54 to 0.71 s against 0.72 s on the unthrottled trace): content
+now fades in from the first frame, where it used to stay hidden until the JavaScript had run. And the local test
+server uses HTTP/1.1 and gzip; Vercel uses HTTP/2 and Brotli, so production pages are smaller and load their
+scripts in parallel.
+
 ### What is still slow
 
-The pages paint quickly but take about four seconds to become fully interactive on the emulated phone, and each
-still downloads 340 to 420 kB of JavaScript. In rough order of payoff, none of it started:
+What is left, in rough order of payoff. None of it is started.
 
-1. **Make the page shell a Server Component.** `AppShell`, `Header` and `Footer` are client components, so React
+1. **The dropdowns on the paycheck calculators.** The Radix select, its positioning library and its scroll lock
+   are about 30 kB compressed, on the path to a responsive page. Native `<select>` elements would remove them and
+   are easier to use on a phone, at the price of a plainer look.
+2. **Make the page shell a Server Component.** `AppShell`, `Header` and `Footer` are client components, so React
    re-runs the whole page frame in the browser. Only the search button, the mobile menu and the cookie banner
    need to be client code.
-2. **Take framer-motion out of the shell and the article layout.** It is about 110 kB and is used there for small
-   entrance effects that CSS can do.
-3. **Drop the three animated blurred background shapes on phones** (`AppShell`). Large blurred, moving layers are
-   expensive to paint on a slow device.
-4. **Shrink the calculator page's HTML.** The hourly paycheck page is about 520 kB of HTML before compression,
-   half of it the data React needs to re-create the article in the browser.
+3. **Shrink the calculator page's HTML.** The hourly paycheck page is about 490 kB of HTML before compression
+   (65 kB gzipped), half of it the data React needs to re-create the article in the browser.
+4. **The framework itself** (about 140 kB compressed) is the floor described above and is not something the site
+   can change without leaving Next.js.
 
 ### Running it yourself
 

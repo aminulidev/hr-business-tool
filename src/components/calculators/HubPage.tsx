@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants } from '@/components/motion';
 import Link from 'next/link';
 import {
   Search,
@@ -19,8 +19,11 @@ import {
   ShieldCheck,
   type LucideIcon,
 } from 'lucide-react';
-import { getPublishedCalculators, categoryOrder, categoryMeta, type CalculatorMeta } from '@/lib/calculator-meta';
-import { searchCalculators } from '@/lib/search-calculators';
+// No registry import here: the list arrives as props from the server page (see src/lib/hub-data.ts).
+import { categoryOrder, categoryMeta } from '@/lib/registry/site';
+import { iconMap } from '@/lib/registry/icons';
+import { searchItems } from '@/lib/search-core';
+import type { HubCalculator } from '@/lib/hub-data';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -92,7 +95,7 @@ const CATEGORY_UI_CONFIG: Record<
   },
 };
 
-export default function HubPage() {
+export default function HubPage({ calculators: activeCalculators }: { calculators: HubCalculator[] }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -113,13 +116,31 @@ export default function HubPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Keyword lists arrive when the search box is first used, not with the page (see hub-keywords.ts).
+  // Until then a search matches on title, description and category.
+  const [keywords, setKeywords] = useState<Record<string, readonly string[]> | null>(null);
+  const keywordsRequested = useRef(false);
+  const loadKeywords = () => {
+    if (keywordsRequested.current) return;
+    keywordsRequested.current = true;
+    import('@/lib/hub-keywords')
+      .then((m) => setKeywords(m.getHubKeywords()))
+      .catch(() => {
+        keywordsRequested.current = false;
+      });
+  };
+
+  const searchable = useMemo(
+    () => (keywords ? activeCalculators.map((c) => ({ ...c, keywords: keywords[c.slug] })) : activeCalculators),
+    [activeCalculators, keywords],
+  );
+
   const isSearching = searchQuery.trim().length > 0;
   const searchResults = useMemo(() => {
     if (!isSearching) return null;
-    return searchCalculators(searchQuery);
-  }, [searchQuery, isSearching]);
+    return searchItems(searchQuery, searchable);
+  }, [searchQuery, isSearching, searchable]);
 
-  const activeCalculators = useMemo(() => getPublishedCalculators(), []);
 
   const filteredCalculators = useMemo(() => {
     const base = searchResults ? searchResults.map((r) => r.calculator) : activeCalculators;
@@ -153,7 +174,7 @@ export default function HubPage() {
     const groups: {
       category: string;
       meta: { emoji: string; description: string };
-      items: CalculatorMeta[];
+      items: HubCalculator[];
       maxScore: number;
     }[] = [];
 
@@ -250,7 +271,11 @@ export default function HubPage() {
               placeholder={`Search ${activeCalculators.length} calculators (e.g. 'hourly paycheck', 'profit margin', 'employee cost')...`}
               className="w-full h-full bg-transparent text-foreground placeholder:text-muted-foreground/80 focus:outline-none text-sm sm:text-base truncate"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={loadKeywords}
+              onChange={(e) => {
+                loadKeywords();
+                setSearchQuery(e.target.value);
+              }}
             />
             {searchQuery ? (
               <button
@@ -682,8 +707,8 @@ export default function HubPage() {
   );
 }
 
-function CalculatorCardComponent({ calc }: { calc: CalculatorMeta }) {
-  const Icon = calc.icon;
+function CalculatorCardComponent({ calc }: { calc: HubCalculator }) {
+  const Icon = iconMap[calc.icon];
 
   return (
     <motion.div

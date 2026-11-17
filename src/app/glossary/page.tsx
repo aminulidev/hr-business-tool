@@ -200,6 +200,7 @@ export default function GlossaryPage() {
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link 
                 href="/"
+                prefetch={false}
                 className="px-8 py-3 rounded-xl bg-white text-emerald-700 font-bold hover:bg-emerald-50 transition-colors"
               >
                 Browse All Tools

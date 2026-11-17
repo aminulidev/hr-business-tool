@@ -223,6 +223,7 @@ export default async function CategoryHubPage({
               <li className="flex items-center">
                 <Link
                   href="/"
+                  prefetch={false}
                   className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors"
                 >
                   <Home className="h-3.5 w-3.5" />
@@ -261,6 +262,7 @@ export default async function CategoryHubPage({
 
               <Link
                 href="/"
+                prefetch={false}
                 className="self-start md:self-center inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border/70 bg-card hover:bg-muted text-xs sm:text-sm font-semibold text-foreground transition-colors shrink-0"
               >
                 <LayoutGrid className="h-4 w-4 text-emerald-600" />

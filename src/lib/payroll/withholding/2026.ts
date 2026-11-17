@@ -48,7 +48,9 @@ import {
   type StateRule,
   type TaxYearDefinition,
   type W4Adjustments,
+  type WithholdingOnlyState,
 } from './engine';
+import { buildMoreStateRules2026 } from './2026-more-states';
 
 // ---------------------------------------------------------------------------
 // Federal — IRS Rev. Proc. 2025-32 brackets and standard deductions, SSA 2026 wage base
@@ -547,11 +549,16 @@ export const STATE_RULES_2026: Record<StateCode, StateRule> = {
   SC: (c) => [{ key: 'state', label: 'South Carolina income tax', annual: southCarolinaIncomeTax(c.taxableWages, c.filingStatus, c.allowances) }],
 };
 
+/** Withholding rules for the jurisdictions without a paycheck page, bound to the 2026 federal figures */
+export const MORE_STATE_RULES_2026 = buildMoreStateRules2026(FEDERAL_2026);
+
 export const YEAR_2026: TaxYearDefinition = {
   year: 2026,
   federal: FEDERAL_2026,
   stateRules: STATE_RULES_2026,
   statesPublished: Object.keys(STATE_RULES_2026) as StateCode[],
+  moreStateRules: MORE_STATE_RULES_2026,
+  moreStatesPublished: Object.keys(MORE_STATE_RULES_2026) as WithholdingOnlyState[],
   stateRulesFrom: 2026,
   federalBasis: 'IRS Rev. Proc. 2025-32, the 2026 Publication 15-T and the SSA 2026 wage base',
   federalSources: [

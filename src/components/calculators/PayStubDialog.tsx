@@ -7,9 +7,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { buildPayStubHtml, defaultPeriodNumber, type PayStubData } from '@/lib/payroll/pay-stub';
+import { calculateEmployerCost, type EmployerCostInput } from '@/lib/payroll/employer-cost-2026';
 import { track } from '@/lib/analytics';
 
-type StubInputs = Omit<PayStubData, 'employeeName' | 'employerName' | 'payDate' | 'periodNumber'>;
+// The employer section is computed here, from its inputs: this dialog is loaded on first use, so the
+// calculators do not have to ship the state unemployment tables just to be ready for it.
+export type StubInputs = Omit<PayStubData, 'employeeName' | 'employerName' | 'payDate' | 'periodNumber' | 'employer'> & {
+  employerInput?: EmployerCostInput;
+};
 
 interface PayStubDialogProps {
   open: boolean;
@@ -39,6 +44,7 @@ export default function PayStubDialog({ open, onOpenChange, data }: PayStubDialo
     () =>
       buildPayStubHtml({
         ...data,
+        employer: data.employerInput ? calculateEmployerCost(data.employerInput) : null,
         employeeName,
         employerName,
         payDate,

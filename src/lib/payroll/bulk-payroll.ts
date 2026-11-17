@@ -14,7 +14,7 @@ import {
   type PayFrequency,
   type StateCode,
 } from './withholding';
-import { STATE_CODES, STATE_PAYCHECK_PAGES } from './state-pages';
+import { STATE_CODES, STATE_META } from './state-meta';
 import { calculateEmployerCost, type EmployerCostResult } from './employer-cost-2026';
 
 export const BULK_MAX_ROWS = 25;
@@ -132,7 +132,7 @@ function headerMap(cells: string[]): Record<number, BulkColumnKey> | null {
 
 function defaultAllowances(state: PaycheckState, status: FilingStatus): number {
   if (state === 'none' || state === 'other') return 0;
-  const a = STATE_PAYCHECK_PAGES[state as StateCode].allowances;
+  const a = STATE_META[state as StateCode].allowances;
   if (!a) return 0;
   return status === 'married' ? a.defaultMarried : a.defaultSingle;
 }
